@@ -1,0 +1,110 @@
+version: '3'
+
+services:
+  node0:
+    container_name: tabinode0
+    image: "tabi/node"
+    ports:
+      - "26656-26657:26656-26657"
+      - "8545-8546:8545-8546"
+    volumes:
+      - ./chainData/tabi/node0/tabid:/tabi:Z
+    command: sh -c "tabid start --home /tabi"
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.2
+
+  node1:
+    container_name: tabinode1
+    image: "tabi/node"
+    ports:
+      - "26659-26660:26656-26657"
+      - "8045-8046:8545-8546"
+    volumes:
+      - ./chainData/tabi/node1/tabid:/tabi:Z
+    command: sh -c "tabid start --home /tabi"
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.3
+
+  node2:
+    container_name: tabinode2
+    image: "tabi/node"
+    ports:
+      - "26661-26662:26656-26657"
+    volumes:
+      - ./chainData/tabi/node2/tabid:/tabi:Z
+    command: sh -c "tabid start --home /tabi"
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.4
+
+  node3:
+    container_name: tabinode3
+    image: "tabi/node"
+    ports:
+      - "26663-26664:26656-26657"
+    volumes:
+      - ./chainData/tabi/node3/tabid:/tabi:Z
+    command: sh -c "tabid start --home /tabi"
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.5
+
+  node4:
+    container_name: tabinode4
+    image: "tabi/node"
+    ports:
+      - "36656-36657:26656-26657"
+    volumes:
+      - ./chainData/tabi/node4/tabid:/tabi:Z
+    command: sh -c "tabid start --home /tabi"
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.6
+
+  node5:
+    container_name: tabinode5
+    image: "tabi/node"
+    ports:
+      - "36659-36660:26656-26657"
+    volumes:
+      - ./chainData/tabi/node5/tabid:/tabi:Z
+    command: sh -c "tabid start --home /tabi"
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.7
+
+  node6:
+    container_name: tabinode6
+    image: "tabi/node"
+    ports:
+      - "36661-36662:26656-26657"
+    volumes:
+      - ./chainData/tabi/node6/tabid:/tabi:Z
+    command: sh -c "tabid start --home /tabi"
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.8
+
+  node7:
+    container_name: tabinode7
+    image: "tabi/node"
+    ports:
+      - "36663-36664:26656-26657"
+    volumes:
+      - ./chainData/tabi/node7/tabid:/tabi:Z
+    command: sh -c "tabid start --home /tabi"
+    networks:
+      localnet:
+        ipv4_address: 192.167.10.9
+
+
+networks:
+  localnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        -
+          subnet: 192.167.10.0/16
