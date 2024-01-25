@@ -16,8 +16,8 @@ package testutil
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/tabilabs/tabi/v1/app/ante/evm"
-	"github.com/tabilabs/tabi/v1/x/evm/statedb"
+	"github.com/tabilabs/tabi/app/ante/evm"
+	"github.com/tabilabs/tabi/x/evm/statedb"
 )
 
 // NewStateDB returns a new StateDB for testing purposes.

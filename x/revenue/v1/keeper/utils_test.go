@@ -13,12 +13,12 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/require"
-	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabilabs/tabi/v1/testutil"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	"github.com/tabilabs/tabi/v1/utils"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
-	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/testutil"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	"github.com/tabilabs/tabi/utils"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
+	"github.com/tabilabs/tabi/x/revenue/v1/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 

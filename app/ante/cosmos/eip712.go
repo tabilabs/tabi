@@ -29,11 +29,11 @@ import (
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"github.com/ethereum/go-ethereum/signer/core/apitypes"
-	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabilabs/tabi/v1/ethereum/eip712"
-	"github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/ethereum/eip712"
+	"github.com/tabilabs/tabi/types"
 
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 )
 
 var tabiCodec codec.ProtoCodecMarshaler

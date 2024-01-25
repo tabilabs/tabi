@@ -18,7 +18,7 @@ import (
 	"strconv"
 	"time"
 
-	tabitypes "github.com/tabilabs/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 
 	"github.com/armon/go-metrics"
 
@@ -30,7 +30,7 @@ import (
 	vestingexported "github.com/cosmos/cosmos-sdk/x/auth/vesting/exported"
 	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 
-	"github.com/tabilabs/tabi/v1/x/vesting/types"
+	"github.com/tabilabs/tabi/x/vesting/types"
 )
 
 var _ types.MsgServer = &Keeper{}

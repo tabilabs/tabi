@@ -17,7 +17,7 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tabilabs/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/x/incentives/types"
 )
 
 // NewHandler returns a handler for incentives module messages

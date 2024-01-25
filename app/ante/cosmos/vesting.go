@@ -19,8 +19,8 @@ import (
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
-	vestingtypes "github.com/tabilabs/tabi/v1/x/vesting/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
+	vestingtypes "github.com/tabilabs/tabi/x/vesting/types"
 )
 
 // TODO: remove once Cosmos SDK is upgraded to v0.46

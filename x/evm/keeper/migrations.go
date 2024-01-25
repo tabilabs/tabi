@@ -14,9 +14,9 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	v4 "github.com/tabilabs/tabi/v1/x/evm/migrations/v4"
-	v5 "github.com/tabilabs/tabi/v1/x/evm/migrations/v5"
-	"github.com/tabilabs/tabi/v1/x/evm/types"
+	v4 "github.com/tabilabs/tabi/x/evm/migrations/v4"
+	v5 "github.com/tabilabs/tabi/x/evm/migrations/v5"
+	"github.com/tabilabs/tabi/x/evm/types"
 )
 
 // Migrator is a struct for handling in-place store migrations.

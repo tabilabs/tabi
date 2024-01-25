@@ -26,10 +26,10 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
-	"github.com/tabilabs/tabi/v1/x/evm/statedb"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/x/evm/statedb"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 
-	inflationtypes "github.com/tabilabs/tabi/v1/x/inflation/types"
+	inflationtypes "github.com/tabilabs/tabi/x/inflation/types"
 )
 
 // AccountKeeper defines the expected interface needed to retrieve account info.

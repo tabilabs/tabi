@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tabilabs/tabi/v1/x/epochs"
-	"github.com/tabilabs/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/x/epochs"
+	"github.com/tabilabs/tabi/x/epochs/types"
 )
 
 func (suite *KeeperTestSuite) TestEpochInfoChangesBeginBlockerAndInitGenesis() {

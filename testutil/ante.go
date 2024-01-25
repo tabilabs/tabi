@@ -2,8 +2,8 @@ package testutil
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/encoding"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/encoding"
 )
 
 // NextFn is a no-op function that returns the context and no error in order to mock

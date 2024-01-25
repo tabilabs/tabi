@@ -1,7 +1,7 @@
 syntax = "proto3";
 package tabi.revenue.v1;
 
-option go_package = "github.com/tabilabs/tabi/v1/x/revenue/v1/types";
+option go_package = "github.com/tabilabs/tabi/x/revenue/v1/types";
 
 // EventRegisterRevenue is an event emitted when a contract is registered to receive a percentage of tx fees.
 message EventRegisterRevenue {

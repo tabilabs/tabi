@@ -5,9 +5,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/tabilabs/tabi/v1/rpc/backend/mocks"
-	ethrpc "github.com/tabilabs/tabi/v1/rpc/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/rpc/backend/mocks"
+	ethrpc "github.com/tabilabs/tabi/rpc/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 

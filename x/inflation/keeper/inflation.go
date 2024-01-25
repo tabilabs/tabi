@@ -16,11 +16,11 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	tabitypes "github.com/tabilabs/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 
-	utils "github.com/tabilabs/tabi/v1/utils"
-	incentivestypes "github.com/tabilabs/tabi/v1/x/incentives/types"
-	"github.com/tabilabs/tabi/v1/x/inflation/types"
+	utils "github.com/tabilabs/tabi/utils"
+	incentivestypes "github.com/tabilabs/tabi/x/incentives/types"
+	"github.com/tabilabs/tabi/x/inflation/types"
 )
 
 // 200M token at year 4 allocated to the team

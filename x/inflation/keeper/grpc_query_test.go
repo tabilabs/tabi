@@ -6,8 +6,8 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	tabitypes "github.com/tabilabs/tabi/v1/types"
-	"github.com/tabilabs/tabi/v1/x/inflation/types"
+	tabitypes "github.com/tabilabs/tabi/types"
+	"github.com/tabilabs/tabi/x/inflation/types"
 )
 
 func (suite *KeeperTestSuite) TestPeriod() { //nolint:dupl

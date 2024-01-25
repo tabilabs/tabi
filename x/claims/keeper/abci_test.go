@@ -9,11 +9,11 @@ import (
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	testutil "github.com/tabilabs/tabi/v1/testutil"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	tabitypes "github.com/tabilabs/tabi/v1/types"
-	"github.com/tabilabs/tabi/v1/x/claims/types"
-	vestingtypes "github.com/tabilabs/tabi/v1/x/vesting/types"
+	testutil "github.com/tabilabs/tabi/testutil"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	tabitypes "github.com/tabilabs/tabi/types"
+	"github.com/tabilabs/tabi/x/claims/types"
+	vestingtypes "github.com/tabilabs/tabi/x/vesting/types"
 )
 
 func (suite *KeeperTestSuite) TestEndBlock() {

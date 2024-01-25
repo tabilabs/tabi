@@ -25,7 +25,7 @@ import (
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/tabilabs/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/x/incentives/types"
 )
 
 // DistributeRewards transfers the allocated rewards to the participants of a given

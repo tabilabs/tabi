@@ -15,7 +15,7 @@ package server
 import (
 	"context"
 	"fmt"
-	tabitypes "github.com/tabilabs/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 	"io"
 	"net"
 	"net/http"
@@ -59,10 +59,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/server/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/v1/indexer"
-	ethdebug "github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/debug"
-	"github.com/tabilabs/tabi/v1/server/config"
-	srvflags "github.com/tabilabs/tabi/v1/server/flags"
+	"github.com/tabilabs/tabi/indexer"
+	ethdebug "github.com/tabilabs/tabi/rpc/namespaces/ethereum/debug"
+	"github.com/tabilabs/tabi/server/config"
+	srvflags "github.com/tabilabs/tabi/server/flags"
 )
 
 // DBOpener is a function to open `application.db`, potentially with customized options.

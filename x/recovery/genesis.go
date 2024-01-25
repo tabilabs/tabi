@@ -17,8 +17,8 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/v1/x/recovery/keeper"
-	"github.com/tabilabs/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/x/recovery/keeper"
+	"github.com/tabilabs/tabi/x/recovery/types"
 )
 
 // InitGenesis import module genesis

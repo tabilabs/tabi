@@ -16,8 +16,8 @@ package inflation
 import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/v1/x/inflation/keeper"
-	"github.com/tabilabs/tabi/v1/x/inflation/types"
+	"github.com/tabilabs/tabi/x/inflation/keeper"
+	"github.com/tabilabs/tabi/x/inflation/types"
 )
 
 // InitGenesis import module genesis

@@ -6,7 +6,7 @@ import "tabi/epochs/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
-option go_package = "github.com/tabilabs/tabi/v1/x/epochs/types";
+option go_package = "github.com/tabilabs/tabi/x/epochs/types";
 
 // Query defines the gRPC querier service.
 service Query {

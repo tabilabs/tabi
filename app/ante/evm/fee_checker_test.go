@@ -11,9 +11,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/tabilabs/tabi/v1/encoding"
-	"github.com/tabilabs/tabi/v1/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/encoding"
+	"github.com/tabilabs/tabi/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )

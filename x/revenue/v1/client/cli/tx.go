@@ -24,9 +24,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	tabitypes "github.com/tabilabs/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 
-	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/x/revenue/v1/types"
 )
 
 // NewTxCmd returns a root CLI command handler for certain modules/revenue

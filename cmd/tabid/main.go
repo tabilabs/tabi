@@ -20,8 +20,8 @@ import (
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/v1/app"
-	cmdcfg "github.com/tabilabs/tabi/v1/cmd/config"
+	"github.com/tabilabs/tabi/app"
+	cmdcfg "github.com/tabilabs/tabi/cmd/config"
 )
 
 func main() {

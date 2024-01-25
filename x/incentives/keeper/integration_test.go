@@ -12,10 +12,10 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	tabitypes "github.com/tabilabs/tabi/v1/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	tabitypes "github.com/tabilabs/tabi/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 
-	"github.com/tabilabs/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/x/incentives/types"
 )
 
 var _ = Describe("Performing EVM transactions", Ordered, func() {

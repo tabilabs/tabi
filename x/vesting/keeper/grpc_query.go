@@ -20,7 +20,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tabilabs/tabi/v1/x/vesting/types"
+	"github.com/tabilabs/tabi/x/vesting/types"
 )
 
 var _ types.QueryServer = Keeper{}

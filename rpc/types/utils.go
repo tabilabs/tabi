@@ -26,8 +26,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
-	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
+	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"

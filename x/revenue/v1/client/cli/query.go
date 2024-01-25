@@ -23,7 +23,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
 
-	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/x/revenue/v1/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module

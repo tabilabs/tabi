@@ -14,10 +14,10 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	evm "github.com/tabilabs/tabi/v1/x/evm/types"
+	evm "github.com/tabilabs/tabi/x/evm/types"
 
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/x/incentives/types"
 )
 
 type KeeperTestSuite struct {

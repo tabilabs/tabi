@@ -17,7 +17,7 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/v1/x/inflation/types"
+	"github.com/tabilabs/tabi/x/inflation/types"
 )
 
 var _ types.QueryServer = Keeper{}

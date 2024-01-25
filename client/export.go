@@ -25,8 +25,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabilabs/tabi/v1/crypto/hd"
+	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/crypto/hd"
 )
 
 // UnsafeExportEthKeyCommand exports a key with the given name as a private key in hex format.

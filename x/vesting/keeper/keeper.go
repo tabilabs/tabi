@@ -21,7 +21,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/tabilabs/tabi/v1/x/vesting/types"
+	"github.com/tabilabs/tabi/x/vesting/types"
 )
 
 // Keeper of this module maintains collections of vesting.

@@ -34,8 +34,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/v1/rpc/ethereum/pubsub"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/rpc/ethereum/pubsub"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 )
 
 var (

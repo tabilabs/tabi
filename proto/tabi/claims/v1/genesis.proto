@@ -6,7 +6,7 @@ import "gogoproto/gogo.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/tabilabs/tabi/v1/x/claims/types";
+option go_package = "github.com/tabilabs/tabi/x/claims/types";
 
 // GenesisState define the claims module's genesis state.
 message GenesisState {

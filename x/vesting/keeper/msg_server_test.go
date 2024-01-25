@@ -5,16 +5,16 @@ import (
 	"time"
 
 	vestingexported "github.com/cosmos/cosmos-sdk/x/auth/vesting/exported"
-	tabitypes "github.com/tabilabs/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 
-	"github.com/tabilabs/tabi/v1/testutil"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	"github.com/tabilabs/tabi/v1/x/vesting/types"
+	"github.com/tabilabs/tabi/testutil"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	"github.com/tabilabs/tabi/x/vesting/types"
 )
 
 var (

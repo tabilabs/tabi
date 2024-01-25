@@ -11,7 +11,7 @@ import (
 	time "time"
 
 	_ "github.com/cosmos/gogoproto/gogoproto"
-	"github.com/tabilabs/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/x/claims/types"
 	proto "github.com/gogo/protobuf/proto"
 	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
 	_ "google.golang.org/protobuf/types/known/durationpb"

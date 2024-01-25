@@ -34,8 +34,8 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 
-	"github.com/tabilabs/tabi/v1/rpc/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/rpc/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	"github.com/tendermint/tendermint/proto/tendermint/crypto"
 )
 

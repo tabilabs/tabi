@@ -19,8 +19,8 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tabilabs/tabi/v1/encoding"
-	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/encoding"
+	"github.com/tabilabs/tabi/utils"
 )
 
 func TestTabiExport(t *testing.T) {

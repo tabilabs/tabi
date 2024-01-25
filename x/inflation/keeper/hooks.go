@@ -19,8 +19,8 @@ import (
 	"github.com/armon/go-metrics"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	epochstypes "github.com/tabilabs/tabi/v1/x/epochs/types"
-	"github.com/tabilabs/tabi/v1/x/inflation/types"
+	epochstypes "github.com/tabilabs/tabi/x/epochs/types"
+	"github.com/tabilabs/tabi/x/inflation/types"
 )
 
 // BeforeEpochStart: noop, We don't need to do anything here

@@ -14,11 +14,11 @@ import (
 	"github.com/tendermint/tendermint/abci/types"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 
-	"github.com/tabilabs/tabi/v1/rpc/backend/mocks"
-	rpc "github.com/tabilabs/tabi/v1/rpc/types"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
-	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/rpc/backend/mocks"
+	rpc "github.com/tabilabs/tabi/rpc/types"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
+	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 )
 
 func (suite *BackendTestSuite) TestBaseFee() {

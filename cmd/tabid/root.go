@@ -48,17 +48,17 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 
-	tabiclient "github.com/tabilabs/tabi/v1/client"
-	"github.com/tabilabs/tabi/v1/client/debug"
-	"github.com/tabilabs/tabi/v1/encoding"
-	"github.com/tabilabs/tabi/v1/ethereum/eip712"
-	tabiserver "github.com/tabilabs/tabi/v1/server"
-	servercfg "github.com/tabilabs/tabi/v1/server/config"
-	srvflags "github.com/tabilabs/tabi/v1/server/flags"
+	tabiclient "github.com/tabilabs/tabi/client"
+	"github.com/tabilabs/tabi/client/debug"
+	"github.com/tabilabs/tabi/encoding"
+	"github.com/tabilabs/tabi/ethereum/eip712"
+	tabiserver "github.com/tabilabs/tabi/server"
+	servercfg "github.com/tabilabs/tabi/server/config"
+	srvflags "github.com/tabilabs/tabi/server/flags"
 
-	"github.com/tabilabs/tabi/v1/app"
-	cmdcfg "github.com/tabilabs/tabi/v1/cmd/config"
-	tabikr "github.com/tabilabs/tabi/v1/crypto/keyring"
+	"github.com/tabilabs/tabi/app"
+	cmdcfg "github.com/tabilabs/tabi/cmd/config"
+	tabikr "github.com/tabilabs/tabi/crypto/keyring"
 )
 
 const (

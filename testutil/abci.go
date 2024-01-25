@@ -24,9 +24,9 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/encoding"
-	"github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/encoding"
+	"github.com/tabilabs/tabi/testutil/tx"
 )
 
 // Commit commits a block at a given time. Reminder: At the end of each

@@ -18,7 +18,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/x/recovery/types"
 )
 
 var _ types.QueryServer = Keeper{}

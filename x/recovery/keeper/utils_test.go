@@ -9,12 +9,12 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
 	ibcgotesting "github.com/cosmos/ibc-go/v6/testing"
-	"github.com/tabilabs/tabi/v1/app"
-	ibctesting "github.com/tabilabs/tabi/v1/ibc/testing"
-	"github.com/tabilabs/tabi/v1/utils"
-	claimstypes "github.com/tabilabs/tabi/v1/x/claims/types"
-	inflationtypes "github.com/tabilabs/tabi/v1/x/inflation/types"
-	"github.com/tabilabs/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/app"
+	ibctesting "github.com/tabilabs/tabi/ibc/testing"
+	"github.com/tabilabs/tabi/utils"
+	claimstypes "github.com/tabilabs/tabi/x/claims/types"
+	inflationtypes "github.com/tabilabs/tabi/x/inflation/types"
+	"github.com/tabilabs/tabi/x/recovery/types"
 )
 
 func CreatePacket(amount, denom, sender, receiver, srcPort, srcChannel, dstPort, dstChannel string, seq, timeout uint64) channeltypes.Packet {

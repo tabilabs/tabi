@@ -31,9 +31,9 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/tabilabs/tabi/v1/x/incentives/client/cli"
-	"github.com/tabilabs/tabi/v1/x/incentives/keeper"
-	"github.com/tabilabs/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/x/incentives/client/cli"
+	"github.com/tabilabs/tabi/x/incentives/keeper"
+	"github.com/tabilabs/tabi/x/incentives/types"
 )
 
 // type check to ensure the interface is properly implemented

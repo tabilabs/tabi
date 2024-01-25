@@ -20,8 +20,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/vm"
-	"github.com/tabilabs/tabi/v1/x/evm/statedb"
-	"github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/x/evm/statedb"
+	"github.com/tabilabs/tabi/x/evm/types"
 )
 
 // EVMConfig creates the EVMConfig based on current state

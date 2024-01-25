@@ -61,13 +61,13 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/crypto/hd"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/crypto/hd"
 
-	"github.com/tabilabs/tabi/v1/encoding"
-	"github.com/tabilabs/tabi/v1/server/config"
-	tabitypes "github.com/tabilabs/tabi/v1/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/encoding"
+	"github.com/tabilabs/tabi/server/config"
+	tabitypes "github.com/tabilabs/tabi/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 )
 
 // package-wide network lock to only allow one test network at a time

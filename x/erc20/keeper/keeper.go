@@ -21,7 +21,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/tabilabs/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/x/erc20/types"
 )
 
 // Keeper of this module maintains collections of erc20.

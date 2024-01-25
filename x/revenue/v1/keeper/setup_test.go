@@ -12,11 +12,11 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/tabilabs/tabi/v1/app"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	evm "github.com/tabilabs/tabi/v1/x/evm/types"
-	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
-	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/app"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	evm "github.com/tabilabs/tabi/x/evm/types"
+	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
+	"github.com/tabilabs/tabi/x/revenue/v1/types"
 
 	"github.com/stretchr/testify/suite"
 )

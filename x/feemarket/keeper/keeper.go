@@ -21,7 +21,7 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/tabilabs/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/x/feemarket/types"
 )
 
 // KeyPrefixBaseFeeV1 TODO: Temporary will be removed with params refactor PR

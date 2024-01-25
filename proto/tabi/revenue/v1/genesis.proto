@@ -4,7 +4,7 @@ package tabi.revenue.v1;
 import "tabi/revenue/v1/revenue.proto";
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/tabilabs/tabi/v1/x/revenue/v1/types";
+option go_package = "github.com/tabilabs/tabi/x/revenue/v1/types";
 
 // GenesisState defines the module's genesis state.
 message GenesisState {

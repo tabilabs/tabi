@@ -3,7 +3,7 @@ package keeper_test
 import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/tabilabs/tabi/v1/x/inflation/types"
+	"github.com/tabilabs/tabi/x/inflation/types"
 )
 
 func (suite *KeeperTestSuite) TestUpdateParams() {

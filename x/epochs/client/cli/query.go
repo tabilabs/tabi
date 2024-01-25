@@ -22,7 +22,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 
-	"github.com/tabilabs/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/x/epochs/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module

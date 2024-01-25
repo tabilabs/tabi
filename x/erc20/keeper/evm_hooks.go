@@ -21,10 +21,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 
-	"github.com/tabilabs/tabi/v1/contracts"
-	"github.com/tabilabs/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/contracts"
+	"github.com/tabilabs/tabi/x/erc20/types"
 )
 
 var _ evmtypes.EvmHooks = Hooks{}

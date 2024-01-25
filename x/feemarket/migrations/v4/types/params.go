@@ -15,7 +15,7 @@ package types
 import (
 	"fmt"
 
-	"github.com/tabilabs/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/x/feemarket/types"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"

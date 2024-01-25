@@ -24,7 +24,7 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v6/testing"
 	ibchelpers "github.com/cosmos/ibc-go/v6/testing/simapp/helpers"
 	"github.com/stretchr/testify/require"
-	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/app"
 )
 
 const DefaultFeeAmt = int64(150_000_000_000_000_000) // 0.15 TABI

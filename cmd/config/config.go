@@ -16,7 +16,7 @@ package config
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/types"
 )
 
 const (

@@ -5,7 +5,7 @@ import "ethermint/feemarket/v1/feemarket.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
-option go_package = "github.com/tabilabs/tabi/v1/x/feemarket/types";
+option go_package = "github.com/tabilabs/tabi/x/feemarket/types";
 
 // Query defines the gRPC querier service.
 service Query {

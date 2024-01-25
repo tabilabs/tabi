@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/tabilabs/tabi/v1/x/inflation/types"
+	"github.com/tabilabs/tabi/x/inflation/types"
 )
 
 func (suite *KeeperTestSuite) TestParams() {

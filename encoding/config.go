@@ -19,7 +19,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 
-	enccodec "github.com/tabilabs/tabi/v1/encoding/codec"
+	enccodec "github.com/tabilabs/tabi/encoding/codec"
 )
 
 // MakeConfig creates an EncodingConfig for testing

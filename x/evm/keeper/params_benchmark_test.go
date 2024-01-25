@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/x/evm/types"
 )
 
 func BenchmarkSetParams(b *testing.B) {

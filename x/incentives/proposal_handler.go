@@ -23,8 +23,8 @@ import (
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/tabilabs/tabi/v1/x/incentives/keeper"
-	"github.com/tabilabs/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/x/incentives/keeper"
+	"github.com/tabilabs/tabi/x/incentives/types"
 )
 
 // NewIncentivesProposalHandler creates a governance handler to manage new

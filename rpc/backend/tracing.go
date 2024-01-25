@@ -20,8 +20,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
-	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	rpctypes "github.com/tabilabs/tabi/rpc/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 )
 

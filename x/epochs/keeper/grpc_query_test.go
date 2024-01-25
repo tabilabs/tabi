@@ -6,7 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/tabilabs/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/x/epochs/types"
 )
 
 func (suite *KeeperTestSuite) TestEpochInfo() {

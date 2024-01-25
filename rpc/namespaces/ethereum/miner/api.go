@@ -14,7 +14,7 @@ package miner
 
 import (
 	"github.com/cosmos/cosmos-sdk/server"
-	"github.com/tabilabs/tabi/v1/rpc/backend"
+	"github.com/tabilabs/tabi/rpc/backend"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"

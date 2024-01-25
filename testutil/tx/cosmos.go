@@ -24,8 +24,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/utils"
 )
 
 var (

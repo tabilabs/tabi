@@ -16,8 +16,8 @@ package testutil
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-	"github.com/tabilabs/tabi/v1/utils"
-	inflationtypes "github.com/tabilabs/tabi/v1/x/inflation/types"
+	"github.com/tabilabs/tabi/utils"
+	inflationtypes "github.com/tabilabs/tabi/x/inflation/types"
 )
 
 // FundAccount is a utility function that funds an account by minting and

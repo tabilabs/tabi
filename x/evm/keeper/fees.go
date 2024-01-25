@@ -25,7 +25,7 @@ import (
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 
-	"github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/x/evm/types"
 )
 
 // CheckSenderBalance validates that the tx cost value is positive and that the

@@ -29,10 +29,10 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/server/config"
-	"github.com/tabilabs/tabi/v1/utils"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/server/config"
+	"github.com/tabilabs/tabi/utils"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 )
 
 // PrepareEthTx creates an ethereum tx and signs it with the provided messages and private key.

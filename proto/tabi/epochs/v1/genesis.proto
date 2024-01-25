@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/tabilabs/tabi/v1/x/epochs/types";
+option go_package = "github.com/tabilabs/tabi/x/epochs/types";
 
 // EpochInfo defines the message interface containing the relevant informations about
 // an epoch.

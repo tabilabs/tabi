@@ -25,7 +25,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 
-	"github.com/tabilabs/tabi/v1/x/vesting/types"
+	"github.com/tabilabs/tabi/x/vesting/types"
 )
 
 // Transaction command flags

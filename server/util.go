@@ -21,7 +21,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/spf13/cobra"
-	"github.com/tabilabs/tabi/v1/server/config"
+	"github.com/tabilabs/tabi/server/config"
 	"golang.org/x/net/netutil"
 
 	sdkserver "github.com/cosmos/cosmos-sdk/server"

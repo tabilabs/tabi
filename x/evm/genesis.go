@@ -22,9 +22,9 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	tabitypes "github.com/tabilabs/tabi/v1/types"
-	"github.com/tabilabs/tabi/v1/x/evm/keeper"
-	"github.com/tabilabs/tabi/v1/x/evm/types"
+	tabitypes "github.com/tabilabs/tabi/types"
+	"github.com/tabilabs/tabi/x/evm/keeper"
+	"github.com/tabilabs/tabi/x/evm/types"
 )
 
 // InitGenesis initializes genesis state based on exported genesis

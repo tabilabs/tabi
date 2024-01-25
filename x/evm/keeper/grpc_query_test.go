@@ -15,10 +15,10 @@ import (
 	ethlogger "github.com/ethereum/go-ethereum/eth/tracers/logger"
 	ethparams "github.com/ethereum/go-ethereum/params"
 
-	"github.com/tabilabs/tabi/v1/server/config"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	"github.com/tabilabs/tabi/v1/x/evm/statedb"
-	"github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/server/config"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	"github.com/tabilabs/tabi/x/evm/statedb"
+	"github.com/tabilabs/tabi/x/evm/types"
 )
 
 // Not valid Ethereum address

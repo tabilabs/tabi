@@ -15,13 +15,13 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/cmd/config"
-	"github.com/tabilabs/tabi/v1/encoding"
-	"github.com/tabilabs/tabi/v1/ethereum/eip712"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	"github.com/tabilabs/tabi/v1/types"
-	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/cmd/config"
+	"github.com/tabilabs/tabi/encoding"
+	"github.com/tabilabs/tabi/ethereum/eip712"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	"github.com/tabilabs/tabi/types"
+	"github.com/tabilabs/tabi/utils"
 )
 
 // Testing Constants

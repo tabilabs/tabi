@@ -19,9 +19,9 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	vestexported "github.com/cosmos/cosmos-sdk/x/auth/vesting/exported"
-	tabitypes "github.com/tabilabs/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 
-	"github.com/tabilabs/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/x/claims/types"
 )
 
 // EndBlocker checks if the airdrop claiming period has ended in order to

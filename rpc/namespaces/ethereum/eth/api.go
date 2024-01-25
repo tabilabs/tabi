@@ -25,11 +25,11 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/tabilabs/tabi/v1/rpc/backend"
+	"github.com/tabilabs/tabi/rpc/backend"
 
-	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
-	"github.com/tabilabs/tabi/v1/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	rpctypes "github.com/tabilabs/tabi/rpc/types"
+	"github.com/tabilabs/tabi/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 )
 
 // The Ethereum API allows applications to connect to an Tabi node that is

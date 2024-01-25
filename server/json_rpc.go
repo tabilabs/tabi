@@ -24,10 +24,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/server/types"
 	ethlog "github.com/ethereum/go-ethereum/log"
 	ethrpc "github.com/ethereum/go-ethereum/rpc"
-	"github.com/tabilabs/tabi/v1/rpc"
+	"github.com/tabilabs/tabi/rpc"
 
-	"github.com/tabilabs/tabi/v1/server/config"
-	tabitypes "github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/server/config"
+	tabitypes "github.com/tabilabs/tabi/types"
 )
 
 // StartJSONRPC starts the JSON-RPC server

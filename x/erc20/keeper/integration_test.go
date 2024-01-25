@@ -15,12 +15,12 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/utils"
 
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/testutil"
-	"github.com/tabilabs/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/testutil"
+	"github.com/tabilabs/tabi/x/erc20/types"
 )
 
 var _ = Describe("Performing EVM transactions", Ordered, func() {

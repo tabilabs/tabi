@@ -25,9 +25,9 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/pkg/errors"
-	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
-	"github.com/tabilabs/tabi/v1/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	rpctypes "github.com/tabilabs/tabi/rpc/types"
+	"github.com/tabilabs/tabi/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 )
 

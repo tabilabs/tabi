@@ -21,7 +21,7 @@ import (
 	transfertypes "github.com/cosmos/ibc-go/v6/modules/apps/transfer/types"
 	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
 
-	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/utils"
 )
 
 // GetTransferSenderRecipient returns the sender and recipient sdk.AccAddresses

@@ -20,7 +20,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/tabilabs/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/x/erc20/types"
 )
 
 // RegisterCoin deploys an erc20 contract and creates the token pair for the

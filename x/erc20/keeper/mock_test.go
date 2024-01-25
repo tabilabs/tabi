@@ -9,9 +9,9 @@ import (
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/stretchr/testify/mock"
-	"github.com/tabilabs/tabi/v1/x/erc20/types"
-	"github.com/tabilabs/tabi/v1/x/evm/statedb"
-	evm "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/x/erc20/types"
+	"github.com/tabilabs/tabi/x/evm/statedb"
+	evm "github.com/tabilabs/tabi/x/evm/types"
 )
 
 var _ types.EVMKeeper = &MockEVMKeeper{}

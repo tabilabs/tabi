@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/tabilabs/tabi/v1/rpc/backend"
-	"github.com/tabilabs/tabi/v1/rpc/types"
+	"github.com/tabilabs/tabi/rpc/backend"
+	"github.com/tabilabs/tabi/rpc/types"
 
 	"github.com/pkg/errors"
 	"github.com/tendermint/tendermint/libs/log"

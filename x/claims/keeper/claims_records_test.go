@@ -3,7 +3,7 @@ package keeper_test
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/x/claims/types"
 )
 
 func (suite *KeeperTestSuite) TestsClaimsRecords() {

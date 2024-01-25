@@ -13,8 +13,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/suite"
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/x/feemarket/types"
 )
 
 type KeeperTestSuite struct {

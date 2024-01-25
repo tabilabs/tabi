@@ -18,10 +18,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/tabilabs/tabi/v1/rpc/backend"
+	"github.com/tabilabs/tabi/rpc/backend"
 
-	"github.com/tabilabs/tabi/v1/crypto/hd"
-	"github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/crypto/hd"
+	"github.com/tabilabs/tabi/types"
 
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -33,7 +33,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 )
 
 // PrivateAccountAPI is the personal_ prefixed set of APIs in the Web3 JSON-RPC spec.

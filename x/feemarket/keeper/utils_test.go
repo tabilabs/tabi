@@ -5,7 +5,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/utils"
 
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -21,14 +21,14 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabilabs/tabi/v1/encoding"
-	"github.com/tabilabs/tabi/v1/testutil"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	tabitypes "github.com/tabilabs/tabi/v1/types"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
-	"github.com/tabilabs/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/encoding"
+	"github.com/tabilabs/tabi/testutil"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	tabitypes "github.com/tabilabs/tabi/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
+	"github.com/tabilabs/tabi/x/feemarket/types"
 
 	"github.com/stretchr/testify/require"
 

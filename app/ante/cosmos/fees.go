@@ -22,7 +22,7 @@ import (
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	anteutils "github.com/tabilabs/tabi/v1/app/ante/utils"
+	anteutils "github.com/tabilabs/tabi/app/ante/utils"
 )
 
 // DeductFeeDecorator deducts fees from the first signer of the tx.

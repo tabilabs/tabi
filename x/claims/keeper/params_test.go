@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	"github.com/tabilabs/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/x/claims/types"
 )
 
 func (suite *KeeperTestSuite) TestParams() {

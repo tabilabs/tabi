@@ -29,9 +29,9 @@ import (
 	host "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	"github.com/cosmos/ibc-go/v6/modules/core/exported"
 
-	"github.com/tabilabs/tabi/v1/ibc"
-	"github.com/tabilabs/tabi/v1/utils"
-	"github.com/tabilabs/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/ibc"
+	"github.com/tabilabs/tabi/utils"
+	"github.com/tabilabs/tabi/x/recovery/types"
 )
 
 // OnRecvPacket performs an IBC receive callback. It returns the tokens that

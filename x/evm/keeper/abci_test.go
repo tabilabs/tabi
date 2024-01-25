@@ -1,7 +1,7 @@
 package keeper_test
 
 import (
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	"github.com/tendermint/tendermint/abci/types"
 )
 

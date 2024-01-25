@@ -16,7 +16,7 @@ package client
 import (
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 
-	"github.com/tabilabs/tabi/v1/x/incentives/client/cli"
+	"github.com/tabilabs/tabi/x/incentives/client/cli"
 )
 
 var (

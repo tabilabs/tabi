@@ -2,9 +2,9 @@ package backend
 
 import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tabilabs/tabi/v1/rpc/backend/mocks"
-	rpc "github.com/tabilabs/tabi/v1/rpc/types"
-	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/rpc/backend/mocks"
+	rpc "github.com/tabilabs/tabi/rpc/types"
+	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 )
 
 var _ feemarkettypes.QueryClient = &mocks.FeeMarketQueryClient{}

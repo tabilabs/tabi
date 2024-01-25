@@ -23,7 +23,7 @@ import (
 	txTypes "github.com/cosmos/cosmos-sdk/types/tx"
 
 	apitypes "github.com/ethereum/go-ethereum/signer/core/apitypes"
-	tabi "github.com/tabilabs/tabi/v1/types"
+	tabi "github.com/tabilabs/tabi/types"
 )
 
 type aminoMessage struct {

@@ -29,7 +29,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
-	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/utils"
 )
 
 // FlagGenesisTime defines the genesis time in string format

@@ -17,7 +17,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/tabilabs/tabi/v1/rpc/types"
+	"github.com/tabilabs/tabi/rpc/types"
 )
 
 // PublicAPI offers and API for the transaction pool. It only operates on data that is non-confidential.

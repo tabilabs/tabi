@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 
 import "tabi/inflation/v1/inflation.proto";
 
-option go_package = "github.com/tabilabs/tabi/v1/x/inflation/types";
+option go_package = "github.com/tabilabs/tabi/x/inflation/types";
 
 // GenesisState defines the inflation module's genesis state.
 message GenesisState {

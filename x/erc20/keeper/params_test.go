@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"reflect"
 
-	"github.com/tabilabs/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/x/erc20/types"
 )
 
 func (suite *KeeperTestSuite) TestParams() {

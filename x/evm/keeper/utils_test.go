@@ -12,10 +12,10 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/stretchr/testify/require"
-	"github.com/tabilabs/tabi/v1/server/config"
-	"github.com/tabilabs/tabi/v1/testutil"
-	"github.com/tabilabs/tabi/v1/x/evm/statedb"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/server/config"
+	"github.com/tabilabs/tabi/testutil"
+	"github.com/tabilabs/tabi/x/evm/statedb"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 )
 
 func (suite *KeeperTestSuite) EvmDenom() string {

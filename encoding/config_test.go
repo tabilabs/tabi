@@ -8,10 +8,10 @@ import (
 
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/encoding"
-	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
-	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/encoding"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 )
 
 func TestTxEncoding(t *testing.T) {

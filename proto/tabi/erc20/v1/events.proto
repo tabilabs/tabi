@@ -1,7 +1,7 @@
 syntax = "proto3";
 package tabi.erc20.v1;
 
-option go_package = "github.com/tabilabs/tabi/v1/x/erc20/types";
+option go_package = "github.com/tabilabs/tabi/x/erc20/types";
 
 // EventRegisterPair is an event emitted when a coin is registered.
 message EventRegisterPair {

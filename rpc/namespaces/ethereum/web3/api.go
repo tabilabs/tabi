@@ -13,7 +13,7 @@
 package web3
 
 import (
-	"github.com/tabilabs/tabi/v1/version"
+	"github.com/tabilabs/tabi/version"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"

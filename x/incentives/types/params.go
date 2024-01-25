@@ -18,7 +18,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	epochstypes "github.com/tabilabs/tabi/v1/x/epochs/types"
+	epochstypes "github.com/tabilabs/tabi/x/epochs/types"
 )
 
 // ParamsKey params store key

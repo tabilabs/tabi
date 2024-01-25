@@ -33,9 +33,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 
-	"github.com/tabilabs/tabi/v1/x/epochs/client/cli"
-	"github.com/tabilabs/tabi/v1/x/epochs/keeper"
-	"github.com/tabilabs/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/x/epochs/client/cli"
+	"github.com/tabilabs/tabi/x/epochs/keeper"
+	"github.com/tabilabs/tabi/x/epochs/types"
 )
 
 var (

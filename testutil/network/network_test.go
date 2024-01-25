@@ -11,10 +11,10 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/tabilabs/tabi/v1/server/config"
-	"github.com/tabilabs/tabi/v1/testutil/network"
+	"github.com/tabilabs/tabi/server/config"
+	"github.com/tabilabs/tabi/testutil/network"
 
-	tabinetwork "github.com/tabilabs/tabi/v1/testutil/network"
+	tabinetwork "github.com/tabilabs/tabi/testutil/network"
 )
 
 type IntegrationTestSuite struct {

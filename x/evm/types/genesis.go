@@ -15,7 +15,7 @@ package types
 import (
 	"fmt"
 
-	"github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/types"
 )
 
 // Validate performs a basic validation of a GenesisAccount fields.

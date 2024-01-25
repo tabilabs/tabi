@@ -15,7 +15,7 @@ package ibctesting
 
 import (
 	"encoding/json"
-	tabiapp "github.com/tabilabs/tabi/v1/app"
+	tabiapp "github.com/tabilabs/tabi/app"
 	"testing"
 	"time"
 
@@ -33,8 +33,8 @@ import (
 
 	ibcgotesting "github.com/cosmos/ibc-go/v6/testing"
 
-	"github.com/tabilabs/tabi/v1/types"
-	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/types"
+	"github.com/tabilabs/tabi/utils"
 )
 
 var DefaultTestingAppInit func() (ibcgotesting.TestingApp, map[string]json.RawMessage) = tabiapp.SetupTestingApp

@@ -22,8 +22,8 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/tabilabs/tabi/v1/app"
-	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
 )
 
 // SubmitProposal delivers a submit proposal tx for a given gov content.

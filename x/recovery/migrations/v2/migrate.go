@@ -18,8 +18,8 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	v2types "github.com/tabilabs/tabi/v1/x/recovery/migrations/v2/types"
-	"github.com/tabilabs/tabi/v1/x/recovery/types"
+	v2types "github.com/tabilabs/tabi/x/recovery/migrations/v2/types"
+	"github.com/tabilabs/tabi/x/recovery/types"
 )
 
 // MigrateStore migrates the x/recovery module state from the consensus version 1 to
