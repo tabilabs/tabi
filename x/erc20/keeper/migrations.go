@@ -16,8 +16,8 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	v3 "github.com/tabi/tabi/v1/x/erc20/migrations/v3"
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	v3 "github.com/tabilabs/tabi/v1/x/erc20/migrations/v3"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 var _ module.MigrationHandler = Migrator{}.Migrate2to3

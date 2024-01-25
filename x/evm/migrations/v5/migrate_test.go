@@ -19,11 +19,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/encoding"
-	v5 "github.com/tabi/tabi/v1/x/evm/migrations/v5"
-	v5types "github.com/tabi/tabi/v1/x/evm/migrations/v5/types"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/encoding"
+	v5 "github.com/tabilabs/tabi/v1/x/evm/migrations/v5"
+	v5types "github.com/tabilabs/tabi/v1/x/evm/migrations/v5/types"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 func TestMigrate(t *testing.T) {

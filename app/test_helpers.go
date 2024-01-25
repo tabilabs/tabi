@@ -34,11 +34,11 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/tabi/tabi/v1/encoding"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/v1/encoding"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 
-	"github.com/tabi/tabi/v1/cmd/config"
-	"github.com/tabi/tabi/v1/utils"
+	"github.com/tabilabs/tabi/v1/cmd/config"
+	"github.com/tabilabs/tabi/v1/utils"
 )
 
 func init() {

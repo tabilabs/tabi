@@ -4,7 +4,7 @@ import (
 	_ "embed" // embed compiled smart contract
 	"encoding/json"
 
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 var (

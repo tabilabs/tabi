@@ -17,7 +17,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/core"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 var _ types.EvmHooks = MultiEvmHooks{}

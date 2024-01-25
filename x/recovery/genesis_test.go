@@ -12,13 +12,13 @@ import (
 	tmversion "github.com/tendermint/tendermint/proto/tendermint/version"
 	"github.com/tendermint/tendermint/version"
 
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/utils"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/utils"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/x/recovery"
-	"github.com/tabi/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/x/recovery"
+	"github.com/tabilabs/tabi/v1/x/recovery/types"
 )
 
 type GenesisTestSuite struct {

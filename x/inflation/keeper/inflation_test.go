@@ -6,9 +6,9 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	tabitypes "github.com/tabi/tabi/v1/types"
-	incentivestypes "github.com/tabi/tabi/v1/x/incentives/types"
-	"github.com/tabi/tabi/v1/x/inflation/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
+	incentivestypes "github.com/tabilabs/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/v1/x/inflation/types"
 )
 
 func (suite *KeeperTestSuite) TestMintAndAllocateInflation() {

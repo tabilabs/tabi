@@ -14,7 +14,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 // GetParams returns the total set of evm parameters.

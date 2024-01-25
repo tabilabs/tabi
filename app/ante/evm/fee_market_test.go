@@ -8,12 +8,12 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/tabi/tabi/v1/app/ante/evm"
-	"github.com/tabi/tabi/v1/testutil"
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/types"
-	"github.com/tabi/tabi/v1/utils"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/app/ante/evm"
+	"github.com/tabilabs/tabi/v1/testutil"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/utils"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 func (suite *AnteTestSuite) TestGasWantedDecorator() {

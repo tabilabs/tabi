@@ -39,11 +39,11 @@ import (
 	rpcclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
 	tmtypes "github.com/tendermint/tendermint/types"
 
-	"github.com/tabi/tabi/v1/rpc/ethereum/pubsub"
-	rpcfilters "github.com/tabi/tabi/v1/rpc/namespaces/ethereum/eth/filters"
-	"github.com/tabi/tabi/v1/rpc/types"
-	"github.com/tabi/tabi/v1/server/config"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/rpc/ethereum/pubsub"
+	rpcfilters "github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/eth/filters"
+	"github.com/tabilabs/tabi/v1/rpc/types"
+	"github.com/tabilabs/tabi/v1/server/config"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 type WebsocketsServer interface {

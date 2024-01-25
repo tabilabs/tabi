@@ -26,11 +26,11 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/tabi/tabi/v1/server/config"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/server/config"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 
-	"github.com/tabi/tabi/v1/contracts"
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/contracts"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 // DeployERC20Contract creates and deploys an ERC20 contract on the EVM with the

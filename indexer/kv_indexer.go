@@ -21,14 +21,14 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	"github.com/ethereum/go-ethereum/common"
-	rpctypes "github.com/tabi/tabi/v1/rpc/types"
+	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	tabitypes "github.com/tabi/tabi/v1/types"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 const (

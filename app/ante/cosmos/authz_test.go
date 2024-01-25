@@ -15,10 +15,10 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	cosmosante "github.com/tabi/tabi/v1/app/ante/cosmos"
-	testutil "github.com/tabi/tabi/v1/testutil"
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	cosmosante "github.com/tabilabs/tabi/v1/app/ante/cosmos"
+	testutil "github.com/tabilabs/tabi/v1/testutil"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 func TestAuthzLimiterDecorator(t *testing.T) {

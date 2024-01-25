@@ -22,8 +22,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 )
 
 // QueryClient defines a gRPC Client used for:

@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"reflect"
 
-	"github.com/tabi/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/v1/x/feemarket/types"
 )
 
 func (suite *KeeperTestSuite) TestSetGetParams() {

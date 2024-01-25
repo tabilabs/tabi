@@ -10,8 +10,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/x/revenue/v1/types"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
 )
 
 type MsgsTestSuite struct {

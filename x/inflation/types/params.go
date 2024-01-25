@@ -19,7 +19,7 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	evm "github.com/tabi/tabi/v1/x/evm/types"
+	evm "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 var ParamsKey = []byte("Params")

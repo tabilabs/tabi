@@ -6,8 +6,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/x/revenue/v1/types"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
 )
 
 func (suite *KeeperTestSuite) TestRevenues() {

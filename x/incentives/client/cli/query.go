@@ -22,7 +22,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 
-	"github.com/tabi/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/v1/x/incentives/types"
 )
 
 // GetQueryCmd returns the parent command for all incentives CLI query commands.

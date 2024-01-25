@@ -9,10 +9,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 
-	evm "github.com/tabi/tabi/v1/x/evm/types"
+	evm "github.com/tabilabs/tabi/v1/x/evm/types"
 
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/x/epochs/types"
 )
 
 type KeeperTestSuite struct {

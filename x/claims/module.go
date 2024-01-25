@@ -30,9 +30,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 
-	"github.com/tabi/tabi/v1/x/claims/client/cli"
-	"github.com/tabi/tabi/v1/x/claims/keeper"
-	"github.com/tabi/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/v1/x/claims/client/cli"
+	"github.com/tabilabs/tabi/v1/x/claims/keeper"
+	"github.com/tabilabs/tabi/v1/x/claims/types"
 )
 
 var (

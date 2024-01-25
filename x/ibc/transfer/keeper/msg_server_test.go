@@ -10,9 +10,9 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	"github.com/stretchr/testify/mock"
-	"github.com/tabi/tabi/v1/testutil"
-	erc20types "github.com/tabi/tabi/v1/x/erc20/types"
-	"github.com/tabi/tabi/v1/x/ibc/transfer/keeper"
+	"github.com/tabilabs/tabi/v1/testutil"
+	erc20types "github.com/tabilabs/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/x/ibc/transfer/keeper"
 )
 
 func (suite *KeeperTestSuite) TestTransfer() {

@@ -19,7 +19,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabi/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/v1/x/feemarket/types"
 )
 
 var _ types.QueryServer = Keeper{}

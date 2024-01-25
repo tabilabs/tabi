@@ -22,7 +22,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tabi/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/v1/x/epochs/types"
 )
 
 var _ types.QueryServer = Keeper{}

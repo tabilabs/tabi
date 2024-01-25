@@ -7,10 +7,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	evmante "github.com/tabi/tabi/v1/app/ante/evm"
-	"github.com/tabi/tabi/v1/testutil"
-	testutiltx "github.com/tabi/tabi/v1/testutil/tx"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	evmante "github.com/tabilabs/tabi/v1/app/ante/evm"
+	"github.com/tabilabs/tabi/v1/testutil"
+	testutiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 var execTypes = []struct {

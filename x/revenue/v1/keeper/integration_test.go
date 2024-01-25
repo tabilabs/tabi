@@ -11,11 +11,11 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabi/tabi/v1/testutil"
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
-	"github.com/tabi/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/testutil"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 )

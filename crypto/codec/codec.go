@@ -16,7 +16,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
 )
 
 // RegisterInterfaces register the Tabi key concrete types.

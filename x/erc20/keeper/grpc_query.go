@@ -22,9 +22,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	tabitypes "github.com/tabi/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
 
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 var _ types.QueryServer = Keeper{}

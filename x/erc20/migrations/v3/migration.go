@@ -16,8 +16,8 @@ package v3
 import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	v3types "github.com/tabi/tabi/v1/x/erc20/migrations/v3/types"
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	v3types "github.com/tabilabs/tabi/v1/x/erc20/migrations/v3/types"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 var isTrue = []byte{0x01}

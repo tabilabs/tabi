@@ -28,9 +28,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	tabitypes "github.com/tabi/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
 
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 // NewTxCmd returns a root CLI command handler for erc20 transaction commands

@@ -3,8 +3,8 @@ package types_test
 import (
 	"testing"
 
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/x/incentives/types"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/x/incentives/types"
 
 	"github.com/stretchr/testify/require"
 )

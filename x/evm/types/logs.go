@@ -19,7 +19,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	tabitypes "github.com/tabi/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
 )
 
 // NewTransactionLogs creates a new NewTransactionLogs instance.

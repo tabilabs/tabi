@@ -8,7 +8,7 @@ import "tabi/claims/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
-option go_package = "github.com/tabi/tabi/v1/x/claims/types";
+option go_package = "github.com/tabilabs/tabi/v1/x/claims/types";
 
 // Query defines the gRPC querier service.
 service Query {

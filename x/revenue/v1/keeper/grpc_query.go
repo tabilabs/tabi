@@ -24,9 +24,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/ethereum/go-ethereum/common"
-	tabitypes "github.com/tabi/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
 
-	"github.com/tabi/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
 )
 
 var _ types.QueryServer = Keeper{}

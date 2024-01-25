@@ -11,12 +11,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabi/tabi/v1/encoding"
-	"github.com/tabi/tabi/v1/testutil"
-	"github.com/tabi/tabi/v1/utils"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/encoding"
+	"github.com/tabilabs/tabi/v1/testutil"
+	"github.com/tabilabs/tabi/v1/utils"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 )
 
 var s *AnteTestSuite

@@ -20,7 +20,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 
-	"github.com/tabi/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/v1/x/recovery/types"
 )
 
 // GetQueryCmd returns the parent command for all recovery CLI query commands.

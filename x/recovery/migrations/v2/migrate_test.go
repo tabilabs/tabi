@@ -9,11 +9,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/encoding"
-	v2 "github.com/tabi/tabi/v1/x/recovery/migrations/v2"
-	v2types "github.com/tabi/tabi/v1/x/recovery/migrations/v2/types"
-	"github.com/tabi/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/encoding"
+	v2 "github.com/tabilabs/tabi/v1/x/recovery/migrations/v2"
+	v2types "github.com/tabilabs/tabi/v1/x/recovery/migrations/v2/types"
+	"github.com/tabilabs/tabi/v1/x/recovery/types"
 )
 
 type mockSubspace struct {

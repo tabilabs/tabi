@@ -31,10 +31,10 @@ import (
 	ibcgotesting "github.com/cosmos/ibc-go/v6/testing"
 	"github.com/cosmos/ibc-go/v6/testing/mock"
 
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	tabitypes "github.com/tabi/tabi/v1/types"
-	"github.com/tabi/tabi/v1/utils"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/utils"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 // ChainIDPrefix defines the default chain ID prefix for Tabi test chains

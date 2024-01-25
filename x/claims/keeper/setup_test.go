@@ -12,9 +12,9 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/suite"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/x/claims/types"
-	evm "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/x/claims/types"
+	evm "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 var s *KeeperTestSuite

@@ -20,7 +20,7 @@ import (
 	cosmoskr "github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/types"
 )
 
 // PreprocessLedgerTx reformats Ledger-signed Cosmos transactions to match the fork expected by Ethermint

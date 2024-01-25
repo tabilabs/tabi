@@ -24,14 +24,14 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	ibcante "github.com/cosmos/ibc-go/v6/modules/core/ante"
 	ibckeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
-	anteutils "github.com/tabi/tabi/v1/app/ante/utils"
+	anteutils "github.com/tabilabs/tabi/v1/app/ante/utils"
 
-	cosmosante "github.com/tabi/tabi/v1/app/ante/cosmos"
-	evmante "github.com/tabi/tabi/v1/app/ante/evm"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	cosmosante "github.com/tabilabs/tabi/v1/app/ante/cosmos"
+	evmante "github.com/tabilabs/tabi/v1/app/ante/evm"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 
 	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	vestingtypes "github.com/tabi/tabi/v1/x/vesting/types"
+	vestingtypes "github.com/tabilabs/tabi/v1/x/vesting/types"
 )
 
 // HandlerOptions defines the list of module keepers required to run the Tabi

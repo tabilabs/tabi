@@ -10,12 +10,12 @@ import (
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"github.com/tabi/tabi/v1/testutil"
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	tabitypes "github.com/tabi/tabi/v1/types"
-	evm "github.com/tabi/tabi/v1/x/evm/types"
-	"github.com/tabi/tabi/v1/x/incentives/types"
-	vestingtypes "github.com/tabi/tabi/v1/x/vesting/types"
+	"github.com/tabilabs/tabi/v1/testutil"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
+	evm "github.com/tabilabs/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/x/incentives/types"
+	vestingtypes "github.com/tabilabs/tabi/v1/x/vesting/types"
 )
 
 func (suite *KeeperTestSuite) TestEvmHooksStoreTxGasUsed() {

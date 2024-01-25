@@ -20,7 +20,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabi/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/v1/x/epochs/types"
 )
 
 // BeginBlocker of epochs module

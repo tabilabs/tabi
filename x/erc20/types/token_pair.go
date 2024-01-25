@@ -16,7 +16,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
-	tabitypes "github.com/tabi/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
 	"github.com/tendermint/tendermint/crypto/tmhash"
 )
 

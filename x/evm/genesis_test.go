@@ -6,11 +6,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	tabitypes "github.com/tabi/tabi/v1/types"
-	"github.com/tabi/tabi/v1/x/evm"
-	"github.com/tabi/tabi/v1/x/evm/statedb"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/x/evm"
+	"github.com/tabilabs/tabi/v1/x/evm/statedb"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 func (suite *EvmTestSuite) TestInitGenesis() {

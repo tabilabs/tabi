@@ -25,9 +25,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	"github.com/tabi/tabi/v1/app"
-	testutiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/utils"
+	"github.com/tabilabs/tabi/v1/app"
+	testutiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/utils"
 )
 
 // PrepareAccountsForDelegationRewards prepares the test suite for testing to withdraw delegation rewards.

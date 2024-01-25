@@ -7,11 +7,11 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/encoding"
-	inflationkeeper "github.com/tabi/tabi/v1/x/inflation/keeper"
-	v2types "github.com/tabi/tabi/v1/x/inflation/migrations/v2/types"
-	"github.com/tabi/tabi/v1/x/inflation/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/encoding"
+	inflationkeeper "github.com/tabilabs/tabi/v1/x/inflation/keeper"
+	v2types "github.com/tabilabs/tabi/v1/x/inflation/migrations/v2/types"
+	"github.com/tabilabs/tabi/v1/x/inflation/types"
 )
 
 type mockSubspace struct {

@@ -31,9 +31,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/tabi/tabi/v1/x/evm/client/cli"
-	"github.com/tabi/tabi/v1/x/evm/keeper"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/x/evm/client/cli"
+	"github.com/tabilabs/tabi/v1/x/evm/keeper"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 var (

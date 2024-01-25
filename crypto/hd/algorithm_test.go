@@ -15,9 +15,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 
-	cryptocodec "github.com/tabi/tabi/v1/crypto/codec"
-	enccodec "github.com/tabi/tabi/v1/encoding/codec"
-	tabitypes "github.com/tabi/tabi/v1/types"
+	cryptocodec "github.com/tabilabs/tabi/v1/crypto/codec"
+	enccodec "github.com/tabilabs/tabi/v1/encoding/codec"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
 )
 
 var TestCodec amino.Codec

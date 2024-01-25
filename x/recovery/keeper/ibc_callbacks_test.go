@@ -9,9 +9,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/stretchr/testify/mock"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabi/tabi/v1/testutil"
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/testutil"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
 
 	transfertypes "github.com/cosmos/ibc-go/v6/modules/apps/transfer/types"
 	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
@@ -19,11 +19,11 @@ import (
 	ibcgotesting "github.com/cosmos/ibc-go/v6/testing"
 	ibcmock "github.com/cosmos/ibc-go/v6/testing/mock"
 
-	claimstypes "github.com/tabi/tabi/v1/x/claims/types"
-	incentivestypes "github.com/tabi/tabi/v1/x/incentives/types"
-	"github.com/tabi/tabi/v1/x/recovery/keeper"
-	"github.com/tabi/tabi/v1/x/recovery/types"
-	vestingtypes "github.com/tabi/tabi/v1/x/vesting/types"
+	claimstypes "github.com/tabilabs/tabi/v1/x/claims/types"
+	incentivestypes "github.com/tabilabs/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/v1/x/recovery/keeper"
+	"github.com/tabilabs/tabi/v1/x/recovery/types"
+	vestingtypes "github.com/tabilabs/tabi/v1/x/vesting/types"
 )
 
 func (suite *KeeperTestSuite) TestOnRecvPacket() {

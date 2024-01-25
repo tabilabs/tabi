@@ -14,12 +14,12 @@ package cli
 
 import (
 	"github.com/spf13/cobra"
-	rpctypes "github.com/tabi/tabi/v1/rpc/types"
+	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 
-	"github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 // GetQueryCmd returns the parent command for all x/bank CLi query commands.

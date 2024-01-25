@@ -12,7 +12,7 @@ import (
 
 	transfertypes "github.com/cosmos/ibc-go/v6/modules/apps/transfer/types"
 
-	"github.com/tabi/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/v1/x/recovery/types"
 )
 
 var _ types.TransferKeeper = &MockTransferKeeper{}

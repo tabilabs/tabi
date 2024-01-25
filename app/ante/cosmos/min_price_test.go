@@ -4,10 +4,10 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	cosmosante "github.com/tabi/tabi/v1/app/ante/cosmos"
-	"github.com/tabi/tabi/v1/testutil"
-	testutiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/utils"
+	cosmosante "github.com/tabilabs/tabi/v1/app/ante/cosmos"
+	"github.com/tabilabs/tabi/v1/testutil"
+	testutiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/utils"
 )
 
 var execTypes = []struct {

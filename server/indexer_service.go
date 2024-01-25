@@ -16,7 +16,7 @@ import (
 	"context"
 	"time"
 
-	tabitypes "github.com/tabi/tabi/v1/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
 	"github.com/tendermint/tendermint/libs/service"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 	"github.com/tendermint/tendermint/types"

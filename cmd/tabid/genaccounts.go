@@ -33,13 +33,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
-	"github.com/tabi/tabi/v1/types"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 
-	tabikr "github.com/tabi/tabi/v1/crypto/keyring"
+	tabikr "github.com/tabilabs/tabi/v1/crypto/keyring"
 
-	vestingcli "github.com/tabi/tabi/v1/x/vesting/client/cli"
-	vestingtypes "github.com/tabi/tabi/v1/x/vesting/types"
+	vestingcli "github.com/tabilabs/tabi/v1/x/vesting/client/cli"
+	vestingtypes "github.com/tabilabs/tabi/v1/x/vesting/types"
 )
 
 const (

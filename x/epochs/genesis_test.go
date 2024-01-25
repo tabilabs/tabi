@@ -5,12 +5,12 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	simapp "github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/x/epochs"
-	"github.com/tabi/tabi/v1/x/epochs/types"
+	simapp "github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/x/epochs"
+	"github.com/tabilabs/tabi/v1/x/epochs/types"
 )
 
 func TestEpochsExportGenesis(t *testing.T) {

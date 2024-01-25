@@ -6,7 +6,7 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y $PACKAGES
 
 # Set working directory for the build
-WORKDIR /go/src/github.com/tabi/tabi
+WORKDIR /go/src/github.com/tabilabs/tabi
 
 # Add source files
 COPY . .
@@ -22,8 +22,8 @@ WORKDIR /
 RUN apt-get update
 
 # Copy over binaries from the build-env
-COPY --from=build-env /go/src/github.com/tabi/tabi/build/tabid /
-COPY --from=build-env /go/src/github.com/tabi/tabi/scripts/start-docker.sh /
+COPY --from=build-env /go/src/github.com/tabilabs/tabi/build/tabid /
+COPY --from=build-env /go/src/github.com/tabilabs/tabi/scripts/start-docker.sh /
 
 EXPOSE 26656 26657 1317 9090 8545 8546
 

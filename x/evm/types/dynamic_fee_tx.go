@@ -22,7 +22,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/types"
 )
 
 func NewDynamicFeeTx(tx *ethtypes.Transaction) (*DynamicFeeTx, error) {

@@ -16,7 +16,7 @@ package types
 import (
 	"fmt"
 
-	"github.com/tabi/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"

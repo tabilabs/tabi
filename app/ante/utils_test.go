@@ -6,8 +6,8 @@ import (
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/tabi/tabi/v1/app/ante"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/app/ante"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
 )
 
 func generatePubKeysAndSignatures(n int, msg []byte, _ bool) (pubkeys []cryptotypes.PubKey, signatures [][]byte) {

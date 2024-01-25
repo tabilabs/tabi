@@ -18,8 +18,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/std"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	cryptocodec "github.com/tabi/tabi/v1/crypto/codec"
-	"github.com/tabi/tabi/v1/types"
+	cryptocodec "github.com/tabilabs/tabi/v1/crypto/codec"
+	"github.com/tabilabs/tabi/v1/types"
 )
 
 // RegisterLegacyAminoCodec registers Interfaces from types, crypto, and SDK std.

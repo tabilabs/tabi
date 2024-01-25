@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"time"
 
-	"github.com/tabi/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/v1/x/epochs/types"
 )
 
 func (suite *KeeperTestSuite) TestEpochLifeCycle() {

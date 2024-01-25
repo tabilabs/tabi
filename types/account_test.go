@@ -12,10 +12,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	cryptocodec "github.com/tabi/tabi/v1/crypto/codec"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	encodingcodec "github.com/tabi/tabi/v1/encoding/codec"
-	"github.com/tabi/tabi/v1/types"
+	cryptocodec "github.com/tabilabs/tabi/v1/crypto/codec"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	encodingcodec "github.com/tabilabs/tabi/v1/encoding/codec"
+	"github.com/tabilabs/tabi/v1/types"
 )
 
 func init() {

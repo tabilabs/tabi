@@ -16,7 +16,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	tabi "github.com/tabi/tabi/v1/types"
+	tabi "github.com/tabilabs/tabi/v1/types"
 	"strconv"
 	"strings"
 
@@ -28,7 +28,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/tabi/tabi/v1/ethereum/eip712"
+	"github.com/tabilabs/tabi/v1/ethereum/eip712"
 	"github.com/tendermint/tendermint/libs/bytes"
 )
 

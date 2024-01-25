@@ -19,7 +19,7 @@ import (
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/tabi/tabi/v1/x/incentives/types"
+	"github.com/tabilabs/tabi/v1/x/incentives/types"
 )
 
 // RegisterIncentive creates an incentive for a contract

@@ -17,7 +17,7 @@ import (
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/types"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
 )
 

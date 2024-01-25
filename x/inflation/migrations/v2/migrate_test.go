@@ -6,15 +6,15 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
-	v2 "github.com/tabi/tabi/v1/x/inflation/migrations/v2"
-	"github.com/tabi/tabi/v1/x/inflation/types"
+	v2 "github.com/tabilabs/tabi/v1/x/inflation/migrations/v2"
+	"github.com/tabilabs/tabi/v1/x/inflation/types"
 
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/encoding"
-	v2types "github.com/tabi/tabi/v1/x/inflation/migrations/v2/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/encoding"
+	v2types "github.com/tabilabs/tabi/v1/x/inflation/migrations/v2/types"
 )
 
 type mockSubspace struct {

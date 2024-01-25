@@ -21,8 +21,8 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v6/modules/core/exported"
 
-	"github.com/tabi/tabi/v1/ibc"
-	"github.com/tabi/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/v1/ibc"
+	"github.com/tabilabs/tabi/v1/x/claims/types"
 )
 
 // OnAcknowledgementPacket performs an IBC send callback. Once a user submits an

@@ -9,19 +9,19 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	ibctesting "github.com/tabi/tabi/v1/ibc/testing"
-	"github.com/tabi/tabi/v1/testutil"
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/utils"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	ibctesting "github.com/tabilabs/tabi/v1/ibc/testing"
+	"github.com/tabilabs/tabi/v1/testutil"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/utils"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibcgotesting "github.com/cosmos/ibc-go/v6/testing"
 
-	"github.com/tabi/tabi/v1/app"
-	claimstypes "github.com/tabi/tabi/v1/x/claims/types"
-	"github.com/tabi/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/v1/app"
+	claimstypes "github.com/tabilabs/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/v1/x/recovery/types"
 )
 
 var (

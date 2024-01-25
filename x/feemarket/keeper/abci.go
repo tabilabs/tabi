@@ -15,7 +15,7 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/tabi/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/v1/x/feemarket/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	sdkmath "cosmossdk.io/math"

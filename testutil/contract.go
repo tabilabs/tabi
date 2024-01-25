@@ -15,9 +15,9 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/testutil/tx"
-	evm "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/testutil/tx"
+	evm "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 // DeployContract deploys a contract with the provided private key,

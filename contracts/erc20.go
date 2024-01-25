@@ -18,9 +18,9 @@ import (
 	"encoding/json"
 
 	"github.com/ethereum/go-ethereum/common"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 var (

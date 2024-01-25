@@ -19,7 +19,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/tabi/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/v1/x/claims/types"
 )
 
 // ClaimCoinsForAction removes the claimable amount entry from a claims record

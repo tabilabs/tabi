@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tabi/tabi/v1/x/recovery/types"
+	"github.com/tabilabs/tabi/v1/x/recovery/types"
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )

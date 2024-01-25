@@ -3,8 +3,8 @@ package keeper_test
 import (
 	"fmt"
 
-	epochstypes "github.com/tabi/tabi/v1/x/epochs/types"
-	"github.com/tabi/tabi/v1/x/inflation/types"
+	epochstypes "github.com/tabilabs/tabi/v1/x/epochs/types"
+	"github.com/tabilabs/tabi/v1/x/inflation/types"
 )
 
 func (suite *KeeperTestSuite) TestSetGetEpochIdentifier() {

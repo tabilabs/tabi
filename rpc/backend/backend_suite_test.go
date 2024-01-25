@@ -18,15 +18,15 @@ import (
 	"github.com/stretchr/testify/suite"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/crypto/hd"
-	"github.com/tabi/tabi/v1/encoding"
-	"github.com/tabi/tabi/v1/indexer"
-	"github.com/tabi/tabi/v1/rpc/backend/mocks"
-	rpctypes "github.com/tabi/tabi/v1/rpc/types"
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/utils"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/crypto/hd"
+	"github.com/tabilabs/tabi/v1/encoding"
+	"github.com/tabilabs/tabi/v1/indexer"
+	"github.com/tabilabs/tabi/v1/rpc/backend/mocks"
+	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/utils"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 type BackendTestSuite struct {

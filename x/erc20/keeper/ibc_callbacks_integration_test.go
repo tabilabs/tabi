@@ -13,14 +13,14 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
 	"github.com/ethereum/go-ethereum/common"
 	. "github.com/onsi/ginkgo/v2"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/contracts"
-	ibctesting "github.com/tabi/tabi/v1/ibc/testing"
-	"github.com/tabi/tabi/v1/testutil"
-	teststypes "github.com/tabi/tabi/v1/types/tests"
-	"github.com/tabi/tabi/v1/utils"
-	claimstypes "github.com/tabi/tabi/v1/x/claims/types"
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/contracts"
+	ibctesting "github.com/tabilabs/tabi/v1/ibc/testing"
+	"github.com/tabilabs/tabi/v1/testutil"
+	teststypes "github.com/tabilabs/tabi/v1/types/tests"
+	"github.com/tabilabs/tabi/v1/utils"
+	claimstypes "github.com/tabilabs/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 var _ = Describe("Convert receiving IBC to Erc20", Ordered, func() {

@@ -20,16 +20,16 @@ import (
 
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/tabi/tabi/v1/rpc/backend"
-	"github.com/tabi/tabi/v1/rpc/namespaces/ethereum/debug"
-	"github.com/tabi/tabi/v1/rpc/namespaces/ethereum/eth"
-	"github.com/tabi/tabi/v1/rpc/namespaces/ethereum/eth/filters"
-	"github.com/tabi/tabi/v1/rpc/namespaces/ethereum/miner"
-	"github.com/tabi/tabi/v1/rpc/namespaces/ethereum/net"
-	"github.com/tabi/tabi/v1/rpc/namespaces/ethereum/personal"
-	"github.com/tabi/tabi/v1/rpc/namespaces/ethereum/txpool"
-	"github.com/tabi/tabi/v1/rpc/namespaces/ethereum/web3"
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/rpc/backend"
+	"github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/debug"
+	"github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/eth"
+	"github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/eth/filters"
+	"github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/miner"
+	"github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/net"
+	"github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/personal"
+	"github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/txpool"
+	"github.com/tabilabs/tabi/v1/rpc/namespaces/ethereum/web3"
+	"github.com/tabilabs/tabi/v1/types"
 
 	rpcclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
 )

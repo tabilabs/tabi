@@ -10,10 +10,10 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rlp"
-	"github.com/tabi/tabi/v1/rpc/backend/mocks"
-	rpctypes "github.com/tabi/tabi/v1/rpc/types"
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/rpc/backend/mocks"
+	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 	"google.golang.org/grpc/metadata"
 )
 

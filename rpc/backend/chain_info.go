@@ -22,10 +22,10 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
-	rpctypes "github.com/tabi/tabi/v1/rpc/types"
-	"github.com/tabi/tabi/v1/types"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
+	"github.com/tabilabs/tabi/v1/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 	tmrpctypes "github.com/tendermint/tendermint/rpc/core/types"
 )
 

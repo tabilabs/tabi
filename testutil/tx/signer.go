@@ -23,7 +23,7 @@ import (
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
 )
 
 // NewAddrKey generates an Ethereum address and its corresponding private key.

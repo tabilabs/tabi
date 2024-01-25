@@ -12,12 +12,12 @@ import (
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabi/tabi/v1/testutil"
-	"github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/utils"
-	"github.com/tabi/tabi/v1/x/claims/types"
-	inflationtypes "github.com/tabi/tabi/v1/x/inflation/types"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/testutil"
+	"github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/v1/x/claims/types"
+	inflationtypes "github.com/tabilabs/tabi/v1/x/inflation/types"
 )
 
 var _ = Describe("Claiming", Ordered, func() {

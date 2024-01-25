@@ -23,11 +23,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
-	anteutils "github.com/tabi/tabi/v1/app/ante/utils"
-	"github.com/tabi/tabi/v1/types"
-	"github.com/tabi/tabi/v1/x/evm/keeper"
-	"github.com/tabi/tabi/v1/x/evm/statedb"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	anteutils "github.com/tabilabs/tabi/v1/app/ante/utils"
+	"github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/x/evm/keeper"
+	"github.com/tabilabs/tabi/v1/x/evm/statedb"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"

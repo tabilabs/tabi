@@ -24,8 +24,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	rpctypes "github.com/tabi/tabi/v1/rpc/types"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 // GetTxCmd returns the transaction commands for this module

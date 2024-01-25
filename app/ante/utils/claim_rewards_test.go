@@ -4,10 +4,10 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	anteutils "github.com/tabi/tabi/v1/app/ante/utils"
-	"github.com/tabi/tabi/v1/testutil"
-	testutiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/utils"
+	anteutils "github.com/tabilabs/tabi/v1/app/ante/utils"
+	"github.com/tabilabs/tabi/v1/testutil"
+	testutiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/utils"
 )
 
 // TestClaimStakingRewardsIfNecessary tests the ClaimStakingRewardsIfNecessary function

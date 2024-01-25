@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/types"
 )
 
 func BenchmarkEthSecp256k1Algo_Derive(b *testing.B) {

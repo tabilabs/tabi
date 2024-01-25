@@ -19,8 +19,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/types"
 
 	"github.com/evmos/evmos-ledger-go/ledger"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabi/tabi/v1/crypto/hd"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/crypto/hd"
 )
 
 // AppName defines the Ledger app used for signing. Tabi uses the Ethereum app

@@ -20,9 +20,9 @@ import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	tabitypes "github.com/tabi/tabi/v1/types"
-	"github.com/tabi/tabi/v1/x/evm/statedb"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/x/evm/statedb"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"

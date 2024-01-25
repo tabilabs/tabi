@@ -9,9 +9,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/spf13/viper"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	"github.com/tabi/tabi/v1/rpc/backend/mocks"
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/rpc/backend/mocks"
+	"github.com/tabilabs/tabi/v1/types"
 	tmrpcclient "github.com/tendermint/tendermint/rpc/client"
 	"google.golang.org/grpc/metadata"
 )

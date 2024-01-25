@@ -22,9 +22,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/params"
 
-	"github.com/tabi/tabi/v1/x/evm/statedb"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/v1/x/evm/statedb"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 )
 
 // EVMKeeper defines the expected keeper interface used on the AnteHandler

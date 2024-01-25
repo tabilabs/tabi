@@ -29,7 +29,7 @@ import (
 
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
 
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/types"
 )
 
 // BlockNumber represents decoding hex string to block values

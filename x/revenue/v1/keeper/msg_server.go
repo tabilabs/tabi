@@ -24,7 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/tabi/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
 )
 
 var _ types.MsgServer = &Keeper{}

@@ -36,9 +36,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/vm"
 	ethparams "github.com/ethereum/go-ethereum/params"
 
-	tabitypes "github.com/tabi/tabi/v1/types"
-	"github.com/tabi/tabi/v1/x/evm/statedb"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/x/evm/statedb"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 var _ types.QueryServer = Keeper{}

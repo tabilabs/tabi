@@ -18,8 +18,8 @@ import (
 
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	v3types "github.com/tabi/tabi/v1/x/claims/migrations/v3/types"
-	"github.com/tabi/tabi/v1/x/claims/types"
+	v3types "github.com/tabilabs/tabi/v1/x/claims/migrations/v3/types"
+	"github.com/tabilabs/tabi/v1/x/claims/types"
 )
 
 // MigrateStore migrates the x/claims module state from the consensus version 2 to

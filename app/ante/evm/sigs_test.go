@@ -3,9 +3,9 @@ package evm_test
 import (
 	"math/big"
 
-	utiltx "github.com/tabi/tabi/v1/testutil/tx"
-	"github.com/tabi/tabi/v1/x/evm/statedb"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	utiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	"github.com/tabilabs/tabi/v1/x/evm/statedb"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 func (suite *AnteTestSuite) TestSignatures() {

@@ -23,8 +23,8 @@ import (
 	"github.com/cosmos/ibc-go/v6/modules/core/exported"
 
 	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tabi/tabi/v1/ibc"
-	"github.com/tabi/tabi/v1/x/erc20/keeper"
+	"github.com/tabilabs/tabi/v1/ibc"
+	"github.com/tabilabs/tabi/v1/x/erc20/keeper"
 )
 
 var _ porttypes.IBCModule = &IBCMiddleware{}

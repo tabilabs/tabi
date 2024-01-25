@@ -16,7 +16,7 @@ package utils
 import (
 	"strings"
 
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
 
 	errorsmod "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"

@@ -6,7 +6,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 

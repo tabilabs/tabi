@@ -8,11 +8,11 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 
-	ethante "github.com/tabi/tabi/v1/app/ante/evm"
-	"github.com/tabi/tabi/v1/testutil"
-	testutiltx "github.com/tabi/tabi/v1/testutil/tx"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
-	vestingtypes "github.com/tabi/tabi/v1/x/vesting/types"
+	ethante "github.com/tabilabs/tabi/v1/app/ante/evm"
+	"github.com/tabilabs/tabi/v1/testutil"
+	testutiltx "github.com/tabilabs/tabi/v1/testutil/tx"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	vestingtypes "github.com/tabilabs/tabi/v1/x/vesting/types"
 )
 
 // global variables used for testing the eth vesting ante handler

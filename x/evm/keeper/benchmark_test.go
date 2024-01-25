@@ -12,8 +12,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	tabitypes "github.com/tabi/tabi/v1/types"
-	"github.com/tabi/tabi/v1/x/evm/types"
+	tabitypes "github.com/tabilabs/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 func SetupContract(b *testing.B) (*KeeperTestSuite, common.Address) {

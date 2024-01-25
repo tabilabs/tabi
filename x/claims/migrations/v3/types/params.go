@@ -17,8 +17,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tabi/tabi/v1/utils"
-	"github.com/tabi/tabi/v1/x/claims/types"
+	"github.com/tabilabs/tabi/v1/utils"
+	"github.com/tabilabs/tabi/v1/x/claims/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"

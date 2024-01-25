@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/tabi/tabi/v1/rpc/types"
+	"github.com/tabilabs/tabi/v1/rpc/types"
 
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -32,7 +32,7 @@ import (
 	"github.com/ethereum/go-ethereum/eth/filters"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 // FilterAPI gathers

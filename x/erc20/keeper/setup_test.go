@@ -15,10 +15,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/suite"
-	"github.com/tabi/tabi/v1/app"
-	ibctesting "github.com/tabi/tabi/v1/ibc/testing"
-	"github.com/tabi/tabi/v1/x/erc20/types"
-	evm "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/app"
+	ibctesting "github.com/tabilabs/tabi/v1/ibc/testing"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
+	evm "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 type KeeperTestSuite struct {

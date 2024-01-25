@@ -1,12 +1,12 @@
 package ante_test
 
 import (
-	ethante "github.com/tabi/tabi/v1/app/ante/evm"
-	"github.com/tabi/tabi/v1/encoding"
-	"github.com/tabi/tabi/v1/types"
+	ethante "github.com/tabilabs/tabi/v1/app/ante/evm"
+	"github.com/tabilabs/tabi/v1/encoding"
+	"github.com/tabilabs/tabi/v1/types"
 
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/app/ante"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/app/ante"
 )
 
 func (suite *AnteTestSuite) TestValidateHandlerOptions() {

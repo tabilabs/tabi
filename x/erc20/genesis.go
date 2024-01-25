@@ -19,8 +19,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 
-	"github.com/tabi/tabi/v1/x/erc20/keeper"
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/x/erc20/keeper"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 // InitGenesis import module genesis

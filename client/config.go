@@ -24,7 +24,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/types"
 )
 
 // InitConfig adds the chain-id, encoding and output flags to the persistent flag set.

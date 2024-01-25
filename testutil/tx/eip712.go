@@ -27,10 +27,10 @@ import (
 	"github.com/ethereum/go-ethereum/signer/core/apitypes"
 
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/tabi/tabi/v1/app"
-	cryptocodec "github.com/tabi/tabi/v1/crypto/codec"
-	"github.com/tabi/tabi/v1/ethereum/eip712"
-	"github.com/tabi/tabi/v1/types"
+	"github.com/tabilabs/tabi/v1/app"
+	cryptocodec "github.com/tabilabs/tabi/v1/crypto/codec"
+	"github.com/tabilabs/tabi/v1/ethereum/eip712"
+	"github.com/tabilabs/tabi/v1/types"
 )
 
 type EIP712TxArgs struct {

@@ -17,14 +17,14 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/x/evm/types"
 
 	"github.com/cosmos/cosmos-sdk/testutil"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/encoding"
-	v4 "github.com/tabi/tabi/v1/x/evm/migrations/v4"
-	v4types "github.com/tabi/tabi/v1/x/evm/migrations/v4/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/encoding"
+	v4 "github.com/tabilabs/tabi/v1/x/evm/migrations/v4"
+	v4types "github.com/tabilabs/tabi/v1/x/evm/migrations/v4/types"
 )
 
 type mockSubspace struct {

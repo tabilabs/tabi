@@ -15,14 +15,14 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/app/ante"
-	"github.com/tabi/tabi/v1/encoding"
-	"github.com/tabi/tabi/v1/ethereum/eip712"
-	"github.com/tabi/tabi/v1/testutil"
-	"github.com/tabi/tabi/v1/utils"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
-	feemarkettypes "github.com/tabi/tabi/v1/x/feemarket/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/app/ante"
+	"github.com/tabilabs/tabi/v1/encoding"
+	"github.com/tabilabs/tabi/v1/ethereum/eip712"
+	"github.com/tabilabs/tabi/v1/testutil"
+	"github.com/tabilabs/tabi/v1/utils"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
+	feemarkettypes "github.com/tabilabs/tabi/v1/x/feemarket/types"
 )
 
 type AnteTestSuite struct {

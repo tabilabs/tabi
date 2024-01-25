@@ -17,7 +17,7 @@ import (
 	"fmt"
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 var _ types.LegacyParams = &V3Params{}

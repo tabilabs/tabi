@@ -4,10 +4,10 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/tabi/tabi/v1/app"
-	"github.com/tabi/tabi/v1/testutil"
-	"github.com/tabi/tabi/v1/x/epochs/types"
-	evm "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/app"
+	"github.com/tabilabs/tabi/v1/testutil"
+	"github.com/tabilabs/tabi/v1/x/epochs/types"
+	evm "github.com/tabilabs/tabi/v1/x/evm/types"
 )
 
 // Test helpers

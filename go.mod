@@ -1,4 +1,4 @@
-module github.com/tabi/tabi/v1
+module github.com/tabilabs/tabi/v1
 
 go 1.20
 

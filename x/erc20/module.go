@@ -31,9 +31,9 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
-	"github.com/tabi/tabi/v1/x/erc20/client/cli"
-	"github.com/tabi/tabi/v1/x/erc20/keeper"
-	"github.com/tabi/tabi/v1/x/erc20/types"
+	"github.com/tabilabs/tabi/v1/x/erc20/client/cli"
+	"github.com/tabilabs/tabi/v1/x/erc20/keeper"
+	"github.com/tabilabs/tabi/v1/x/erc20/types"
 )
 
 // type check to ensure the interface is properly implemented

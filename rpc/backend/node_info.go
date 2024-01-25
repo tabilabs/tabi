@@ -30,11 +30,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/tabi/tabi/v1/crypto/ethsecp256k1"
-	rpctypes "github.com/tabi/tabi/v1/rpc/types"
-	"github.com/tabi/tabi/v1/server/config"
-	"github.com/tabi/tabi/v1/types"
-	evmtypes "github.com/tabi/tabi/v1/x/evm/types"
+	"github.com/tabilabs/tabi/v1/crypto/ethsecp256k1"
+	rpctypes "github.com/tabilabs/tabi/v1/rpc/types"
+	"github.com/tabilabs/tabi/v1/server/config"
+	"github.com/tabilabs/tabi/v1/types"
+	evmtypes "github.com/tabilabs/tabi/v1/x/evm/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 

@@ -16,7 +16,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabi/tabi/v1/x/revenue/v1/types"
+	"github.com/tabilabs/tabi/v1/x/revenue/v1/types"
 )
 
 // GetParams returns the total set of revenue parameters.

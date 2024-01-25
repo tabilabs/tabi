@@ -19,7 +19,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/server"
-	"github.com/tabi/tabi/v1/indexer"
+	"github.com/tabilabs/tabi/v1/indexer"
 	tmnode "github.com/tendermint/tendermint/node"
 	sm "github.com/tendermint/tendermint/state"
 	tmstore "github.com/tendermint/tendermint/store"
