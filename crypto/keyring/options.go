@@ -18,7 +18,7 @@ import (
 	cosmosLedger "github.com/cosmos/cosmos-sdk/crypto/ledger"
 	"github.com/cosmos/cosmos-sdk/crypto/types"
 
-	"github.com/evmos/evmos-ledger-go/ledger"
+	"github.com/tabilabs/ledger-go/ledger"
 	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
 	"github.com/tabilabs/tabi/crypto/hd"
 )
@@ -35,7 +35,7 @@ var (
 	// The Ledger derivation function is responsible for all signing and address generation.
 	SupportedAlgorithmsLedger = keyring.SigningAlgoList{hd.EthSecp256k1}
 	// LedgerDerivation defines the Tabi Ledger Go derivation (Ethereum app with EIP-712 signing)
-	LedgerDerivation = ledger.EvmosLedgerDerivation()
+	LedgerDerivation = ledger.TabiLedgerDerivation()
 	// CreatePubkey uses the ethsecp256k1 pubkey with Ethereum address generation and keccak hashing
 	CreatePubkey = func(key []byte) types.PubKey { return &ethsecp256k1.PubKey{Key: key} }
 	// SkipDERConversion represents whether the signed Ledger output should skip conversion from DER to BER.
