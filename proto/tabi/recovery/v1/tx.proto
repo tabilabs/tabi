@@ -3,8 +3,8 @@ package tabi.recovery.v1;
 
 import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
-import "tabi/recovery/v1/genesis.proto";
 import "gogoproto/gogo.proto";
+import "tabi/recovery/v1/genesis.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/recovery/types";
 

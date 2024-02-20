@@ -3,8 +3,8 @@ package tabi.claims.v1;
 
 import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
-import "tabi/claims/v1/genesis.proto";
 import "gogoproto/gogo.proto";
+import "tabi/claims/v1/genesis.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/claims/types";
 

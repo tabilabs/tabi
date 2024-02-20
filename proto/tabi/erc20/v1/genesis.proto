@@ -1,8 +1,8 @@
 syntax = "proto3";
 package tabi.erc20.v1;
 
-import "tabi/erc20/v1/erc20.proto";
 import "gogoproto/gogo.proto";
+import "tabi/erc20/v1/erc20.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/erc20/types";
 

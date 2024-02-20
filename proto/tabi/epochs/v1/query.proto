@@ -2,9 +2,9 @@ syntax = "proto3";
 package tabi.epochs.v1;
 
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "tabi/epochs/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "tabi/epochs/v1/genesis.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/epochs/types";
 

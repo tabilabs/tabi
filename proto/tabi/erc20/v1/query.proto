@@ -2,10 +2,10 @@ syntax = "proto3";
 package tabi.erc20.v1;
 
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "tabi/erc20/v1/erc20.proto";
-import "tabi/erc20/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "tabi/erc20/v1/erc20.proto";
+import "tabi/erc20/v1/genesis.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/erc20/types";
 

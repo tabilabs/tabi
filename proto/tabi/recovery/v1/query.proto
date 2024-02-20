@@ -1,9 +1,9 @@
 syntax = "proto3";
 package tabi.recovery.v1;
 
-import "tabi/recovery/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "tabi/recovery/v1/genesis.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/recovery/types";
 

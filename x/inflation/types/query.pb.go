@@ -6,10 +6,6 @@ package types
 import (
 	context "context"
 	fmt "fmt"
-	io "io"
-	math "math"
-	math_bits "math/bits"
-
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/cosmos/gogoproto/gogoproto"
@@ -19,14 +15,15 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	io "io"
+	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -35,19 +32,18 @@ var (
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // QueryPeriodRequest is the request type for the Query/Period RPC method.
-type QueryPeriodRequest struct{}
+type QueryPeriodRequest struct {
+}
 
 func (m *QueryPeriodRequest) Reset()         { *m = QueryPeriodRequest{} }
 func (m *QueryPeriodRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryPeriodRequest) ProtoMessage()    {}
 func (*QueryPeriodRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{0}
+	return fileDescriptor_907bb1d0b9a58539, []int{0}
 }
-
 func (m *QueryPeriodRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryPeriodRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPeriodRequest.Marshal(b, m, deterministic)
@@ -60,15 +56,12 @@ func (m *QueryPeriodRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-
 func (m *QueryPeriodRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPeriodRequest.Merge(m, src)
 }
-
 func (m *QueryPeriodRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryPeriodRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPeriodRequest.DiscardUnknown(m)
 }
@@ -85,13 +78,11 @@ func (m *QueryPeriodResponse) Reset()         { *m = QueryPeriodResponse{} }
 func (m *QueryPeriodResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryPeriodResponse) ProtoMessage()    {}
 func (*QueryPeriodResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{1}
+	return fileDescriptor_907bb1d0b9a58539, []int{1}
 }
-
 func (m *QueryPeriodResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryPeriodResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPeriodResponse.Marshal(b, m, deterministic)
@@ -104,15 +95,12 @@ func (m *QueryPeriodResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-
 func (m *QueryPeriodResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPeriodResponse.Merge(m, src)
 }
-
 func (m *QueryPeriodResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryPeriodResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPeriodResponse.DiscardUnknown(m)
 }
@@ -128,19 +116,18 @@ func (m *QueryPeriodResponse) GetPeriod() uint64 {
 
 // QueryEpochMintProvisionRequest is the request type for the
 // Query/EpochMintProvision RPC method.
-type QueryEpochMintProvisionRequest struct{}
+type QueryEpochMintProvisionRequest struct {
+}
 
 func (m *QueryEpochMintProvisionRequest) Reset()         { *m = QueryEpochMintProvisionRequest{} }
 func (m *QueryEpochMintProvisionRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryEpochMintProvisionRequest) ProtoMessage()    {}
 func (*QueryEpochMintProvisionRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{2}
+	return fileDescriptor_907bb1d0b9a58539, []int{2}
 }
-
 func (m *QueryEpochMintProvisionRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryEpochMintProvisionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryEpochMintProvisionRequest.Marshal(b, m, deterministic)
@@ -153,15 +140,12 @@ func (m *QueryEpochMintProvisionRequest) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-
 func (m *QueryEpochMintProvisionRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryEpochMintProvisionRequest.Merge(m, src)
 }
-
 func (m *QueryEpochMintProvisionRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryEpochMintProvisionRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryEpochMintProvisionRequest.DiscardUnknown(m)
 }
@@ -179,13 +163,11 @@ func (m *QueryEpochMintProvisionResponse) Reset()         { *m = QueryEpochMintP
 func (m *QueryEpochMintProvisionResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryEpochMintProvisionResponse) ProtoMessage()    {}
 func (*QueryEpochMintProvisionResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{3}
+	return fileDescriptor_907bb1d0b9a58539, []int{3}
 }
-
 func (m *QueryEpochMintProvisionResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryEpochMintProvisionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryEpochMintProvisionResponse.Marshal(b, m, deterministic)
@@ -198,15 +180,12 @@ func (m *QueryEpochMintProvisionResponse) XXX_Marshal(b []byte, deterministic bo
 		return b[:n], nil
 	}
 }
-
 func (m *QueryEpochMintProvisionResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryEpochMintProvisionResponse.Merge(m, src)
 }
-
 func (m *QueryEpochMintProvisionResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryEpochMintProvisionResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryEpochMintProvisionResponse.DiscardUnknown(m)
 }
@@ -222,19 +201,18 @@ func (m *QueryEpochMintProvisionResponse) GetEpochMintProvision() types.DecCoin 
 
 // QuerySkippedEpochsRequest is the request type for the Query/SkippedEpochs RPC
 // method.
-type QuerySkippedEpochsRequest struct{}
+type QuerySkippedEpochsRequest struct {
+}
 
 func (m *QuerySkippedEpochsRequest) Reset()         { *m = QuerySkippedEpochsRequest{} }
 func (m *QuerySkippedEpochsRequest) String() string { return proto.CompactTextString(m) }
 func (*QuerySkippedEpochsRequest) ProtoMessage()    {}
 func (*QuerySkippedEpochsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{4}
+	return fileDescriptor_907bb1d0b9a58539, []int{4}
 }
-
 func (m *QuerySkippedEpochsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QuerySkippedEpochsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QuerySkippedEpochsRequest.Marshal(b, m, deterministic)
@@ -247,15 +225,12 @@ func (m *QuerySkippedEpochsRequest) XXX_Marshal(b []byte, deterministic bool) ([
 		return b[:n], nil
 	}
 }
-
 func (m *QuerySkippedEpochsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QuerySkippedEpochsRequest.Merge(m, src)
 }
-
 func (m *QuerySkippedEpochsRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QuerySkippedEpochsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QuerySkippedEpochsRequest.DiscardUnknown(m)
 }
@@ -273,13 +248,11 @@ func (m *QuerySkippedEpochsResponse) Reset()         { *m = QuerySkippedEpochsRe
 func (m *QuerySkippedEpochsResponse) String() string { return proto.CompactTextString(m) }
 func (*QuerySkippedEpochsResponse) ProtoMessage()    {}
 func (*QuerySkippedEpochsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{5}
+	return fileDescriptor_907bb1d0b9a58539, []int{5}
 }
-
 func (m *QuerySkippedEpochsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QuerySkippedEpochsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QuerySkippedEpochsResponse.Marshal(b, m, deterministic)
@@ -292,15 +265,12 @@ func (m *QuerySkippedEpochsResponse) XXX_Marshal(b []byte, deterministic bool) (
 		return b[:n], nil
 	}
 }
-
 func (m *QuerySkippedEpochsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QuerySkippedEpochsResponse.Merge(m, src)
 }
-
 func (m *QuerySkippedEpochsResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QuerySkippedEpochsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QuerySkippedEpochsResponse.DiscardUnknown(m)
 }
@@ -316,19 +286,18 @@ func (m *QuerySkippedEpochsResponse) GetSkippedEpochs() uint64 {
 
 // QueryCirculatingSupplyRequest is the request type for the
 // Query/CirculatingSupply RPC method.
-type QueryCirculatingSupplyRequest struct{}
+type QueryCirculatingSupplyRequest struct {
+}
 
 func (m *QueryCirculatingSupplyRequest) Reset()         { *m = QueryCirculatingSupplyRequest{} }
 func (m *QueryCirculatingSupplyRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryCirculatingSupplyRequest) ProtoMessage()    {}
 func (*QueryCirculatingSupplyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{6}
+	return fileDescriptor_907bb1d0b9a58539, []int{6}
 }
-
 func (m *QueryCirculatingSupplyRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryCirculatingSupplyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryCirculatingSupplyRequest.Marshal(b, m, deterministic)
@@ -341,15 +310,12 @@ func (m *QueryCirculatingSupplyRequest) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-
 func (m *QueryCirculatingSupplyRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryCirculatingSupplyRequest.Merge(m, src)
 }
-
 func (m *QueryCirculatingSupplyRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryCirculatingSupplyRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryCirculatingSupplyRequest.DiscardUnknown(m)
 }
@@ -367,13 +333,11 @@ func (m *QueryCirculatingSupplyResponse) Reset()         { *m = QueryCirculating
 func (m *QueryCirculatingSupplyResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryCirculatingSupplyResponse) ProtoMessage()    {}
 func (*QueryCirculatingSupplyResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{7}
+	return fileDescriptor_907bb1d0b9a58539, []int{7}
 }
-
 func (m *QueryCirculatingSupplyResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryCirculatingSupplyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryCirculatingSupplyResponse.Marshal(b, m, deterministic)
@@ -386,15 +350,12 @@ func (m *QueryCirculatingSupplyResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-
 func (m *QueryCirculatingSupplyResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryCirculatingSupplyResponse.Merge(m, src)
 }
-
 func (m *QueryCirculatingSupplyResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryCirculatingSupplyResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryCirculatingSupplyResponse.DiscardUnknown(m)
 }
@@ -410,19 +371,18 @@ func (m *QueryCirculatingSupplyResponse) GetCirculatingSupply() types.DecCoin {
 
 // QueryInflationRateRequest is the request type for the Query/InflationRate RPC
 // method.
-type QueryInflationRateRequest struct{}
+type QueryInflationRateRequest struct {
+}
 
 func (m *QueryInflationRateRequest) Reset()         { *m = QueryInflationRateRequest{} }
 func (m *QueryInflationRateRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryInflationRateRequest) ProtoMessage()    {}
 func (*QueryInflationRateRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{8}
+	return fileDescriptor_907bb1d0b9a58539, []int{8}
 }
-
 func (m *QueryInflationRateRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryInflationRateRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryInflationRateRequest.Marshal(b, m, deterministic)
@@ -435,15 +395,12 @@ func (m *QueryInflationRateRequest) XXX_Marshal(b []byte, deterministic bool) ([
 		return b[:n], nil
 	}
 }
-
 func (m *QueryInflationRateRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryInflationRateRequest.Merge(m, src)
 }
-
 func (m *QueryInflationRateRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryInflationRateRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryInflationRateRequest.DiscardUnknown(m)
 }
@@ -461,13 +418,11 @@ func (m *QueryInflationRateResponse) Reset()         { *m = QueryInflationRateRe
 func (m *QueryInflationRateResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryInflationRateResponse) ProtoMessage()    {}
 func (*QueryInflationRateResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{9}
+	return fileDescriptor_907bb1d0b9a58539, []int{9}
 }
-
 func (m *QueryInflationRateResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryInflationRateResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryInflationRateResponse.Marshal(b, m, deterministic)
@@ -480,15 +435,12 @@ func (m *QueryInflationRateResponse) XXX_Marshal(b []byte, deterministic bool) (
 		return b[:n], nil
 	}
 }
-
 func (m *QueryInflationRateResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryInflationRateResponse.Merge(m, src)
 }
-
 func (m *QueryInflationRateResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryInflationRateResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryInflationRateResponse.DiscardUnknown(m)
 }
@@ -496,19 +448,18 @@ func (m *QueryInflationRateResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryInflationRateResponse proto.InternalMessageInfo
 
 // QueryParamsRequest is the request type for the Query/Params RPC method.
-type QueryParamsRequest struct{}
+type QueryParamsRequest struct {
+}
 
 func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
 func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsRequest) ProtoMessage()    {}
 func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{10}
+	return fileDescriptor_907bb1d0b9a58539, []int{10}
 }
-
 func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParamsRequest.Marshal(b, m, deterministic)
@@ -521,15 +472,12 @@ func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-
 func (m *QueryParamsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParamsRequest.Merge(m, src)
 }
-
 func (m *QueryParamsRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParamsRequest.DiscardUnknown(m)
 }
@@ -546,13 +494,11 @@ func (m *QueryParamsResponse) Reset()         { *m = QueryParamsResponse{} }
 func (m *QueryParamsResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsResponse) ProtoMessage()    {}
 func (*QueryParamsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_91b9f1b5d47c7fd7, []int{11}
+	return fileDescriptor_907bb1d0b9a58539, []int{11}
 }
-
 func (m *QueryParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParamsResponse.Marshal(b, m, deterministic)
@@ -565,15 +511,12 @@ func (m *QueryParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-
 func (m *QueryParamsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParamsResponse.Merge(m, src)
 }
-
 func (m *QueryParamsResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryParamsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParamsResponse.DiscardUnknown(m)
 }
@@ -602,53 +545,58 @@ func init() {
 	proto.RegisterType((*QueryParamsResponse)(nil), "tabi.inflation.v1.QueryParamsResponse")
 }
 
-func init() { proto.RegisterFile("tabi/inflation/v1/query.proto", fileDescriptor_91b9f1b5d47c7fd7) }
+func init() { proto.RegisterFile("tabi/inflation/v1/query.proto", fileDescriptor_907bb1d0b9a58539) }
 
-var fileDescriptor_91b9f1b5d47c7fd7 = []byte{
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x94, 0x94, 0x4f, 0x6f, 0xd3, 0x30,
-	0x18, 0xc6, 0xbd, 0x88, 0x55, 0xc2, 0xa8, 0x93, 0x6a, 0x7a, 0x60, 0xa1, 0x5b, 0xa7, 0x48, 0x20,
-	0x04, 0x2c, 0xa6, 0xdd, 0x01, 0x69, 0xc7, 0x8e, 0x1d, 0x26, 0x04, 0xda, 0x3a, 0x2e, 0x70, 0xa9,
-	0x9c, 0xcc, 0x64, 0x16, 0xad, 0xed, 0xc5, 0x6e, 0xa1, 0x48, 0x7c, 0x0f, 0xce, 0x1c, 0xf9, 0x08,
-	0x1c, 0x39, 0xf2, 0x31, 0x38, 0xf2, 0x29, 0x50, 0x1c, 0x27, 0x6b, 0x96, 0x18, 0xb6, 0x9b, 0xf5,
-	0xbe, 0xef, 0xf3, 0xbc, 0x7f, 0xfa, 0x6b, 0xe0, 0x96, 0x26, 0x11, 0xc3, 0x8c, 0xbf, 0x9f, 0x12,
-	0xcd, 0x04, 0xc7, 0x8b, 0x01, 0xbe, 0x98, 0xd3, 0x74, 0x19, 0xca, 0x54, 0x68, 0x81, 0x3a, 0x59,
-	0x3a, 0x2c, 0xd3, 0xe1, 0x62, 0xe0, 0x6f, 0xc7, 0x42, 0xcd, 0x84, 0xc2, 0x11, 0x51, 0x14, 0x2f,
-	0x06, 0x11, 0xd5, 0x64, 0x80, 0x63, 0xc1, 0x78, 0x2e, 0xf1, 0xfb, 0x75, 0xc7, 0x84, 0x72, 0xaa,
-	0x98, 0xb2, 0x05, 0xdd, 0x44, 0x24, 0xc2, 0x3c, 0x71, 0xf6, 0xb2, 0xd1, 0x5e, 0x22, 0x44, 0x32,
-	0xa5, 0x98, 0x48, 0x86, 0x09, 0xe7, 0x42, 0x1b, 0xb5, 0xd5, 0x04, 0x5d, 0x88, 0x4e, 0xb2, 0xb1,
-	0x8e, 0x69, 0xca, 0xc4, 0xd9, 0x98, 0x5e, 0xcc, 0xa9, 0xd2, 0xc1, 0x1e, 0xbc, 0x5b, 0x89, 0x2a,
-	0x29, 0xb8, 0xa2, 0xa8, 0x07, 0x5b, 0xd2, 0x44, 0x10, 0xb8, 0xb7, 0xb6, 0xb3, 0xf6, 0xe8, 0xd6,
-	0x10, 0xec, 0x83, 0xb1, 0x8d, 0x05, 0x3b, 0x70, 0xdb, 0x88, 0x0e, 0xa5, 0x88, 0xcf, 0x5f, 0x31,
-	0xae, 0x8f, 0x53, 0xb1, 0x60, 0x8a, 0x09, 0x5e, 0xd8, 0x7e, 0x84, 0x7d, 0x67, 0x85, 0x6d, 0xf1,
-	0x06, 0x76, 0x69, 0x96, 0x9d, 0xcc, 0x18, 0xd7, 0x13, 0x59, 0xe4, 0x6d, 0xc3, 0x3b, 0xc3, 0x5e,
-	0x98, 0x5f, 0x29, 0xcc, 0xae, 0x14, 0xda, 0x2b, 0x85, 0x2f, 0x68, 0x7c, 0x20, 0x18, 0xdf, 0x07,
-	0x23, 0x30, 0x46, 0xb4, 0xe6, 0x1e, 0xdc, 0x87, 0x9b, 0xa6, 0xf1, 0xe9, 0x07, 0x26, 0x25, 0x3d,
-	0x33, 0xfd, 0x55, 0x31, 0xd5, 0x11, 0xf4, 0x9b, 0x92, 0x76, 0xa0, 0x27, 0x70, 0x43, 0xe5, 0x89,
-	0x89, 0x31, 0x56, 0x95, 0xdd, 0xdb, 0x6a, 0x55, 0x14, 0xf4, 0xe1, 0x96, 0xb1, 0x3a, 0x60, 0x69,
-	0x3c, 0xcf, 0x7e, 0x26, 0x9e, 0x9c, 0xce, 0xa5, 0x9c, 0x2e, 0x8b, 0x5e, 0xca, 0xde, 0xa8, 0xa1,
-	0xc0, 0xf6, 0x3b, 0x81, 0x28, 0xbe, 0x4c, 0x4e, 0x94, 0xc9, 0xde, 0x60, 0xfd, 0x4e, 0x7c, 0xd5,
-	0xba, 0xdc, 0xfe, 0xa8, 0x40, 0x67, 0x4c, 0x34, 0x2d, 0x26, 0x7a, 0x69, 0xb7, 0xbf, 0x92, 0xb4,
-	0xd3, 0xec, 0xc2, 0x8d, 0x12, 0xb8, 0x49, 0x4a, 0x34, 0xb5, 0x93, 0xdc, 0xce, 0xb6, 0x1f, 0x81,
-	0x71, 0x9b, 0xad, 0xca, 0x2e, 0x69, 0x22, 0x29, 0x99, 0x95, 0x07, 0x7e, 0x5d, 0xd0, 0x64, 0xa3,
-	0xd6, 0xfb, 0x39, 0x6c, 0x49, 0x13, 0x29, 0xb7, 0xdb, 0x0c, 0x6b, 0xff, 0x8a, 0x30, 0x17, 0x99,
-	0x66, 0xb6, 0x7c, 0xf8, 0x75, 0x1d, 0xae, 0x1b, 0x43, 0xf4, 0x16, 0xb6, 0x72, 0x44, 0xd1, 0x83,
-	0x06, 0x69, 0x1d, 0x6c, 0xff, 0xe1, 0xff, 0xca, 0xf2, 0xd9, 0x02, 0x80, 0xbe, 0x40, 0x54, 0xc7,
-	0x14, 0x0d, 0x5c, 0x7a, 0x27, 0xf4, 0xfe, 0xf0, 0x26, 0x92, 0xb2, 0x3d, 0x87, 0xed, 0x0a, 0x8f,
-	0xe8, 0xa9, 0xcb, 0xa6, 0x89, 0x69, 0x7f, 0xf7, 0x9a, 0xd5, 0x65, 0xbf, 0xcf, 0xb0, 0x53, 0x63,
-	0x12, 0x3d, 0x73, 0xb9, 0xb8, 0xf8, 0xf6, 0x9d, 0xf7, 0x71, 0x02, 0x9f, 0xef, 0x5a, 0xa1, 0xcf,
-	0xbd, 0x6b, 0x13, 0xc1, 0xee, 0x5d, 0x1b, 0x91, 0x0e, 0x80, 0xa1, 0x26, 0x07, 0xcf, 0x4d, 0xcd,
-	0x2a, 0xc0, 0xff, 0xa0, 0xa6, 0x42, 0x74, 0x00, 0x46, 0x87, 0x10, 0x8c, 0xc0, 0xbb, 0xc7, 0x09,
-	0xd3, 0xe7, 0xf3, 0x28, 0x8c, 0xc5, 0x0c, 0x67, 0xca, 0x29, 0x89, 0x94, 0x79, 0xe0, 0x4f, 0x2b,
-	0xdf, 0x6f, 0xbd, 0x94, 0x54, 0x7d, 0xf3, 0xc0, 0x77, 0x0f, 0xfc, 0xf0, 0xc0, 0x4f, 0x0f, 0xfc,
-	0xf2, 0xc0, 0x6f, 0x0f, 0xfc, 0xf1, 0x40, 0xd4, 0x32, 0x1f, 0xe7, 0xbd, 0xbf, 0x01, 0x00, 0x00,
-	0xff, 0xff, 0x29, 0x79, 0xdb, 0x1a, 0x45, 0x06, 0x00, 0x00,
+var fileDescriptor_907bb1d0b9a58539 = []byte{
+	// 681 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x95, 0xcf, 0x4e, 0xd4, 0x40,
+	0x1c, 0xc7, 0x77, 0x0c, 0xae, 0x71, 0x0c, 0x24, 0x8c, 0xc4, 0x48, 0x81, 0x2e, 0xac, 0x01, 0x44,
+	0xdd, 0x8e, 0x0b, 0x07, 0xef, 0x80, 0x07, 0x0f, 0x1a, 0x2c, 0xf1, 0xe2, 0x65, 0xd3, 0x96, 0xb1,
+	0x4c, 0xd8, 0x9d, 0x19, 0x3a, 0xb3, 0x1b, 0xf1, 0x64, 0xf4, 0xea, 0xc1, 0xc4, 0x83, 0x0f, 0xe0,
+	0x81, 0xc4, 0xf8, 0x20, 0x1c, 0x49, 0xbc, 0x18, 0x0f, 0x68, 0x58, 0x1f, 0xc4, 0x74, 0x3a, 0x5d,
+	0xb6, 0xb4, 0x5d, 0xe1, 0xe0, 0x89, 0xf2, 0xfb, 0xfb, 0x9d, 0x6f, 0xe7, 0xd3, 0x85, 0x73, 0xca,
+	0xf3, 0x29, 0xa6, 0xec, 0x55, 0xdb, 0x53, 0x94, 0x33, 0xdc, 0x6b, 0xe2, 0xfd, 0x2e, 0x89, 0x0e,
+	0x1c, 0x11, 0x71, 0xc5, 0xd1, 0x64, 0x9c, 0x76, 0x06, 0x69, 0xa7, 0xd7, 0xb4, 0xec, 0x80, 0xcb,
+	0x0e, 0x97, 0xd8, 0xf7, 0x24, 0xc1, 0xbd, 0xa6, 0x4f, 0x94, 0xd7, 0xc4, 0x01, 0xa7, 0x2c, 0x69,
+	0xb1, 0xa6, 0x42, 0x1e, 0x72, 0xfd, 0x88, 0xe3, 0x27, 0x13, 0x9d, 0x0d, 0x39, 0x0f, 0xdb, 0x04,
+	0x7b, 0x82, 0x62, 0x8f, 0x31, 0xae, 0xf4, 0x3c, 0x69, 0xb2, 0xb5, 0xbc, 0x8a, 0x90, 0x30, 0x22,
+	0xa9, 0x29, 0xa8, 0x4f, 0x41, 0xf4, 0x3c, 0x96, 0xb5, 0x45, 0x22, 0xca, 0x77, 0x5c, 0xb2, 0xdf,
+	0x25, 0x52, 0xd5, 0x1b, 0xf0, 0x66, 0x26, 0x2a, 0x05, 0x67, 0x92, 0xa0, 0x5b, 0xb0, 0x2a, 0x74,
+	0xe4, 0x36, 0x98, 0x07, 0x77, 0xc7, 0x5c, 0xf3, 0x5f, 0x7d, 0x1e, 0xda, 0xba, 0xfc, 0xb1, 0xe0,
+	0xc1, 0xee, 0x53, 0xca, 0xd4, 0x56, 0xc4, 0x7b, 0x54, 0x52, 0xce, 0xd2, 0x81, 0x87, 0x00, 0xd6,
+	0x4a, 0x4b, 0xcc, 0xf4, 0xf7, 0x00, 0x4e, 0x91, 0x38, 0xdd, 0xea, 0x50, 0xa6, 0x5a, 0x22, 0x2d,
+	0xd0, 0xcb, 0x6e, 0xac, 0xce, 0x3a, 0x89, 0x3f, 0x4e, 0xec, 0x8f, 0x63, 0xfc, 0x71, 0x36, 0x49,
+	0xb0, 0xc1, 0x29, 0x5b, 0x5f, 0x3b, 0x3a, 0xa9, 0x55, 0xbe, 0xfe, 0xaa, 0xdd, 0x0f, 0xa9, 0xda,
+	0xed, 0xfa, 0x4e, 0xc0, 0x3b, 0xd8, 0xf8, 0x99, 0xfc, 0x69, 0xc8, 0x9d, 0x3d, 0xac, 0x0e, 0x04,
+	0x91, 0x69, 0x8f, 0x74, 0x11, 0xc9, 0xa9, 0xa9, 0xcf, 0xc0, 0x69, 0x2d, 0x74, 0x7b, 0x8f, 0x0a,
+	0x41, 0x76, 0xb4, 0x5e, 0x99, 0x1e, 0x63, 0x03, 0x5a, 0x45, 0x49, 0x73, 0x80, 0x45, 0x38, 0x21,
+	0x93, 0x44, 0x4b, 0x0f, 0x96, 0xc6, 0xa6, 0x71, 0x39, 0x5c, 0x5e, 0xaf, 0xc1, 0x39, 0x3d, 0x64,
+	0x83, 0x46, 0x41, 0x37, 0x7e, 0x2f, 0x2c, 0xdc, 0xee, 0x0a, 0xd1, 0x3e, 0x48, 0xb7, 0x7c, 0x01,
+	0xc6, 0xcf, 0x82, 0x0a, 0xb3, 0xea, 0x2d, 0x80, 0x28, 0x38, 0xcb, 0xb6, 0xa4, 0x4e, 0xff, 0x3f,
+	0xa7, 0x26, 0x83, 0xf3, 0x52, 0x06, 0x46, 0x3d, 0x49, 0x2f, 0x97, 0xeb, 0x29, 0x92, 0x1e, 0x41,
+	0x1a, 0xa3, 0xce, 0x25, 0x8d, 0xfa, 0x17, 0x70, 0x62, 0x70, 0x25, 0x5b, 0x91, 0xa7, 0x88, 0x16,
+	0x7e, 0x7d, 0xdd, 0x89, 0xa5, 0xfd, 0x3c, 0xa9, 0x2d, 0x5d, 0x4c, 0x9a, 0x3b, 0x4e, 0x87, 0xc7,
+	0x9f, 0xdd, 0x65, 0x2f, 0xf2, 0x3a, 0x83, 0x77, 0xf6, 0x2c, 0xbd, 0xcb, 0x26, 0x6a, 0x34, 0x3c,
+	0x82, 0x55, 0xa1, 0x23, 0xc6, 0xb4, 0x69, 0x27, 0x47, 0xa4, 0x93, 0xb4, 0xac, 0x8f, 0xc5, 0xb2,
+	0x5c, 0x53, 0xbe, 0xfa, 0xe1, 0x1a, 0xbc, 0xaa, 0x07, 0xa2, 0x37, 0xb0, 0x9a, 0x00, 0x82, 0x16,
+	0x0b, 0x9a, 0xf3, 0x58, 0x59, 0x4b, 0xff, 0x2a, 0x4b, 0xb4, 0xd5, 0x17, 0xde, 0x7d, 0xff, 0xf3,
+	0xe9, 0xca, 0x0c, 0x9a, 0xc6, 0x79, 0x7c, 0x13, 0xe4, 0xd0, 0x37, 0x00, 0x51, 0x9e, 0x25, 0xd4,
+	0x2c, 0xdb, 0x50, 0x8a, 0xa6, 0xb5, 0x7a, 0x99, 0x16, 0x23, 0x10, 0x6b, 0x81, 0x2b, 0x68, 0xb9,
+	0x40, 0x60, 0x11, 0xc2, 0xe8, 0x33, 0x80, 0xe3, 0x19, 0x68, 0xd0, 0x83, 0xb2, 0xb5, 0x45, 0xe0,
+	0x59, 0x8d, 0x0b, 0x56, 0x1b, 0x7d, 0x2b, 0x5a, 0xdf, 0x1d, 0xb4, 0x50, 0xa0, 0x2f, 0x8b, 0x28,
+	0x3a, 0x04, 0x70, 0x32, 0xc7, 0x19, 0x7a, 0x58, 0xb6, 0xaf, 0x0c, 0x5a, 0xab, 0x79, 0x89, 0x0e,
+	0xa3, 0xb2, 0xa1, 0x55, 0x2e, 0xa3, 0xc5, 0x02, 0x95, 0x79, 0xb8, 0xb5, 0x87, 0x19, 0x9e, 0xca,
+	0x3d, 0x2c, 0x62, 0xb2, 0xdc, 0xc3, 0x42, 0x48, 0x47, 0x7a, 0x98, 0xa5, 0x57, 0x83, 0xa0, 0xe1,
+	0x18, 0x01, 0xc2, 0x30, 0x93, 0x23, 0x40, 0xc8, 0x40, 0x3a, 0x1a, 0x84, 0x04, 0xce, 0xcd, 0xa3,
+	0x53, 0x1b, 0x1c, 0x9f, 0xda, 0xe0, 0xf7, 0xa9, 0x0d, 0x3e, 0xf6, 0xed, 0xca, 0x71, 0xdf, 0xae,
+	0xfc, 0xe8, 0xdb, 0x95, 0x97, 0xf7, 0x86, 0xbe, 0x22, 0x71, 0x7b, 0xdb, 0xf3, 0x65, 0x32, 0xe7,
+	0xf5, 0xd0, 0x24, 0xfd, 0x35, 0xf1, 0xab, 0xfa, 0xd7, 0x70, 0xed, 0x6f, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0x2c, 0x07, 0xc7, 0x60, 0xb6, 0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ context.Context
-	_ grpc.ClientConn
-)
+var _ context.Context
+var _ grpc.ClientConn
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
@@ -753,28 +701,24 @@ type QueryServer interface {
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
-type UnimplementedQueryServer struct{}
+type UnimplementedQueryServer struct {
+}
 
 func (*UnimplementedQueryServer) Period(ctx context.Context, req *QueryPeriodRequest) (*QueryPeriodResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Period not implemented")
 }
-
 func (*UnimplementedQueryServer) EpochMintProvision(ctx context.Context, req *QueryEpochMintProvisionRequest) (*QueryEpochMintProvisionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EpochMintProvision not implemented")
 }
-
 func (*UnimplementedQueryServer) SkippedEpochs(ctx context.Context, req *QuerySkippedEpochsRequest) (*QuerySkippedEpochsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SkippedEpochs not implemented")
 }
-
 func (*UnimplementedQueryServer) CirculatingSupply(ctx context.Context, req *QueryCirculatingSupplyRequest) (*QueryCirculatingSupplyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CirculatingSupply not implemented")
 }
-
 func (*UnimplementedQueryServer) InflationRate(ctx context.Context, req *QueryInflationRateRequest) (*QueryInflationRateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InflationRate not implemented")
 }
-
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
@@ -1261,7 +1205,6 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *QueryPeriodRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1387,11 +1330,9 @@ func (m *QueryParamsResponse) Size() (n int) {
 func sovQuery(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (m *QueryPeriodRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1442,7 +1383,6 @@ func (m *QueryPeriodRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryPeriodResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1512,7 +1452,6 @@ func (m *QueryPeriodResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryEpochMintProvisionRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1563,7 +1502,6 @@ func (m *QueryEpochMintProvisionRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryEpochMintProvisionResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1647,7 +1585,6 @@ func (m *QueryEpochMintProvisionResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QuerySkippedEpochsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1698,7 +1635,6 @@ func (m *QuerySkippedEpochsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QuerySkippedEpochsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1768,7 +1704,6 @@ func (m *QuerySkippedEpochsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryCirculatingSupplyRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1819,7 +1754,6 @@ func (m *QueryCirculatingSupplyRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryCirculatingSupplyResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1903,7 +1837,6 @@ func (m *QueryCirculatingSupplyResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryInflationRateRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1954,7 +1887,6 @@ func (m *QueryInflationRateRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryInflationRateResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2039,7 +1971,6 @@ func (m *QueryInflationRateResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2090,7 +2021,6 @@ func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2174,7 +2104,6 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipQuery(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

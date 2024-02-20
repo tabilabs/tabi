@@ -4,9 +4,9 @@ package tabi.erc20.v1;
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
-import "tabi/erc20/v1/genesis.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "tabi/erc20/v1/genesis.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/erc20/types";
 

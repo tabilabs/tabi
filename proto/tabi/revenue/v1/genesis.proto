@@ -1,8 +1,8 @@
 syntax = "proto3";
 package tabi.revenue.v1;
 
-import "tabi/revenue/v1/revenue.proto";
 import "gogoproto/gogo.proto";
+import "tabi/revenue/v1/revenue.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/revenue/v1/types";
 
