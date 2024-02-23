@@ -159,9 +159,6 @@ import (
 	revenue "github.com/tabilabs/tabi/x/revenue/v1"
 	revenuekeeper "github.com/tabilabs/tabi/x/revenue/v1/keeper"
 	revenuetypes "github.com/tabilabs/tabi/x/revenue/v1/types"
-	"github.com/tabilabs/tabi/x/vesting"
-	vestingkeeper "github.com/tabilabs/tabi/x/vesting/keeper"
-	vestingtypes "github.com/tabilabs/tabi/x/vesting/types"
 
 	// NOTE: override ICS20 keeper to support IBC transfers of ERC20 tokens
 	"github.com/tabilabs/tabi/x/ibc/transfer"
@@ -225,7 +222,6 @@ var (
 		upgrade.AppModuleBasic{},
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{AppModuleBasic: &ibctransfer.AppModuleBasic{}},
-		vesting.AppModuleBasic{},
 		evm.AppModuleBasic{},
 		feemarket.AppModuleBasic{},
 		inflation.AppModuleBasic{},
@@ -314,7 +310,6 @@ type Tabi struct {
 	Erc20Keeper      erc20keeper.Keeper
 	IncentivesKeeper incentiveskeeper.Keeper
 	EpochsKeeper     epochskeeper.Keeper
-	VestingKeeper    vestingkeeper.Keeper
 	RecoveryKeeper   *recoverykeeper.Keeper
 	RevenueKeeper    revenuekeeper.Keeper
 
@@ -373,7 +368,7 @@ func NewTabi(
 		evmtypes.StoreKey, feemarkettypes.StoreKey,
 		// tabi keys
 		inflationtypes.StoreKey, erc20types.StoreKey, incentivestypes.StoreKey,
-		epochstypes.StoreKey, claimstypes.StoreKey, vestingtypes.StoreKey,
+		epochstypes.StoreKey, claimstypes.StoreKey,
 		revenuetypes.StoreKey, recoverytypes.StoreKey,
 	)
 
@@ -501,11 +496,6 @@ func NewTabi(
 			app.SlashingKeeper.Hooks(),
 			app.ClaimsKeeper.Hooks(),
 		),
-	)
-
-	app.VestingKeeper = vestingkeeper.NewKeeper(
-		keys[vestingtypes.StoreKey], appCodec,
-		app.AccountKeeper, app.BankKeeper, app.StakingKeeper,
 	)
 
 	app.Erc20Keeper = erc20keeper.NewKeeper(
@@ -675,7 +665,6 @@ func NewTabi(
 		epochs.NewAppModule(appCodec, app.EpochsKeeper),
 		claims.NewAppModule(appCodec, *app.ClaimsKeeper,
 			app.GetSubspace(claimstypes.ModuleName)),
-		vesting.NewAppModule(app.VestingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		recovery.NewAppModule(*app.RecoveryKeeper,
 			app.GetSubspace(recoverytypes.ModuleName)),
 		revenue.NewAppModule(app.RevenueKeeper, app.AccountKeeper,
@@ -711,7 +700,6 @@ func NewTabi(
 		authz.ModuleName,
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
-		vestingtypes.ModuleName,
 		inflationtypes.ModuleName,
 		erc20types.ModuleName,
 		claimstypes.ModuleName,
@@ -746,7 +734,6 @@ func NewTabi(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		// Tabi modules
-		vestingtypes.ModuleName,
 		inflationtypes.ModuleName,
 		erc20types.ModuleName,
 		incentivestypes.ModuleName,
@@ -786,7 +773,6 @@ func NewTabi(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		// Tabi modules
-		vestingtypes.ModuleName,
 		inflationtypes.ModuleName,
 		erc20types.ModuleName,
 		incentivestypes.ModuleName,
