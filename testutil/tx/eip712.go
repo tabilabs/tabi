@@ -1,42 +1,49 @@
-// Copyright 2022 Tabi Foundation
-// This file is part of the Tabi Network packages.
+// Copyright 2021 Evmos Foundation
+// This file is part of Evmos' Ethermint library.
 //
-// Tabi is free software: you can redistribute it and/or modify
+// The Ethermint library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The Tabi packages are distributed in the hope that it will be useful,
+// The Ethermint library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
-
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the Ethermint library. If not, see https://github.com/evmos/ethermint/blob/main/LICENSE
 package tx
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
+
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
+	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/tx/signing"
+	"github.com/ethereum/go-ethereum/crypto"
+	cryptocodec "github.com/tabilabs/tabi/crypto/codec"
+
 	"github.com/cosmos/cosmos-sdk/x/auth/migrations/legacytx"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
-	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/tabilabs/tabi/ethereum/eip712"
+
+	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	"github.com/ethereum/go-ethereum/signer/core/apitypes"
 
-	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
-	"github.com/tabilabs/tabi/app"
-	cryptocodec "github.com/tabilabs/tabi/crypto/codec"
-	"github.com/tabilabs/tabi/ethereum/eip712"
 	"github.com/tabilabs/tabi/types"
+
+	"github.com/tabilabs/tabi/app"
 )
 
 type EIP712TxArgs struct {
 	CosmosTxArgs       CosmosTxArgs
-	UseLegacyExtension bool
 	UseLegacyTypedData bool
+	UseLegacyExtension bool
 }
 
 type typedDataArgs struct {
@@ -46,16 +53,16 @@ type typedDataArgs struct {
 	legacyMsg      sdk.Msg
 }
 
-type signatureV2Args struct {
-	pubKey    cryptotypes.PubKey
-	signature []byte
-	nonce     uint64
-}
-
 type legacyWeb3ExtensionArgs struct {
 	feePayer  string
 	chainID   uint64
 	signature []byte
+}
+
+type signatureV2Args struct {
+	pubKey    cryptotypes.PubKey
+	signature []byte
+	nonce     uint64
 }
 
 // CreateEIP712CosmosTx creates a cosmos tx for typed data according to EIP712.
@@ -63,12 +70,12 @@ type legacyWeb3ExtensionArgs struct {
 // It returns the signed transaction and an error
 func CreateEIP712CosmosTx(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEthermint *app.Tabi,
 	args EIP712TxArgs,
 ) (sdk.Tx, error) {
 	builder, err := PrepareEIP712CosmosTx(
 		ctx,
-		appTabi,
+		appEthermint,
 		args,
 	)
 	return builder.GetTx(), err
@@ -79,7 +86,7 @@ func CreateEIP712CosmosTx(
 // It returns the tx builder with the signed transaction and an error
 func PrepareEIP712CosmosTx(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEthermint *app.Tabi,
 	args EIP712TxArgs,
 ) (client.TxBuilder, error) {
 	txArgs := args.CosmosTxArgs
@@ -90,10 +97,15 @@ func PrepareEIP712CosmosTx(
 	}
 	chainIDNum := pc.Uint64()
 
+	fmt.Println("args ", txArgs.Priv)
 	from := sdk.AccAddress(txArgs.Priv.PubKey().Address().Bytes())
-	accNumber := appTabi.AccountKeeper.GetAccount(ctx, from).GetAccountNumber()
+	fmt.Println("from ", from)
+	acc := appEthermint.AccountKeeper.GetAccount(ctx, from)
 
-	nonce, err := appTabi.AccountKeeper.GetSequence(ctx, from)
+	fmt.Println("acc: ", acc)
+	accNumber := acc.GetAccountNumber()
+
+	nonce, err := appEthermint.AccountKeeper.GetSequence(ctx, from)
 	if err != nil {
 		return nil, err
 	}
@@ -109,6 +121,7 @@ func PrepareEIP712CosmosTx(
 		legacyFeePayer: from,
 		legacyMsg:      msgs[0],
 	}
+
 	typedData, err := createTypedData(typedDataArgs, args.UseLegacyTypedData)
 	if err != nil {
 		return nil, err
@@ -130,7 +143,7 @@ func PrepareEIP712CosmosTx(
 
 	return signCosmosEIP712Tx(
 		ctx,
-		appTabi,
+		appEthermint,
 		args,
 		builder,
 		chainIDNum,
@@ -138,11 +151,35 @@ func PrepareEIP712CosmosTx(
 	)
 }
 
+// createTypedData creates the TypedData object corresponding to
+// the arguments, using the legacy implementation as specified.
+func createTypedData(args typedDataArgs, useLegacy bool) (apitypes.TypedData, error) {
+	if useLegacy {
+		registry := codectypes.NewInterfaceRegistry()
+		types.RegisterInterfaces(registry)
+		cryptocodec.RegisterInterfaces(registry)
+		ethermintCodec := codec.NewProtoCodec(registry)
+
+		feeDelegation := &eip712.FeeDelegationOptions{
+			FeePayer: args.legacyFeePayer,
+		}
+
+		return eip712.LegacyWrapTxToTypedData(
+			ethermintCodec,
+			args.chainID,
+			args.legacyMsg,
+			args.data,
+			feeDelegation,
+		)
+	}
+	return eip712.WrapTxToTypedData(args.chainID, args.data)
+}
+
 // signCosmosEIP712Tx signs the cosmos transaction on the txBuilder provided using
 // the provided private key and the typed data
 func signCosmosEIP712Tx(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	args EIP712TxArgs,
 	builder authtx.ExtensionOptionsTxBuilder,
 	chainID uint64,
@@ -151,7 +188,7 @@ func signCosmosEIP712Tx(
 	priv := args.CosmosTxArgs.Priv
 
 	from := sdk.AccAddress(priv.PubKey().Address().Bytes())
-	nonce, err := appTabi.AccountKeeper.GetSequence(ctx, from)
+	nonce, err := appEvmos.AccountKeeper.GetSequence(ctx, from)
 	if err != nil {
 		return nil, err
 	}
@@ -197,47 +234,6 @@ func signCosmosEIP712Tx(
 	return builder, nil
 }
 
-// createTypedData creates the TypedData object corresponding to
-// the arguments, using the legacy implementation as specified.
-func createTypedData(args typedDataArgs, useLegacy bool) (apitypes.TypedData, error) {
-	if useLegacy {
-		registry := codectypes.NewInterfaceRegistry()
-		types.RegisterInterfaces(registry)
-		cryptocodec.RegisterInterfaces(registry)
-		tabiCodec := codec.NewProtoCodec(registry)
-
-		feeDelegation := &eip712.FeeDelegationOptions{
-			FeePayer: args.legacyFeePayer,
-		}
-
-		return eip712.LegacyWrapTxToTypedData(
-			tabiCodec,
-			args.chainID,
-			args.legacyMsg,
-			args.data,
-			feeDelegation,
-		)
-	}
-
-	return eip712.WrapTxToTypedData(args.chainID, args.data)
-}
-
-// setBuilderLegacyWeb3Extension creates a legacy ExtensionOptionsWeb3Tx and
-// appends it to the builder options.
-func setBuilderLegacyWeb3Extension(builder authtx.ExtensionOptionsTxBuilder, args legacyWeb3ExtensionArgs) error {
-	option, err := codectypes.NewAnyWithValue(&types.ExtensionOptionsWeb3Tx{
-		FeePayer:         args.feePayer,
-		TypedDataChainID: args.chainID,
-		FeePayerSig:      args.signature,
-	})
-	if err != nil {
-		return err
-	}
-
-	builder.SetExtensionOptions(option)
-	return nil
-}
-
 // getTxSignatureV2 returns the SignatureV2 object corresponding to
 // the arguments, using the legacy implementation as needed.
 func getTxSignatureV2(args signatureV2Args, useLegacyExtension bool) signing.SignatureV2 {
@@ -261,4 +257,20 @@ func getTxSignatureV2(args signatureV2Args, useLegacyExtension bool) signing.Sig
 		},
 		Sequence: args.nonce,
 	}
+}
+
+// setBuilderLegacyWeb3Extension creates a legacy ExtensionOptionsWeb3Tx and
+// appends it to the builder options.
+func setBuilderLegacyWeb3Extension(builder authtx.ExtensionOptionsTxBuilder, args legacyWeb3ExtensionArgs) error {
+	option, err := codectypes.NewAnyWithValue(&types.ExtensionOptionsWeb3Tx{
+		FeePayer:         args.feePayer,
+		TypedDataChainID: args.chainID,
+		FeePayerSig:      args.signature,
+	})
+	if err != nil {
+		return err
+	}
+
+	builder.SetExtensionOptions(option)
+	return nil
 }
