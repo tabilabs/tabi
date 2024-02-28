@@ -25,9 +25,17 @@ message Params {
   // inflation rate
   string inflation = 2 [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false ];
 
-  // stake rewards rate
-  string stake_rewards = 3 [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false ];
+  // inflation_distribution of the minted denom
+  InflationDistribution inflation_distribution = 3 [(gogoproto.nullable) = false];
+}
 
-  // claims rewards rate
-  string claims_rewards = 4 [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false ];
+message InflationDistribution {
+  // staking_rewards defines the proportion of the minted minted_denom that is
+  // to be allocated as staking rewards
+  string staking_rewards = 1
+  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  // usage_incentives defines the proportion of the minted minted_denom that is
+  // to be allocated to the incentives module address
+  string claims_rewards = 2
+  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
 }

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/tabilabs/tabi/x/evm/keeper"
+	"github.com/tabilabs/tabi/x/mint/keeper"
 	"github.com/tabilabs/tabi/x/mint/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"

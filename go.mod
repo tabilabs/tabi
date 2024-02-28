@@ -43,6 +43,7 @@ require (
 	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4
 	google.golang.org/grpc v1.54.0
 	google.golang.org/protobuf v1.30.0
+	gopkg.in/yaml.v2 v2.4.0
 	sigs.k8s.io/yaml v1.3.0
 )
 
@@ -193,7 +194,6 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
 )

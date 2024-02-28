@@ -10,9 +10,10 @@ import (
 
 const (
 	blocksPerYear = 60 * 60 * 8766 / 5 // 5 second a block, 8766 = 365.25 * 24
+	BaseDenomUnit = 18
 )
 
-var initialIssue = sdkmath.NewIntWithDecimal(20, 8)
+var initialIssue = sdkmath.NewIntWithDecimal(100, 8) // 100*(10^8) sdTabi,
 
 // Create a new minter object
 func NewMinter(lastUpdate time.Time, inflationBase sdk.Int) Minter {
@@ -26,7 +27,7 @@ func NewMinter(lastUpdate time.Time, inflationBase sdk.Int) Minter {
 func DefaultMinter() Minter {
 	return NewMinter(
 		time.Unix(0, 0).UTC(),
-		initialIssue.Mul(sdkmath.NewIntWithDecimal(1, 6)), // 20*(10^8)iris, 20*(10^8)*(10^6)uiris
+		initialIssue.Mul(sdkmath.NewIntWithDecimal(1, 18)), // 100*(10^8)sdTabi, 100*(10^8)*(10^18)atabi
 	)
 }
 
@@ -39,4 +40,16 @@ func ValidateMinter(m Minter) error {
 		return fmt.Errorf("minter inflation basement (%s) should be positive", m.InflationBase.String())
 	}
 	return nil
+}
+
+// NextAnnualProvisions gets the provisions for a block based on the annual provisions rate
+func (m Minter) NextAnnualProvisions(params Params) (provisions sdk.Dec) {
+	return params.Inflation.MulInt(m.InflationBase)
+}
+
+// BlockProvision gets the provisions for a block based on the annual provisions rate
+func (m Minter) BlockProvision(params Params) sdk.Coin {
+	provisions := m.NextAnnualProvisions(params)
+	blockInflationAmount := provisions.QuoInt(sdk.NewInt(blocksPerYear))
+	return sdk.NewCoin(params.MintDenom, blockInflationAmount.TruncateInt())
 }
