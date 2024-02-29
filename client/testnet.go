@@ -21,6 +21,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+
 	"net"
 	"os"
 	"path/filepath"
@@ -50,7 +51,6 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
-	mintypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/tabilabs/tabi/crypto/hd"
@@ -58,6 +58,8 @@ import (
 	srvflags "github.com/tabilabs/tabi/server/flags"
 	ethermint "github.com/tabilabs/tabi/types"
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
+
+	mintypes "github.com/tabilabs/tabi/x/mint/types"
 
 	"github.com/tabilabs/tabi/testutil/network"
 )
@@ -429,6 +431,7 @@ func initGenFiles(
 	govGenState.DepositParams.MinDeposit[0].Denom = coinDenom
 	appGenState[govtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&govGenState)
 
+	// set the mint parameters in the genesis state
 	var mintGenState mintypes.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[mintypes.ModuleName], &mintGenState)
 

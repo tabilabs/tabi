@@ -1,0 +1,15 @@
+syntax = "proto3";
+package tabi.mint.v1;
+
+import "gogoproto/gogo.proto";
+
+import "tabi/mint/v1/mint.proto";
+
+
+option go_package = "github.com/tabilabs/tabi/x/mint/types";
+
+// GenesisState defines the mint module's genesis state
+message GenesisState {
+  Minter minter = 1 [ (gogoproto.nullable) = false ];
+  Params params = 2 [ (gogoproto.nullable) = false ];
+}
