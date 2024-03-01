@@ -31,9 +31,9 @@ type Keeper struct {
 }
 
 // NewKeeper returns a mint keeper
-func NewKeeper(cdc codec.Codec, key storetypes.StoreKey,
+func NewKeeper(cdc codec.Codec, authority sdk.AccAddress, key storetypes.StoreKey,
 	paramSpace paramtypes.Subspace, ak types.AccountKeeper, bk types.BankKeeper, dk types.DistrKeeper,
-	feeCollectorName string, claimsCollectorName string) Keeper {
+	feeCollectorName, claimsCollectorName string) Keeper {
 
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -49,6 +49,7 @@ func NewKeeper(cdc codec.Codec, key storetypes.StoreKey,
 		distrKeeper:         dk,
 		feeCollectorName:    feeCollectorName,
 		claimsCollectorName: claimsCollectorName,
+		authority:           authority,
 	}
 	return keeper
 }

@@ -5,6 +5,9 @@ const (
 	// ModuleName defines the module name
 	ModuleName = "claims"
 
+	// FeeCollectorName the root string for the fee collector account address
+	ClaimsCollectorName = "claims_collector"
+
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
 

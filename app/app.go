@@ -134,6 +134,9 @@ import (
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 
 	// tabi modules
+	"github.com/tabilabs/tabi/x/claims"
+	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
+	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 	"github.com/tabilabs/tabi/x/mint"
 	mintkeeper "github.com/tabilabs/tabi/x/mint/keeper"
 	minttypes "github.com/tabilabs/tabi/x/mint/types"
@@ -207,14 +210,15 @@ var (
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:     nil,
-		distrtypes.ModuleName:          nil,
-		minttypes.ModuleName:           {authtypes.Minter},
-		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:            {authtypes.Burner},
-		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		evmtypes.ModuleName:            {authtypes.Minter, authtypes.Burner}, // used for secure addition and subtraction of balance using module account
+		authtypes.FeeCollectorName:      nil,
+		distrtypes.ModuleName:           nil,
+		minttypes.ModuleName:            {authtypes.Minter},
+		stakingtypes.BondedPoolName:     {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:  {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:             {authtypes.Burner},
+		ibctransfertypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
+		evmtypes.ModuleName:             {authtypes.Minter, authtypes.Burner}, // used for secure addition and subtraction of balance using module account
+		claimstypes.ClaimsCollectorName: nil,
 	}
 
 	// module accounts that are allowed to receive tokens
@@ -271,6 +275,8 @@ type Tabi struct {
 	FeeMarketKeeper feemarketkeeper.Keeper
 
 	// Tabi keepers
+
+	Claimskeeper claimskeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -399,13 +405,14 @@ func NewTabi(
 
 	app.MintKeeper = mintkeeper.NewKeeper(
 		appCodec,
+		authtypes.NewModuleAddress(govtypes.ModuleName),
 		keys[minttypes.StoreKey],
 		app.GetSubspace(minttypes.ModuleName),
 		app.AccountKeeper,
 		app.BankKeeper,
 		app.DistrKeeper,
 		authtypes.FeeCollectorName,
-		"",
+		claimstypes.ClaimsCollectorName,
 	)
 
 	app.SlashingKeeper = slashingkeeper.NewKeeper(
@@ -454,6 +461,16 @@ func NewTabi(
 		appCodec, keys[evmtypes.StoreKey], tkeys[evmtypes.TransientKey], authtypes.NewModuleAddress(govtypes.ModuleName),
 		app.AccountKeeper, app.BankKeeper, &stakingKeeper, app.FeeMarketKeeper,
 		tracer, app.GetSubspace(evmtypes.ModuleName),
+	)
+
+	// Tabi module keepers
+	app.Claimskeeper = claimskeeper.NewKeeper(
+		appCodec,
+		authtypes.NewModuleAddress(govtypes.ModuleName),
+		keys[claimstypes.StoreKey],
+		app.GetSubspace(claimstypes.ModuleName),
+		app.AccountKeeper,
+		app.BankKeeper,
 	)
 
 	// Create IBC Keeper
@@ -576,6 +593,7 @@ func NewTabi(
 		evm.NewAppModule(app.EvmKeeper, app.AccountKeeper, app.GetSubspace(evmtypes.ModuleName)),
 		feemarket.NewAppModule(app.FeeMarketKeeper, app.GetSubspace(feemarkettypes.ModuleName)),
 		// Tabi app modules
+		claims.NewAppModule(appCodec, app.Claimskeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -606,6 +624,9 @@ func NewTabi(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
+
+		// Tabi app modules
+		claimstypes.ModuleName,
 	)
 
 	// NOTE: fee market module must go last in order to retrieve the block gas used.
@@ -631,6 +652,9 @@ func NewTabi(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+
+		// Tabi app modules
+		claimstypes.ModuleName,
 	)
 	// NOTE: The genutils module must occur after staking so that pools are
 	// properly initialized with tokens from genesis accounts.
@@ -662,6 +686,10 @@ func NewTabi(
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+
+		// Tabi app modules
+		claimstypes.ModuleName,
+
 		// NOTE: crisis module must go at the end to check for invariants on each module
 		crisistypes.ModuleName,
 	)
