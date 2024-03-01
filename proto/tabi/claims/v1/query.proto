@@ -1,20 +1,20 @@
 syntax = "proto3";
-package tabi.mint.v1;
+package tabi.claims.v1;
 
 import "cosmos/base/query/v1beta1/pagination.proto";
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 
-import "tabi/mint/v1/mint.proto";
+import "tabi/claims/v1/claims.proto";
 
-option go_package = "github.com/tabilabs/tabi/x/mint/types";
+option go_package = "github.com/tabilabs/tabi/x/claims/types";
 
 // Query creates service with guardian as rpc
 service Query {
   // Params queries the mint parameters
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/x/mint/params";
+    option (google.api.http).get = "/x/claims/params";
   }
 }
 

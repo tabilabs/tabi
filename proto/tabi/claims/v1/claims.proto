@@ -1,0 +1,11 @@
+syntax = "proto3";
+package tabi.claims.v1;
+
+option go_package = "github.com/tabilabs/tabi/x/claims/types";
+
+message Params {
+    // enable_claims is the parameter to enable the claiming process
+    bool enable_claims = 1;
+    // claims_denom is the denomination of the claimable coin
+    string claims_denom = 2;
+  }
