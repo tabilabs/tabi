@@ -17,3 +17,8 @@ func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.Q
 
 	return &types.QueryParamsResponse{Params: params}, nil
 }
+
+func (k Keeper) NodeRewards(c context.Context, req *types.QueryNodeRewardsRequest) (*types.QueryNodeRewardsResponse, error) {
+	// todo: implement the logic
+	return nil, nil
+}

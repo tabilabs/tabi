@@ -41,3 +41,12 @@ func (m msgServer) UpdateParams(
 	}
 	return &types.MsgUpdateParamsResponse{}, nil
 }
+
+// WithdrawNodeReward implement the interface of types.MsgServer
+func (m msgServer) WithdrawNodeReward(
+	goCtx context.Context,
+	msg *types.MsgWithdrawNodeReward,
+) (*types.MsgWithdrawNodeRewardResponse, error) {
+	// todo: implement the logic
+	return nil, nil
+}

@@ -2,6 +2,7 @@ syntax = "proto3";
 package tabi.claims.v1;
 
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
@@ -14,8 +15,14 @@ option go_package = "github.com/tabilabs/tabi/x/claims/types";
 service Query {
   // Params queries the mint parameters
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/x/claims/params";
+    option (google.api.http).get = "/x/claims/v1/params";
   }
+
+  // NodeRewards queries the total rewards accrued by a delegation.
+  rpc NodeRewards(QueryNodeRewardsRequest) returns (QueryNodeRewardsResponse) {
+    option (google.api.http).get = "/x/claims/v1/nodes/{node_id}/rewards";
+  }
+
 }
 
 // QueryParamsRequest is request type for the Query/Parameters RPC method
@@ -27,4 +34,23 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 
   cosmos.base.query.v1beta1.PageResponse res = 2;
+}
+
+
+// QueryNodeRewardsRequest is the request type for the
+// Query/NodeRewards RPC method.
+message QueryNodeRewardsRequest {
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  // node_id defines the node id to query for.
+  string node_id = 1;
+}
+
+// QueryNodeRewardsResponse is the response type for the
+// Query/NodeRewards RPC method.
+message QueryNodeRewardsResponse {
+  // rewards defines the rewards accrued by a delegation.
+  repeated cosmos.base.v1beta1.DecCoin rewards = 1
+      [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"];
 }

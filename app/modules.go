@@ -99,9 +99,13 @@ var (
 		evidence.AppModuleBasic{},
 		ibctransfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
-		// tabi modules
+
+		// Ethermint app modules
 		evm.AppModuleBasic{},
 		feemarket.AppModuleBasic{},
+
+		// tabi modules
+		claims.AppModuleBasic{},
 	)
 
 	// module account permissions

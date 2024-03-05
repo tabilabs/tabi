@@ -16,6 +16,11 @@ service Msg {
   // UpdateParams defines a governance operation for updating the x/claims
   // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // WithdrawValidatorCommission defines a method to withdraw the
+  // rewards to the Node address.
+  rpc WithdrawNodeReward(MsgWithdrawNodeReward) returns (MsgWithdrawNodeRewardResponse);
+  
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -35,3 +40,22 @@ message MsgUpdateParams {
 // MsgUpdateParamsResponse defines the response structure for executing a
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
+
+// MsgWithdrawNodeReward represents delegation withdrawal to a delegator
+// from a single Node.
+message MsgWithdrawNodeReward {
+  option (cosmos.msg.v1.signer) = "node_owner_address";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string node_owner_address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string node_id = 2;
+}
+
+// MsgWithdrawNodeRewardResponse defines the Msg/WithdrawNodeReward response type.
+message MsgWithdrawNodeRewardResponse {
+  // Since: cosmos-sdk 0.46
+  repeated cosmos.base.v1beta1.Coin amount = 1
+      [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}
