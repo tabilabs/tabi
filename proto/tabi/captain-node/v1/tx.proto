@@ -1,0 +1,6 @@
+syntax = "proto3";
+package tabi.captain_node.v1;
+
+
+
+option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
