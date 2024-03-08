@@ -7,12 +7,8 @@ option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
 
 // Params defines captain-node module's parameters
 message Params {
-    option (gogoproto.goproto_stringer) = false;   
 
     uint32 max_captains = 1;
-
-    uint8 minimum_power_on_period = 2;
-    uint8 maximum_power_on_period = 3;
-
-    uint8 max_level = 4;
+    uint32 minimum_power_on_period = 2;
+    uint32 maximum_power_on_period = 3;
 }
