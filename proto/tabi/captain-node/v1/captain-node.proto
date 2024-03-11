@@ -7,8 +7,30 @@ option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
 
 // Params defines captain-node module's parameters
 message Params {
+    // total_count_captains defines the total count of the captains
+    uint32 total_count_captains = 1;
 
-    uint32 max_captains = 1;
+    // minimum_power_on_period defines the minimum period for a captain to be powered on
     uint32 minimum_power_on_period = 2;
+
+    // maximum_power_on_period defines the maximum period for a captain to be powered on
     uint32 maximum_power_on_period = 3;
+
+    // constant_a defines the constant a for the captain can get the reward from the network
+    uint32 constant_a = 4;
+
+    // tech_progress_coefficient defines the coefficient for the captain can get the reward from the network
+    uint32 tech_progress_coefficient = 5;
+
+    // node_configs defines the node configurations
+    repeated NodeConfig node_configs = 6 [(gogoproto.nullable) = false];
+}
+
+message NodeConfig {
+    // level defines the level of the node
+    uint32 level = 1;
+    // total_count defines the total count of the node
+    uint32 total_count = 2;
+    // computing_power defines the computing power of the node
+    uint32 computing_power = 3;
 }
