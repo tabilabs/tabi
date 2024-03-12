@@ -1,0 +1,13 @@
+syntax = "proto3";
+package tabi.captain_node.v1;
+
+import "tabi/captain-node/v1/captain-node.proto";
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
+
+// GenesisState defines the mint module's genesis state
+message GenesisState {
+  Params params = 2 [ (gogoproto.nullable) = false ];
+}

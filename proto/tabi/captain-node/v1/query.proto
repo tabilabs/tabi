@@ -1,0 +1,30 @@
+syntax = "proto3";
+package tabi.captain_node.v1;
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+
+import "tabi/captain-node/v1/captain-node.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
+
+// Query creates service with guardian as rpc
+service Query {
+  // Params queries the captain-node parameters
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/x/captain-node/params";
+  }
+}
+
+// QueryParamsRequest is request type for the Query/Parameters RPC method
+message QueryParamsRequest {
+}
+
+// QueryParamsResponse is response type for the Query/Parameters RPC method
+message QueryParamsResponse {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+
+  cosmos.base.query.v1beta1.PageResponse res = 2;
+}
