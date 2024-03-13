@@ -1,16 +1,6 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
+// SPDX-License-Identifier: Apache-2.0
 
+// Package tests provides utility functions for testing.
 package tests
 
 import (
@@ -18,33 +8,44 @@ import (
 )
 
 var (
+	// UosmoDenomtrace represents the DenomTrace for the uosmo token.
 	UosmoDenomtrace = transfertypes.DenomTrace{
 		Path:      "transfer/channel-0",
 		BaseDenom: "uosmo",
 	}
+	// UosmoIbcdenom represents the IBC denomination for the uosmo token.
 	UosmoIbcdenom = UosmoDenomtrace.IBCDenom()
 
+	// UatomDenomtrace represents the DenomTrace for the uatom token.
 	UatomDenomtrace = transfertypes.DenomTrace{
 		Path:      "transfer/channel-1",
 		BaseDenom: "uatom",
 	}
+	// UatomIbcdenom represents the IBC denomination for the uatom token.
 	UatomIbcdenom = UatomDenomtrace.IBCDenom()
 
+	// UtabiDenomtrace represents the DenomTrace for the atabi token.
 	UtabiDenomtrace = transfertypes.DenomTrace{
 		Path:      "transfer/channel-0",
 		BaseDenom: "atabi",
 	}
+	// UtabiIbcdenom represents the IBC denomination for the atabi token.
 	UtabiIbcdenom = UtabiDenomtrace.IBCDenom()
 
+	// UatomOsmoDenomtrace represents the DenomTrace for the uatom token on the osmo channel.
 	UatomOsmoDenomtrace = transfertypes.DenomTrace{
 		Path:      "transfer/channel-0/transfer/channel-1",
 		BaseDenom: "uatom",
 	}
+	// UatomOsmoIbcdenom represents the IBC denomination for the uatom token on the osmo channel.
 	UatomOsmoIbcdenom = UatomOsmoDenomtrace.IBCDenom()
 
+	// AtabiDenomtrace represents the DenomTrace for the atabi token.
 	AtabiDenomtrace = transfertypes.DenomTrace{
 		Path:      "transfer/channel-0",
 		BaseDenom: "atabi",
 	}
+	// AtabiIbcdenom represents the IBC denomination for the atabi token.
 	AtabiIbcdenom = AtabiDenomtrace.IBCDenom()
 )
+
