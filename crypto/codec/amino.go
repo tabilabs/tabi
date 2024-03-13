@@ -1,15 +1,17 @@
+// SPDX-License-Identifier: LGPL-3.0-or-later
 // Copyright 2024 Tabi Foundation
 // This file is part of the Tabi Network packages.
-//
+
 // Tabi is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+
 // The Tabi packages are distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
+
 package codec
 
 import (
@@ -25,10 +27,8 @@ import (
 // RegisterCrypto registers all crypto dependency types with the provided Amino
 // codec.
 func RegisterCrypto(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&ethsecp256k1.PubKey{},
-		ethsecp256k1.PubKeyName, nil)
-	cdc.RegisterConcrete(&ethsecp256k1.PrivKey{},
-		ethsecp256k1.PrivKeyName, nil)
+	cdc.RegisterConcrete(&ethsecp256k1.PubKey{}, ethsecp256k1.PubKeyName, nil)
+	cdc.RegisterConcrete(&ethsecp256k1.PrivKey{}, ethsecp256k1.PrivKeyName, nil)
 
 	keyring.RegisterLegacyAminoCodec(cdc)
 	cryptocodec.RegisterCrypto(cdc)
