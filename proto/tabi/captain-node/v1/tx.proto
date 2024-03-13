@@ -16,6 +16,12 @@ service Msg {
   // module parameters. The authority is defined in the keeper.
   //
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // Transfer defines a power operation for transferring a node to a new owner
+
+  // UpdateNodeDivision defines a power operation for updating the division of a node
+
+
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.

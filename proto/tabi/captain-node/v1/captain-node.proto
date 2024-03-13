@@ -19,18 +19,30 @@ message Params {
     // constant_a defines the constant a for the captain can get the reward from the network
     uint32 constant_a = 4;
 
-    // tech_progress_coefficient defines the coefficient for the captain can get the reward from the network
-    uint32 tech_progress_coefficient = 5;
+    // current_level_for_sale defines the current level for sale
+    uint32 current_level_for_sale = 5;
 
-    // node_configs defines the node configurations
-    repeated NodeConfig node_configs = 6 [(gogoproto.nullable) = false];
+    // maximum_number_of_holdings defines the maximum number of holdings for a captain
+    uint32 maximum_number_of_holdings = 6;
 }
 
-message NodeConfig {
+// Rank defines the node class
+message Division {
+    string id = 1;
     // level defines the level of the node
-    uint32 level = 1;
+    uint32 level = 2;
     // total_count defines the total count of the node
-    uint32 total_count = 2;
+    uint32 total_count = 3;
     // computing_power defines the computing power of the node
-    uint32 computing_power = 3;
+    uint32 computing_power = 4;
+    // low defines the low of the node
+    uint32 low = 5;
+    // high defines the high of the node
+    uint32 high = 6;
+}
+
+// Node defines the node
+message Node {
+    string id = 1;
+    string division_id = 2;
 }

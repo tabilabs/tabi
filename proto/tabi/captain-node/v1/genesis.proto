@@ -9,5 +9,17 @@ option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
 
 // GenesisState defines the mint module's genesis state
 message GenesisState {
-  Params params = 2 [ (gogoproto.nullable) = false ];
+  Params params = 1;
+  repeated Division divisions = 2;
+  repeated Entry entries = 3;
+}
+
+
+
+message Entry {
+  // owner is the owner address of the following ndoe
+  string owner = 1;
+
+  // nodes is the list of nodes that the owner has
+  repeated Node nodes = 2;
 }
