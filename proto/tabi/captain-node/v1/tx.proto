@@ -10,18 +10,25 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
 option (gogoproto.goproto_getters_all) = false;
 
-// Msg defines the coinswap Msg service
+// Msg defines the captain-node Msg service
 service Msg {
   // UpdateParams defines a governance operation for updating the x/coinswap
   // module parameters. The authority is defined in the keeper.
   //
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
 
-  // Transfer defines a power operation for transferring a node to a new owner
+  // RegisterCaller defines a rpc handler method for MsgRegisterCaller.
+  rpc RegisterCaller(MsgRegisterCaller) returns (MsgRegisterCallerResponse);
 
-  // UpdateNodeDivision defines a power operation for updating the division of a node
+  // ReceiveExperience defines a user operation for receiving experience
+  // to a captain node.
+  rpc ReceiveExperience(MsgReceiveExperience) returns (MsgReceiveExperienceResponse);
 
+  // Mint defines a white list operation for minting a captain node.
+  rpc Mint(MsgMint) returns (MsgMintResponse);
 
+  // UpdatePowerOnPeriod defines a white list operation for updating the power on period.
+  rpc UpdatePowerOnPeriod(MsgUpdatePowerOnPeriod) returns (MsgUpdatePowerOnPeriodResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -44,3 +51,80 @@ message MsgUpdateParams {
 //
 // Since: cosmos-sdk 0.47
 message MsgUpdateParamsResponse {}
+
+// MsgReceiveExperience is the Msg/ReceiveExperience request type.
+message MsgReceiveExperience {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  // user is the address that receives the experience.
+  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // experience is the amount of experience to receive.
+  uint64 experience = 2;
+
+  // captain_node_id is the id of the captain node to receive experience.
+  string captain_node_id = 3;
+}
+
+// MsgReceiveExperienceResponse defines the response structure for executing a
+// MsgReceiveExperience message.
+message MsgReceiveExperienceResponse{}
+
+// MsgMint is the Msg/Mint request type.
+message MsgMint {
+  option (cosmos.msg.v1.signer) = "sender";
+  // sender is the address of the owner of nft
+  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // receiver is the receiver address of nft
+  string receiver = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  string division_id = 3;
+}
+
+// MsgMintResponse defines the response structure for executing a
+// MsgMint message.
+message MsgMintResponse{}
+
+// MsgUpdatePowerOnPeriod is the Msg/UpdatePowerOnPeriod request type.
+message MsgUpdatePowerOnPeriod {
+  option (cosmos.msg.v1.signer) = "sender";
+  // sender is the address of the owner of nft
+  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // captain_node_power_on_periods is the captain node power on periods to update.
+  repeated CaptainNodePowerOnPeriod captain_node_power_on_periods = 2;
+}
+
+message CaptainNodePowerOnPeriod {
+  // power_on_period is the period of time that the captain node is powered on.
+  uint64 power_on_period = 1;
+
+  // node_id is the id of the captain node to update power on period.
+  string node_id = 2;
+}
+
+// MsgUpdatePowerOnPeriodResponse defines the response structure for executing a
+// MsgUpdatePowerOnPeriod message.
+message MsgUpdatePowerOnPeriodResponse{}
+
+// MsgRegisterCaller defines a overnance proposal to register some
+// callers for mint node.
+message MsgRegisterCaller {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  option (gogoproto.goproto_getters) = false;
+  // the title of the update proposal
+  string title = 1;
+  // the description of the proposal
+  string description = 2;
+
+  // caller address list
+  repeated string callers = 3;
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgRegisterCallerResponse defines the Msg/RegisterCaller response type.
+message MsgRegisterCallerResponse {}

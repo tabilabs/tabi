@@ -9,17 +9,22 @@ option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
 
 // GenesisState defines the mint module's genesis state
 message GenesisState {
-  Params params = 1;
+  Params params = 1 [ (gogoproto.nullable) = false ];
   repeated Division divisions = 2;
   repeated Entry entries = 3;
+
+  // authorized caller list
+  repeated IdentifiedCallers callers = 4 [ (gogoproto.nullable) = false ];
 }
 
-
-
+// Entry Defines all info owned by a person
 message Entry {
-  // owner is the owner address of the following ndoe
+  // owner is the owner address of the following node
   string owner = 1;
 
+  // extractable_amount is the amount of experience that the owner can extract from the node
+  uint64 extractable_amount = 2;
+
   // nodes is the list of nodes that the owner has
-  repeated Node nodes = 2;
+  repeated Node nodes = 3;
 }

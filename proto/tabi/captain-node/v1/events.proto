@@ -1,0 +1,30 @@
+syntax = "proto3";
+package tabi.captain_node.v1;
+
+option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
+
+// EventMint is the mint event
+message EventMint {
+  string id = 1;
+  string node_id = 2;
+  string division_id = 3;
+  string owner = 4;
+}
+
+// EventReceiveExperience is the event for receiving experience
+message EventReceiveExperience {
+  string node_id = 1;
+  string old_division_id = 2;
+  string new_division_id = 3;
+  string receive_experience_amount = 4;
+  string remaining_experience_amount = 5;
+  string sender = 6;
+}
+
+// EventUpdatePowerOnPeriod is the event for updating power on period
+message EventUpdatePowerOnPeriod {
+  string node_id = 1;
+  string old_power_on_period = 2;
+  string new_power_on_period = 3;
+  string sender = 4;
+}

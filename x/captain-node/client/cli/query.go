@@ -13,17 +13,17 @@ import (
 
 // GetQueryCmd returns the cli query commands for the mint module.
 func GetQueryCmd() *cobra.Command {
-	cliamsQueryCmd := &cobra.Command{
+	captionNodeQueryCmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      "Querying commands for the cliams module",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
-	cliamsQueryCmd.AddCommand(
+	captionNodeQueryCmd.AddCommand(
 		GetCmdQueryParams(),
 	)
-	return cliamsQueryCmd
+	return captionNodeQueryCmd
 }
 
 // GetCmdQueryParams implements a command to return the current minting parameters.

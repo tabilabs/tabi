@@ -17,9 +17,12 @@ func ParamKeyTable() paramtypes.KeyTable {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return Params{
-		MaxCaptains:          100000,
-		MaximumPowerOnPeriod: 24,
-		MinimumPowerOnPeriod: 6,
+		TotalCountCaptains:      100000,
+		MaximumPowerOnPeriod:    24,
+		MinimumPowerOnPeriod:    6,
+		ConstantA:               300000,
+		CurrentLevelForSale:     1,
+		MaximumNumberOfHoldings: 5,
 	}
 }
 
@@ -35,5 +38,26 @@ func (p *Params) GetParamSpace() string {
 
 // Validate returns err if the Params is invalid
 func (p Params) Validate() error {
+	if p.TotalCountCaptains <= 0 {
+		return nil
+	}
+
+	if p.MaximumPowerOnPeriod <= 0 || p.MaximumPowerOnPeriod > 24 {
+		return nil
+	}
+
+	if p.MinimumPowerOnPeriod <= 0 || p.MaximumPowerOnPeriod > 24 || p.MinimumPowerOnPeriod > p.MaximumPowerOnPeriod {
+		return nil
+	}
+
+	if p.ConstantA <= 0 {
+		return nil
+	}
+	if p.CurrentLevelForSale <= 0 || p.CurrentLevelForSale > 7 {
+		return nil
+	}
+	if p.MaximumNumberOfHoldings <= 0 || p.MaximumNumberOfHoldings > p.TotalCountCaptains {
+		return nil
+	}
 	return nil
 }

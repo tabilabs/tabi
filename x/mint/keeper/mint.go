@@ -103,18 +103,7 @@ func (k Keeper) GetProportions(
 	}
 }
 
-// GetParamSet returns inflation params from the global param store
-func (k Keeper) GetParamSet(ctx sdk.Context) types.Params {
-	var params types.Params
-	k.paramSpace.GetParamSet(ctx, &params)
-	return params
-}
-
-// SetParamSet set inflation params from the global param store
-func (k Keeper) SetParamSet(ctx sdk.Context, params types.Params) {
-	k.paramSpace.SetParamSet(ctx, &params)
-}
-
+// GetTokenSupply returns the total supply of the token
 func (k Keeper) GetTokenSupply(ctx sdk.Context) sdkmath.Int {
 	tabiCoin := k.bankKeeper.GetSupply(ctx, "")
 	sdTabiCoin := k.bankKeeper.GetSupply(ctx, "")

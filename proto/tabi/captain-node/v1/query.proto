@@ -97,7 +97,7 @@ message QueryDivisionsRequest {
 
 // QueryDivisionsResponse is the response type for the Query/Divisions RPC method
 message QueryDivisionsResponse {
-  repeated Divisions      divisions    = 1;
+  repeated Division      divisions    = 1;
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
