@@ -20,15 +20,19 @@ service Msg {
   // RegisterCaller defines a rpc handler method for MsgRegisterCaller.
   rpc RegisterCaller(MsgRegisterCaller) returns (MsgRegisterCallerResponse);
 
-  // ReceiveExperience defines a user operation for receiving experience
+  // UpdatePowerOnPeriod defines a white list operation for updating the power on period.
+  rpc UpdatePowerOnPeriod(MsgUpdatePowerOnPeriod) returns (MsgUpdatePowerOnPeriodResponse);
+
+  // UpdateUserExperience defines a white list operation for updating the user experience.
+  rpc UpdateUserExperience(MsgUpdateUserExperience) returns (MsgUpdateUserExperienceResponse);
+
+  // WithdrawExperience defines a user operation for receiving experience
   // to a captain node.
-  rpc ReceiveExperience(MsgReceiveExperience) returns (MsgReceiveExperienceResponse);
+  rpc WithdrawExperience(MsgWithdrawExperience) returns (MsgWithdrawExperienceResponse);
 
   // Mint defines a white list operation for minting a captain node.
   rpc Mint(MsgMint) returns (MsgMintResponse);
 
-  // UpdatePowerOnPeriod defines a white list operation for updating the power on period.
-  rpc UpdatePowerOnPeriod(MsgUpdatePowerOnPeriod) returns (MsgUpdatePowerOnPeriodResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -52,8 +56,8 @@ message MsgUpdateParams {
 // Since: cosmos-sdk 0.47
 message MsgUpdateParamsResponse {}
 
-// MsgReceiveExperience is the Msg/ReceiveExperience request type.
-message MsgReceiveExperience {
+// MsgWithdrawExperience is the Msg/MsgWithdrawExperience request type.
+message MsgWithdrawExperience {
   option (cosmos.msg.v1.signer) = "sender";
 
   // user is the address that receives the experience.
@@ -62,13 +66,13 @@ message MsgReceiveExperience {
   // experience is the amount of experience to receive.
   uint64 experience = 2;
 
-  // captain_node_id is the id of the captain node to receive experience.
-  string captain_node_id = 3;
+  // node_id is the id of the captain node to receive experience.
+  string node_id = 3;
 }
 
-// MsgReceiveExperienceResponse defines the response structure for executing a
-// MsgReceiveExperience message.
-message MsgReceiveExperienceResponse{}
+// MsgWithdrawExperienceResponse defines the response structure for executing a
+// MsgWithdrawExperience message.
+message MsgWithdrawExperienceResponse{}
 
 // MsgMint is the Msg/Mint request type.
 message MsgMint {
@@ -128,3 +132,26 @@ message MsgRegisterCaller {
 
 // MsgRegisterCallerResponse defines the Msg/RegisterCaller response type.
 message MsgRegisterCallerResponse {}
+
+
+//MsgUpdateUserExperience is the Msg/UpdateUserExperience request type.
+message MsgUpdateUserExperience {
+  option (cosmos.msg.v1.signer) = "sender";
+  // sender is the address of the owner of nft
+  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // user_experience is the user experience to update.
+  repeated UserExperience user_experiences = 2;
+}
+
+message UserExperience {
+  // experience is the amount of experience to update.
+  uint64 experience = 1;
+
+  // receiver is the receiver address of node
+  string receiver = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgUpdateUserExperienceResponse defines the response structure for executing a
+// MsgUpdateUserExperience message.
+message MsgUpdateUserExperienceResponse{}

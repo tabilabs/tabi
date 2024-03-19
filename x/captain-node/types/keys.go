@@ -30,20 +30,23 @@ const (
 )
 
 var (
-	ParamsKey           = []byte{0x00}
-	NodeKey             = []byte{0x01}
-	NodeByOwner         = []byte{0x02}
-	OwnerKey            = []byte{0x03}
-	DivisionKey         = []byte{0x04}
-	DivisionTotalSupply = []byte{0x05}
-	OwnerHolding        = []byte{0x06}
-	PowerOnPeriod       = []byte{0x07}
+	ParamsKey              = []byte{0x00}
+	NodeKey                = []byte{0x01}
+	NodeByOwnerKey         = []byte{0x02}
+	OwnerKey               = []byte{0x03}
+	DivisionKey            = []byte{0x04}
+	DivisionTotalSupplyKey = []byte{0x05}
+	OwnerHoldingKey        = []byte{0x06}
+	PowerOnPeriodKey       = []byte{0x07}
+	ExperienceKey          = []byte{0x08}
 
 	Delimiter   = []byte{0x00}
 	Placeholder = []byte{0x01}
 )
 
 // NodeStoreKey returns the byte representation of the node key
+// Items are stored with the following key: values
+// 0x01<nodeID>
 func NodeStoreKey(nodeID string) []byte {
 	key := make([]byte, len(NodeKey)+len(nodeID))
 	copy(key, NodeKey)
@@ -51,7 +54,20 @@ func NodeStoreKey(nodeID string) []byte {
 	return key
 }
 
+// NodeByOwnerStoreKey returns the byte representation of the node owner
+// Items are stored with the following key: values
+// 0x02<owner>
+func NodeByOwnerStoreKey(owner sdk.AccAddress) []byte {
+	owner = address.MustLengthPrefix(owner)
+	key := make([]byte, len(NodeByOwnerKey)+len(owner))
+	copy(key, NodeByOwnerKey)
+	copy(key[len(NodeByOwnerKey):], owner)
+	return key
+}
+
 // OwnerStoreKey returns the byte representation of the owner key
+// Items are stored with the following key: values
+// 0x03<nodeID>
 func OwnerStoreKey(nodeId string) []byte {
 
 	key := make([]byte, len(OwnerKey)+len(nodeId))
@@ -61,6 +77,8 @@ func OwnerStoreKey(nodeId string) []byte {
 }
 
 // DivisionStoreKey returns the byte representation of the divisions key
+// Items are stored with the following key: values
+// 0x04<divisionsID>
 func DivisionStoreKey(divisionsID string) []byte {
 	key := make([]byte, len(DivisionKey)+len(divisionsID))
 	copy(key, DivisionKey)
@@ -68,36 +86,44 @@ func DivisionStoreKey(divisionsID string) []byte {
 	return key
 }
 
-// DivisionTotalSupplyKey returns the byte representation of the divisions total supply key
-func DivisionTotalSupplyKey(divisionsID string) []byte {
-	key := make([]byte, len(DivisionTotalSupply)+len(divisionsID))
-	copy(key, DivisionTotalSupply)
-	copy(key[len(DivisionTotalSupply):], divisionsID)
-	return key
-}
-
-// NodeByOwnerStoreKey returns the byte representation of the node owner
+// DivisionTotalSupplyStoreKey returns the byte representation of the divisions total supply key
 // Items are stored with the following key: values
-// 0x02<owner>
-func NodeByOwnerStoreKey(owner sdk.AccAddress) []byte {
-	owner = address.MustLengthPrefix(owner)
-	key := make([]byte, len(NodeByOwner)+len(owner))
-	copy(key, NodeByOwner)
-	copy(key[len(NodeByOwner):], owner)
+// 0x05<divisionsID>
+func DivisionTotalSupplyStoreKey(divisionsID string) []byte {
+	key := make([]byte, len(DivisionTotalSupplyKey)+len(divisionsID))
+	copy(key, DivisionTotalSupplyKey)
+	copy(key[len(DivisionTotalSupplyKey):], divisionsID)
 	return key
 }
 
+// OwnerHoldingTotalSupplyStoreKey returns the byte representation of the owner holding total supply key
+// Items are stored with the following key: values
+// 0x06<owner>
 func OwnerHoldingTotalSupplyStoreKey(owner sdk.AccAddress) []byte {
 	owner = address.MustLengthPrefix(owner)
-	key := make([]byte, len(OwnerHolding)+len(owner))
-	copy(key, OwnerHolding)
-	copy(key[len(OwnerHolding):], owner)
+	key := make([]byte, len(OwnerHoldingKey)+len(owner))
+	copy(key, OwnerHoldingKey)
+	copy(key[len(OwnerHoldingKey):], owner)
 	return key
 }
 
+// NodePowerOnPeriodStoreKey returns the byte representation of the node power on period key
+// Items are stored with the following key: values
+// 0x07<nodeID>
 func NodePowerOnPeriodStoreKey(nodeID string) []byte {
-	key := make([]byte, len(PowerOnPeriod)+len(nodeID))
-	copy(key, PowerOnPeriod)
-	copy(key[len(PowerOnPeriod):], nodeID)
+	key := make([]byte, len(PowerOnPeriodKey)+len(nodeID))
+	copy(key, PowerOnPeriodKey)
+	copy(key[len(PowerOnPeriodKey):], nodeID)
+	return key
+}
+
+// ExperienceStoreKey returns the byte representation of the experience key
+// Items are stored with the following key: values
+// 0x08<owner>
+func ExperienceStoreKey(owner sdk.AccAddress) []byte {
+	owner = address.MustLengthPrefix(owner)
+	key := make([]byte, len(ExperienceKey)+len(owner))
+	copy(key, ExperienceKey)
+	copy(key[len(ExperienceKey):], owner)
 	return key
 }

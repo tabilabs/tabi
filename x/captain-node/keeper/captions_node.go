@@ -54,6 +54,46 @@ func (k Keeper) CreateNode(ctx sdk.Context, node types.Node, receiver sdk.AccAdd
 	return nil
 }
 
+func (k Keeper) UpdateNode(ctx sdk.Context, nodeID string, experience uint64, owner sdk.AccAddress) error {
+	// Check if the node exists
+	if !k.HasNode(ctx, nodeID) {
+		return errorsmod.Wrap(types.ErrNodeNotExists, nodeID)
+	}
+
+	// Check if owner of the node is the sender
+	if err := k.AuthorizeNode(ctx, nodeID, owner); err != nil {
+		return errorsmod.Wrap(types.ErrUnauthorized, owner.String())
+	}
+
+	// Check if the node has enough experience
+	if k.GetExperience(ctx, owner) < experience {
+		return errorsmod.Wrap(types.ErrInsufficientExperience, nodeID)
+	}
+
+	// Update the node
+	node, _ := k.GetNode(ctx, nodeID)
+	currentDivision, _ := k.GetDivision(ctx, node.DivisionId)
+
+	node.Experience += experience
+
+	// Check if the node has enough experience to be promoted to the next division
+	if node.Experience > currentDivision.High {
+		divisions := k.GetDivisions(ctx)
+		for _, division := range divisions {
+			if node.Experience <= division.High && node.Experience >= division.Low {
+				node.DivisionId = division.Id
+				break
+			}
+		}
+	}
+
+	// Set the node
+	k.setNode(ctx, node)
+	// Set the experience
+	k.decrExperience(ctx, owner, experience)
+	return nil
+}
+
 // GenerateNodeID defines a method for generating a new node id
 func (k Keeper) GenerateNodeID(ctx sdk.Context) string {
 	sequence := k.GetNodeSequence(ctx)
@@ -63,10 +103,24 @@ func (k Keeper) GenerateNodeID(ctx sdk.Context) string {
 	return hash
 }
 
+// GetLastNodeID defines a method for returning the last node id
+func (k Keeper) GetLastNodeID(ctx sdk.Context) string {
+	sequence := k.GetNodeSequence(ctx)
+	return fmt.Sprintf(nodeIdPrefix, sequence-1)
+}
+
 // HasNode defines a method for checking the existence of a node
 func (k Keeper) HasNode(ctx sdk.Context, nodeID string) bool {
 	store := ctx.KVStore(k.storeKey)
 	return store.Has(types.NodeStoreKey(nodeID))
+}
+
+// AuthorizeNode defines a method for checking if the sender is the owner of the given node
+func (k Keeper) AuthorizeNode(ctx sdk.Context, nodeID string, owner sdk.AccAddress) error {
+	if !owner.Equals(k.GetOwner(ctx, nodeID)) {
+		return errorsmod.Wrap(types.ErrUnauthorized, owner.String())
+	}
+	return nil
 }
 
 // GetNode defines a method for returning the node information of the specified id
@@ -112,6 +166,8 @@ func (k Keeper) GetUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress) ui
 	return k.getUserHoldingQuantity(ctx, owner)
 }
 
+// setNode defines a method for setting the node
+// only can have one owner
 func (k Keeper) setNode(ctx sdk.Context, node types.Node) {
 	bz := k.cdc.MustMarshal(&node)
 	store := ctx.KVStore(k.storeKey)
@@ -120,6 +176,7 @@ func (k Keeper) setNode(ctx sdk.Context, node types.Node) {
 
 // SetOwner defines a method for setting the owner of the specified node
 // and setting the owner of the specified node
+// user can have multiple nodes
 func (k Keeper) setOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.OwnerStoreKey(nodeID), owner.Bytes())

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	errorsmod "cosmossdk.io/errors"
 
@@ -63,6 +64,10 @@ func (m msgServer) RegisterCaller(
 }
 
 /*****************************************************************************/
+/*****************************************************************************/
+/* Need Allow Function */
+/*****************************************************************************/
+/*****************************************************************************/
 
 // Mint implement the interface of types.MsgServer
 func (m msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMintResponse, error) {
@@ -104,11 +109,6 @@ func (m msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMi
 	return &types.MsgMintResponse{}, nil
 }
 
-func (m msgServer) ReceiveExperience(goCtx context.Context, msg *types.MsgReceiveExperience) (*types.MsgReceiveExperienceResponse, error) {
-	// todo
-	return &types.MsgReceiveExperienceResponse{}, nil
-}
-
 func (m msgServer) UpdatePowerOnPeriod(goCtx context.Context, msg *types.MsgUpdatePowerOnPeriod) (*types.MsgUpdatePowerOnPeriodResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	_, err := sdk.AccAddressFromBech32(msg.Sender)
@@ -141,4 +141,70 @@ func (m msgServer) UpdatePowerOnPeriod(goCtx context.Context, msg *types.MsgUpda
 	resultEvents = append(resultEvents, events...)
 	ctx.EventManager().EmitEvents(resultEvents)
 	return &types.MsgUpdatePowerOnPeriodResponse{}, nil
+}
+
+func (m msgServer) UpdateUserExperience(goCtx context.Context, msg *types.MsgUpdateUserExperience) (*types.MsgUpdateUserExperienceResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	_, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+
+	// check if msg.Sender not in allow list
+	if !m.k.AuthCaller(ctx, msg.Sender) {
+		return nil, errorsmod.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"invalid sender; not in allow list",
+		)
+	}
+	if len(msg.UserExperiences) == 0 {
+		return nil, errorsmod.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"invalid user experience; empty",
+		)
+	}
+	events := m.k.UpdateAllUserExperience(ctx, msg.UserExperiences)
+
+	resultEvents := sdk.Events{sdk.NewEvent(
+		sdk.EventTypeMessage,
+		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		sdk.NewAttribute(sdk.AttributeKeySender, msg.Sender),
+	)}
+	resultEvents = append(resultEvents, events...)
+	ctx.EventManager().EmitEvents(resultEvents)
+	return &types.MsgUpdateUserExperienceResponse{}, nil
+}
+
+/*****************************************************************************/
+/*****************************************************************************/
+/* User Function */
+/*****************************************************************************/
+/*****************************************************************************/
+
+func (m msgServer) WithdrawExperience(goCtx context.Context, msg *types.MsgWithdrawExperience) (*types.MsgWithdrawExperienceResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := m.k.UpdateNode(ctx, msg.NodeId, msg.Experience, sender); err != nil {
+		return nil, err
+	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeMintNode,
+			sdk.NewAttribute(types.AttributeKeyNodeID, msg.NodeId),
+			sdk.NewAttribute(types.AttributeKeyExperience, fmt.Sprintf("%d", msg.Experience)),
+			sdk.NewAttribute(types.AttributeKeyReceiver, msg.Sender),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Sender),
+		),
+	})
+
+	return &types.MsgWithdrawExperienceResponse{}, nil
 }

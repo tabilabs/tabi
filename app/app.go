@@ -110,6 +110,8 @@ import (
 
 	// tabi modules
 
+	captainnodekeeper "github.com/tabilabs/tabi/x/captain-node/keeper"
+	captainnodetypes "github.com/tabilabs/tabi/x/captain-node/types"
 	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 	mintkeeper "github.com/tabilabs/tabi/x/mint/keeper"
@@ -195,8 +197,8 @@ type Tabi struct {
 	FeeMarketKeeper feemarketkeeper.Keeper
 
 	// Tabi keepers
-
-	Claimskeeper claimskeeper.Keeper
+	Claimskeeper      claimskeeper.Keeper
+	CaptainNodeKeeper captainnodekeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -253,6 +255,8 @@ func NewTabi(
 		evmtypes.StoreKey, feemarkettypes.StoreKey,
 
 		// tabi keys
+		claimstypes.StoreKey,
+		captainnodetypes.StoreKey,
 	)
 
 	// Add the EVM transient store key
@@ -393,6 +397,13 @@ func NewTabi(
 		app.GetSubspace(claimstypes.ModuleName),
 		app.AccountKeeper,
 		app.BankKeeper,
+	)
+
+	app.CaptainNodeKeeper = captainnodekeeper.NewKeeper(
+		appCodec,
+		keys[captainnodetypes.StoreKey],
+		app.GetSubspace(captainnodetypes.ModuleName),
+		authtypes.NewModuleAddress(govtypes.ModuleName),
 	)
 
 	// Create IBC Keeper
@@ -835,6 +846,7 @@ func initParamsKeeper(
 	paramsKeeper.Subspace(feemarkettypes.ModuleName).WithKeyTable(feemarkettypes.ParamKeyTable())
 	// tabi subspaces
 	paramsKeeper.Subspace(claimstypes.ModuleName)
+	paramsKeeper.Subspace(captainnodetypes.ModuleName)
 
 	return paramsKeeper
 }

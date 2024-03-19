@@ -10,10 +10,12 @@ func (k Keeper) UpdateAllNodesPowerOnPeriod(
 	NodesPowerOnPeriod []*types.CaptainNodePowerOnPeriod,
 ) []sdk.Event {
 	events := make([]sdk.Event, 0)
+	params := k.GetParams(ctx)
 	for _, nodePowerOnPeriod := range NodesPowerOnPeriod {
 		// update the power on period of the node
 		oldPowerOnPeriod := k.GetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId)
-		k.SetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId, nodePowerOnPeriod.PowerOnPeriod)
+		powerOnPeriod := calculatePowerOnPeriod(nodePowerOnPeriod.PowerOnPeriod, params.MaximumPowerOnPeriod)
+		k.SetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId, powerOnPeriod)
 		newPowerOnPeriod := k.GetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId)
 		events = append(
 			events,
@@ -29,11 +31,10 @@ func (k Keeper) UpdateAllNodesPowerOnPeriod(
 }
 
 // SetNodePowerOnPeriod set the proportion of online nodes
-func (k Keeper) SetNodePowerOnPeriod(ctx sdk.Context, nodeID string, proportion uint64) {
+func (k Keeper) SetNodePowerOnPeriod(ctx sdk.Context, nodeID string, powerOnPeriod sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
 
-	powerOnPeriod := k.CalculatePowerOnPeriod(ctx, proportion)
-	store.Set(types.NodePowerOnPeriodStoreKey(nodeID), powerOnPeriod.Bytes())
+	store.Set(types.NodePowerOnPeriodStoreKey(nodeID), powerOnPeriod.BigInt().Bytes())
 }
 
 // GetNodePowerOnPeriod returns the proportion of online nodes

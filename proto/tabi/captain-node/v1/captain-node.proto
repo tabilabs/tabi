@@ -46,6 +46,7 @@ message Node {
     string id = 1;
     string division_id = 2;
     string owner = 3;
+    uint64 experience = 4;
 }
 
 // Experience defines the experience of the user
