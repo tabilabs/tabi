@@ -16,7 +16,7 @@ import (
 // GetQueryCmd returns the cli query commands for the mint module.
 func GetQueryCmd() *cobra.Command {
 	captionNodeQueryCmd := &cobra.Command{
-		Use:                        types.ModuleName,
+		Use:                        "captain-node",
 		Short:                      "Querying commands for the cliams module",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,

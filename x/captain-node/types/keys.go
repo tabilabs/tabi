@@ -8,7 +8,7 @@ import (
 // nolint
 const (
 	// ModuleName defines the module name
-	ModuleName = "captain-node"
+	ModuleName = "captainnode"
 
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName

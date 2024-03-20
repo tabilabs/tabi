@@ -1,6 +1,8 @@
 package types
 
 import (
+	"strings"
+
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -19,6 +21,7 @@ var (
 	_ sdk.Msg = &MsgWithdrawExperience{}
 	_ sdk.Msg = &MsgUpdatePowerOnPeriod{}
 	_ sdk.Msg = &MsgUpdateUserExperience{}
+	_ sdk.Msg = &MsgRegisterCaller{}
 )
 
 // GetSignBytes returns the raw bytes for a MsgUpdateParams message that
@@ -147,6 +150,17 @@ func (msg MsgUpdatePowerOnPeriod) ValidateBasic() error {
 	if len(msg.CaptainNodePowerOnPeriods) == 0 {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captain node power on periods cannot be empty")
 	}
+
+	for _, captainNodePowerOnPeriod := range msg.CaptainNodePowerOnPeriods {
+		if captainNodePowerOnPeriod.PowerOnPeriod <= 0 || captainNodePowerOnPeriod.PowerOnPeriod > 24 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "power on period must be between 1 and 24")
+		}
+		captainNodePowerOnPeriod.NodeId = strings.TrimSpace(captainNodePowerOnPeriod.NodeId)
+		if captainNodePowerOnPeriod.NodeId == "" {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node id cannot be empty")
+		}
+	}
+
 	return nil
 }
 
@@ -186,6 +200,16 @@ func (msg MsgUpdateUserExperience) ValidateBasic() error {
 	if len(msg.UserExperiences) == 0 {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "user experiences cannot be empty")
 	}
+
+	for _, userExperience := range msg.UserExperiences {
+		if userExperience.Experience == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "experience cannot be zero")
+		}
+		if _, err := sdk.AccAddressFromBech32(userExperience.Receiver); err != nil {
+			return errorsmod.Wrap(err, "invalid receiver address")
+		}
+	}
+
 	return nil
 }
 
@@ -198,4 +222,44 @@ func (msg MsgUpdateUserExperience) GetSignBytes() []byte {
 func (msg MsgUpdateUserExperience) GetSigners() []sdk.AccAddress {
 	fromAddress, _ := sdk.AccAddressFromBech32(msg.Sender)
 	return []sdk.AccAddress{fromAddress}
+}
+
+func NewMsgRegisterCaller() *MsgRegisterCaller {
+	return &MsgRegisterCaller{}
+}
+
+// Route Implements Msg.
+func (m MsgRegisterCaller) Route() string { return RouterKey }
+
+// Type Implements Msg.
+func (m MsgRegisterCaller) Type() string { return TypeMsgUpdatePowerOnPeriod }
+
+// ValidateBasic Implements Msg.
+func (msg MsgRegisterCaller) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
+		return errorsmod.Wrap(err, "invalid authority address")
+	}
+
+	if len(msg.Callers) == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "caller cannot be empty")
+	}
+
+	for _, caller := range msg.Callers {
+		if _, err := sdk.AccAddressFromBech32(caller); err != nil {
+			return errorsmod.Wrap(err, "invalid caller address")
+		}
+	}
+
+	return nil
+}
+
+// GetSignBytes Implements Msg.
+func (msg MsgRegisterCaller) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
+}
+
+// GetSigners Implements Msg.
+func (msg MsgRegisterCaller) GetSigners() []sdk.AccAddress {
+	addr, _ := sdk.AccAddressFromBech32(msg.Authority)
+	return []sdk.AccAddress{addr}
 }

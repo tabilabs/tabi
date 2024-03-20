@@ -138,6 +138,19 @@ func (k Keeper) GetNode(ctx sdk.Context, nodeID string) (types.Node, bool) {
 	return node, true
 }
 
+// GetNodes returns all nodes
+func (k Keeper) GetNodes(ctx sdk.Context) (nodes []types.Node) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.NodeKey)
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var node types.Node
+		k.cdc.MustUnmarshal(iterator.Value(), &node)
+		nodes = append(nodes, node)
+	}
+	return nodes
+}
+
 // GetNodesByOwner return all nodes owned by the specified owner
 func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []types.Node) {
 	ownerStore := k.getNodeStoreByOwner(ctx, owner)

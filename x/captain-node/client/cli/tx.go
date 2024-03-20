@@ -21,7 +21,7 @@ import (
 // GetTxCmd returns the transaction commands for this module
 func GetTxCmd() *cobra.Command {
 	captionNodeTxCmd := &cobra.Command{
-		Use:                        types.ModuleName,
+		Use:                        "captain-node",
 		Short:                      "captain-node transactions subcommands",
 		Long:                       "Provides the most common captain-node logic",
 		DisableFlagParsing:         true,
