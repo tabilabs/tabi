@@ -25,9 +25,20 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Params defines captain-node module's parameters
 type Params struct {
-	MaxCaptains          uint32 `protobuf:"varint,1,opt,name=max_captains,json=maxCaptains,proto3" json:"max_captains,omitempty"`
-	MinimumPowerOnPeriod uint32 `protobuf:"varint,2,opt,name=minimum_power_on_period,json=minimumPowerOnPeriod,proto3" json:"minimum_power_on_period,omitempty"`
-	MaximumPowerOnPeriod uint32 `protobuf:"varint,3,opt,name=maximum_power_on_period,json=maximumPowerOnPeriod,proto3" json:"maximum_power_on_period,omitempty"`
+	// total_count_captains defines the total count of the captains
+	TotalCountCaptains uint64 `protobuf:"varint,1,opt,name=total_count_captains,json=totalCountCaptains,proto3" json:"total_count_captains,omitempty"`
+	// minimum_power_on_period defines the minimum period for a captain to be powered on
+	MinimumPowerOnPeriod uint64 `protobuf:"varint,2,opt,name=minimum_power_on_period,json=minimumPowerOnPeriod,proto3" json:"minimum_power_on_period,omitempty"`
+	// maximum_power_on_period defines the maximum period for a captain to be powered on
+	MaximumPowerOnPeriod uint64 `protobuf:"varint,3,opt,name=maximum_power_on_period,json=maximumPowerOnPeriod,proto3" json:"maximum_power_on_period,omitempty"`
+	// constant_a defines the constant a for the captain can get the reward from the network
+	ConstantA uint64 `protobuf:"varint,4,opt,name=constant_a,json=constantA,proto3" json:"constant_a,omitempty"`
+	// current_level_for_sale defines the current level for sale
+	CurrentLevelForSale uint64 `protobuf:"varint,5,opt,name=current_level_for_sale,json=currentLevelForSale,proto3" json:"current_level_for_sale,omitempty"`
+	// maximum_number_of_holdings defines the maximum number of holdings for a captain
+	MaximumNumberOfHoldings uint64 `protobuf:"varint,6,opt,name=maximum_number_of_holdings,json=maximumNumberOfHoldings,proto3" json:"maximum_number_of_holdings,omitempty"`
+	// authorized caller list
+	Callers []string `protobuf:"bytes,7,rep,name=callers,proto3" json:"callers,omitempty"`
 }
 
 func (m *Params) Reset()         { *m = Params{} }
@@ -63,29 +74,272 @@ func (m *Params) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Params proto.InternalMessageInfo
 
-func (m *Params) GetMaxCaptains() uint32 {
+func (m *Params) GetTotalCountCaptains() uint64 {
 	if m != nil {
-		return m.MaxCaptains
+		return m.TotalCountCaptains
 	}
 	return 0
 }
 
-func (m *Params) GetMinimumPowerOnPeriod() uint32 {
+func (m *Params) GetMinimumPowerOnPeriod() uint64 {
 	if m != nil {
 		return m.MinimumPowerOnPeriod
 	}
 	return 0
 }
 
-func (m *Params) GetMaximumPowerOnPeriod() uint32 {
+func (m *Params) GetMaximumPowerOnPeriod() uint64 {
 	if m != nil {
 		return m.MaximumPowerOnPeriod
 	}
 	return 0
 }
 
+func (m *Params) GetConstantA() uint64 {
+	if m != nil {
+		return m.ConstantA
+	}
+	return 0
+}
+
+func (m *Params) GetCurrentLevelForSale() uint64 {
+	if m != nil {
+		return m.CurrentLevelForSale
+	}
+	return 0
+}
+
+func (m *Params) GetMaximumNumberOfHoldings() uint64 {
+	if m != nil {
+		return m.MaximumNumberOfHoldings
+	}
+	return 0
+}
+
+func (m *Params) GetCallers() []string {
+	if m != nil {
+		return m.Callers
+	}
+	return nil
+}
+
+// Rank defines the node class
+type Division struct {
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// level defines the level of the node
+	Level uint64 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
+	// total_count defines the total count of the node
+	TotalCount uint64 `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	// computing_power defines the computing power of the node
+	ComputingPower uint64 `protobuf:"varint,4,opt,name=computing_power,json=computingPower,proto3" json:"computing_power,omitempty"`
+	// low defines the low of the node
+	Low uint64 `protobuf:"varint,5,opt,name=low,proto3" json:"low,omitempty"`
+	// high defines the high of the node
+	High uint64 `protobuf:"varint,6,opt,name=high,proto3" json:"high,omitempty"`
+}
+
+func (m *Division) Reset()         { *m = Division{} }
+func (m *Division) String() string { return proto.CompactTextString(m) }
+func (*Division) ProtoMessage()    {}
+func (*Division) Descriptor() ([]byte, []int) {
+	return fileDescriptor_cdb21c7c329a6c9e, []int{1}
+}
+func (m *Division) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Division) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Division.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Division) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Division.Merge(m, src)
+}
+func (m *Division) XXX_Size() int {
+	return m.Size()
+}
+func (m *Division) XXX_DiscardUnknown() {
+	xxx_messageInfo_Division.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Division proto.InternalMessageInfo
+
+func (m *Division) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *Division) GetLevel() uint64 {
+	if m != nil {
+		return m.Level
+	}
+	return 0
+}
+
+func (m *Division) GetTotalCount() uint64 {
+	if m != nil {
+		return m.TotalCount
+	}
+	return 0
+}
+
+func (m *Division) GetComputingPower() uint64 {
+	if m != nil {
+		return m.ComputingPower
+	}
+	return 0
+}
+
+func (m *Division) GetLow() uint64 {
+	if m != nil {
+		return m.Low
+	}
+	return 0
+}
+
+func (m *Division) GetHigh() uint64 {
+	if m != nil {
+		return m.High
+	}
+	return 0
+}
+
+// Node defines the node
+type Node struct {
+	Id         string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	DivisionId string `protobuf:"bytes,2,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
+	Owner      string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
+	Experience uint64 `protobuf:"varint,4,opt,name=experience,proto3" json:"experience,omitempty"`
+}
+
+func (m *Node) Reset()         { *m = Node{} }
+func (m *Node) String() string { return proto.CompactTextString(m) }
+func (*Node) ProtoMessage()    {}
+func (*Node) Descriptor() ([]byte, []int) {
+	return fileDescriptor_cdb21c7c329a6c9e, []int{2}
+}
+func (m *Node) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Node) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Node.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Node) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Node.Merge(m, src)
+}
+func (m *Node) XXX_Size() int {
+	return m.Size()
+}
+func (m *Node) XXX_DiscardUnknown() {
+	xxx_messageInfo_Node.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Node proto.InternalMessageInfo
+
+func (m *Node) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *Node) GetDivisionId() string {
+	if m != nil {
+		return m.DivisionId
+	}
+	return ""
+}
+
+func (m *Node) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *Node) GetExperience() uint64 {
+	if m != nil {
+		return m.Experience
+	}
+	return 0
+}
+
+// Experience defines the experience of the user
+type Experience struct {
+	Owner             string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	ExtractableAmount uint64 `protobuf:"varint,2,opt,name=extractable_amount,json=extractableAmount,proto3" json:"extractable_amount,omitempty"`
+}
+
+func (m *Experience) Reset()         { *m = Experience{} }
+func (m *Experience) String() string { return proto.CompactTextString(m) }
+func (*Experience) ProtoMessage()    {}
+func (*Experience) Descriptor() ([]byte, []int) {
+	return fileDescriptor_cdb21c7c329a6c9e, []int{3}
+}
+func (m *Experience) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Experience) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Experience.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Experience) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Experience.Merge(m, src)
+}
+func (m *Experience) XXX_Size() int {
+	return m.Size()
+}
+func (m *Experience) XXX_DiscardUnknown() {
+	xxx_messageInfo_Experience.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Experience proto.InternalMessageInfo
+
+func (m *Experience) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *Experience) GetExtractableAmount() uint64 {
+	if m != nil {
+		return m.ExtractableAmount
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*Params)(nil), "tabi.captain_node.v1.Params")
+	proto.RegisterType((*Division)(nil), "tabi.captain_node.v1.Division")
+	proto.RegisterType((*Node)(nil), "tabi.captain_node.v1.Node")
+	proto.RegisterType((*Experience)(nil), "tabi.captain_node.v1.Experience")
 }
 
 func init() {
@@ -93,22 +347,39 @@ func init() {
 }
 
 var fileDescriptor_cdb21c7c329a6c9e = []byte{
-	// 233 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x52, 0x2f, 0x49, 0x4c, 0xca,
-	0xd4, 0x4f, 0x4e, 0x2c, 0x28, 0x49, 0xcc, 0xcc, 0xd3, 0xcd, 0xcb, 0x4f, 0x49, 0xd5, 0x2f, 0x33,
-	0x44, 0xe1, 0xeb, 0x15, 0x14, 0xe5, 0x97, 0xe4, 0x0b, 0x89, 0x80, 0x14, 0xea, 0x41, 0x25, 0xe2,
-	0xc1, 0x12, 0x65, 0x86, 0x52, 0x22, 0xe9, 0xf9, 0xe9, 0xf9, 0x60, 0x05, 0xfa, 0x20, 0x16, 0x44,
-	0xad, 0xd2, 0x4c, 0x46, 0x2e, 0xb6, 0x80, 0xc4, 0xa2, 0xc4, 0xdc, 0x62, 0x21, 0x45, 0x2e, 0x9e,
-	0xdc, 0xc4, 0x8a, 0x78, 0xa8, 0xbe, 0x62, 0x09, 0x46, 0x05, 0x46, 0x0d, 0xde, 0x20, 0xee, 0xdc,
-	0xc4, 0x0a, 0x67, 0xa8, 0x90, 0x90, 0x29, 0x97, 0x78, 0x6e, 0x66, 0x5e, 0x66, 0x6e, 0x69, 0x6e,
-	0x7c, 0x41, 0x7e, 0x79, 0x6a, 0x51, 0x7c, 0x7e, 0x5e, 0x7c, 0x41, 0x6a, 0x51, 0x66, 0x7e, 0x8a,
-	0x04, 0x13, 0x58, 0xb5, 0x08, 0x54, 0x3a, 0x00, 0x24, 0xeb, 0x9f, 0x17, 0x00, 0x96, 0x03, 0x6b,
-	0x4b, 0xac, 0xc0, 0xaa, 0x8d, 0x19, 0xaa, 0x0d, 0x22, 0x8d, 0xa2, 0xcd, 0xc9, 0xfd, 0xc4, 0x23,
-	0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1, 0xc2,
-	0x63, 0x39, 0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0x74, 0xd3, 0x33, 0x4b, 0x32, 0x4a, 0x93, 0xf4,
-	0x92, 0xf3, 0x73, 0xf5, 0x41, 0x9e, 0xcd, 0x49, 0x4c, 0x2a, 0x06, 0x33, 0xf4, 0x2b, 0x50, 0x03,
-	0xa8, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0xec, 0x57, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0xe4, 0x84, 0x78, 0x1f, 0x42, 0x01, 0x00, 0x00,
+	// 505 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x93, 0xcf, 0x6e, 0xd3, 0x40,
+	0x10, 0xc6, 0xe3, 0x24, 0x4d, 0xc9, 0x54, 0x2a, 0xb0, 0x44, 0x60, 0x55, 0xc2, 0xad, 0x72, 0x69,
+	0x2f, 0x49, 0xa8, 0x2a, 0x4e, 0x9c, 0x4a, 0xf9, 0x2b, 0xa1, 0x36, 0x98, 0x1b, 0x97, 0xd5, 0xda,
+	0xde, 0x38, 0x2b, 0xad, 0x77, 0xad, 0xf5, 0x3a, 0x09, 0x6f, 0xc1, 0x23, 0xf0, 0x38, 0x1c, 0x2b,
+	0x71, 0xe1, 0x88, 0x92, 0x17, 0x41, 0x1e, 0xaf, 0xdb, 0x44, 0x70, 0x9b, 0x99, 0xdf, 0x7c, 0xab,
+	0x6f, 0xbf, 0xd5, 0xc2, 0xa9, 0x65, 0x91, 0x98, 0xc4, 0x2c, 0xb7, 0x4c, 0xa8, 0x91, 0xd2, 0x09,
+	0x9f, 0x2c, 0xce, 0x77, 0xfa, 0x71, 0x6e, 0xb4, 0xd5, 0x64, 0x50, 0x2d, 0x8e, 0x1d, 0xa0, 0x08,
+	0x16, 0xe7, 0x47, 0x83, 0x54, 0xa7, 0x1a, 0x17, 0x26, 0x55, 0x55, 0xef, 0x0e, 0x7f, 0xb5, 0xa1,
+	0x37, 0x65, 0x86, 0x65, 0x05, 0x79, 0x01, 0x03, 0xab, 0x2d, 0x93, 0x34, 0xd6, 0xa5, 0xb2, 0xd4,
+	0xe9, 0x0b, 0xdf, 0x3b, 0xf1, 0xce, 0xba, 0x21, 0x41, 0x76, 0x55, 0xa1, 0x2b, 0x47, 0xc8, 0x4b,
+	0x78, 0x96, 0x09, 0x25, 0xb2, 0x32, 0xa3, 0xb9, 0x5e, 0x72, 0x43, 0xb5, 0xa2, 0x39, 0x37, 0x42,
+	0x27, 0x7e, 0x1b, 0x45, 0x03, 0x87, 0xa7, 0x15, 0xbd, 0x51, 0x53, 0x64, 0x28, 0x63, 0xab, 0xff,
+	0xca, 0x3a, 0x4e, 0x56, 0xe3, 0x5d, 0xd9, 0x73, 0x80, 0x58, 0xab, 0xc2, 0x32, 0x65, 0x29, 0xf3,
+	0xbb, 0xb8, 0xd9, 0x6f, 0x26, 0x97, 0xe4, 0x02, 0x9e, 0xc6, 0xa5, 0x31, 0x5c, 0x59, 0x2a, 0xf9,
+	0x82, 0x4b, 0x3a, 0xd3, 0x86, 0x16, 0x4c, 0x72, 0x7f, 0x0f, 0x57, 0x9f, 0x38, 0xfa, 0xa9, 0x82,
+	0xef, 0xb4, 0xf9, 0xc2, 0x24, 0x27, 0xaf, 0xe0, 0xa8, 0xb1, 0xa2, 0xca, 0x2c, 0xaa, 0xbc, 0xcc,
+	0xe8, 0x5c, 0xcb, 0x44, 0xa8, 0xb4, 0xf0, 0x7b, 0x28, 0x6c, 0xcc, 0x5e, 0xe3, 0xc2, 0xcd, 0xec,
+	0x83, 0xc3, 0xc4, 0x87, 0xfd, 0x98, 0x49, 0xc9, 0x4d, 0xe1, 0xef, 0x9f, 0x74, 0xce, 0xfa, 0x61,
+	0xd3, 0x0e, 0x7f, 0x78, 0xf0, 0xe0, 0x8d, 0x58, 0x88, 0x42, 0x68, 0x45, 0x0e, 0xa1, 0x2d, 0x12,
+	0x4c, 0xb1, 0x1f, 0xb6, 0x45, 0x42, 0x06, 0xb0, 0x87, 0x06, 0x5d, 0x46, 0x75, 0x43, 0x8e, 0xe1,
+	0x60, 0x2b, 0x7d, 0x17, 0x04, 0xdc, 0x87, 0x4e, 0x4e, 0xe1, 0x61, 0xac, 0xb3, 0xbc, 0xb4, 0x42,
+	0xa5, 0x75, 0x6e, 0x2e, 0x83, 0xc3, 0xbb, 0x31, 0xe6, 0x45, 0x1e, 0x41, 0x47, 0xea, 0xa5, 0xbb,
+	0x75, 0x55, 0x12, 0x02, 0xdd, 0xb9, 0x48, 0xe7, 0xee, 0x3e, 0x58, 0x0f, 0x33, 0xe8, 0x5e, 0xeb,
+	0x84, 0xff, 0xe3, 0xee, 0x18, 0x0e, 0x12, 0xe7, 0x9c, 0x8a, 0xfa, 0x1d, 0xfb, 0x21, 0x34, 0xa3,
+	0x8f, 0x68, 0x5f, 0x2f, 0x15, 0x37, 0x68, 0xb1, 0x1f, 0xd6, 0x0d, 0x09, 0x00, 0xf8, 0xaa, 0x7a,
+	0x44, 0xae, 0x62, 0xee, 0x8c, 0x6d, 0x4d, 0x86, 0x9f, 0x01, 0xde, 0xde, 0x75, 0xf7, 0x67, 0x78,
+	0xdb, 0x67, 0x8c, 0x80, 0xf0, 0x95, 0x35, 0x2c, 0xb6, 0x2c, 0x92, 0x9c, 0xb2, 0x0c, 0x93, 0xa8,
+	0x53, 0x7a, 0xbc, 0x45, 0x2e, 0x11, 0xbc, 0x7e, 0xff, 0x73, 0x1d, 0x78, 0xb7, 0xeb, 0xc0, 0xfb,
+	0xb3, 0x0e, 0xbc, 0xef, 0x9b, 0xa0, 0x75, 0xbb, 0x09, 0x5a, 0xbf, 0x37, 0x41, 0xeb, 0xeb, 0x28,
+	0x15, 0x76, 0x5e, 0x46, 0xe3, 0x58, 0x67, 0x93, 0xea, 0x2f, 0x48, 0x16, 0x15, 0x58, 0x4c, 0x56,
+	0xbb, 0xff, 0xc7, 0x7e, 0xcb, 0x79, 0x11, 0xf5, 0xf0, 0x2b, 0x5c, 0xfc, 0x0d, 0x00, 0x00, 0xff,
+	0xff, 0x9a, 0x9e, 0xcd, 0x14, 0x61, 0x03, 0x00, 0x00,
 }
 
 func (m *Params) Marshal() (dAtA []byte, err error) {
@@ -131,6 +402,30 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.Callers) > 0 {
+		for iNdEx := len(m.Callers) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Callers[iNdEx])
+			copy(dAtA[i:], m.Callers[iNdEx])
+			i = encodeVarintCaptainNode(dAtA, i, uint64(len(m.Callers[iNdEx])))
+			i--
+			dAtA[i] = 0x3a
+		}
+	}
+	if m.MaximumNumberOfHoldings != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.MaximumNumberOfHoldings))
+		i--
+		dAtA[i] = 0x30
+	}
+	if m.CurrentLevelForSale != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.CurrentLevelForSale))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.ConstantA != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.ConstantA))
+		i--
+		dAtA[i] = 0x20
+	}
 	if m.MaximumPowerOnPeriod != 0 {
 		i = encodeVarintCaptainNode(dAtA, i, uint64(m.MaximumPowerOnPeriod))
 		i--
@@ -141,10 +436,149 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.MaxCaptains != 0 {
-		i = encodeVarintCaptainNode(dAtA, i, uint64(m.MaxCaptains))
+	if m.TotalCountCaptains != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.TotalCountCaptains))
 		i--
 		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *Division) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Division) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Division) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.High != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.High))
+		i--
+		dAtA[i] = 0x30
+	}
+	if m.Low != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.Low))
+		i--
+		dAtA[i] = 0x28
+	}
+	if m.ComputingPower != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.ComputingPower))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.TotalCount != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.TotalCount))
+		i--
+		dAtA[i] = 0x18
+	}
+	if m.Level != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.Level))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintCaptainNode(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *Node) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Node) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Node) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Experience != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.Experience))
+		i--
+		dAtA[i] = 0x20
+	}
+	if len(m.Owner) > 0 {
+		i -= len(m.Owner)
+		copy(dAtA[i:], m.Owner)
+		i = encodeVarintCaptainNode(dAtA, i, uint64(len(m.Owner)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.DivisionId) > 0 {
+		i -= len(m.DivisionId)
+		copy(dAtA[i:], m.DivisionId)
+		i = encodeVarintCaptainNode(dAtA, i, uint64(len(m.DivisionId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintCaptainNode(dAtA, i, uint64(len(m.Id)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *Experience) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Experience) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Experience) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ExtractableAmount != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.ExtractableAmount))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Owner) > 0 {
+		i -= len(m.Owner)
+		copy(dAtA[i:], m.Owner)
+		i = encodeVarintCaptainNode(dAtA, i, uint64(len(m.Owner)))
+		i--
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -166,14 +600,97 @@ func (m *Params) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.MaxCaptains != 0 {
-		n += 1 + sovCaptainNode(uint64(m.MaxCaptains))
+	if m.TotalCountCaptains != 0 {
+		n += 1 + sovCaptainNode(uint64(m.TotalCountCaptains))
 	}
 	if m.MinimumPowerOnPeriod != 0 {
 		n += 1 + sovCaptainNode(uint64(m.MinimumPowerOnPeriod))
 	}
 	if m.MaximumPowerOnPeriod != 0 {
 		n += 1 + sovCaptainNode(uint64(m.MaximumPowerOnPeriod))
+	}
+	if m.ConstantA != 0 {
+		n += 1 + sovCaptainNode(uint64(m.ConstantA))
+	}
+	if m.CurrentLevelForSale != 0 {
+		n += 1 + sovCaptainNode(uint64(m.CurrentLevelForSale))
+	}
+	if m.MaximumNumberOfHoldings != 0 {
+		n += 1 + sovCaptainNode(uint64(m.MaximumNumberOfHoldings))
+	}
+	if len(m.Callers) > 0 {
+		for _, s := range m.Callers {
+			l = len(s)
+			n += 1 + l + sovCaptainNode(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *Division) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovCaptainNode(uint64(l))
+	}
+	if m.Level != 0 {
+		n += 1 + sovCaptainNode(uint64(m.Level))
+	}
+	if m.TotalCount != 0 {
+		n += 1 + sovCaptainNode(uint64(m.TotalCount))
+	}
+	if m.ComputingPower != 0 {
+		n += 1 + sovCaptainNode(uint64(m.ComputingPower))
+	}
+	if m.Low != 0 {
+		n += 1 + sovCaptainNode(uint64(m.Low))
+	}
+	if m.High != 0 {
+		n += 1 + sovCaptainNode(uint64(m.High))
+	}
+	return n
+}
+
+func (m *Node) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovCaptainNode(uint64(l))
+	}
+	l = len(m.DivisionId)
+	if l > 0 {
+		n += 1 + l + sovCaptainNode(uint64(l))
+	}
+	l = len(m.Owner)
+	if l > 0 {
+		n += 1 + l + sovCaptainNode(uint64(l))
+	}
+	if m.Experience != 0 {
+		n += 1 + sovCaptainNode(uint64(m.Experience))
+	}
+	return n
+}
+
+func (m *Experience) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Owner)
+	if l > 0 {
+		n += 1 + l + sovCaptainNode(uint64(l))
+	}
+	if m.ExtractableAmount != 0 {
+		n += 1 + sovCaptainNode(uint64(m.ExtractableAmount))
 	}
 	return n
 }
@@ -215,9 +732,9 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MaxCaptains", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalCountCaptains", wireType)
 			}
-			m.MaxCaptains = 0
+			m.TotalCountCaptains = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCaptainNode
@@ -227,7 +744,7 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MaxCaptains |= uint32(b&0x7F) << shift
+				m.TotalCountCaptains |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -246,7 +763,7 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MinimumPowerOnPeriod |= uint32(b&0x7F) << shift
+				m.MinimumPowerOnPeriod |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -265,7 +782,539 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MaximumPowerOnPeriod |= uint32(b&0x7F) << shift
+				m.MaximumPowerOnPeriod |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConstantA", wireType)
+			}
+			m.ConstantA = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ConstantA |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentLevelForSale", wireType)
+			}
+			m.CurrentLevelForSale = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CurrentLevelForSale |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MaximumNumberOfHoldings", wireType)
+			}
+			m.MaximumNumberOfHoldings = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.MaximumNumberOfHoldings |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Callers", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Callers = append(m.Callers, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCaptainNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Division) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCaptainNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Division: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Division: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Level", wireType)
+			}
+			m.Level = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Level |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalCount", wireType)
+			}
+			m.TotalCount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.TotalCount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ComputingPower", wireType)
+			}
+			m.ComputingPower = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ComputingPower |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Low", wireType)
+			}
+			m.Low = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Low |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field High", wireType)
+			}
+			m.High = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.High |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCaptainNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Node) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCaptainNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Node: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Node: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DivisionId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DivisionId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Owner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Experience", wireType)
+			}
+			m.Experience = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Experience |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipCaptainNode(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Experience) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowCaptainNode
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Experience: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Experience: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthCaptainNode
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Owner = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExtractableAmount", wireType)
+			}
+			m.ExtractableAmount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ExtractableAmount |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

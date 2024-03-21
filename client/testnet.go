@@ -21,6 +21,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"net"
 	"os"
@@ -400,6 +401,7 @@ func initGenFiles(
 	numValidators int,
 ) error {
 	appGenState := mbm.DefaultGenesis(clientCtx.Codec)
+
 	// set the accounts in the genesis state
 	var authGenState authtypes.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[authtypes.ModuleName], &authGenState)
@@ -428,7 +430,10 @@ func initGenFiles(
 	var govGenState govv1.GenesisState
 	clientCtx.Codec.MustUnmarshalJSON(appGenState[govtypes.ModuleName], &govGenState)
 
+	votingPeriod := 90 * time.Second // 90 seconds
 	govGenState.DepositParams.MinDeposit[0].Denom = coinDenom
+	govGenState.DepositParams.MaxDepositPeriod = &votingPeriod
+	govGenState.VotingParams.VotingPeriod = &votingPeriod
 	appGenState[govtypes.ModuleName] = clientCtx.Codec.MustMarshalJSON(&govGenState)
 
 	// set the mint parameters in the genesis state

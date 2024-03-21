@@ -43,7 +43,9 @@ import (
 	ibc "github.com/cosmos/ibc-go/v6/modules/core"
 	ibcclientclient "github.com/cosmos/ibc-go/v6/modules/core/02-client/client"
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
+	captainnode "github.com/tabilabs/tabi/x/captain-node"
 
+	captainnodetypes "github.com/tabilabs/tabi/x/captain-node/types"
 	"github.com/tabilabs/tabi/x/claims"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 	"github.com/tabilabs/tabi/x/evm"
@@ -106,6 +108,7 @@ var (
 
 		// tabi modules
 		claims.AppModuleBasic{},
+		captainnode.AppModule{},
 	)
 
 	// module account permissions
@@ -162,6 +165,7 @@ func appModules(
 		feemarket.NewAppModule(app.FeeMarketKeeper, app.GetSubspace(feemarkettypes.ModuleName)),
 		// Tabi app modules
 		claims.NewAppModule(appCodec, app.Claimskeeper),
+		captainnode.NewAppModule(appCodec, app.CaptainNodeKeeper),
 	}
 }
 
@@ -201,6 +205,7 @@ func orderBeginBlockers() []string {
 
 		//self module
 		claimstypes.ModuleName,
+		captainnodetypes.ModuleName,
 	}
 }
 
@@ -237,6 +242,7 @@ func orderEndBlockers() []string {
 
 		//self module
 		claimstypes.ModuleName,
+		captainnodetypes.ModuleName,
 	}
 }
 
@@ -274,6 +280,8 @@ func orderInitBlockers() []string {
 
 		//self module
 		claimstypes.ModuleName,
+		captainnodetypes.ModuleName,
+
 		// NOTE: crisis module must go at the end to check for invariants on each module
 		crisistypes.ModuleName,
 	}

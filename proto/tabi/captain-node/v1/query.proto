@@ -14,7 +14,37 @@ option go_package = "github.com/tabilabs/tabi/x/captain-node/types";
 service Query {
   // Params queries the captain-node parameters
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/x/captain-node/params";
+    option (google.api.http).get = "/x/captain-node/v1/params";
+  }
+
+  // Owner queries all node from the given owner
+  rpc Owner(QueryOwnerRequest) returns (QueryOwnerResponse) {
+    option (google.api.http).get = "/x/captain-node/v1/owner/{id}";
+  }
+
+  // Supply queries the number of Node from the given division
+  rpc Supply(QuerySupplyRequest) returns (QuerySupplyResponse) {
+    option (google.api.http).get = "/x/captain-node/v1/supply/{division_id}";
+  }
+
+  // Division queries an node division by its ID
+  rpc Division(QueryDivisionRequest) returns (QueryDivisionResponse) {
+    option (google.api.http).get = "/x/captain-node/v1/divisions/{division_id}";
+  }
+
+  // Divisions queries all Node divisions
+  rpc Divisions(QueryDivisionsRequest) returns (QueryDivisionsResponse) {
+    option (google.api.http).get = "/x/captain-node/v1/divisions";
+  }
+
+  // Node queries an Node based on its id.
+  rpc Node(QueryNodeRequest) returns (QueryNodeResponse) {
+    option (google.api.http).get = "/x/captain-node/v1/nodes/{id}";
+  }
+
+  // Nodes queries all node of a given owner
+  rpc Nodes(QueryNodesRequest) returns (QueryNodesResponse) {
+    option (google.api.http).get = "/x/captain-node/v1/nodes";
   }
 }
 
@@ -27,4 +57,69 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 
   cosmos.base.query.v1beta1.PageResponse res = 2;
+}
+
+// QueryOwnerRequest is the request type for the Query/Owner RPC method
+message QueryOwnerRequest {
+  string id       = 2;
+}
+
+// QueryOwnerResponse is the response type for the Query/Owner RPC method
+message QueryOwnerResponse {
+  string owner = 1;
+}
+
+// QuerySupplyRequest is the request type for the Query/Supply RPC method
+message QuerySupplyRequest {
+  string division_id = 1;
+}
+
+// QuerySupplyResponse is the response type for the Query/Supply RPC method
+message QuerySupplyResponse {
+  uint64 amount = 1;
+}
+
+// QueryDivisionRequest is the request type for the Query/Division RPC method
+message QueryDivisionRequest {
+  string division_id = 1;
+}
+
+// QueryDivisionResponse is the response type for the Query/Division RPC method
+message QueryDivisionResponse {
+  Division division = 1;
+}
+
+// QueryDivisionsRequest is the request type for the Query/Divisions RPC method
+message QueryDivisionsRequest {
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryDivisionsResponse is the response type for the Query/Divisions RPC method
+message QueryDivisionsResponse {
+  repeated Division      divisions    = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+
+// QueryNFTRequest is the request type for the Query/Node RPC method
+message QueryNodeRequest {
+  string id       = 1;
+}
+
+// QueryNFTResponse is the response type for the Query/Node RPC method
+message QueryNodeResponse {
+  Node node = 1;
+}
+
+// QueryNodestRequest is the request type for the Query/Nodes RPC method
+message QueryNodesRequest {
+  string                                owner      = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryNodesResponse is the response type for the Query/Nodes RPC methods
+message QueryNodesResponse {
+  repeated Node nodes      = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

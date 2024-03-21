@@ -1,4 +1,4 @@
-package captain_node
+package captainnode
 
 import (
 	"context"
@@ -48,12 +48,12 @@ func (AppModuleBasic) ValidateGenesis(
 	config client.TxEncodingConfig,
 	bz json.RawMessage,
 ) error {
-	var data types.GenesisState
-	if err := cdc.UnmarshalJSON(bz, &data); err != nil {
+	var genesisState types.GenesisState
+	if err := cdc.UnmarshalJSON(bz, &genesisState); err != nil {
 		return fmt.Errorf("failed to unmarshal %s genesis state: %w", types.ModuleName, err)
 	}
 
-	return ValidateGenesis(data)
+	return genesisState.Validate()
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the mint module.
@@ -63,8 +63,7 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 
 // GetTxCmd returns the root tx command for the mint module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
-	// todo
-	return nil
+	return cli.GetTxCmd()
 }
 
 // GetQueryCmd returns no root query command for the mint module.
@@ -102,6 +101,7 @@ func (AppModule) Name() string { return types.ModuleName }
 
 // RegisterServices registers module services.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 }
 
@@ -137,14 +137,14 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.
 
 	cdc.MustUnmarshalJSON(data, &genesisState)
 
-	InitGenesis(ctx, am.keeper, genesisState)
+	am.keeper.InitGenesis(ctx, genesisState)
 	return []abci.ValidatorUpdate{}
 }
 
 // ExportGenesis returns the exported genesis state as raw bytes for the mint
 // module.
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	gs := ExportGenesis(ctx, am.keeper)
+	gs := am.keeper.ExportGenesis(ctx)
 	return cdc.MustMarshalJSON(gs)
 }
 
