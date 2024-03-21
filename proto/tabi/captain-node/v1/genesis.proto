@@ -12,9 +12,7 @@ message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
   repeated Division divisions = 2;
   repeated Entry entries = 3;
-
-  // authorized caller list
-  repeated IdentifiedCallers callers = 4 [ (gogoproto.nullable) = false ];
+  
 }
 
 // Entry Defines all info owned by a person

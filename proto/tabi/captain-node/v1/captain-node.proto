@@ -24,6 +24,9 @@ message Params {
 
     // maximum_number_of_holdings defines the maximum number of holdings for a captain
     uint64 maximum_number_of_holdings = 6;
+
+    // authorized caller list
+    repeated string callers = 7;
 }
 
 // Rank defines the node class
@@ -53,10 +56,4 @@ message Node {
 message Experience {
    string owner = 1;
    uint64 extractable_amount = 2;
-}
-
-// IdentifiedCallers defines a list of authorized callers
-message IdentifiedCallers {
-    // authorized caller list
-    repeated string callers = 1;
 }

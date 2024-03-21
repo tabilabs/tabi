@@ -65,7 +65,7 @@ func newDivisions() []*Division {
 		},
 		{
 			Id:             GenDivisionsId(LevelFour),
-			Level:          LevelThree,
+			Level:          LevelFour,
 			TotalCount:     10000,
 			ComputingPower: 105000,
 			Low:            0,

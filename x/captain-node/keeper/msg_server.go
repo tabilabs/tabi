@@ -45,24 +45,6 @@ func (m msgServer) UpdateParams(
 	return &types.MsgUpdateParamsResponse{}, nil
 }
 
-func (m msgServer) RegisterCaller(
-	goCtx context.Context,
-	msg *types.MsgRegisterCaller,
-) (*types.MsgRegisterCallerResponse, error) {
-	if m.k.authority.String() != msg.Authority {
-		return nil, errorsmod.Wrapf(
-			sdkerrors.ErrUnauthorized,
-			"invalid authority; expected %s, got %s",
-			m.k.authority.String(),
-			msg.Authority,
-		)
-	}
-
-	ctx := sdk.UnwrapSDKContext(goCtx)
-	m.k.RegisterCallers(ctx, msg.Callers)
-	return &types.MsgRegisterCallerResponse{}, nil
-}
-
 /*****************************************************************************/
 /*****************************************************************************/
 /* Need Allow Function */
@@ -77,8 +59,13 @@ func (m msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMi
 		return nil, err
 	}
 
+	receiver, err := sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return nil, err
+	}
+
 	// check if msg.Sender not in allow list
-	if !m.k.AuthCaller(ctx, msg.Sender) {
+	if !m.k.AuthCaller(ctx, sender) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
 			"invalid sender; not in allow list",
@@ -88,7 +75,7 @@ func (m msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMi
 	// generate node id
 	nodeId := m.k.GenerateNodeID(ctx)
 	node := types.NewNode(nodeId, msg.DivisionId, msg.Receiver)
-	if err := m.k.CreateNode(ctx, node, sender); err != nil {
+	if err := m.k.CreateNode(ctx, node, receiver); err != nil {
 		return nil, err
 	}
 
@@ -111,13 +98,13 @@ func (m msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMi
 
 func (m msgServer) UpdatePowerOnPeriod(goCtx context.Context, msg *types.MsgUpdatePowerOnPeriod) (*types.MsgUpdatePowerOnPeriodResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	_, err := sdk.AccAddressFromBech32(msg.Sender)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		return nil, err
 	}
 
 	// check if msg.Sender not in allow list
-	if !m.k.AuthCaller(ctx, msg.Sender) {
+	if !m.k.AuthCaller(ctx, sender) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
 			"invalid sender; not in allow list",
@@ -145,13 +132,13 @@ func (m msgServer) UpdatePowerOnPeriod(goCtx context.Context, msg *types.MsgUpda
 
 func (m msgServer) UpdateUserExperience(goCtx context.Context, msg *types.MsgUpdateUserExperience) (*types.MsgUpdateUserExperienceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	_, err := sdk.AccAddressFromBech32(msg.Sender)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		return nil, err
 	}
 
 	// check if msg.Sender not in allow list
-	if !m.k.AuthCaller(ctx, msg.Sender) {
+	if !m.k.AuthCaller(ctx, sender) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
 			"invalid sender; not in allow list",

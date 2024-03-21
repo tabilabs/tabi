@@ -17,9 +17,6 @@ service Msg {
   //
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
 
-  // RegisterCaller defines a rpc handler method for MsgRegisterCaller.
-  rpc RegisterCaller(MsgRegisterCaller) returns (MsgRegisterCallerResponse);
-
   // UpdatePowerOnPeriod defines a white list operation for updating the power on period.
   rpc UpdatePowerOnPeriod(MsgUpdatePowerOnPeriod) returns (MsgUpdatePowerOnPeriodResponse);
 

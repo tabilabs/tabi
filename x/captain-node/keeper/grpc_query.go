@@ -113,8 +113,6 @@ func (k Keeper) Nodes(goCtx context.Context, request *types.QueryNodesRequest) (
 		return nil, sdkerrors.ErrInvalidRequest.Wrap("empty request")
 	}
 
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
 	var err error
 	var owner sdk.AccAddress
 	if len(request.Owner) > 0 {
@@ -126,10 +124,12 @@ func (k Keeper) Nodes(goCtx context.Context, request *types.QueryNodesRequest) (
 
 	var nodes []*types.Node
 	var pageRes *query.PageResponse
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	switch {
 	case len(request.Owner) > 0:
-		if pageRes, err = query.Paginate(k.getNodeStoreByOwner(ctx, owner), request.Pagination, func(key []byte, value []byte) error {
+
+		if pageRes, err = query.Paginate(k.getNodesStoreByOwner(ctx, owner), request.Pagination, func(key []byte, value []byte) error {
 			node, has := k.GetNode(ctx, string(key))
 			if has {
 				nodes = append(nodes, &node)
@@ -139,7 +139,18 @@ func (k Keeper) Nodes(goCtx context.Context, request *types.QueryNodesRequest) (
 			return nil, err
 		}
 	default:
-		return nil, sdkerrors.ErrInvalidRequest.Wrap("ust provide at least one of owner")
+		// return all nodes
+		nodeStore := k.getNodesStore(ctx)
+		if pageRes, err = query.Paginate(nodeStore, request.Pagination, func(_ []byte, value []byte) error {
+			var node types.Node
+			if err := k.cdc.Unmarshal(value, &node); err != nil {
+				return err
+			}
+			nodes = append(nodes, &node)
+			return nil
+		}); err != nil {
+			return nil, err
+		}
 	}
 
 	return &types.QueryNodesResponse{

@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
@@ -11,6 +13,11 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/tabilabs/tabi/x/captain-node/types"
+)
+
+// Flag names and values
+const (
+	FlagOwner = "owner"
 )
 
 // GetQueryCmd returns the cli query commands for the mint module.
@@ -69,6 +76,7 @@ func GetOwnerCmd() *cobra.Command {
 Example:
 $ %s query %s owner <node-id>
 `, version.AppName, types.ModuleName),
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
@@ -100,7 +108,7 @@ func GetSupplyCmd() *cobra.Command {
 Example:
 $ %s query %s supply <division-id>
 `, version.AppName, types.ModuleName),
-		Args: cobra.NoArgs,
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
@@ -134,7 +142,7 @@ func GetDivisionCmd() *cobra.Command {
 Example:
 $ %s query %s division <division-id>
 `, version.AppName, types.ModuleName),
-		Args: cobra.NoArgs,
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
@@ -195,6 +203,7 @@ $ %s query %s divisions
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
+	flags.AddPaginationFlagsToCmd(cmd, "divisions")
 	return cmd
 }
 
@@ -207,7 +216,7 @@ func GetNodeCmd() *cobra.Command {
 Example:
 $ %s query %s node <node-id>
 `, version.AppName, types.ModuleName),
-		Args: cobra.NoArgs,
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
 			if err != nil {
@@ -237,7 +246,7 @@ func GetNodesCmd() *cobra.Command {
 		Long: fmt.Sprintf(`Query all nodes
 
 Example:
-$ %s query %s node <node-id>
+$ %s query %s nodes --owner <owner>
 `, version.AppName, types.ModuleName),
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -253,12 +262,23 @@ $ %s query %s node <node-id>
 				return err
 			}
 
-			res, err := queryClient.Nodes(context.Background(),
-				&types.QueryNodesRequest{
-					Pagination: pageReq,
-					Owner:      args[0],
-				},
-			)
+			request := &types.QueryNodesRequest{
+				Pagination: pageReq,
+			}
+
+			owner, err := cmd.Flags().GetString(FlagOwner)
+			if err != nil {
+				return err
+			}
+
+			if len(owner) > 0 {
+				if _, err := sdk.AccAddressFromBech32(owner); err != nil {
+					return err
+				}
+				request.Owner = owner
+			}
+
+			res, err := queryClient.Nodes(context.Background(), request)
 			if err != nil {
 				return err
 			}
@@ -267,5 +287,7 @@ $ %s query %s node <node-id>
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
+	flags.AddPaginationFlagsToCmd(cmd, "nodes")
+	cmd.Flags().String(FlagOwner, "", "The owner of the nft")
 	return cmd
 }

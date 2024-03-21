@@ -17,7 +17,7 @@ service Query {
     option (google.api.http).get = "/x/captain-node/v1/params";
   }
 
-  // Owner queries the owner of the node
+  // Owner queries all node from the given owner
   rpc Owner(QueryOwnerRequest) returns (QueryOwnerResponse) {
     option (google.api.http).get = "/x/captain-node/v1/owner/{id}";
   }

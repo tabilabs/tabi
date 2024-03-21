@@ -55,19 +55,18 @@ func NewMintNodeTxCmd() *cobra.Command {
 			}
 
 			var sender = clientCtx.GetFromAddress().String()
+			divisionID := strings.TrimSpace(args[0])
+			if len(divisionID) == 0 {
+				panic("division-id cannot be empty")
+			}
 
-			receiver := strings.TrimSpace(args[0])
+			receiver := strings.TrimSpace(args[1])
 			if len(receiver) > 0 {
 				if _, err = sdk.AccAddressFromBech32(receiver); err != nil {
 					return err
 				}
 			} else {
 				panic("receiver cannot be empty")
-			}
-
-			divisionID := strings.TrimSpace(args[1])
-			if len(divisionID) == 0 {
-				panic("division-id cannot be empty")
 			}
 
 			msg := types.NewMsgMint(divisionID, receiver, sender)

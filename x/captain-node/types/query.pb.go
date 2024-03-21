@@ -770,7 +770,7 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Params queries the captain-node parameters
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	// Owner queries the owner of the node
+	// Owner queries all node from the given owner
 	Owner(ctx context.Context, in *QueryOwnerRequest, opts ...grpc.CallOption) (*QueryOwnerResponse, error)
 	// Supply queries the number of Node from the given division
 	Supply(ctx context.Context, in *QuerySupplyRequest, opts ...grpc.CallOption) (*QuerySupplyResponse, error)
@@ -859,7 +859,7 @@ func (c *queryClient) Nodes(ctx context.Context, in *QueryNodesRequest, opts ...
 type QueryServer interface {
 	// Params queries the captain-node parameters
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
-	// Owner queries the owner of the node
+	// Owner queries all node from the given owner
 	Owner(context.Context, *QueryOwnerRequest) (*QueryOwnerResponse, error)
 	// Supply queries the number of Node from the given division
 	Supply(context.Context, *QuerySupplyRequest) (*QuerySupplyResponse, error)

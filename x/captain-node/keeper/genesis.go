@@ -9,12 +9,18 @@ import (
 
 // InitGenesis stores the NFT genesis.
 func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
-	if err := types.ValidateGenesis(data); err != nil {
+	if err := data.Validate(); err != nil {
 		panic(fmt.Errorf("failed to initialize mint genesis state: %s", err.Error()))
 	}
 
 	if err := k.SetParams(ctx, data.Params); err != nil {
 		panic(fmt.Errorf("failed to set mint genesis state: %s", err.Error()))
+	}
+
+	for _, division := range data.Divisions {
+		if err := k.SaveDivision(ctx, *division); err != nil {
+			panic(fmt.Errorf("failed to save division: %s", err.Error()))
+		}
 	}
 }
 
@@ -22,7 +28,6 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
 	// todo: Entry
 	return &types.GenesisState{
-		Callers:   k.GetAllCallers(ctx),
 		Params:    k.GetParams(ctx),
 		Divisions: k.GetDivisions(ctx),
 	}

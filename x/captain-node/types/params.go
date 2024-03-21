@@ -3,6 +3,8 @@ package types
 import (
 	"fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -77,8 +79,15 @@ func (p Params) Validate() error {
 	if p.CurrentLevelForSale <= 0 || p.CurrentLevelForSale > 5 {
 		return fmt.Errorf("current level for sale should be positive and less than or equal to 7")
 	}
+
 	if p.MaximumNumberOfHoldings <= 0 || p.MaximumNumberOfHoldings > p.TotalCountCaptains {
 		return fmt.Errorf("maximum number of holdings should be positive and less than or equal to total count of captains")
+	}
+
+	for _, caller := range p.Callers {
+		if _, err := sdk.AccAddressFromBech32(caller); err != nil {
+			return fmt.Errorf("caller address is invalid: %s", err)
+		}
 	}
 	return nil
 }

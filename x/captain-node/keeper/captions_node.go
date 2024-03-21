@@ -45,12 +45,6 @@ func (k Keeper) CreateNode(ctx sdk.Context, node types.Node, receiver sdk.AccAdd
 	// Set the division total supply
 	k.incrDivisionTotalSupply(ctx, node.DivisionId)
 
-	bz, err := k.cdc.Marshal(&node)
-	if err != nil {
-		return errorsmod.Wrap(err, "Marshal node failed")
-	}
-	store := ctx.KVStore(k.storeKey)
-	store.Set(types.NodeStoreKey(node.Id), bz)
 	return nil
 }
 
@@ -135,6 +129,17 @@ func (k Keeper) GetNode(ctx sdk.Context, nodeID string) (types.Node, bool) {
 		return node, false
 	}
 	k.cdc.MustUnmarshal(bz, &node)
+	owner := sdk.MustAccAddressFromBech32(node.Owner)
+	// Set the node by owner
+	// 0x02<owner><Delimiter>
+	ownerStore := k.getNodesStoreByOwner(ctx, owner)
+
+	ownerStoreIterator := ownerStore.Iterator(nil, nil)
+	defer ownerStoreIterator.Close()
+	for ; ownerStoreIterator.Valid(); ownerStoreIterator.Next() {
+		fmt.Println("ownerStoreIterator.Key(): ", string(ownerStoreIterator.Key()))
+		fmt.Println("ownerStoreIterator.Value(): ", ownerStoreIterator.Value())
+	}
 	return node, true
 }
 
@@ -153,7 +158,7 @@ func (k Keeper) GetNodes(ctx sdk.Context) (nodes []types.Node) {
 
 // GetNodesByOwner return all nodes owned by the specified owner
 func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []types.Node) {
-	ownerStore := k.getNodeStoreByOwner(ctx, owner)
+	ownerStore := k.getNodesStoreByOwner(ctx, owner)
 	iterator := ownerStore.Iterator(nil, nil)
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
@@ -185,6 +190,7 @@ func (k Keeper) setNode(ctx sdk.Context, node types.Node) {
 	bz := k.cdc.MustMarshal(&node)
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.NodeStoreKey(node.Id), bz)
+	fmt.Println("store.Get(types.NodeStoreKey(node.Id)): ", store.Get(types.NodeStoreKey(node.Id)))
 }
 
 // SetOwner defines a method for setting the owner of the specified node
@@ -192,24 +198,39 @@ func (k Keeper) setNode(ctx sdk.Context, node types.Node) {
 // user can have multiple nodes
 func (k Keeper) setOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
-	store.Set(types.OwnerStoreKey(nodeID), owner.Bytes())
+	key := types.OwnerStoreKey(nodeID)
+	store.Set(key, owner.Bytes())
 
-	ownerStore := k.getNodeStoreByOwner(ctx, owner)
+	// Set the node by owner
+	// 0x02<owner><Delimiter>
+	ownerStore := k.getNodesStoreByOwner(ctx, owner)
+
 	ownerStore.Set([]byte(nodeID), types.Placeholder)
 }
 
+func (k Keeper) getNodesStoreByOwner(ctx sdk.Context, owner sdk.AccAddress) prefix.Store {
+	store := ctx.KVStore(k.storeKey)
+	key := types.NodeByOwnerStoreKey(owner) // 0x02<owner><Delimiter>
+	return prefix.NewStore(store, key)
+}
+
+// isUserHoldingQuantityExceeded checks if the user holding quantity exceeded
+// if exceeded, return true
 func (k Keeper) isUserHoldingQuantityExceeded(ctx sdk.Context, owner sdk.AccAddress) bool {
 	params := k.GetParams(ctx)
 	maximumNumberOfHoldings := params.MaximumNumberOfHoldings
 	if k.getUserHoldingQuantity(ctx, owner) >= maximumNumberOfHoldings {
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
 func (k Keeper) getUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress) uint64 {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.OwnerHoldingTotalSupplyStoreKey(owner))
+	if bz == nil {
+		return 0
+	}
 	return sdk.BigEndianToUint64(bz)
 }
 
@@ -223,9 +244,9 @@ func (k Keeper) updateUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress,
 	store.Set(types.OwnerHoldingTotalSupplyStoreKey(owner), sdk.Uint64ToBigEndian(supply))
 }
 
-func (k Keeper) getNodeStoreByOwner(ctx sdk.Context, owner sdk.AccAddress) prefix.Store {
+func (k Keeper) getNodesStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
-	return prefix.NewStore(store, types.NodeByOwnerStoreKey(owner))
+	return prefix.NewStore(store, types.NodeKey)
 }
 
 // GetNodeSequence gets the next Node sequence from the store.

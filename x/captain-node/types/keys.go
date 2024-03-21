@@ -24,9 +24,6 @@ const (
 
 	// KeyNextMTSequence is the key used to store the next MT sequence in the keeper
 	KeyNextNodeSequence = "nextNodeSequence"
-
-	// KeyCallers is the key used to store the callers address in the keeper.
-	KeyCallers = "callers"
 )
 
 var (
@@ -56,12 +53,14 @@ func NodeStoreKey(nodeID string) []byte {
 
 // NodeByOwnerStoreKey returns the byte representation of the node owner
 // Items are stored with the following key: values
-// 0x02<owner>
+// 0x02<owner><Delimiter>
 func NodeByOwnerStoreKey(owner sdk.AccAddress) []byte {
 	owner = address.MustLengthPrefix(owner)
-	key := make([]byte, len(NodeByOwnerKey)+len(owner))
+
+	key := make([]byte, len(NodeByOwnerKey)+len(owner)+len(Delimiter))
 	copy(key, NodeByOwnerKey)
 	copy(key[len(NodeByOwnerKey):], owner)
+	copy(key[len(NodeByOwnerKey)+len(owner):], Delimiter)
 	return key
 }
 
