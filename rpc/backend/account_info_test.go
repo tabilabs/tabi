@@ -91,7 +91,7 @@ func (suite *BackendTestSuite) TestGetProof() {
 		expAccRes     *rpctypes.AccountResult
 	}{
 		{
-			"fail - BlockNumeber = 1 (invalidBlockNumber)",
+			"fail - BlockNumber = 1 (invalidBlockNumber)",
 			address1,
 			[]string{},
 			rpctypes.BlockNumberOrHash{BlockNumber: &blockNrInvalid},

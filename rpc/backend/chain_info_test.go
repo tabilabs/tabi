@@ -296,8 +296,8 @@ func (suite *BackendTestSuite) TestGlobalMinGasPrice() {
 		{
 			"fail - Can't get FeeMarket params",
 			func() {
-				feeMarketCleint := suite.backend.queryClient.FeeMarket.(*mocks.FeeMarketQueryClient)
-				RegisterFeeMarketParamsError(feeMarketCleint, int64(1))
+				feeMarketClient := suite.backend.queryClient.FeeMarket.(*mocks.FeeMarketQueryClient)
+				RegisterFeeMarketParamsError(feeMarketClient, int64(1))
 			},
 			sdk.ZeroDec(),
 			false,

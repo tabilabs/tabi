@@ -494,7 +494,7 @@ func skipKeys(dAtA []byte) (n int, err error) {
 }
 
 var (
-	ErrInvalidLengthKeys        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrInvalidLengthKeys        = fmt.Errorf("proto: negative length found during unmarshalling")
 	ErrIntOverflowKeys          = fmt.Errorf("proto: integer overflow")
 	ErrUnexpectedEndOfGroupKeys = fmt.Errorf("proto: unexpected end of group")
 )
