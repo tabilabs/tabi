@@ -14,4 +14,5 @@ var (
 	ErrUnauthorized                = errorsmod.Register(ModuleName, 8, "unauthorized address")
 	ErrNodeNotExists               = errorsmod.Register(ModuleName, 9, "node does not exist")
 	ErrInsufficientExperience      = errorsmod.Register(ModuleName, 10, "insufficient experience")
+	ErrInvalidSaleLevel            = errorsmod.Register(ModuleName, 11, "new sale level must be greater than the current sale level")
 )

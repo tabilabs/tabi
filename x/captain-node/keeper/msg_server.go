@@ -162,6 +162,98 @@ func (m msgServer) UpdateUserExperience(goCtx context.Context, msg *types.MsgUpd
 	return &types.MsgUpdateUserExperienceResponse{}, nil
 }
 
+func (m msgServer) UpdateSaleLevel(goCtx context.Context, msg *types.MsgUpdateSaleLevel) (*types.MsgUpdateSaleLevelResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+
+	// check if msg.Sender not in allow list
+	if !m.k.AuthCaller(ctx, sender) {
+		return nil, errorsmod.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"invalid sender; not in allow list",
+		)
+	}
+
+	event, err := m.k.UpdateSaleLevel(ctx, msg.SaleLevel)
+	if err != nil {
+		return nil, err
+	}
+	resultEvents := sdk.Events{sdk.NewEvent(
+		sdk.EventTypeMessage,
+		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		sdk.NewAttribute(sdk.AttributeKeySender, msg.Sender),
+	)}
+	resultEvents = append(resultEvents, event)
+	ctx.EventManager().EmitEvents(resultEvents)
+
+	return &types.MsgUpdateSaleLevelResponse{}, nil
+}
+
+func (m msgServer) AddCaller(goCtx context.Context, msg *types.MsgAddCaller) (*types.MsgAddCallerResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+
+	// check if msg.Sender not in allow list
+	if !m.k.AuthCaller(ctx, sender) {
+		return nil, errorsmod.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"invalid sender; not in allow list",
+		)
+	}
+
+	events, err := m.k.SetCaller(ctx, msg.Callers)
+	if err != nil {
+		return nil, err
+	}
+
+	resultEvents := sdk.Events{sdk.NewEvent(
+		sdk.EventTypeMessage,
+		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		sdk.NewAttribute(sdk.AttributeKeySender, msg.Sender),
+	)}
+	resultEvents = append(resultEvents, events...)
+	ctx.EventManager().EmitEvents(resultEvents)
+
+	return &types.MsgAddCallerResponse{}, nil
+}
+
+func (m msgServer) RemoveCaller(goCtx context.Context, msg *types.MsgRemoveCaller) (*types.MsgRemoveCallerResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+
+	// check if msg.Sender not in allow list
+	if !m.k.AuthCaller(ctx, sender) {
+		return nil, errorsmod.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"invalid sender; not in allow list",
+		)
+	}
+
+	events, err := m.k.RemoveCaller(ctx, msg.Callers)
+	if err != nil {
+		return nil, err
+	}
+
+	resultEvents := sdk.Events{sdk.NewEvent(
+		sdk.EventTypeMessage,
+		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+		sdk.NewAttribute(sdk.AttributeKeySender, msg.Sender),
+	)}
+	resultEvents = append(resultEvents, events...)
+	ctx.EventManager().EmitEvents(resultEvents)
+
+	return &types.MsgRemoveCallerResponse{}, nil
+}
+
 /*****************************************************************************/
 /*****************************************************************************/
 /* User Function */

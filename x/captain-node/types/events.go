@@ -20,4 +20,13 @@ const (
 	AttributeKeyOwner             = "owner"
 	AttributeKeyOldExperience     = "old_experience"
 	AttributeKeyNewExperience     = "new_experience"
+
+	EventTypeAddCaller = "add_caller"
+	AttributeCaller    = "caller"
+
+	EventTypeRemoveCaller = "remove_caller"
+
+	EventTypeUpdateSaleLevel = "update_sale_level"
+	AttributeKeyOldSaleLevel = "old_sale_level"
+	AttributeKeyNewSaleLevel = "new_sale_level"
 )

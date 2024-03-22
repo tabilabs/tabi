@@ -10,9 +10,13 @@ import (
 
 // caption-node message types
 const (
-	TypeMsgMint                = "mint"
-	TypeMsgReceiveExperience   = "receive_experience"
-	TypeMsgUpdatePowerOnPeriod = "update_power_on_period"
+	TypeMsgMint                 = "mint"
+	TypeMsgReceiveExperience    = "receive_experience"
+	TypeMsgUpdatePowerOnPeriod  = "update_power_on_period"
+	TypeMsgUpdateUserExperience = "update_user_experience"
+	TypeMsgAddCaller            = "add_caller"
+	TypeMsgRemoveCaller         = "remove_caller"
+	TypeMsgUpdateSaleLevel      = "update_sale_level"
 )
 
 var (
@@ -21,7 +25,9 @@ var (
 	_ sdk.Msg = &MsgWithdrawExperience{}
 	_ sdk.Msg = &MsgUpdatePowerOnPeriod{}
 	_ sdk.Msg = &MsgUpdateUserExperience{}
-	_ sdk.Msg = &MsgRegisterCaller{}
+	_ sdk.Msg = &MsgAddCaller{}
+	_ sdk.Msg = &MsgRemoveCaller{}
+	_ sdk.Msg = &MsgUpdateSaleLevel{}
 )
 
 // GetSignBytes returns the raw bytes for a MsgUpdateParams message that
@@ -152,8 +158,8 @@ func (msg MsgUpdatePowerOnPeriod) ValidateBasic() error {
 	}
 
 	for _, captainNodePowerOnPeriod := range msg.CaptainNodePowerOnPeriods {
-		if captainNodePowerOnPeriod.PowerOnPeriod <= 0 || captainNodePowerOnPeriod.PowerOnPeriod > 24 {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "power on period must be between 1 and 24")
+		if captainNodePowerOnPeriod.PowerOnPeriodRate.IsZero() || captainNodePowerOnPeriod.PowerOnPeriodRate.GT(sdk.NewDec(1)) {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "power on period must be between 0 and 1")
 		}
 		captainNodePowerOnPeriod.NodeId = strings.TrimSpace(captainNodePowerOnPeriod.NodeId)
 		if captainNodePowerOnPeriod.NodeId == "" {
@@ -189,7 +195,7 @@ func NewMsgUpdateUserExperience(
 func (m MsgUpdateUserExperience) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (m MsgUpdateUserExperience) Type() string { return TypeMsgUpdatePowerOnPeriod }
+func (m MsgUpdateUserExperience) Type() string { return TypeMsgUpdateUserExperience }
 
 // ValidateBasic Implements Msg.
 func (msg MsgUpdateUserExperience) ValidateBasic() error {
@@ -224,20 +230,20 @@ func (msg MsgUpdateUserExperience) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewMsgRegisterCaller() *MsgRegisterCaller {
-	return &MsgRegisterCaller{}
+func NewMsgAddCaller() *MsgAddCaller {
+	return &MsgAddCaller{}
 }
 
 // Route Implements Msg.
-func (m MsgRegisterCaller) Route() string { return RouterKey }
+func (m MsgAddCaller) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (m MsgRegisterCaller) Type() string { return TypeMsgUpdatePowerOnPeriod }
+func (m MsgAddCaller) Type() string { return TypeMsgAddCaller }
 
 // ValidateBasic Implements Msg.
-func (msg MsgRegisterCaller) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
-		return errorsmod.Wrap(err, "invalid authority address")
+func (msg MsgAddCaller) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
+		return errorsmod.Wrap(err, "invalid sender address")
 	}
 
 	if len(msg.Callers) == 0 {
@@ -254,12 +260,86 @@ func (msg MsgRegisterCaller) ValidateBasic() error {
 }
 
 // GetSignBytes Implements Msg.
-func (msg MsgRegisterCaller) GetSignBytes() []byte {
+func (msg MsgAddCaller) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
 }
 
 // GetSigners Implements Msg.
-func (msg MsgRegisterCaller) GetSigners() []sdk.AccAddress {
-	addr, _ := sdk.AccAddressFromBech32(msg.Authority)
+func (msg MsgAddCaller) GetSigners() []sdk.AccAddress {
+	addr, _ := sdk.AccAddressFromBech32(msg.Sender)
+	return []sdk.AccAddress{addr}
+}
+
+func NewMsgRemoveCaller() *MsgRemoveCaller {
+	return &MsgRemoveCaller{}
+}
+
+// Route Implements Msg.
+func (m MsgRemoveCaller) Route() string { return RouterKey }
+
+// Type Implements Msg.
+func (m MsgRemoveCaller) Type() string { return TypeMsgRemoveCaller }
+
+// ValidateBasic Implements Msg.
+func (msg MsgRemoveCaller) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
+		return errorsmod.Wrap(err, "invalid sender address")
+	}
+
+	if len(msg.Callers) == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "caller cannot be empty")
+	}
+
+	for _, caller := range msg.Callers {
+		if _, err := sdk.AccAddressFromBech32(caller); err != nil {
+			return errorsmod.Wrap(err, "invalid caller address")
+		}
+	}
+
+	return nil
+}
+
+// GetSignBytes Implements Msg.
+func (msg MsgRemoveCaller) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
+}
+
+// GetSigners Implements Msg.
+func (msg MsgRemoveCaller) GetSigners() []sdk.AccAddress {
+	addr, _ := sdk.AccAddressFromBech32(msg.Sender)
+	return []sdk.AccAddress{addr}
+}
+
+func NewMsgUpdateSaleLevel() *MsgUpdateSaleLevel {
+	return &MsgUpdateSaleLevel{}
+}
+
+// Route Implements Msg.
+func (m MsgUpdateSaleLevel) Route() string { return RouterKey }
+
+// Type Implements Msg.
+func (m MsgUpdateSaleLevel) Type() string { return TypeMsgUpdateSaleLevel }
+
+// ValidateBasic Implements Msg.
+func (msg MsgUpdateSaleLevel) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
+		return errorsmod.Wrap(err, "invalid sender address")
+	}
+
+	if msg.SaleLevel <= 1 || msg.SaleLevel > 5 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "sale level must be between 1 and 5")
+	}
+
+	return nil
+}
+
+// GetSignBytes Implements Msg.
+func (msg MsgUpdateSaleLevel) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
+}
+
+// GetSigners Implements Msg.
+func (msg MsgUpdateSaleLevel) GetSigners() []sdk.AccAddress {
+	addr, _ := sdk.AccAddressFromBech32(msg.Sender)
 	return []sdk.AccAddress{addr}
 }

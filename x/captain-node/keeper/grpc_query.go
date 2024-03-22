@@ -158,3 +158,15 @@ func (k Keeper) Nodes(goCtx context.Context, request *types.QueryNodesRequest) (
 		Nodes:      nodes,
 	}, nil
 }
+
+func (k Keeper) SaleLevel(goCtx context.Context, _ *types.QuerySaleLevelRequest) (*types.QuerySaleLevelResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	level := k.GetSaleLevel(ctx)
+	return &types.QuerySaleLevelResponse{SaleLevel: level}, nil
+}
+
+func (k Keeper) Callers(goCtx context.Context, _ *types.QueryCallersRequest) (*types.QueryCallersResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	callers := k.GetCallers(ctx)
+	return &types.QueryCallersResponse{Callers: callers}, nil
+}
