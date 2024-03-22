@@ -370,7 +370,7 @@ func skipAccount(dAtA []byte) (n int, err error) {
 }
 
 var (
-	ErrInvalidLengthAccount        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrInvalidLengthAccount        = fmt.Errorf("proto: negative length found during unmarshalling")
 	ErrIntOverflowAccount          = fmt.Errorf("proto: integer overflow")
 	ErrUnexpectedEndOfGroupAccount = fmt.Errorf("proto: unexpected end of group")
 )
