@@ -1,0 +1,5 @@
+[files]
+# Temporarily commenting a lot so that at least *.sol files are included.
+extend-exclude = [
+    "x/**",
+]
