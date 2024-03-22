@@ -23,6 +23,17 @@ service Msg {
   // UpdateUserExperience defines a white list operation for updating the user experience.
   rpc UpdateUserExperience(MsgUpdateUserExperience) returns (MsgUpdateUserExperienceResponse);
 
+  // UpdateSaleLevel defines a white list operation for updating the sale level.
+  rpc UpdateSaleLevel(MsgUpdateSaleLevel) returns (MsgUpdateSaleLevelResponse);
+
+  // AddCaller defines a white list  operation for registering some
+  // callers for mint node.
+  rpc AddCaller(MsgAddCaller) returns (MsgAddCallerResponse);
+
+  // RemoveCaller defines a white list  operation for removing some
+  // callers for mint node.
+  rpc RemoveCaller(MsgRemoveCaller) returns (MsgRemoveCallerResponse);
+
   // WithdrawExperience defines a user operation for receiving experience
   // to a captain node.
   rpc WithdrawExperience(MsgWithdrawExperience) returns (MsgWithdrawExperienceResponse);
@@ -98,9 +109,8 @@ message MsgUpdatePowerOnPeriod {
 }
 
 message CaptainNodePowerOnPeriod {
-  // power_on_period is the period of time that the captain node is powered on.
-  uint64 power_on_period = 1;
-
+  // power_on_period_rate is the period of time that the captain node is powered on.
+  string power_on_period_rate = 1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
   // node_id is the id of the captain node to update power on period.
   string node_id = 2;
 }
@@ -109,27 +119,35 @@ message CaptainNodePowerOnPeriod {
 // MsgUpdatePowerOnPeriod message.
 message MsgUpdatePowerOnPeriodResponse{}
 
-// MsgRegisterCaller defines a overnance proposal to register some
+// MsgAddCaller defines a white list proposal to register some
 // callers for mint node.
-message MsgRegisterCaller {
-  option (cosmos.msg.v1.signer) = "authority";
-
-  option (gogoproto.goproto_getters) = false;
-  // the title of the update proposal
-  string title = 1;
-  // the description of the proposal
-  string description = 2;
+message MsgAddCaller {
+  option (cosmos.msg.v1.signer) = "sender";
 
   // caller address list
-  repeated string callers = 3;
+  repeated string callers = 1;
   // authority is the address that controls the module (defaults to x/gov unless
   // overwritten).
-  string authority = 4 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string sender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
-// MsgRegisterCallerResponse defines the Msg/RegisterCaller response type.
-message MsgRegisterCallerResponse {}
+// MsgAddCallerResponse defines the Msg/AddCaller response type.
+message MsgAddCallerResponse {}
 
+// MsgRemoveCaller defines a white list proposal to remove some
+// callers for mint node.
+message MsgRemoveCaller {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  // caller address list
+  repeated string callers = 1;
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string sender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgRemoveCallerResponse defines the Msg/RemoveCaller response type.
+message MsgRemoveCallerResponse {}
 
 //MsgUpdateUserExperience is the Msg/UpdateUserExperience request type.
 message MsgUpdateUserExperience {
@@ -152,3 +170,19 @@ message UserExperience {
 // MsgUpdateUserExperienceResponse defines the response structure for executing a
 // MsgUpdateUserExperience message.
 message MsgUpdateUserExperienceResponse{}
+
+// MsgUpdateSaleLevel is the Msg/UpdateSaleLevel request type.
+message MsgUpdateSaleLevel {
+  option (cosmos.msg.v1.signer) = "sender";
+  // sender is the address of the owner of nft
+  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // sale_level is the sale levels to update.
+  uint64 sale_level = 2;
+}
+
+// MsgUpdateSaleLevelResponse defines the response structure for executing a
+// MsgUpdateSaleLevel message.
+message MsgUpdateSaleLevelResponse{}
+
+

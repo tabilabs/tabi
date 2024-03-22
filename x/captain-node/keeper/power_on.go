@@ -10,12 +10,12 @@ func (k Keeper) UpdateAllNodesPowerOnPeriod(
 	NodesPowerOnPeriod []*types.CaptainNodePowerOnPeriod,
 ) []sdk.Event {
 	events := make([]sdk.Event, 0)
-	params := k.GetParams(ctx)
 	for _, nodePowerOnPeriod := range NodesPowerOnPeriod {
 		// update the power on period of the node
 		oldPowerOnPeriod := k.GetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId)
-		powerOnPeriod := calculatePowerOnPeriod(nodePowerOnPeriod.PowerOnPeriod, params.MaximumPowerOnPeriod)
-		k.SetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId, powerOnPeriod)
+
+		// set the new power on period
+		k.SetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId, nodePowerOnPeriod.PowerOnPeriodRate)
 		newPowerOnPeriod := k.GetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId)
 		events = append(
 			events,

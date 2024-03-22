@@ -3,6 +3,8 @@ package types
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
@@ -178,8 +180,8 @@ func (suite *MsgsTestSuite) TestMsgUpdatePowerOnPeriodValidateBasic() {
 				Sender: "cosmos1vewsdxxmeraett7ztsaym88jsrv85kzm8ekjsg",
 				CaptainNodePowerOnPeriods: []*CaptainNodePowerOnPeriod{
 					{
-						NodeId:        "1",
-						PowerOnPeriod: 18,
+						NodeId:            "1",
+						PowerOnPeriodRate: sdk.NewDecWithPrec(4, 2),
 					},
 				},
 			},
@@ -191,8 +193,8 @@ func (suite *MsgsTestSuite) TestMsgUpdatePowerOnPeriodValidateBasic() {
 				Sender: "invalid",
 				CaptainNodePowerOnPeriods: []*CaptainNodePowerOnPeriod{
 					{
-						NodeId:        "1",
-						PowerOnPeriod: 18,
+						NodeId:            "1",
+						PowerOnPeriodRate: sdk.NewDecWithPrec(4, 2),
 					},
 				},
 			},
@@ -204,8 +206,8 @@ func (suite *MsgsTestSuite) TestMsgUpdatePowerOnPeriodValidateBasic() {
 				Sender: "cosmos1vewsdxxmeraett7ztsaym88jsrv85kzm8ekjsg",
 				CaptainNodePowerOnPeriods: []*CaptainNodePowerOnPeriod{
 					{
-						NodeId:        "",
-						PowerOnPeriod: 18,
+						NodeId:            "",
+						PowerOnPeriodRate: sdk.NewDecWithPrec(4, 2),
 					},
 				},
 			},
@@ -217,8 +219,8 @@ func (suite *MsgsTestSuite) TestMsgUpdatePowerOnPeriodValidateBasic() {
 				Sender: "cosmos1vewsdxxmeraett7ztsaym88jsrv85kzm8ekjsg",
 				CaptainNodePowerOnPeriods: []*CaptainNodePowerOnPeriod{
 					{
-						NodeId:        "1",
-						PowerOnPeriod: 0,
+						NodeId:            "1",
+						PowerOnPeriodRate: sdk.NewDecWithPrec(0, 2),
 					},
 				},
 			},
@@ -325,16 +327,16 @@ func (suite *MsgsTestSuite) TestMsgUpdateUserExperienceValidateBasic() {
 	}
 }
 
-func (suite *MsgsTestSuite) TestMsgRegisterCallerValidateBasic() {
+func (suite *MsgsTestSuite) TestMsgAddCallerValidateBasic() {
 	testCases := []struct {
 		name      string
-		msgUpdate *MsgRegisterCaller
+		msgUpdate *MsgAddCaller
 		expPass   bool
 	}{
 		{
 			"pass - valid msg",
-			&MsgRegisterCaller{
-				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+			&MsgAddCaller{
+				Sender: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 				Callers: []string{
 					"cosmos1pgm8hyk0pvphmlvfjc8wsvk4daluz5tgmr4lac",
 				},
@@ -343,8 +345,8 @@ func (suite *MsgsTestSuite) TestMsgRegisterCallerValidateBasic() {
 		},
 		{
 			"fail - invalid authority address",
-			&MsgRegisterCaller{
-				Authority: "invalid",
+			&MsgAddCaller{
+				Sender: "invalid",
 				Callers: []string{
 					"cosmos1pgm8hyk0pvphmlvfjc8wsvk4daluz5tgmr4lac",
 				},
@@ -353,8 +355,8 @@ func (suite *MsgsTestSuite) TestMsgRegisterCallerValidateBasic() {
 		},
 		{
 			"fail - invalid caller address",
-			&MsgRegisterCaller{
-				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+			&MsgAddCaller{
+				Sender: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 				Callers: []string{
 					"invalid",
 				},
@@ -363,13 +365,114 @@ func (suite *MsgsTestSuite) TestMsgRegisterCallerValidateBasic() {
 		},
 		{
 			"fail - invalid caller is empty",
-			&MsgRegisterCaller{
-				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-				Callers:   []string{},
+			&MsgAddCaller{
+				Sender:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+				Callers: []string{},
 			},
 			false,
 		},
 	}
+	for _, tc := range testCases {
+		suite.Run(tc.name, func() {
+			err := tc.msgUpdate.ValidateBasic()
+			if tc.expPass {
+				suite.NoError(err)
+			} else {
+				suite.Error(err)
+			}
+		})
+	}
+}
+
+func (suite *MsgsTestSuite) TestMsgRemoveCallerValidateBasic() {
+	testCases := []struct {
+		name      string
+		msgUpdate *MsgRemoveCaller
+		expPass   bool
+	}{
+		{
+			"pass - valid msg",
+			&MsgRemoveCaller{
+				Sender: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+				Callers: []string{
+					"cosmos1pgm8hyk0pvphmlvfjc8wsvk4daluz5tgmr4lac",
+				},
+			},
+			true,
+		},
+		{
+			"fail - invalid authority address",
+			&MsgRemoveCaller{
+				Sender: "invalid",
+				Callers: []string{
+					"cosmos1pgm8hyk0pvphmlvfjc8wsvk4daluz5tgmr4lac",
+				},
+			},
+			false,
+		},
+		{
+			"fail - invalid caller address",
+			&MsgRemoveCaller{
+				Sender: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+				Callers: []string{
+					"invalid",
+				},
+			},
+			false,
+		},
+		{
+			"fail - invalid caller is empty",
+			&MsgRemoveCaller{
+				Sender:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+				Callers: []string{},
+			},
+			false,
+		},
+	}
+	for _, tc := range testCases {
+		suite.Run(tc.name, func() {
+			err := tc.msgUpdate.ValidateBasic()
+			if tc.expPass {
+				suite.NoError(err)
+			} else {
+				suite.Error(err)
+			}
+		})
+	}
+}
+
+func (suite *MsgsTestSuite) TestMsgUpdateSaleLevelValidateBasic() {
+	testCases := []struct {
+		name      string
+		msgUpdate *MsgUpdateSaleLevel
+		expPass   bool
+	}{
+		{
+			"pass - valid msg",
+			&MsgUpdateSaleLevel{
+				Sender:    "cosmos1vewsdxxmeraett7ztsaym88jsrv85kzm8ekjsg",
+				SaleLevel: 2,
+			},
+			true,
+		},
+		{
+			"fail - invalid Sender address",
+			&MsgUpdateSaleLevel{
+				Sender:    "invalid",
+				SaleLevel: 2,
+			},
+			false,
+		},
+		{
+			"fail - invalid SaleLevel",
+			&MsgUpdateSaleLevel{
+				Sender:    "cosmos1vewsdxxmeraett7ztsaym88jsrv85kzm8ekjsg",
+				SaleLevel: 0,
+			},
+			false,
+		},
+	}
+
 	for _, tc := range testCases {
 		suite.Run(tc.name, func() {
 			err := tc.msgUpdate.ValidateBasic()

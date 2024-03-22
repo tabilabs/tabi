@@ -46,6 +46,16 @@ service Query {
   rpc Nodes(QueryNodesRequest) returns (QueryNodesResponse) {
     option (google.api.http).get = "/x/captain-node/v1/nodes";
   }
+
+  // SaleLevel queries current sale level
+  rpc SaleLevel(QuerySaleLevelRequest) returns (QuerySaleLevelResponse) {
+    option (google.api.http).get = "/x/captain-node/v1/sale_level";
+  }
+
+  // Callers queries all the callers
+  rpc Callers(QueryCallersRequest) returns (QueryCallersResponse) {
+    option (google.api.http).get = "/x/captain-node/v1/callers";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Parameters RPC method
@@ -122,4 +132,22 @@ message QueryNodesRequest {
 message QueryNodesResponse {
   repeated Node nodes      = 1;
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QuerySaleLevelRequest is the request type for the Query/SaleLevel RPC method
+message QuerySaleLevelRequest {
+}
+
+// QuerySaleLevelResponse is the response type for the Query/SaleLevel RPC method
+message QuerySaleLevelResponse {
+  uint64 sale_level = 1;
+}
+
+// QueryCallersRequest is the request type for the Query/Callers RPC method
+message QueryCallersRequest {
+}
+
+// QueryCallersResponse is the response type for the Query/Callers RPC method
+message QueryCallersResponse {
+  repeated string callers = 1;
 }
