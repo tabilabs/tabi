@@ -30,6 +30,18 @@ const (
 	AppDBBackend = "app-db-backend"
 )
 
+// Cache flags
+const (
+	CacheBlockMaxSize  = "cache.block-max-size"
+	CacheBlockLifetime = "cache.block-lifetime"
+
+	CacheBlockResultsMaxSize  = "cache.block-results-max-size"
+	CacheBlockResultsLifetime = "cache.block-results-lifetime"
+
+	CacheFeeHistoryMaxSize  = "cache.fee-history-max-size"
+	CacheFeeHistoryLifetime = "cache.fee-history-lifetime"
+)
+
 // GRPC-related flags.
 const (
 	GRPCOnly       = "grpc-only"

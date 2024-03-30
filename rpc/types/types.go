@@ -94,8 +94,15 @@ type SignTransactionResult struct {
 	Tx  *ethtypes.Transaction `json:"tx"`
 }
 
+type TxGasAndReward struct {
+	GasUsed uint64   `json:"gasUsed"`
+	Reward  *big.Int `json:"reward"`
+}
+
 type OneFeeHistory struct {
-	BaseFee, NextBaseFee *big.Int   // base fee for each block
-	Reward               []*big.Int // each element of the array will have the tip provided to miners for the percentile given
-	GasUsedRatio         float64    // the ratio of gas used to the gas limit for each block
+	BaseFee      *big.Int         `json:"baseFee"` // base fee for each block
+	NextBaseFee  *big.Int         `json:"nextBaseFee"`
+	GasUsedRatio float64          `json:"gasUsedRatio"` // the ratio of gas used to the gas limit for each block
+	BlockGasUsed float64          `json:"blockGasUsed"`
+	Sorter       []TxGasAndReward `json:"Sorter"`
 }

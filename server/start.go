@@ -217,6 +217,15 @@ which accepts a path for the resulting pprof file.
 	cmd.Flags().Uint64(server.FlagStateSyncSnapshotInterval, 0, "State sync snapshot interval")
 	cmd.Flags().Uint32(server.FlagStateSyncSnapshotKeepRecent, 2, "State sync snapshot to keep")
 
+	cmd.Flags().Uint32(srvflags.CacheBlockMaxSize, config.DefaultBlockMaxSize, "Maximum number of cache blocks")
+	cmd.Flags().Uint64(srvflags.CacheBlockLifetime, config.DefaultBlockLifetime, "Cache block lifetime")
+
+	cmd.Flags().Uint32(srvflags.CacheBlockResultsMaxSize, config.DefaultBlockResultsMaxSize, "Maximum number of cache block results")
+	cmd.Flags().Uint64(srvflags.CacheBlockResultsLifetime, config.DefaultBlockResultsLifetime, "Cache block results lifetime")
+
+	cmd.Flags().Uint32(srvflags.CacheFeeHistoryMaxSize, config.DefaultFeeHistoryMaxSize, "Maximum number of cache fee history")
+	cmd.Flags().Uint64(srvflags.CacheFeeHistoryLifetime, config.DefaultFeeHistoryLifetime, "Cache fee history lifetime")
+
 	// add support for all Tendermint-specific command line options
 	tcmd.AddNodeFlags(cmd)
 	return cmd

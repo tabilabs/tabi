@@ -17,7 +17,9 @@ import (
 	"fmt"
 	"math"
 	"math/big"
+	"sort"
 	"strconv"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	grpctypes "github.com/cosmos/cosmos-sdk/types/grpc"
@@ -166,6 +168,16 @@ func (b *Backend) GetBlockTransactionCount(block *tmrpctypes.ResultBlock) *hexut
 	return &n
 }
 
+type cacheResultBlock struct {
+	ResultBlock *tmrpctypes.ResultBlock
+	Timestamp   int64
+}
+
+type timeAndKey struct {
+	Key       interface{}
+	Timestamp int64
+}
+
 // TendermintBlockByNumber returns a Tendermint-formatted block for a given
 // block number
 func (b *Backend) TendermintBlockByNumber(blockNum rpctypes.BlockNumber) (*tmrpctypes.ResultBlock, error) {
@@ -178,6 +190,20 @@ func (b *Backend) TendermintBlockByNumber(blockNum rpctypes.BlockNumber) (*tmrpc
 		}
 		height = int64(n) //#nosec G701 -- checked for int overflow already
 	}
+
+	// Load from blockResults map
+	value, ok := b.blockNumber.Load(height)
+	if ok && value != nil {
+		if cache, ok := value.(*cacheResultBlock); ok {
+			cache.Timestamp = time.Now().Unix()
+
+			//Clean up expired data
+			b.tryCleanBlockNumber()
+
+			return cache.ResultBlock, nil
+		}
+	}
+
 	resBlock, err := b.clientCtx.Client.Block(b.ctx, &height)
 	if err != nil {
 		b.logger.Debug("tendermint client failed to get block", "height", height, "error", err.Error())
@@ -189,13 +215,162 @@ func (b *Backend) TendermintBlockByNumber(blockNum rpctypes.BlockNumber) (*tmrpc
 		return nil, nil
 	}
 
+	// Clean up expired data
+	b.tryCleanBlockNumber()
+
+	// Store to blockResults map
+	if b.cfg.CACHE.BlockMaxSize > 0 {
+		b.blockNumber.Store(height, &cacheResultBlock{
+			ResultBlock: resBlock,
+			Timestamp:   time.Now().Unix(),
+		})
+	}
+
 	return resBlock, nil
+}
+
+func (b *Backend) tryCleanBlockNumber() {
+	// If BlockResultsMaxSize is 0, no caching is required
+	if b.cfg.CACHE.BlockMaxSize == 0 {
+		return
+	}
+
+	now := time.Now().Unix()
+	if now-b.cleanTimeOfBlockNumber < 10 {
+		return
+	}
+	b.cleanTimeOfBlockNumber = now
+
+	interval := b.cfg.CACHE.BlockLifetime
+	var deleteKeys []interface{}
+
+	var allTimeAndKey []timeAndKey
+
+	// Search for expired data and all keys
+	b.blockNumber.Range(func(key, value interface{}) bool {
+		if cache, ok := value.(*cacheResultBlock); ok {
+			if now-cache.Timestamp >= int64(interval) {
+				deleteKeys = append(deleteKeys, key)
+			} else {
+				allTimeAndKey = append(allTimeAndKey, timeAndKey{
+					Key:       key,
+					Timestamp: cache.Timestamp,
+				})
+			}
+		}
+		return true
+	})
+
+	// Delete expired data
+	if len(deleteKeys) > 0 {
+		for _, key := range deleteKeys {
+			b.blockNumber.Delete(key)
+		}
+	}
+
+	// Limit the number of data
+	maxTotal := b.cfg.CACHE.BlockMaxSize
+	if total := len(allTimeAndKey); total > maxTotal {
+		sort.Slice(allTimeAndKey, func(i, j int) bool {
+			return allTimeAndKey[i].Timestamp < allTimeAndKey[j].Timestamp
+		})
+		delCount := total - maxTotal
+		for i := 0; i < total && i < delCount; i++ {
+			b.blockNumber.Delete(allTimeAndKey[i].Key)
+		}
+	}
+}
+
+type cacheResultBlockResults struct {
+	BlockResults *tmrpctypes.ResultBlockResults
+	Timestamp    int64
 }
 
 // TendermintBlockResultByNumber returns a Tendermint-formatted block result
 // by block number
 func (b *Backend) TendermintBlockResultByNumber(height *int64) (*tmrpctypes.ResultBlockResults, error) {
-	return b.clientCtx.Client.BlockResults(b.ctx, height)
+	// Load from blockResults map
+	value, ok := b.blockResults.Load(strconv.FormatInt(*height, 10))
+	if ok && value != nil {
+		if cache, ok := value.(*cacheResultBlockResults); ok {
+			cache.Timestamp = time.Now().Unix()
+
+			//Clean up expired data
+			b.tryCleanBlockResults()
+
+			return cache.BlockResults, nil
+		}
+	}
+
+	blockResults, err := b.clientCtx.Client.BlockResults(b.ctx, height)
+	if err != nil {
+		return nil, err
+	}
+
+	// Clean up expired data
+	b.tryCleanBlockResults()
+
+	// Store to blockResults map
+	if b.cfg.CACHE.BlockResultsMaxSize > 0 {
+		b.blockResults.Store(strconv.FormatInt(*height, 10), &cacheResultBlockResults{
+			BlockResults: blockResults,
+			Timestamp:    time.Now().Unix(),
+		})
+	}
+
+	return blockResults, nil
+}
+
+func (b *Backend) tryCleanBlockResults() {
+	// If BlockResultsMaxSize is 0, no caching is required
+	if b.cfg.CACHE.BlockResultsMaxSize == 0 {
+		return
+	}
+
+	now := time.Now().Unix()
+	if now-b.cleanTimeOfBlockResults < 10 {
+		return
+	}
+	b.cleanTimeOfBlockResults = now
+
+	interval := b.cfg.CACHE.BlockResultsLifetime
+	var deleteKeys []interface{}
+
+	var allTimeAndKey []timeAndKey
+
+	// Search for expired data and all keys
+	b.blockResults.Range(func(key, value interface{}) bool {
+		if cache, ok := value.(*cacheResultBlockResults); ok {
+			if now-cache.Timestamp >= interval {
+				deleteKeys = append(deleteKeys, key)
+			} else {
+				allTimeAndKey = append(allTimeAndKey, timeAndKey{
+					Key:       key,
+					Timestamp: cache.Timestamp,
+				})
+			}
+		}
+		return true
+	})
+
+	// Delete expired data
+	if len(deleteKeys) > 0 {
+		for _, key := range deleteKeys {
+			b.blockResults.Delete(key)
+		}
+	}
+
+	// Limit the number of data
+	maxTotal := b.cfg.CACHE.BlockResultsMaxSize
+	if total := len(allTimeAndKey); total > maxTotal {
+		sort.Slice(allTimeAndKey, func(i, j int) bool {
+			return allTimeAndKey[i].Timestamp < allTimeAndKey[j].Timestamp
+		})
+		delCount := total - maxTotal
+		for i := 0; i < total && i < delCount; i++ {
+			b.blockResults.Delete(allTimeAndKey[i].Key)
+		}
+	}
 }
 
 // TendermintBlockByHash returns a Tendermint-formatted block by block number

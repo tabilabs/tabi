@@ -39,12 +39,7 @@ import (
 	"github.com/tendermint/tendermint/proto/tendermint/crypto"
 )
 
-type txGasAndReward struct {
-	gasUsed uint64
-	reward  *big.Int
-}
-
-type sortGasAndReward []txGasAndReward
+type sortGasAndReward []types.TxGasAndReward
 
 func (s sortGasAndReward) Len() int { return len(s) }
 func (s sortGasAndReward) Swap(i, j int) {
@@ -52,7 +47,7 @@ func (s sortGasAndReward) Swap(i, j int) {
 }
 
 func (s sortGasAndReward) Less(i, j int) bool {
-	return s[i].reward.Cmp(s[j].reward) < 0
+	return s[i].Reward.Cmp(s[j].Reward) < 0
 }
 
 // getAccountNonce returns the account nonce for the given account address.
@@ -118,7 +113,6 @@ func (b *Backend) getAccountNonce(accAddr common.Address, pending bool, height i
 func (b *Backend) processBlock(
 	tendermintBlock *tmrpctypes.ResultBlock,
 	ethBlock *map[string]interface{},
-	rewardPercentiles []float64,
 	tendermintBlockResult *tmrpctypes.ResultBlockResults,
 	targetOneFeeHistory *types.OneFeeHistory,
 ) error {
@@ -154,14 +148,8 @@ func (b *Backend) processBlock(
 	}
 
 	gasUsedRatio := gasusedfloat / float64(gasLimitUint64)
-	blockGasUsed := gasusedfloat
+	targetOneFeeHistory.BlockGasUsed = gasusedfloat
 	targetOneFeeHistory.GasUsedRatio = gasUsedRatio
-
-	rewardCount := len(rewardPercentiles)
-	targetOneFeeHistory.Reward = make([]*big.Int, rewardCount)
-	for i := 0; i < rewardCount; i++ {
-		targetOneFeeHistory.Reward[i] = big.NewInt(0)
-	}
 
 	// check tendermintTxs
 	tendermintTxs := tendermintBlock.Block.Txs
@@ -190,31 +178,47 @@ func (b *Backend) processBlock(
 			if reward == nil {
 				reward = big.NewInt(0)
 			}
-			sorter = append(sorter, txGasAndReward{gasUsed: txGasUsed, reward: reward})
+			sorter = append(sorter, types.TxGasAndReward{GasUsed: txGasUsed, Reward: reward})
 		}
 	}
 
 	// return an all zero row if there are no transactions to gather data from
-	ethTxCount := len(sorter)
-	if ethTxCount == 0 {
-		return nil
+	if len(sorter) == 0 {
+		targetOneFeeHistory.Sorter = sorter
+	} else {
+		sort.Sort(sorter)
+		targetOneFeeHistory.Sorter = sorter
 	}
 
-	sort.Sort(sorter)
+	return nil
+}
+
+func (b *Backend) getFeeReward(oneFeeHistory *types.OneFeeHistory, rewardPercentiles []float64) []*big.Int {
+	rewardCount := len(rewardPercentiles)
+	reward := make([]*big.Int, rewardCount)
+	for i := 0; i < rewardCount; i++ {
+		reward[i] = big.NewInt(0)
+	}
+
+	sorter := oneFeeHistory.Sorter
+	ethTxCount := len(sorter)
+	if ethTxCount == 0 {
+		return reward
+	}
 
 	var txIndex int
-	sumGasUsed := sorter[0].gasUsed
+	sumGasUsed := sorter[0].GasUsed
+	blockGasUsed := oneFeeHistory.BlockGasUsed
 
 	for i, p := range rewardPercentiles {
 		thresholdGasUsed := uint64(blockGasUsed * p / 100) // #nosec G701
 		for sumGasUsed < thresholdGasUsed && txIndex < ethTxCount-1 {
 			txIndex++
-			sumGasUsed += sorter[txIndex].gasUsed
+			sumGasUsed += sorter[txIndex].GasUsed
 		}
-		targetOneFeeHistory.Reward[i] = sorter[txIndex].reward
+		reward[i] = sorter[txIndex].Reward
 	}
-
-	return nil
+	return reward
 }
 
 // AllTxLogsFromEvents parses all ethereum logs from cosmos events

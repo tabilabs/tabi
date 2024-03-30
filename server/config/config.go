@@ -81,6 +81,24 @@ const (
 
 	// DefaultMaxOpenConnections represents the amount of open connections (unlimited = 0)
 	DefaultMaxOpenConnections = 0
+
+	// DefaultBlockMaxSize is maximum number of cache blocks.
+	DefaultBlockMaxSize = 500
+
+	// DefaultBlockLifetime is cache block lifetime.
+	DefaultBlockLifetime = 10 * 60
+
+	// DefaultBlockResultsMaxSize is maximum number of cache block results.
+	DefaultBlockResultsMaxSize = 500
+
+	// DefaultBlockResultsLifetime is cache block results lifetime.
+	DefaultBlockResultsLifetime = 10 * 60
+
+	// DefaultFeeHistoryMaxSize is maximum number of cache fee history.
+	DefaultFeeHistoryMaxSize = 500
+
+	// DefaultFeeHistoryLifetime is cache fee history lifetime.
+	DefaultFeeHistoryLifetime = 10 * 60
 )
 
 var evmTracers = []string{"json", "markdown", "struct", "access_list"}
@@ -93,6 +111,7 @@ type Config struct {
 	EVM     EVMConfig     `mapstructure:"evm"`
 	JSONRPC JSONRPCConfig `mapstructure:"json-rpc"`
 	TLS     TLSConfig     `mapstructure:"tls"`
+	CACHE   CacheConfig   `mapstructure:"cache"`
 }
 
 // EVMConfig defines the application configuration values for the EVM.
@@ -154,6 +173,17 @@ type TLSConfig struct {
 	KeyPath string `mapstructure:"key-path"`
 }
 
+type CacheConfig struct {
+	BlockMaxSize  int   `mapstructure:"block-max-size"`
+	BlockLifetime int64 `mapstructure:"block-lifetime"`
+
+	BlockResultsMaxSize  int   `mapstructure:"block-results-max-size"`
+	BlockResultsLifetime int64 `mapstructure:"block-results-lifetime"`
+
+	FeeHistoryMaxSize  int   `mapstructure:"fee-history-max-size"`
+	FeeHistoryLifetime int64 `mapstructure:"fee-history-lifetime"`
+}
+
 // AppConfig helps to override default appConfig template and configs.
 // return "", nil if no custom configuration is required for the application.
 func AppConfig(denom string) (string, interface{}) {
@@ -182,6 +212,7 @@ func AppConfig(denom string) (string, interface{}) {
 		EVM:     *DefaultEVMConfig(),
 		JSONRPC: *DefaultJSONRPCConfig(),
 		TLS:     *DefaultTLSConfig(),
+		CACHE:   *DefaultCache(),
 	}
 
 	customAppTemplate := config.DefaultConfigTemplate + DefaultConfigTemplate
@@ -196,6 +227,7 @@ func DefaultConfig() *Config {
 		EVM:     *DefaultEVMConfig(),
 		JSONRPC: *DefaultJSONRPCConfig(),
 		TLS:     *DefaultTLSConfig(),
+		CACHE:   *DefaultCache(),
 	}
 }
 
@@ -309,6 +341,17 @@ func DefaultTLSConfig() *TLSConfig {
 	}
 }
 
+func DefaultCache() *CacheConfig {
+	return &CacheConfig{
+		BlockMaxSize:         DefaultBlockMaxSize,
+		BlockLifetime:        DefaultBlockLifetime,
+		BlockResultsMaxSize:  DefaultBlockResultsMaxSize,
+		BlockResultsLifetime: DefaultBlockResultsLifetime,
+		FeeHistoryMaxSize:    DefaultFeeHistoryMaxSize,
+		FeeHistoryLifetime:   DefaultFeeHistoryLifetime,
+	}
+}
+
 // Validate returns an error if the TLS certificate and key file extensions are invalid.
 func (c TLSConfig) Validate() error {
 	certExt := path.Ext(c.CertificatePath)
@@ -323,6 +366,33 @@ func (c TLSConfig) Validate() error {
 		return fmt.Errorf("invalid extension %s for key path %s, expected '.pem'", keyExt, c.KeyPath)
 	}
 
+	return nil
+}
+
+func (c CacheConfig) Validate() error {
+	if c.BlockMaxSize < 0 {
+		return errors.New("cache block-max-size cannot be negative")
+	}
+
+	if c.BlockLifetime <= 0 {
+		return errors.New("cache block-lifetime cannot be negative or 0")
+	}
+
+	if c.BlockResultsMaxSize < 0 {
+		return errors.New("cache block-results-max-size cannot be negative")
+	}
+
+	if c.BlockResultsLifetime <= 0 {
+		return errors.New("cache block-results-lifetime cannot be negative or 0")
+	}
+
+	if c.FeeHistoryMaxSize < 0 {
+		return errors.New("cache fee-history-max-size cannot be negative")
+	}
+
+	if c.FeeHistoryLifetime <= 0 {
+		return errors.New("cache fee-history-lifetime cannot be negative or 0")
+	}
 	return nil
 }
 
@@ -362,6 +432,16 @@ func GetConfig(v *viper.Viper) (Config, error) {
 			CertificatePath: v.GetString("tls.certificate-path"),
 			KeyPath:         v.GetString("tls.key-path"),
 		},
+		CACHE: CacheConfig{
+			BlockMaxSize:  v.GetInt("cache.block-max-size"),
+			BlockLifetime: v.GetInt64("cache.block-lifetime"),
+
+			BlockResultsMaxSize:  v.GetInt("cache.block-results-max-size"),
+			BlockResultsLifetime: v.GetInt64("cache.block-results-lifetime"),
+
+			FeeHistoryMaxSize:  v.GetInt("cache.fee-history-max-size"),
+			FeeHistoryLifetime: v.GetInt64("cache.fee-history-lifetime"),
+		},
 	}, nil
 }
 
@@ -386,6 +466,10 @@ func (c Config) ValidateBasic() error {
 
 	if err := c.TLS.Validate(); err != nil {
 		return errorsmod.Wrapf(errortypes.ErrAppConfig, "invalid tls config value: %s", err.Error())
+	}
+
+	if err := c.CACHE.Validate(); err != nil {
+		return errorsmod.Wrapf(errortypes.ErrAppConfig, "invalid cache config value: %s", err.Error())
 	}
 
 	return c.Config.ValidateBasic()

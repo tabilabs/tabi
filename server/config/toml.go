@@ -103,4 +103,25 @@ certificate-path = "{{ .TLS.CertificatePath }}"
 
 # Key path defines the key.pem file path for the TLS configuration.
 key-path = "{{ .TLS.KeyPath }}"
+
+###############################################################################
+###                             Cache Configuration                         ###
+###############################################################################
+
+[cache]
+
+# Maximum number of cache blocks(0 to disable).
+block-max-size = {{ .CACHE.BlockMaxSize }}
+# Cache block lifetime(unit seconds).
+block-lifetime = {{ .CACHE.BlockLifetime }}
+
+# Maximum number of cache block results(0 to disable).
+block-results-max-size = {{ .CACHE.BlockResultsMaxSize }}
+# Cache block results lifetime(unit seconds).
+block-results-lifetime = {{ .CACHE.BlockResultsLifetime }}
+
+# Maximum number of cache fee history(0 to disable).
+fee-history-max-size = {{ .CACHE.FeeHistoryMaxSize }}
+# Cache fee history lifetime(unit seconds).
+fee-history-lifetime = {{ .CACHE.FeeHistoryLifetime }}
 `

@@ -117,7 +117,7 @@ func (f *Filter) Logs(_ context.Context, logLimit int, blockLimit int64) ([]*eth
 
 		blockRes, err := f.backend.TendermintBlockResultByNumber(&resBlock.Block.Height)
 		if err != nil {
-			f.logger.Debug("failed to fetch block result from Tendermint", "height", resBlock.Block.Height, "error", err.Error())
+			f.logger.Info("failed to fetch block result from Tendermint", "height", resBlock.Block.Height, "error", err.Error())
 			return nil, nil
 		}
 
@@ -136,7 +136,7 @@ func (f *Filter) Logs(_ context.Context, logLimit int, blockLimit int64) ([]*eth
 	}
 
 	if header == nil || header.Number == nil {
-		f.logger.Debug("header not found or has no number")
+		f.logger.Info("header not found or has no number")
 		return nil, nil
 	}
 
@@ -169,7 +169,7 @@ func (f *Filter) Logs(_ context.Context, logLimit int, blockLimit int64) ([]*eth
 	for height := from; height <= to; height++ {
 		blockRes, err := f.backend.TendermintBlockResultByNumber(&height)
 		if err != nil {
-			f.logger.Debug("failed to fetch block result from Tendermint", "height", height, "error", err.Error())
+			f.logger.Error("failed to fetch block result from Tendermint", "height", height, "error", err.Error())
 			return nil, nil
 		}
 
