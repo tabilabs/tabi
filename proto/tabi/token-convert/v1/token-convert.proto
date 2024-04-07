@@ -1,0 +1,39 @@
+syntax = "proto3";
+package tabi.token_convert.v1;
+
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/token-convert/types";
+
+// Strategy defines the unlock strategy for conversion from Vetabi to Tabi.
+message Strategy {
+  // id is the unique identifier of the strategy.
+  int64 id = 1;
+
+  // name is the name of the strategy.
+  string name = 2;
+
+  // period represents the lock time in seconds.
+  int64 period = 3;
+
+  // conversion_rate is the conversion rate from Vetabi to Tabi.
+  string conversion_rate = 4;
+}
+
+// Voucher defines the voucher for redeeming unlocked Tabi.
+message Voucher {
+  // id is the unique identifier of the voucher.
+  int64 id = 1;
+
+  // owner is the address of the owner of the voucher.
+  string owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // created_time is the time when the voucher was created.
+  int64 created_time = 3;
+
+  // strategy_id is the unique identifier of the strategy.
+  int64 strategy_id = 4;
+
+  // status is the status of the voucher.
+  int64 status = 5;
+}
