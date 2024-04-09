@@ -31,7 +31,6 @@ import (
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 
 	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 )
 
 // HandlerOptions defines the list of module keepers required to run the Tabi
@@ -42,7 +41,7 @@ type HandlerOptions struct {
 	BankKeeper             evmtypes.BankKeeper
 	DistributionKeeper     anteutils.DistributionKeeper
 	IBCKeeper              *ibckeeper.Keeper
-	StakingKeeper          stakingkeeper.Keeper
+	StakingKeeper          anteutils.StakingKeeper
 	FeeMarketKeeper        evmante.FeeMarketKeeper
 	EvmKeeper              evmante.EVMKeeper
 	FeegrantKeeper         ante.FeegrantKeeper
