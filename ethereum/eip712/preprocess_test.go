@@ -31,7 +31,7 @@ var (
 		encoding.MakeConfig(app.ModuleBasics).TxConfig,
 	)
 )
-var feePayerAddress = "tabi17xpfvakm2amg962yls6f84z3kell8c5ljcjw34"
+var feePayerAddress = "tabis1ghe3xqkwzfkue0eq8flz9xfu6a5j25tcngtla3"
 
 type TestCaseStruct struct {
 	txBuilder              client.TxBuilder
@@ -68,7 +68,7 @@ func TestLedgerPreprocessing(t *testing.T) {
 		require.True(t, len(hasExtOptsTx.GetExtensionOptions()) == 1)
 
 		expectedExt := types.ExtensionOptionsWeb3Tx{
-			TypedDataChainID: 9000,
+			TypedDataChainID: 9789,
 			FeePayer:         feePayerAddress,
 			FeePayerSig:      tc.expectedSignatureBytes,
 		}
