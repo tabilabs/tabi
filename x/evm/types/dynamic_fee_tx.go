@@ -266,13 +266,6 @@ func (tx DynamicFeeTx) Validate() error {
 		)
 	}
 
-	if !(chainID.Cmp(big.NewInt(9789)) == 0 || chainID.Cmp(big.NewInt(9788)) == 0) {
-		return errorsmod.Wrapf(
-			errortypes.ErrInvalidChainID,
-			"chain ID must be 9789 or 9788 on Tabi, got %s", chainID,
-		)
-	}
-
 	return nil
 }
 
