@@ -15,6 +15,7 @@ package keyring
 
 import (
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
+	cosmosLedger "github.com/cosmos/cosmos-sdk/crypto/ledger"
 	"github.com/cosmos/cosmos-sdk/crypto/types"
 
 	"github.com/tabilabs/ledger-go/ledger"
@@ -48,9 +49,9 @@ func Option() keyring.Option {
 	return func(options *keyring.Options) {
 		options.SupportedAlgos = SupportedAlgorithms
 		options.SupportedAlgosLedger = SupportedAlgorithmsLedger
-		//options.LedgerDerivation = func() (cosmosLedger.SECP256K1, error) { return LedgerDerivation() }
-		//options.LedgerCreateKey = CreatePubkey
-		//options.LedgerAppName = AppName
-		//options.LedgerSigSkipDERConv = SkipDERConversion
+		options.LedgerDerivation = func() (cosmosLedger.SECP256K1, error) { return LedgerDerivation() }
+		options.LedgerCreateKey = CreatePubkey
+		options.LedgerAppName = AppName
+		options.LedgerSigSkipDERConv = SkipDERConversion
 	}
 }
