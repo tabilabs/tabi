@@ -2,6 +2,7 @@ syntax = "proto3";
 package tabi.claims.v1;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 import "tabi/claims/v1/claims.proto";
 
@@ -12,5 +13,17 @@ message GenesisState {
     // params defines all the parameters of the module.
     Params params = 1 [(gogoproto.nullable) = false];
 
+    // fee_pool defines the fee pool at genesis.
+    FeePool fee_pool = 2 [(gogoproto.nullable) = false];
+
+    // holder_withdraw_infos defines the holder withdraw infos at genesis.
+    repeated HolderWithdrawInfo holder_withdraw_infos = 3 [(gogoproto.nullable) = false];
 }
 
+message HolderWithdrawInfo {
+    option (gogoproto.equal)           = false;
+    option (gogoproto.goproto_getters) = false;
+
+    // holder_address is the address of the holder.
+    string holder_address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}

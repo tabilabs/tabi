@@ -1,6 +1,10 @@
 syntax = "proto3";
 package tabi.claims.v1;
 
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+
 option go_package = "github.com/tabilabs/tabi/x/claims/types";
 
 message Params {
@@ -8,4 +12,10 @@ message Params {
     bool enable_claims = 1;
     // claims_denom is the denomination of the claimable coin
     string claims_denom = 2;
-  }
+}
+
+// FeePool is the global fee pool for distribution.
+message FeePool {
+    repeated cosmos.base.v1beta1.DecCoin community_pool = 1
+    [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"];
+}

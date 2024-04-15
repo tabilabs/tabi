@@ -17,10 +17,12 @@ service Msg {
   // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
 
-  // WithdrawValidatorCommission defines a method to withdraw the
-  // rewards to the Node address.
-  rpc WithdrawNodeReward(MsgWithdrawNodeReward) returns (MsgWithdrawNodeRewardResponse);
-  
+  // WithdrawReward defines a method to withdraw the rewards
+  rpc WithdrawReward(MsgWithdrawReward) returns (MsgWithdrawRewardResponse);
+
+  // FundCommunityPool defines a method to allow an account to directly
+  // fund the community pool.
+  rpc FundCommunityPool(MsgFundCommunityPool) returns (MsgFundCommunityPoolResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -43,7 +45,7 @@ message MsgUpdateParamsResponse {}
 
 // MsgWithdrawNodeReward represents delegation withdrawal to a delegator
 // from a single Node.
-message MsgWithdrawNodeReward {
+message MsgWithdrawReward {
   option (cosmos.msg.v1.signer) = "node_owner_address";
 
   option (gogoproto.equal)           = false;
@@ -54,8 +56,24 @@ message MsgWithdrawNodeReward {
 }
 
 // MsgWithdrawNodeRewardResponse defines the Msg/WithdrawNodeReward response type.
-message MsgWithdrawNodeRewardResponse {
+message MsgWithdrawRewardResponse {
   // Since: cosmos-sdk 0.46
   repeated cosmos.base.v1beta1.Coin amount = 1
       [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
+
+// MsgFundCommunityPool allows an account to directly
+// fund the community pool.
+message MsgFundCommunityPool {
+  option (cosmos.msg.v1.signer) = "depositor";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  repeated cosmos.base.v1beta1.Coin amount = 1
+  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  string depositor = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgFundCommunityPoolResponse defines the Msg/FundCommunityPool response type.
+message MsgFundCommunityPoolResponse {}

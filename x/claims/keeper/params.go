@@ -20,7 +20,7 @@ func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 
 // SetParams sets the mint module parameters.
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
-	if err := params.Validate(); err != nil {
+	if err := params.ValidateBasic(); err != nil {
 		return err
 	}
 

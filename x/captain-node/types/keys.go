@@ -1,6 +1,8 @@
 package types
 
 import (
+	"bytes"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 )
@@ -22,7 +24,7 @@ const (
 	// Query endpoints supported by the minting querier
 	QueryParameters = "parameters"
 
-	// KeyNextMTSequence is the key used to store the next MT sequence in the keeper
+	// KeyNextMTSequence is the key used to store the next CaptainNode sequence in the keeper
 	KeyNextNodeSequence = "nextNodeSequence"
 )
 
@@ -36,6 +38,7 @@ var (
 	OwnerHoldingKey        = []byte{0x06}
 	PowerOnPeriodKey       = []byte{0x07}
 	ExperienceKey          = []byte{0x08}
+	OperationalRateKey     = []byte{0x09}
 
 	Delimiter   = []byte{0x00}
 	Placeholder = []byte{0x01}
@@ -125,4 +128,14 @@ func ExperienceStoreKey(owner sdk.AccAddress) []byte {
 	copy(key, ExperienceKey)
 	copy(key[len(ExperienceKey):], owner)
 	return key
+}
+
+func ParseNodeByOwnerStoreKey(key []byte) (owner sdk.AccAddress, nodeId string) {
+	ret := bytes.Split(key, Delimiter)
+	if len(ret) != 2 {
+		panic("invalid nftOfClassByOwnerStoreKey")
+	}
+	owner = address.MustLengthPrefix(owner)
+	nodeId = string(ret[1])
+	return
 }

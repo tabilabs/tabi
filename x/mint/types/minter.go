@@ -11,9 +11,11 @@ import (
 const (
 	blocksPerYear = 60 * 60 * 8766 / 5 // 5 second a block, 8766 = 365.25 * 24
 	BaseDenomUnit = 18
+
+	BlocksPerDay = 24 * 60 * 60 / 5 // 5 second a block
 )
 
-var initialIssue = sdkmath.NewIntWithDecimal(100, 8) // 100*(10^8) sdTabi,
+var InitialIssue = sdkmath.NewIntWithDecimal(100, 8) // 100*(10^8) sdTabi,
 
 // Create a new minter object
 func NewMinter(lastUpdate time.Time, inflationBase sdk.Int) Minter {
@@ -27,7 +29,7 @@ func NewMinter(lastUpdate time.Time, inflationBase sdk.Int) Minter {
 func DefaultMinter() Minter {
 	return NewMinter(
 		time.Unix(0, 0).UTC(),
-		initialIssue.Mul(sdkmath.NewIntWithDecimal(1, 18)), // 100*(10^8)sdTabi, 100*(10^8)*(10^18)atabi
+		InitialIssue.Mul(sdkmath.NewIntWithDecimal(1, 18)), // 100*(10^8)sdTabi, 100*(10^8)*(10^18)atabi
 	)
 }
 

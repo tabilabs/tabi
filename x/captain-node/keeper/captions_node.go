@@ -129,17 +129,6 @@ func (k Keeper) GetNode(ctx sdk.Context, nodeID string) (types.Node, bool) {
 		return node, false
 	}
 	k.cdc.MustUnmarshal(bz, &node)
-	owner := sdk.MustAccAddressFromBech32(node.Owner)
-	// Set the node by owner
-	// 0x02<owner><Delimiter>
-	ownerStore := k.getNodesStoreByOwner(ctx, owner)
-
-	ownerStoreIterator := ownerStore.Iterator(nil, nil)
-	defer ownerStoreIterator.Close()
-	for ; ownerStoreIterator.Valid(); ownerStoreIterator.Next() {
-		fmt.Println("ownerStoreIterator.Key(): ", string(ownerStoreIterator.Key()))
-		fmt.Println("ownerStoreIterator.Value(): ", ownerStoreIterator.Value())
-	}
 	return node, true
 }
 
@@ -179,6 +168,27 @@ func (k Keeper) GetOwner(ctx sdk.Context, nodeID string) sdk.AccAddress {
 	return sdk.AccAddress(bz)
 }
 
+// GetOwners returns all owners
+func (k Keeper) GetOwners(ctx sdk.Context) (owners []sdk.AccAddress) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.NodeByOwnerKey)
+	defer iterator.Close()
+	// Need to filter duplicates from the iterator
+	ownerMap := make(map[string]struct{})
+	for ; iterator.Valid(); iterator.Next() {
+		// iterator.Key() = <owner><Delimiter><nodeID>
+		// strings.Split(string(iterator.Key()), types.Delimiter)[0] = <owner>
+		owner, _ := types.ParseNodeByOwnerStoreKey(iterator.Key())
+		ownerMap[owner.String()] = struct{}{}
+	}
+	for owner := range ownerMap {
+		accAddr, _ := sdk.AccAddressFromBech32(owner)
+		owners = append(owners, accAddr)
+	}
+	return owners
+
+}
+
 // GetUserHoldingQuantity returns the amount of nodes owned by the specified owner
 func (k Keeper) GetUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress) uint64 {
 	return k.getUserHoldingQuantity(ctx, owner)
@@ -198,6 +208,8 @@ func (k Keeper) setNode(ctx sdk.Context, node types.Node) {
 // user can have multiple nodes
 func (k Keeper) setOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
+
+	// nodeID -> owner
 	key := types.OwnerStoreKey(nodeID)
 	store.Set(key, owner.Bytes())
 
@@ -205,6 +217,7 @@ func (k Keeper) setOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddress) {
 	// 0x02<owner><Delimiter>
 	ownerStore := k.getNodesStoreByOwner(ctx, owner)
 
+	// 0x02<owner><Delimiter><nodeID> -> Placeholder
 	ownerStore.Set([]byte(nodeID), types.Placeholder)
 }
 

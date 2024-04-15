@@ -110,3 +110,10 @@ func (k Keeper) GetTokenSupply(ctx sdk.Context) sdkmath.Int {
 	tabiCoin = tabiCoin.Add(sdTabiCoin)
 	return tabiCoin.Amount
 }
+
+// GetDailyIssuance returns the amount of tokens issued per day
+func (k Keeper) GetDailyIssuance(ctx sdk.Context) sdk.Dec {
+	params := k.GetParams(ctx)
+
+	return params.Inflation.MulInt(types.InitialIssue)
+}

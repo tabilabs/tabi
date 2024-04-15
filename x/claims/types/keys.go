@@ -23,5 +23,6 @@ const (
 
 var (
 	// use for the keeper store
-	ParamsKey = []byte{0x00}
+	ParamsKey  = []byte{0x00}
+	FeePoolKey = []byte{0x01} // key for global distribution state
 )
