@@ -18,11 +18,20 @@ service Query {
     option (google.api.http).get = "/x/claims/v1/params";
   }
 
-  // NodeRewards queries the total rewards accrued by a delegation.
-  rpc NodeRewards(QueryNodeRewardsRequest) returns (QueryNodeRewardsResponse) {
-    option (google.api.http).get = "/x/claims/v1/nodes/{node_id}/rewards";
+  // NodeTotalRewards queries the total rewards accrued by a delegation.
+  rpc NodeTotalRewards(QueryNodeTotalRewardsRequest) returns (QueryNodeTotalRewardsResponse) {
+    option (google.api.http).get = "/x/claims/v1/nodes/{node_id}/total_rewards";
   }
 
+  // HolderUnclaimedRewards queries the total rewards accrued by a delegation.
+  rpc HolderUnclaimedRewards(QueryHolderUnclaimedRewardsRequest) returns (QueryHolderUnclaimedRewardsResponse) {
+    option (google.api.http).get = "/x/claims/v1/holders/{user_id}/unclaimed_rewards";
+  }
+
+  // HolderTotalRewards queries the total rewards accrued by a delegation.
+  rpc HolderTotalRewards(QueryHolderTotalRewardsRequest) returns (QueryHolderTotalRewardsResponse) {
+    option (google.api.http).get = "/x/claims/v1/holders/{user_id}/total_rewards";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Parameters RPC method
@@ -36,21 +45,33 @@ message QueryParamsResponse {
   cosmos.base.query.v1beta1.PageResponse res = 2;
 }
 
-
-// QueryNodeRewardsRequest is the request type for the
-// Query/NodeRewards RPC method.
-message QueryNodeRewardsRequest {
-  option (gogoproto.equal)           = false;
-  option (gogoproto.goproto_getters) = false;
-
-  // node_id defines the node id to query for.
+// QueryNodeTotalRewardsRequest is request type for the Query/NodeTotalRewards RPC method
+message QueryNodeTotalRewardsRequest {
   string node_id = 1;
 }
 
-// QueryNodeRewardsResponse is the response type for the
-// Query/NodeRewards RPC method.
-message QueryNodeRewardsResponse {
-  // rewards defines the rewards accrued by a delegation.
-  repeated cosmos.base.v1beta1.DecCoin rewards = 1
-      [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"];
+// QueryNodeTotalRewardsResponse is response type for the Query/NodeTotalRewards RPC method
+message QueryNodeTotalRewardsResponse {
+  cosmos.base.v1beta1.Coin total_rewards = 1;
 }
+
+// QueryHolderUnclaimedRewardsRequest is request type for the Query/HolderUnclaimedRewards RPC method
+message QueryHolderUnclaimedRewardsRequest {
+  string user_id = 1;
+}
+
+// QueryHolderUnclaimedRewardsResponse is response type for the Query/HolderUnclaimedRewards RPC method
+message QueryHolderUnclaimedRewardsResponse {
+  cosmos.base.v1beta1.Coin unclaimed_rewards = 1;
+}
+
+// QueryHolderTotalRewardsRequest is request type for the Query/HolderTotalRewards RPC method
+message QueryHolderTotalRewardsRequest {
+  string user_id = 1;
+}
+
+// QueryHolderTotalRewardsResponse is response type for the Query/HolderTotalRewards RPC method
+message QueryHolderTotalRewardsResponse {
+  cosmos.base.v1beta1.Coin total_rewards = 1;
+}
+

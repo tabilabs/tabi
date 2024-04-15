@@ -43,10 +43,32 @@ func (m msgServer) UpdateParams(
 }
 
 // WithdrawNodeReward implement the interface of types.MsgServer
-func (m msgServer) WithdrawNodeReward(
+func (m msgServer) WithdrawReward(
 	goCtx context.Context,
-	msg *types.MsgWithdrawNodeReward,
-) (*types.MsgWithdrawNodeRewardResponse, error) {
+	msg *types.MsgWithdrawReward,
+) (*types.MsgWithdrawRewardResponse, error) {
 	// todo: implement the logic
 	return nil, nil
+}
+
+func (m msgServer) FundCommunityPool(goCtx context.Context, msg *types.MsgFundCommunityPool) (*types.MsgFundCommunityPoolResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	depositer, err := sdk.AccAddressFromBech32(msg.Depositor)
+	if err != nil {
+		return nil, err
+	}
+	if err := m.k.FundCommunityPool(ctx, msg.Amount, depositer); err != nil {
+		return nil, err
+	}
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Depositor),
+		),
+	)
+
+	return &types.MsgFundCommunityPoolResponse{}, nil
 }

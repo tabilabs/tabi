@@ -33,6 +33,6 @@ func (p *Params) GetParamSpace() string {
 }
 
 // Validate returns err if the Params is invalid
-func (p Params) Validate() error {
+func (p Params) ValidateBasic() error {
 	return nil
 }

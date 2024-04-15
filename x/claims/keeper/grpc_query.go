@@ -18,7 +18,17 @@ func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.Q
 	return &types.QueryParamsResponse{Params: params}, nil
 }
 
-func (k Keeper) NodeRewards(c context.Context, req *types.QueryNodeRewardsRequest) (*types.QueryNodeRewardsResponse, error) {
-	// todo: implement the logic
-	return nil, nil
+func (k Keeper) NodeTotalRewards(ctx context.Context, request *types.QueryNodeTotalRewardsRequest) (*types.QueryNodeTotalRewardsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k Keeper) HolderUnclaimedRewards(ctx context.Context, request *types.QueryHolderUnclaimedRewardsRequest) (*types.QueryHolderUnclaimedRewardsResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (k Keeper) HolderTotalRewards(ctx context.Context, request *types.QueryHolderTotalRewardsRequest) (*types.QueryHolderTotalRewardsResponse, error) {
+	//TODO implement me
+	panic("implement me")
 }

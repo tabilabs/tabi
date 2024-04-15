@@ -18,8 +18,14 @@ type Keeper struct {
 	storeKey   storetypes.StoreKey
 	paramSpace paramtypes.Subspace
 
-	accountKeeper types.AccountKeeper
+	// cosmos keepers
+	authKeeper    types.AccountKeeper
 	bankKeeper    types.BankKeeper
+	stakingKeeper types.StakingKeeper
+
+	// self module keepers
+	mintKeeper        types.MintKeeper
+	captainNodeKeeper types.CaptainNodeKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this should be the x/gov module account.
 	authority sdk.AccAddress
@@ -35,12 +41,12 @@ func NewKeeper(cdc codec.Codec, authority sdk.AccAddress,
 	}
 
 	keeper := Keeper{
-		storeKey:      key,
-		cdc:           cdc,
-		paramSpace:    paramSpace.WithKeyTable(types.ParamKeyTable()),
-		accountKeeper: ak,
-		bankKeeper:    bk,
-		authority:     authority,
+		storeKey:   key,
+		cdc:        cdc,
+		paramSpace: paramSpace.WithKeyTable(types.ParamKeyTable()),
+		authKeeper: ak,
+		bankKeeper: bk,
+		authority:  authority,
 	}
 	return keeper
 }
