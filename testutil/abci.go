@@ -1,16 +1,18 @@
-// Copyright 2022 Tabi Foundation
-// This file is part of the Tabi Network packages.
+// Copyright 2022 Evmos Foundation
+// This file is part of the Evmos Network packages.
 //
-// Tabi is free software: you can redistribute it and/or modify
+// Evmos is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The Tabi packages are distributed in the hope that it will be useful,
+// The Evmos packages are distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
-
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the Evmos packages. If not, see https://github.com/evmos/evmos/blob/main/LICENSE
 package testutil
 
 import (
@@ -67,7 +69,7 @@ func Commit(ctx sdk.Context, app *app.Tabi, t time.Duration, vs *tmtypes.Validat
 // DeliverTx delivers a cosmos tx for a given set of msgs
 func DeliverTx(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	priv cryptotypes.PrivKey,
 	gasPrice *sdkmath.Int,
 	msgs ...sdk.Msg,
@@ -75,7 +77,7 @@ func DeliverTx(
 	txConfig := encoding.MakeConfig(app.ModuleBasics).TxConfig
 	tx, err := tx.PrepareCosmosTx(
 		ctx,
-		appTabi,
+		appEvmos,
 		tx.CosmosTxArgs{
 			TxCfg:    txConfig,
 			Priv:     priv,
@@ -88,30 +90,30 @@ func DeliverTx(
 	if err != nil {
 		return abci.ResponseDeliverTx{}, err
 	}
-	return BroadcastTxBytes(appTabi, txConfig.TxEncoder(), tx)
+	return BroadcastTxBytes(appEvmos, txConfig.TxEncoder(), tx)
 }
 
 // DeliverEthTx generates and broadcasts a Cosmos Tx populated with MsgEthereumTx messages.
 // If a private key is provided, it will attempt to sign all messages with the given private key,
 // otherwise, it will assume the messages have already been signed.
 func DeliverEthTx(
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	priv cryptotypes.PrivKey,
 	msgs ...sdk.Msg,
 ) (abci.ResponseDeliverTx, error) {
 	txConfig := encoding.MakeConfig(app.ModuleBasics).TxConfig
 
-	tx, err := tx.PrepareEthTx(txConfig, appTabi, priv, msgs...)
+	tx, err := tx.PrepareEthTx(txConfig, appEvmos, priv, msgs...)
 	if err != nil {
 		return abci.ResponseDeliverTx{}, err
 	}
-	return BroadcastTxBytes(appTabi, txConfig.TxEncoder(), tx)
+	return BroadcastTxBytes(appEvmos, txConfig.TxEncoder(), tx)
 }
 
 // CheckTx checks a cosmos tx for a given set of msgs
 func CheckTx(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	priv cryptotypes.PrivKey,
 	gasPrice *sdkmath.Int,
 	msgs ...sdk.Msg,
@@ -120,7 +122,7 @@ func CheckTx(
 
 	tx, err := tx.PrepareCosmosTx(
 		ctx,
-		appTabi,
+		appEvmos,
 		tx.CosmosTxArgs{
 			TxCfg:    txConfig,
 			Priv:     priv,
@@ -133,22 +135,22 @@ func CheckTx(
 	if err != nil {
 		return abci.ResponseCheckTx{}, err
 	}
-	return checkTxBytes(appTabi, txConfig.TxEncoder(), tx)
+	return checkTxBytes(appEvmos, txConfig.TxEncoder(), tx)
 }
 
 // CheckEthTx checks a Ethereum tx for a given set of msgs
 func CheckEthTx(
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	priv cryptotypes.PrivKey,
 	msgs ...sdk.Msg,
 ) (abci.ResponseCheckTx, error) {
 	txConfig := encoding.MakeConfig(app.ModuleBasics).TxConfig
 
-	tx, err := tx.PrepareEthTx(txConfig, appTabi, priv, msgs...)
+	tx, err := tx.PrepareEthTx(txConfig, appEvmos, priv, msgs...)
 	if err != nil {
 		return abci.ResponseCheckTx{}, err
 	}
-	return checkTxBytes(appTabi, txConfig.TxEncoder(), tx)
+	return checkTxBytes(appEvmos, txConfig.TxEncoder(), tx)
 }
 
 // BroadcastTxBytes encodes a transaction and calls DeliverTx on the app.

@@ -1,35 +1,28 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-
 package types
 
+// nolint
 const (
 	// ModuleName defines the module name
 	ModuleName = "claims"
 
+	// FeeCollectorName the root string for the fee collector account address
+	ClaimsCollectorName = "claims_collector"
+
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
 
-	// RouterKey is the message route for claims
+	// RouterKey defines the module's message routing key
 	RouterKey = ModuleName
+
+	// QuerierRoute defines the module's query routing key
+	QuerierRoute = ModuleName
+
+	// Query endpoints supported by the minting querier
+	QueryParameters = "parameters"
 )
 
-// prefix bytes for the claims module's persistent store
-const (
-	prefixClaimsRecords = iota + 1
-)
-
-// KVStore key prefixes
 var (
-	KeyPrefixClaimsRecords = []byte{prefixClaimsRecords}
+	// use for the keeper store
+	ParamsKey  = []byte{0x00}
+	FeePoolKey = []byte{0x01} // key for global distribution state
 )

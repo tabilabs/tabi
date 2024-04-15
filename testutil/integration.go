@@ -1,15 +1,18 @@
-// Copyright 2022 Tabi Foundation
-// This file is part of the Tabi Network packages.
+// Copyright 2022 Evmos Foundation
+// This file is part of the Evmos Network packages.
 //
-// Tabi is free software: you can redistribute it and/or modify
+// Evmos is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The Tabi packages are distributed in the hope that it will be useful,
+// The Evmos packages are distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the Evmos packages. If not, see https://github.com/evmos/evmos/blob/main/LICENSE
 
 package testutil
 
@@ -31,7 +34,7 @@ import (
 // event.
 func SubmitProposal(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	pk *ethsecp256k1.PrivKey,
 	content govv1beta1.Content,
 	eventNum int,
@@ -44,7 +47,7 @@ func SubmitProposal(
 	if err != nil {
 		return id, err
 	}
-	res, err := DeliverTx(ctx, appTabi, pk, nil, msg)
+	res, err := DeliverTx(ctx, appEvmos, pk, nil, msg)
 	if err != nil {
 		return id, err
 	}
@@ -60,7 +63,7 @@ func SubmitProposal(
 // Delegate delivers a delegate tx
 func Delegate(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	priv *ethsecp256k1.PrivKey,
 	delegateAmount sdk.Coin,
 	validator stakingtypes.Validator,
@@ -73,13 +76,13 @@ func Delegate(
 	}
 
 	delegateMsg := stakingtypes.NewMsgDelegate(accountAddress, val, delegateAmount)
-	return DeliverTx(ctx, appTabi, priv, nil, delegateMsg)
+	return DeliverTx(ctx, appEvmos, priv, nil, delegateMsg)
 }
 
 // Vote delivers a vote tx with the VoteOption "yes"
 func Vote(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	priv *ethsecp256k1.PrivKey,
 	proposalID uint64,
 	voteOption govv1beta1.VoteOption,
@@ -87,5 +90,5 @@ func Vote(
 	accountAddress := sdk.AccAddress(priv.PubKey().Address().Bytes())
 
 	voteMsg := govv1beta1.NewMsgVote(accountAddress, proposalID, voteOption)
-	return DeliverTx(ctx, appTabi, priv, nil, voteMsg)
+	return DeliverTx(ctx, appEvmos, priv, nil, voteMsg)
 }
