@@ -52,16 +52,15 @@ func VoucherStoreKey(voucherID string) []byte {
 // VoucherByOwnerStoreKey returns the byte representation of the voucher by owner key
 // Items are stored with key as follows:
 // 0x03<owner><Delimiter(1 Byte)><voucherID>
-func VoucherByOwnerStoreKey(owner sdktypes.AccAddress, voucherID uint64) []byte {
+func VoucherByOwnerStoreKey(owner sdktypes.AccAddress, voucherID string) []byte {
 	address.MustLengthPrefix(owner)
-	voucherIdBz := sdktypes.Uint64ToBigEndian(voucherID)
 
-	bz := make([]byte, len(VoucherByOwnerKey)+len(owner)+len(Delimiter)+len(voucherIdBz))
+	bz := make([]byte, len(VoucherByOwnerKey)+len(owner)+len(Delimiter)+len(voucherID))
 
 	copy(bz, VoucherByOwnerKey)
 	copy(bz[len(VoucherByOwnerKey):], owner)
 	copy(bz[len(VoucherByOwnerKey)+len(owner):], Delimiter)
-	copy(bz[len(VoucherByOwnerKey)+len(owner)+len(Delimiter):], voucherIdBz)
+	copy(bz[len(VoucherByOwnerKey)+len(owner)+len(Delimiter):], voucherID)
 
 	return bz
 }

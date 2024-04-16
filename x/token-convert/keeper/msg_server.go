@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -85,7 +84,7 @@ func (m msgServer) ConvertVetabi(goCtx context.Context, msg *types.MsgConvertVet
 			types.EventTypeConvertVetabi,
 			sdk.NewAttribute(types.AttributeKeySender, msg.Sender),
 			sdk.NewAttribute(types.AttributeKeyAmount, msg.Coin.String()),
-			sdk.NewAttribute(types.AttributeKeyVoucherID, strconv.FormatUint(voucherID, 10)),
+			sdk.NewAttribute(types.AttributeKeyVoucherID, voucherID),
 			sdk.NewAttribute(types.AttributeKeyExpiryTime, expiryTime),
 		),
 	)

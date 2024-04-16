@@ -55,7 +55,7 @@ func (k Keeper) GetVoucher(ctx sdk.Context, voucherID string) (types.Voucher, bo
 }
 
 // setVoucherByOwner sets the VoucherByOwnerStore.
-func (k Keeper) setVoucherByOwner(ctx sdk.Context, owner sdk.AccAddress, voucherID uint64) {
+func (k Keeper) setVoucherByOwner(ctx sdk.Context, owner sdk.AccAddress, voucherID string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.VoucherByOwnerStoreKey(owner.Bytes(), voucherID), types.PlaceHolder)
 }

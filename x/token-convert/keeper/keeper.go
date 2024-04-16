@@ -61,14 +61,14 @@ func (k Keeper) ConvertTabi(ctx sdk.Context, sender sdk.AccAddress, coin sdk.Coi
 }
 
 // LockVetabiAndCreateVoucher locks vetabi and creates a voucher for future withdraw.
-func (k Keeper) LockVetabiAndCreateVoucher(ctx sdk.Context, sender sdk.AccAddress, strategy types.Strategy, coin sdk.Coin) (string, uint64, error) {
+func (k Keeper) LockVetabiAndCreateVoucher(ctx sdk.Context, sender sdk.AccAddress, strategy types.Strategy, coin sdk.Coin) (string, string, error) {
 	if strategy.Name == k.instantStrategy {
 		err := k.InstantWithdrawVetabi(ctx, sender, coin)
-		return "", 0, err
+		return "", "", err
 	}
 
 	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(coin)); err != nil {
-		return "", 0, err
+		return "", "", err
 	}
 
 	voucherID := k.createVoucher(ctx, sender, strategy.Name, coin)
