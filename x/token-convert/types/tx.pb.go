@@ -7,6 +7,7 @@ import (
 	context "context"
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
+	types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
@@ -31,8 +32,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgConvertTabi represents a message to convert Tabi to Vetabi.
 type MsgConvertTabi struct {
-	Amount int64  `protobuf:"varint,1,opt,name=amount,proto3" json:"amount,omitempty"`
-	Sender string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	Coin   types.Coin `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin"`
+	Sender string     `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
 func (m *MsgConvertTabi) Reset()         { *m = MsgConvertTabi{} }
@@ -68,11 +69,11 @@ func (m *MsgConvertTabi) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgConvertTabi proto.InternalMessageInfo
 
-func (m *MsgConvertTabi) GetAmount() int64 {
+func (m *MsgConvertTabi) GetCoin() types.Coin {
 	if m != nil {
-		return m.Amount
+		return m.Coin
 	}
-	return 0
+	return types.Coin{}
 }
 
 func (m *MsgConvertTabi) GetSender() string {
@@ -121,9 +122,9 @@ var xxx_messageInfo_MsgConvertTabiResponse proto.InternalMessageInfo
 
 // MsgConvertVetabi represents a message to convert Vetabi to Tabi.
 type MsgConvertVetabi struct {
-	Amount     int64  `protobuf:"varint,1,opt,name=amount,proto3" json:"amount,omitempty"`
-	StrategyId int64  `protobuf:"varint,2,opt,name=strategy_id,json=strategyId,proto3" json:"strategy_id,omitempty"`
-	Sender     string `protobuf:"bytes,3,opt,name=sender,proto3" json:"sender,omitempty"`
+	Coin     types.Coin `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin"`
+	Strategy string     `protobuf:"bytes,2,opt,name=strategy,proto3" json:"strategy,omitempty"`
+	Sender   string     `protobuf:"bytes,3,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
 func (m *MsgConvertVetabi) Reset()         { *m = MsgConvertVetabi{} }
@@ -159,18 +160,18 @@ func (m *MsgConvertVetabi) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgConvertVetabi proto.InternalMessageInfo
 
-func (m *MsgConvertVetabi) GetAmount() int64 {
+func (m *MsgConvertVetabi) GetCoin() types.Coin {
 	if m != nil {
-		return m.Amount
+		return m.Coin
 	}
-	return 0
+	return types.Coin{}
 }
 
-func (m *MsgConvertVetabi) GetStrategyId() int64 {
+func (m *MsgConvertVetabi) GetStrategy() string {
 	if m != nil {
-		return m.StrategyId
+		return m.Strategy
 	}
-	return 0
+	return ""
 }
 
 func (m *MsgConvertVetabi) GetSender() string {
@@ -182,7 +183,7 @@ func (m *MsgConvertVetabi) GetSender() string {
 
 // MsgConvertVetabiResponse defines the Msg/ConvertVetabi response type.
 type MsgConvertVetabiResponse struct {
-	VoucherId  int64  `protobuf:"varint,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
+	VoucherId  string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
 	ExpiryTime string `protobuf:"bytes,2,opt,name=expiry_time,json=expiryTime,proto3" json:"expiry_time,omitempty"`
 }
 
@@ -219,11 +220,11 @@ func (m *MsgConvertVetabiResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgConvertVetabiResponse proto.InternalMessageInfo
 
-func (m *MsgConvertVetabiResponse) GetVoucherId() int64 {
+func (m *MsgConvertVetabiResponse) GetVoucherId() string {
 	if m != nil {
 		return m.VoucherId
 	}
-	return 0
+	return ""
 }
 
 func (m *MsgConvertVetabiResponse) GetExpiryTime() string {
@@ -235,7 +236,7 @@ func (m *MsgConvertVetabiResponse) GetExpiryTime() string {
 
 // MsgWithdrawTabi represents a message to withdraw Tabi as per voucher.
 type MsgWithdrawTabi struct {
-	VoucherId int64  `protobuf:"varint,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
+	VoucherId string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
 	Sender    string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
@@ -272,11 +273,11 @@ func (m *MsgWithdrawTabi) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgWithdrawTabi proto.InternalMessageInfo
 
-func (m *MsgWithdrawTabi) GetVoucherId() int64 {
+func (m *MsgWithdrawTabi) GetVoucherId() string {
 	if m != nil {
 		return m.VoucherId
 	}
-	return 0
+	return ""
 }
 
 func (m *MsgWithdrawTabi) GetSender() string {
@@ -288,10 +289,8 @@ func (m *MsgWithdrawTabi) GetSender() string {
 
 // MsgWithdrawTabiResponse defines the Msg/WithdrawTabi response type.
 type MsgWithdrawTabiResponse struct {
-	TabiWithdrawn  int64 `protobuf:"varint,1,opt,name=tabi_withdrawn,json=tabiWithdrawn,proto3" json:"tabi_withdrawn,omitempty"`
-	TabiBurned     int64 `protobuf:"varint,2,opt,name=tabi_burned,json=tabiBurned,proto3" json:"tabi_burned,omitempty"`
-	VetabiUnlocked int64 `protobuf:"varint,3,opt,name=vetabi_unlocked,json=vetabiUnlocked,proto3" json:"vetabi_unlocked,omitempty"`
-	VetabiBurned   int64 `protobuf:"varint,4,opt,name=vetabi_burned,json=vetabiBurned,proto3" json:"vetabi_burned,omitempty"`
+	TabiWithdrawn  types.Coin `protobuf:"bytes,1,opt,name=tabi_withdrawn,json=tabiWithdrawn,proto3" json:"tabi_withdrawn"`
+	VetabiReturned types.Coin `protobuf:"bytes,2,opt,name=vetabi_returned,json=vetabiReturned,proto3" json:"vetabi_returned"`
 }
 
 func (m *MsgWithdrawTabiResponse) Reset()         { *m = MsgWithdrawTabiResponse{} }
@@ -327,37 +326,23 @@ func (m *MsgWithdrawTabiResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgWithdrawTabiResponse proto.InternalMessageInfo
 
-func (m *MsgWithdrawTabiResponse) GetTabiWithdrawn() int64 {
+func (m *MsgWithdrawTabiResponse) GetTabiWithdrawn() types.Coin {
 	if m != nil {
 		return m.TabiWithdrawn
 	}
-	return 0
+	return types.Coin{}
 }
 
-func (m *MsgWithdrawTabiResponse) GetTabiBurned() int64 {
+func (m *MsgWithdrawTabiResponse) GetVetabiReturned() types.Coin {
 	if m != nil {
-		return m.TabiBurned
+		return m.VetabiReturned
 	}
-	return 0
-}
-
-func (m *MsgWithdrawTabiResponse) GetVetabiUnlocked() int64 {
-	if m != nil {
-		return m.VetabiUnlocked
-	}
-	return 0
-}
-
-func (m *MsgWithdrawTabiResponse) GetVetabiBurned() int64 {
-	if m != nil {
-		return m.VetabiBurned
-	}
-	return 0
+	return types.Coin{}
 }
 
 // MsgCancelConvert represents a message to cancel the conversion of Vetabi to Tabi.
 type MsgCancelConvert struct {
-	VoucherId int64  `protobuf:"varint,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
+	VoucherId string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
 	Sender    string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
@@ -394,11 +379,11 @@ func (m *MsgCancelConvert) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgCancelConvert proto.InternalMessageInfo
 
-func (m *MsgCancelConvert) GetVoucherId() int64 {
+func (m *MsgCancelConvert) GetVoucherId() string {
 	if m != nil {
 		return m.VoucherId
 	}
-	return 0
+	return ""
 }
 
 func (m *MsgCancelConvert) GetSender() string {
@@ -410,7 +395,7 @@ func (m *MsgCancelConvert) GetSender() string {
 
 // MsgCancelConvertResponse defines the Msg/CancelConvert response type.
 type MsgCancelConvertResponse struct {
-	VetabiUnlocked int64 `protobuf:"varint,1,opt,name=vetabi_unlocked,json=vetabiUnlocked,proto3" json:"vetabi_unlocked,omitempty"`
+	VetabiUnlocked types.Coin `protobuf:"bytes,1,opt,name=vetabi_unlocked,json=vetabiUnlocked,proto3" json:"vetabi_unlocked"`
 }
 
 func (m *MsgCancelConvertResponse) Reset()         { *m = MsgCancelConvertResponse{} }
@@ -446,11 +431,11 @@ func (m *MsgCancelConvertResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgCancelConvertResponse proto.InternalMessageInfo
 
-func (m *MsgCancelConvertResponse) GetVetabiUnlocked() int64 {
+func (m *MsgCancelConvertResponse) GetVetabiUnlocked() types.Coin {
 	if m != nil {
 		return m.VetabiUnlocked
 	}
-	return 0
+	return types.Coin{}
 }
 
 func init() {
@@ -467,40 +452,41 @@ func init() {
 func init() { proto.RegisterFile("tabi/token-convert/v1/tx.proto", fileDescriptor_f967002ae4f42118) }
 
 var fileDescriptor_f967002ae4f42118 = []byte{
-	// 530 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0xcb, 0x6e, 0xd3, 0x40,
-	0x14, 0xad, 0x31, 0x8a, 0xd4, 0xdb, 0x26, 0x45, 0x56, 0x29, 0x21, 0x12, 0xa6, 0x0a, 0x2a, 0xed,
-	0x26, 0x36, 0x85, 0x2f, 0x20, 0xdd, 0xd0, 0x45, 0x36, 0xa6, 0x80, 0x94, 0x8d, 0xe5, 0xc7, 0xe0,
-	0x8c, 0x1a, 0xcf, 0x44, 0x33, 0x63, 0x37, 0x59, 0xf0, 0x0f, 0x7c, 0x06, 0x3b, 0x36, 0x7c, 0x04,
-	0xcb, 0x8a, 0x15, 0x4b, 0x94, 0xfc, 0x08, 0xf2, 0xcc, 0xc4, 0xd8, 0x51, 0x48, 0x83, 0xc4, 0xce,
-	0x3e, 0xf7, 0xf8, 0x9c, 0x7b, 0xcf, 0xf5, 0x0c, 0xd8, 0x22, 0x08, 0xb1, 0x2b, 0xe8, 0x35, 0x22,
-	0xbd, 0x88, 0x92, 0x1c, 0x31, 0xe1, 0xe6, 0xe7, 0xae, 0x98, 0x3a, 0x13, 0x46, 0x05, 0xb5, 0x1e,
-	0x16, 0x75, 0x47, 0xd6, 0x7d, 0x5d, 0x77, 0xf2, 0xf3, 0xce, 0x61, 0x42, 0x13, 0x2a, 0x19, 0x6e,
-	0xf1, 0xa4, 0xc8, 0x9d, 0xc7, 0x11, 0xe5, 0x29, 0xe5, 0xbe, 0x2a, 0xa8, 0x17, 0x55, 0xea, 0x0e,
-	0xa1, 0x35, 0xe0, 0xc9, 0x85, 0x52, 0xb8, 0x0a, 0x42, 0x6c, 0x1d, 0x41, 0x23, 0x48, 0x69, 0x46,
-	0x44, 0xdb, 0x38, 0x36, 0xce, 0x4c, 0x4f, 0xbf, 0x59, 0x2f, 0xa0, 0xc1, 0x11, 0x89, 0x11, 0x6b,
-	0xdf, 0x3b, 0x36, 0xce, 0x76, 0xfb, 0xed, 0x1f, 0xdf, 0x7a, 0x87, 0x5a, 0xeb, 0x75, 0x1c, 0x33,
-	0xc4, 0xf9, 0x5b, 0xc1, 0x30, 0x49, 0x3c, 0xcd, 0xeb, 0xb6, 0xe1, 0xa8, 0xae, 0xed, 0x21, 0x3e,
-	0xa1, 0x84, 0xa3, 0xee, 0x27, 0x78, 0xf0, 0xa7, 0xf2, 0x1e, 0x89, 0x4d, 0xbe, 0x4f, 0x61, 0x8f,
-	0x0b, 0x16, 0x08, 0x94, 0xcc, 0x7c, 0x1c, 0x4b, 0x73, 0xd3, 0x83, 0x25, 0x74, 0x19, 0x57, 0x1a,
-	0x33, 0xb7, 0x6c, 0x6c, 0x08, 0xed, 0x55, 0xfb, 0x65, 0x6b, 0xd6, 0x13, 0x80, 0x9c, 0x66, 0xd1,
-	0x08, 0xb1, 0xc2, 0x4d, 0xb5, 0xb2, 0xab, 0x91, 0xcb, 0xb8, 0xe8, 0x06, 0x4d, 0x27, 0x98, 0xcd,
-	0x7c, 0x81, 0x53, 0xa4, 0xa2, 0xf0, 0x40, 0x41, 0x57, 0x38, 0x45, 0xdd, 0x10, 0x0e, 0x06, 0x3c,
-	0xf9, 0x80, 0xc5, 0x28, 0x66, 0xc1, 0x8d, 0x4c, 0xf4, 0x0e, 0xc9, 0x7f, 0x0f, 0xf6, 0xab, 0x01,
-	0x8f, 0x56, 0x4c, 0xca, 0xfe, 0x4f, 0xa0, 0x55, 0xcc, 0xe3, 0xdf, 0xe8, 0x22, 0xd1, 0x86, 0xcd,
-	0x02, 0x5d, 0x7e, 0x41, 0x8a, 0x39, 0x24, 0x2d, 0xcc, 0x18, 0x41, 0x65, 0xaa, 0x05, 0xd4, 0x97,
-	0x88, 0x75, 0x0a, 0x07, 0xb9, 0x4c, 0xc6, 0xcf, 0xc8, 0x98, 0x46, 0xd7, 0x28, 0x96, 0xf1, 0x9a,
-	0x5e, 0x4b, 0xc1, 0xef, 0x34, 0x6a, 0x3d, 0x83, 0xa6, 0x26, 0x6a, 0xad, 0xfb, 0x92, 0xb6, 0xaf,
-	0x40, 0xa5, 0xd6, 0x8d, 0xd4, 0xc2, 0x03, 0x12, 0xa1, 0xb1, 0xce, 0xfd, 0xff, 0xc7, 0x72, 0xa1,
-	0xd6, 0x5a, 0x35, 0x29, 0x63, 0x59, 0x33, 0x8e, 0xb1, 0x6e, 0x9c, 0x97, 0x5f, 0x4c, 0x30, 0x07,
-	0x3c, 0xb1, 0x22, 0xd8, 0xab, 0x9e, 0x8a, 0x13, 0x67, 0xed, 0x81, 0x73, 0xea, 0x3f, 0x78, 0xa7,
-	0xb7, 0x15, 0xad, 0xec, 0x0a, 0x43, 0xb3, 0x7e, 0x08, 0x4e, 0xef, 0xfc, 0x5e, 0x11, 0x3b, 0xee,
-	0x96, 0xc4, 0xd2, 0xea, 0x23, 0xec, 0xd7, 0x7e, 0xca, 0xe7, 0x7f, 0x17, 0xa8, 0xf2, 0x3a, 0xce,
-	0x76, 0xbc, 0xda, 0x48, 0xb5, 0x35, 0x6f, 0x1a, 0xa9, 0x4a, 0xdc, 0x38, 0xd2, 0xba, 0x9d, 0xf6,
-	0xdf, 0x7c, 0x9f, 0xdb, 0xc6, 0xed, 0xdc, 0x36, 0x7e, 0xcd, 0x6d, 0xe3, 0xf3, 0xc2, 0xde, 0xb9,
-	0x5d, 0xd8, 0x3b, 0x3f, 0x17, 0xf6, 0xce, 0xd0, 0x49, 0xb0, 0x18, 0x65, 0xa1, 0x13, 0xd1, 0xd4,
-	0x2d, 0x44, 0xc7, 0x41, 0xc8, 0xe5, 0x83, 0x3b, 0x5d, 0xb9, 0x53, 0xc5, 0x6c, 0x82, 0x78, 0xd8,
-	0x90, 0x97, 0xe1, 0xab, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0xb0, 0xb7, 0x03, 0x30, 0x76, 0x05,
+	// 546 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0xcd, 0x6e, 0x13, 0x31,
+	0x10, 0xce, 0x92, 0xaa, 0x22, 0x0e, 0x4d, 0xd1, 0xaa, 0x40, 0xba, 0x12, 0xdb, 0x2a, 0x12, 0xd0,
+	0x4b, 0x6c, 0xd2, 0x3e, 0x01, 0xa9, 0x84, 0xca, 0x21, 0x97, 0x50, 0x40, 0xea, 0x65, 0xb5, 0x3f,
+	0xc3, 0xc6, 0x6a, 0x62, 0x47, 0xb6, 0xb3, 0x49, 0xde, 0x82, 0x0b, 0xef, 0x80, 0xc4, 0x95, 0x87,
+	0xe8, 0xb1, 0xe2, 0xc4, 0x09, 0xa1, 0xe4, 0x45, 0xd0, 0xae, 0xdd, 0x74, 0x37, 0x2a, 0xed, 0x82,
+	0xb8, 0xd9, 0xfe, 0xbe, 0x99, 0xf9, 0xe6, 0xb3, 0xc7, 0xc8, 0x55, 0x7e, 0x40, 0x89, 0xe2, 0xe7,
+	0xc0, 0xda, 0x21, 0x67, 0x09, 0x08, 0x45, 0x92, 0x0e, 0x51, 0x33, 0x3c, 0x16, 0x5c, 0x71, 0xfb,
+	0x51, 0x8a, 0xe3, 0x0c, 0xf7, 0x0c, 0x8e, 0x93, 0x8e, 0xb3, 0x13, 0xf3, 0x98, 0x67, 0x0c, 0x92,
+	0xae, 0x34, 0xd9, 0x71, 0x43, 0x2e, 0x47, 0x5c, 0x92, 0xc0, 0x97, 0x40, 0x92, 0x4e, 0x00, 0xca,
+	0xef, 0x90, 0x90, 0x53, 0x66, 0xf0, 0x5d, 0x8d, 0x7b, 0x3a, 0x50, 0x6f, 0x34, 0xd4, 0x9a, 0xa2,
+	0x46, 0x4f, 0xc6, 0xc7, 0xba, 0xc2, 0xa9, 0x1f, 0x50, 0xfb, 0x08, 0x6d, 0xa4, 0xa1, 0x4d, 0x6b,
+	0xdf, 0x3a, 0xa8, 0x1f, 0xee, 0x62, 0x43, 0x4f, 0x73, 0x63, 0x93, 0x1b, 0x1f, 0x73, 0xca, 0xba,
+	0x1b, 0x17, 0x3f, 0xf7, 0x2a, 0xfd, 0x8c, 0x6c, 0xbf, 0x44, 0x9b, 0x12, 0x58, 0x04, 0xa2, 0x79,
+	0x6f, 0xdf, 0x3a, 0xa8, 0x75, 0x9b, 0xdf, 0xbf, 0xb5, 0x77, 0x4c, 0xe4, 0xab, 0x28, 0x12, 0x20,
+	0xe5, 0x5b, 0x25, 0x28, 0x8b, 0xfb, 0x86, 0xd7, 0x6a, 0xa2, 0xc7, 0xc5, 0xc2, 0x7d, 0x90, 0x63,
+	0xce, 0x24, 0xb4, 0x3e, 0x5b, 0xe8, 0xe1, 0x35, 0xf4, 0x1e, 0xd4, 0x3f, 0xab, 0x72, 0xd0, 0x7d,
+	0xa9, 0x84, 0xaf, 0x20, 0x9e, 0x6b, 0x5d, 0xfd, 0xd5, 0x3e, 0xa7, 0xb8, 0x5a, 0x52, 0xf1, 0x19,
+	0x6a, 0xae, 0xcb, 0xba, 0xd2, 0x6c, 0x3f, 0x45, 0x28, 0xe1, 0x93, 0x70, 0x00, 0xc2, 0xa3, 0x51,
+	0x26, 0xb2, 0xd6, 0xaf, 0x99, 0x93, 0x37, 0x91, 0xbd, 0x87, 0xea, 0x30, 0x1b, 0x53, 0x31, 0xf7,
+	0x14, 0x1d, 0x81, 0xd1, 0x82, 0xf4, 0xd1, 0x29, 0x1d, 0x41, 0x2b, 0x40, 0xdb, 0x3d, 0x19, 0x7f,
+	0xa0, 0x6a, 0x10, 0x09, 0x7f, 0x9a, 0xdd, 0xc3, 0x1d, 0x29, 0xff, 0xde, 0xf1, 0xaf, 0x16, 0x7a,
+	0xb2, 0x56, 0x64, 0xa5, 0xff, 0x35, 0x6a, 0xa4, 0xfd, 0x78, 0x53, 0x03, 0x96, 0x36, 0x7a, 0x2b,
+	0x0d, 0xbb, 0x4a, 0xc9, 0xec, 0x13, 0xb4, 0x9d, 0x64, 0xce, 0x78, 0x02, 0xd4, 0x44, 0x30, 0x88,
+	0x32, 0x79, 0x25, 0x12, 0x35, 0x12, 0xe3, 0xa8, 0x0e, 0x6b, 0x85, 0xfa, 0x11, 0xf8, 0x2c, 0x84,
+	0xa1, 0xf1, 0xfc, 0xff, 0x5b, 0x12, 0xe9, 0x2b, 0xcd, 0x17, 0x59, 0x59, 0x72, 0xdd, 0xca, 0x84,
+	0x0d, 0x79, 0x78, 0x0e, 0x51, 0x59, 0x4f, 0x4c, 0x2b, 0xef, 0x4c, 0xd8, 0xe1, 0x97, 0x2a, 0xaa,
+	0xf6, 0x64, 0x6c, 0x87, 0xa8, 0x9e, 0x1f, 0xb4, 0x67, 0xf8, 0xc6, 0x19, 0xc7, 0xc5, 0xb1, 0x70,
+	0xda, 0xa5, 0x68, 0x2b, 0xd9, 0x14, 0x6d, 0x15, 0x27, 0xe7, 0xc5, 0x9d, 0xf1, 0x9a, 0xe8, 0x90,
+	0x92, 0xc4, 0x55, 0xa9, 0x8f, 0xe8, 0x41, 0xe1, 0xc5, 0x3e, 0xff, 0x73, 0x82, 0x3c, 0xcf, 0xc1,
+	0xe5, 0x78, 0x85, 0x96, 0x0a, 0xef, 0xe0, 0xb6, 0x96, 0xf2, 0xc4, 0x5b, 0x5b, 0xba, 0xe9, 0xd2,
+	0xbb, 0x27, 0x17, 0x0b, 0xd7, 0xba, 0x5c, 0xb8, 0xd6, 0xaf, 0x85, 0x6b, 0x7d, 0x5a, 0xba, 0x95,
+	0xcb, 0xa5, 0x5b, 0xf9, 0xb1, 0x74, 0x2b, 0x67, 0x38, 0xa6, 0x6a, 0x30, 0x09, 0x70, 0xc8, 0x47,
+	0x24, 0x4d, 0x3a, 0xf4, 0x03, 0x99, 0x2d, 0xc8, 0x6c, 0xed, 0x1b, 0x57, 0xf3, 0x31, 0xc8, 0x60,
+	0x33, 0xfb, 0x5f, 0x8f, 0x7e, 0x07, 0x00, 0x00, 0xff, 0xff, 0x96, 0x52, 0xb0, 0xb3, 0xe9, 0x05,
 	0x00, 0x00,
 }
 
@@ -731,11 +717,16 @@ func (m *MsgConvertTabi) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.Amount != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.Amount))
-		i--
-		dAtA[i] = 0x8
+	{
+		size, err := m.Coin.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -789,16 +780,23 @@ func (m *MsgConvertVetabi) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.StrategyId != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.StrategyId))
+	if len(m.Strategy) > 0 {
+		i -= len(m.Strategy)
+		copy(dAtA[i:], m.Strategy)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Strategy)))
 		i--
-		dAtA[i] = 0x10
+		dAtA[i] = 0x12
 	}
-	if m.Amount != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.Amount))
-		i--
-		dAtA[i] = 0x8
+	{
+		size, err := m.Coin.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -829,10 +827,12 @@ func (m *MsgConvertVetabiResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.VoucherId != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.VoucherId))
+	if len(m.VoucherId) > 0 {
+		i -= len(m.VoucherId)
+		copy(dAtA[i:], m.VoucherId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.VoucherId)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -864,10 +864,12 @@ func (m *MsgWithdrawTabi) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.VoucherId != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.VoucherId))
+	if len(m.VoucherId) > 0 {
+		i -= len(m.VoucherId)
+		copy(dAtA[i:], m.VoucherId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.VoucherId)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -892,26 +894,26 @@ func (m *MsgWithdrawTabiResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	_ = i
 	var l int
 	_ = l
-	if m.VetabiBurned != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.VetabiBurned))
-		i--
-		dAtA[i] = 0x20
+	{
+		size, err := m.VetabiReturned.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
-	if m.VetabiUnlocked != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.VetabiUnlocked))
-		i--
-		dAtA[i] = 0x18
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.TabiWithdrawn.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
-	if m.TabiBurned != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.TabiBurned))
-		i--
-		dAtA[i] = 0x10
-	}
-	if m.TabiWithdrawn != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.TabiWithdrawn))
-		i--
-		dAtA[i] = 0x8
-	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -942,10 +944,12 @@ func (m *MsgCancelConvert) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.VoucherId != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.VoucherId))
+	if len(m.VoucherId) > 0 {
+		i -= len(m.VoucherId)
+		copy(dAtA[i:], m.VoucherId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.VoucherId)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -970,11 +974,16 @@ func (m *MsgCancelConvertResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	_ = i
 	var l int
 	_ = l
-	if m.VetabiUnlocked != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.VetabiUnlocked))
-		i--
-		dAtA[i] = 0x8
+	{
+		size, err := m.VetabiUnlocked.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -995,9 +1004,8 @@ func (m *MsgConvertTabi) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Amount != 0 {
-		n += 1 + sovTx(uint64(m.Amount))
-	}
+	l = m.Coin.Size()
+	n += 1 + l + sovTx(uint64(l))
 	l = len(m.Sender)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
@@ -1020,11 +1028,11 @@ func (m *MsgConvertVetabi) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Amount != 0 {
-		n += 1 + sovTx(uint64(m.Amount))
-	}
-	if m.StrategyId != 0 {
-		n += 1 + sovTx(uint64(m.StrategyId))
+	l = m.Coin.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = len(m.Strategy)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.Sender)
 	if l > 0 {
@@ -1039,8 +1047,9 @@ func (m *MsgConvertVetabiResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VoucherId != 0 {
-		n += 1 + sovTx(uint64(m.VoucherId))
+	l = len(m.VoucherId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.ExpiryTime)
 	if l > 0 {
@@ -1055,8 +1064,9 @@ func (m *MsgWithdrawTabi) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VoucherId != 0 {
-		n += 1 + sovTx(uint64(m.VoucherId))
+	l = len(m.VoucherId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.Sender)
 	if l > 0 {
@@ -1071,18 +1081,10 @@ func (m *MsgWithdrawTabiResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.TabiWithdrawn != 0 {
-		n += 1 + sovTx(uint64(m.TabiWithdrawn))
-	}
-	if m.TabiBurned != 0 {
-		n += 1 + sovTx(uint64(m.TabiBurned))
-	}
-	if m.VetabiUnlocked != 0 {
-		n += 1 + sovTx(uint64(m.VetabiUnlocked))
-	}
-	if m.VetabiBurned != 0 {
-		n += 1 + sovTx(uint64(m.VetabiBurned))
-	}
+	l = m.TabiWithdrawn.Size()
+	n += 1 + l + sovTx(uint64(l))
+	l = m.VetabiReturned.Size()
+	n += 1 + l + sovTx(uint64(l))
 	return n
 }
 
@@ -1092,8 +1094,9 @@ func (m *MsgCancelConvert) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VoucherId != 0 {
-		n += 1 + sovTx(uint64(m.VoucherId))
+	l = len(m.VoucherId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.Sender)
 	if l > 0 {
@@ -1108,9 +1111,8 @@ func (m *MsgCancelConvertResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VetabiUnlocked != 0 {
-		n += 1 + sovTx(uint64(m.VetabiUnlocked))
-	}
+	l = m.VetabiUnlocked.Size()
+	n += 1 + l + sovTx(uint64(l))
 	return n
 }
 
@@ -1150,10 +1152,10 @@ func (m *MsgConvertTabi) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coin", wireType)
 			}
-			m.Amount = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1163,11 +1165,25 @@ func (m *MsgConvertTabi) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Amount |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Coin.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
@@ -1301,10 +1317,10 @@ func (m *MsgConvertVetabi) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coin", wireType)
 			}
-			m.Amount = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1314,16 +1330,30 @@ func (m *MsgConvertVetabi) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Amount |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Coin.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field StrategyId", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Strategy", wireType)
 			}
-			m.StrategyId = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1333,11 +1363,24 @@ func (m *MsgConvertVetabi) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.StrategyId |= int64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Strategy = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
@@ -1421,10 +1464,10 @@ func (m *MsgConvertVetabiResponse) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VoucherId", wireType)
 			}
-			m.VoucherId = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1434,11 +1477,24 @@ func (m *MsgConvertVetabiResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.VoucherId |= int64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VoucherId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ExpiryTime", wireType)
@@ -1522,10 +1578,10 @@ func (m *MsgWithdrawTabi) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VoucherId", wireType)
 			}
-			m.VoucherId = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1535,11 +1591,24 @@ func (m *MsgWithdrawTabi) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.VoucherId |= int64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VoucherId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
@@ -1623,10 +1692,10 @@ func (m *MsgWithdrawTabiResponse) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TabiWithdrawn", wireType)
 			}
-			m.TabiWithdrawn = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1636,16 +1705,30 @@ func (m *MsgWithdrawTabiResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.TabiWithdrawn |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.TabiWithdrawn.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TabiBurned", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VetabiReturned", wireType)
 			}
-			m.TabiBurned = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1655,49 +1738,25 @@ func (m *MsgWithdrawTabiResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.TabiBurned |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VetabiUnlocked", wireType)
+			if msglen < 0 {
+				return ErrInvalidLengthTx
 			}
-			m.VetabiUnlocked = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VetabiUnlocked |= int64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
 			}
-		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VetabiBurned", wireType)
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
 			}
-			m.VetabiBurned = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.VetabiBurned |= int64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
+			if err := m.VetabiReturned.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
 			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -1749,10 +1808,10 @@ func (m *MsgCancelConvert) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VoucherId", wireType)
 			}
-			m.VoucherId = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1762,11 +1821,24 @@ func (m *MsgCancelConvert) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.VoucherId |= int64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VoucherId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
@@ -1850,10 +1922,10 @@ func (m *MsgCancelConvertResponse) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VetabiUnlocked", wireType)
 			}
-			m.VetabiUnlocked = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1863,11 +1935,25 @@ func (m *MsgCancelConvertResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.VetabiUnlocked |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.VetabiUnlocked.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])

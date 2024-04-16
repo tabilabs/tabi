@@ -2,6 +2,7 @@ syntax = "proto3";
 package tabi.token_convert.v1;
 
 import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/token-convert/types";
@@ -25,7 +26,7 @@ service Msg {
 
 // MsgConvertTabi represents a message to convert Tabi to Vetabi.
 message MsgConvertTabi {
-  int64 amount = 1;
+  cosmos.base.v1beta1.Coin coin = 1  [(gogoproto.nullable) = false];
   string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
@@ -34,38 +35,36 @@ message MsgConvertTabiResponse {}
 
 // MsgConvertVetabi represents a message to convert Vetabi to Tabi.
 message MsgConvertVetabi {
-  int64 amount = 1;
-  int64 strategy_id = 2;
+  cosmos.base.v1beta1.Coin coin = 1  [(gogoproto.nullable) = false];
+  string strategy = 2;
   string sender = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // MsgConvertVetabiResponse defines the Msg/ConvertVetabi response type.
 message MsgConvertVetabiResponse {
-  int64 voucher_id = 1;
+  string voucher_id = 1;
   string expiry_time = 2;
 }
 
 // MsgWithdrawTabi represents a message to withdraw Tabi as per voucher.
 message MsgWithdrawTabi {
-  int64 voucher_id = 1;
+  string voucher_id = 1;
   string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // MsgWithdrawTabiResponse defines the Msg/WithdrawTabi response type.
 message MsgWithdrawTabiResponse {
-  int64 tabi_withdrawn = 1;
-  int64 tabi_burned = 2;
-  int64 vetabi_unlocked = 3;
-  int64 vetabi_burned = 4;
+  cosmos.base.v1beta1.Coin tabi_withdrawn = 1  [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin vetabi_returned = 2 [(gogoproto.nullable) = false];
 }
 
 // MsgCancelConvert represents a message to cancel the conversion of Vetabi to Tabi.
 message MsgCancelConvert {
-  int64 voucher_id = 1;
+  string voucher_id = 1;
   string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // MsgCancelConvertResponse defines the Msg/CancelConvert response type.
 message MsgCancelConvertResponse {
-  int64 vetabi_unlocked = 1;
+  cosmos.base.v1beta1.Coin vetabi_unlocked = 1 [(gogoproto.nullable) = false];
 }

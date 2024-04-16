@@ -7,6 +7,7 @@ import (
 	context "context"
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
+	types "github.com/cosmos/cosmos-sdk/types"
 	query "github.com/cosmos/cosmos-sdk/types/query"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
@@ -33,7 +34,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // QueryStrategyRequest is the request type for the Query/Voucher RPC
 type QueryStrategyRequest struct {
-	StrategyId int64 `protobuf:"varint,1,opt,name=strategy_id,json=strategyId,proto3" json:"strategy_id,omitempty"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 }
 
 func (m *QueryStrategyRequest) Reset()         { *m = QueryStrategyRequest{} }
@@ -69,19 +70,18 @@ func (m *QueryStrategyRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryStrategyRequest proto.InternalMessageInfo
 
-func (m *QueryStrategyRequest) GetStrategyId() int64 {
+func (m *QueryStrategyRequest) GetName() string {
 	if m != nil {
-		return m.StrategyId
+		return m.Name
 	}
-	return 0
+	return ""
 }
 
 // QueryVoucherRequest is the request type for the Query/Voucher RPC
 type QueryStrategyResponse struct {
-	Id             int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name           string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Period         int64  `protobuf:"varint,3,opt,name=period,proto3" json:"period,omitempty"`
-	ConversionRate string `protobuf:"bytes,4,opt,name=conversion_rate,json=conversionRate,proto3" json:"conversion_rate,omitempty"`
+	Name           string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Period         int64  `protobuf:"varint,2,opt,name=period,proto3" json:"period,omitempty"`
+	ConversionRate string `protobuf:"bytes,3,opt,name=conversion_rate,json=conversionRate,proto3" json:"conversion_rate,omitempty"`
 }
 
 func (m *QueryStrategyResponse) Reset()         { *m = QueryStrategyResponse{} }
@@ -116,13 +116,6 @@ func (m *QueryStrategyResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_QueryStrategyResponse proto.InternalMessageInfo
-
-func (m *QueryStrategyResponse) GetId() int64 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
-}
 
 func (m *QueryStrategyResponse) GetName() string {
 	if m != nil {
@@ -245,7 +238,7 @@ func (m *QueryStrategiesResponse) GetPagination() *query.PageResponse {
 
 // QueryVoucherRequest is the request type for the Query/Voucher RPC
 type QueryVoucherRequest struct {
-	VoucherId int64 `protobuf:"varint,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
+	VoucherId string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
 }
 
 func (m *QueryVoucherRequest) Reset()         { *m = QueryVoucherRequest{} }
@@ -281,20 +274,19 @@ func (m *QueryVoucherRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryVoucherRequest proto.InternalMessageInfo
 
-func (m *QueryVoucherRequest) GetVoucherId() int64 {
+func (m *QueryVoucherRequest) GetVoucherId() string {
 	if m != nil {
 		return m.VoucherId
 	}
-	return 0
+	return ""
 }
 
 // QueryVoucherResponse is the response type for the Query/Voucher RPC
 type QueryVoucherResponse struct {
-	Id          int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id          string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Owner       string `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
 	CreatedTime int64  `protobuf:"varint,3,opt,name=created_time,json=createdTime,proto3" json:"created_time,omitempty"`
-	StrategyId  int64  `protobuf:"varint,4,opt,name=strategy_id,json=strategyId,proto3" json:"strategy_id,omitempty"`
-	Status      string `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	Strategy    string `protobuf:"bytes,4,opt,name=strategy,proto3" json:"strategy,omitempty"`
 }
 
 func (m *QueryVoucherResponse) Reset()         { *m = QueryVoucherResponse{} }
@@ -330,11 +322,11 @@ func (m *QueryVoucherResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryVoucherResponse proto.InternalMessageInfo
 
-func (m *QueryVoucherResponse) GetId() int64 {
+func (m *QueryVoucherResponse) GetId() string {
 	if m != nil {
 		return m.Id
 	}
-	return 0
+	return ""
 }
 
 func (m *QueryVoucherResponse) GetOwner() string {
@@ -351,16 +343,9 @@ func (m *QueryVoucherResponse) GetCreatedTime() int64 {
 	return 0
 }
 
-func (m *QueryVoucherResponse) GetStrategyId() int64 {
+func (m *QueryVoucherResponse) GetStrategy() string {
 	if m != nil {
-		return m.StrategyId
-	}
-	return 0
-}
-
-func (m *QueryVoucherResponse) GetStatus() string {
-	if m != nil {
-		return m.Status
+		return m.Strategy
 	}
 	return ""
 }
@@ -473,7 +458,7 @@ func (m *QueryVouchersResponse) GetPagination() *query.PageResponse {
 
 // QueryUnlockStatusRequest is the request type for the Query/UnlockStatus RPC
 type QueryUnlockStatusRequest struct {
-	VoucherId int64 `protobuf:"varint,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
+	VoucherId string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
 }
 
 func (m *QueryUnlockStatusRequest) Reset()         { *m = QueryUnlockStatusRequest{} }
@@ -509,20 +494,20 @@ func (m *QueryUnlockStatusRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryUnlockStatusRequest proto.InternalMessageInfo
 
-func (m *QueryUnlockStatusRequest) GetVoucherId() int64 {
+func (m *QueryUnlockStatusRequest) GetVoucherId() string {
 	if m != nil {
 		return m.VoucherId
 	}
-	return 0
+	return ""
 }
 
 // QueryUnlockStatusResponse is the response type for the Query/UnlockStatus RPC
 type QueryUnlockStatusResponse struct {
-	CurrentTime      string `protobuf:"bytes,1,opt,name=current_time,json=currentTime,proto3" json:"current_time,omitempty"`
-	TabiWithdrawable int64  `protobuf:"varint,2,opt,name=tabi_withdrawable,json=tabiWithdrawable,proto3" json:"tabi_withdrawable,omitempty"`
-	TabiBurnable     int64  `protobuf:"varint,3,opt,name=tabi_burnable,json=tabiBurnable,proto3" json:"tabi_burnable,omitempty"`
-	VetabiBurnable   int64  `protobuf:"varint,4,opt,name=vetabi_burnable,json=vetabiBurnable,proto3" json:"vetabi_burnable,omitempty"`
-	VetabiReturnable int64  `protobuf:"varint,5,opt,name=vetabi_returnable,json=vetabiReturnable,proto3" json:"vetabi_returnable,omitempty"`
+	CurrentTime      string     `protobuf:"bytes,1,opt,name=current_time,json=currentTime,proto3" json:"current_time,omitempty"`
+	TabiWithdrawable types.Coin `protobuf:"bytes,2,opt,name=tabi_withdrawable,json=tabiWithdrawable,proto3" json:"tabi_withdrawable"`
+	TabiBurnable     types.Coin `protobuf:"bytes,3,opt,name=tabi_burnable,json=tabiBurnable,proto3" json:"tabi_burnable"`
+	VetabiBurnable   types.Coin `protobuf:"bytes,4,opt,name=vetabi_burnable,json=vetabiBurnable,proto3" json:"vetabi_burnable"`
+	VetabiReturnable types.Coin `protobuf:"bytes,5,opt,name=vetabi_returnable,json=vetabiReturnable,proto3" json:"vetabi_returnable"`
 }
 
 func (m *QueryUnlockStatusResponse) Reset()         { *m = QueryUnlockStatusResponse{} }
@@ -565,32 +550,32 @@ func (m *QueryUnlockStatusResponse) GetCurrentTime() string {
 	return ""
 }
 
-func (m *QueryUnlockStatusResponse) GetTabiWithdrawable() int64 {
+func (m *QueryUnlockStatusResponse) GetTabiWithdrawable() types.Coin {
 	if m != nil {
 		return m.TabiWithdrawable
 	}
-	return 0
+	return types.Coin{}
 }
 
-func (m *QueryUnlockStatusResponse) GetTabiBurnable() int64 {
+func (m *QueryUnlockStatusResponse) GetTabiBurnable() types.Coin {
 	if m != nil {
 		return m.TabiBurnable
 	}
-	return 0
+	return types.Coin{}
 }
 
-func (m *QueryUnlockStatusResponse) GetVetabiBurnable() int64 {
+func (m *QueryUnlockStatusResponse) GetVetabiBurnable() types.Coin {
 	if m != nil {
 		return m.VetabiBurnable
 	}
-	return 0
+	return types.Coin{}
 }
 
-func (m *QueryUnlockStatusResponse) GetVetabiReturnable() int64 {
+func (m *QueryUnlockStatusResponse) GetVetabiReturnable() types.Coin {
 	if m != nil {
 		return m.VetabiReturnable
 	}
-	return 0
+	return types.Coin{}
 }
 
 func init() {
@@ -609,61 +594,62 @@ func init() {
 func init() { proto.RegisterFile("tabi/token-convert/v1/query.proto", fileDescriptor_e2ad330f982db981) }
 
 var fileDescriptor_e2ad330f982db981 = []byte{
-	// 855 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x4d, 0x6f, 0xeb, 0x44,
-	0x14, 0xed, 0x24, 0x4d, 0x69, 0x6f, 0x4a, 0xe1, 0x0d, 0x79, 0x0f, 0xbf, 0xe8, 0xe1, 0x97, 0x67,
-	0xd0, 0xeb, 0x47, 0x1a, 0x9b, 0x94, 0x22, 0x04, 0x1b, 0x44, 0x17, 0x85, 0xee, 0xc0, 0xe5, 0x43,
-	0x62, 0x13, 0xc6, 0xf1, 0xc8, 0xb5, 0x9a, 0x78, 0x52, 0xcf, 0x24, 0xa5, 0x2a, 0xdd, 0xb0, 0x05,
-	0x21, 0xa4, 0x0a, 0x09, 0x09, 0x76, 0x6c, 0xf8, 0x01, 0xfc, 0x08, 0x96, 0x15, 0x6c, 0x58, 0xa2,
-	0x16, 0xf1, 0x3b, 0x90, 0x67, 0xc6, 0x71, 0x92, 0xba, 0xc1, 0x42, 0xec, 0x3c, 0x77, 0xce, 0x9d,
-	0x7b, 0xe6, 0xdc, 0x73, 0x47, 0x86, 0x27, 0x82, 0x78, 0xa1, 0x23, 0xd8, 0x31, 0x8d, 0x5a, 0x5d,
-	0x16, 0x8d, 0x68, 0x2c, 0x9c, 0x51, 0xdb, 0x39, 0x19, 0xd2, 0xf8, 0xcc, 0x1e, 0xc4, 0x4c, 0x30,
-	0x7c, 0x3f, 0x81, 0xd8, 0x12, 0xd2, 0xd1, 0x10, 0x7b, 0xd4, 0xae, 0xd7, 0x02, 0x16, 0x30, 0x89,
-	0x70, 0x92, 0x2f, 0x05, 0xae, 0x3f, 0x0a, 0x18, 0x0b, 0x7a, 0xd4, 0x21, 0x83, 0xd0, 0x21, 0x51,
-	0xc4, 0x04, 0x11, 0x21, 0x8b, 0xb8, 0xde, 0x7d, 0xd8, 0x65, 0xbc, 0xcf, 0x78, 0x47, 0xa5, 0xa9,
-	0x85, 0xde, 0xda, 0x52, 0x2b, 0xc7, 0x23, 0x9c, 0xaa, 0xf2, 0xce, 0xa8, 0xed, 0x51, 0x41, 0xda,
-	0xce, 0x80, 0x04, 0x61, 0x24, 0xcf, 0xd1, 0xd8, 0xcd, 0x7c, 0xd2, 0x53, 0x01, 0x05, 0xb5, 0xde,
-	0x80, 0xda, 0x07, 0xc9, 0x61, 0x87, 0x22, 0x26, 0x82, 0x06, 0x67, 0x2e, 0x3d, 0x19, 0x52, 0x2e,
-	0xf0, 0x63, 0xa8, 0x72, 0x1d, 0xea, 0x84, 0xbe, 0x81, 0x1a, 0x68, 0xa3, 0xec, 0x42, 0x1a, 0x3a,
-	0xf0, 0xad, 0x2f, 0xe0, 0xfe, 0x4c, 0x22, 0x1f, 0xb0, 0x88, 0x53, 0xbc, 0x06, 0xa5, 0x71, 0x42,
-	0x29, 0xf4, 0x31, 0x86, 0xc5, 0x88, 0xf4, 0xa9, 0x51, 0x6a, 0xa0, 0x8d, 0x15, 0x57, 0x7e, 0xe3,
-	0x07, 0xb0, 0x34, 0xa0, 0x71, 0xc8, 0x7c, 0xa3, 0x2c, 0x71, 0x7a, 0x85, 0xd7, 0xe1, 0x39, 0x45,
-	0x8f, 0x87, 0x2c, 0xea, 0x24, 0x07, 0x1b, 0x8b, 0x32, 0x6d, 0x2d, 0x0b, 0xbb, 0x44, 0x50, 0xeb,
-	0x33, 0x78, 0x30, 0x59, 0x3d, 0xa4, 0x3c, 0x25, 0xbe, 0x0f, 0x90, 0xe9, 0x21, 0x69, 0x54, 0x77,
-	0x9e, 0xda, 0x5a, 0xca, 0x44, 0x3c, 0x5b, 0xf5, 0x4e, 0x8b, 0x67, 0xbf, 0x4f, 0x02, 0xaa, 0x73,
-	0xdd, 0x89, 0x4c, 0xeb, 0x27, 0x04, 0x2f, 0xde, 0x2a, 0xa1, 0xaf, 0xf8, 0x36, 0xa4, 0x4a, 0x84,
-	0x94, 0x1b, 0xa8, 0x51, 0xde, 0xa8, 0xee, 0x3c, 0xb6, 0x73, 0x6d, 0x60, 0x8f, 0xf5, 0x99, 0x48,
-	0xc1, 0xef, 0x4e, 0x91, 0x2c, 0x49, 0x92, 0xeb, 0xff, 0x4a, 0x52, 0x55, 0x9f, 0x62, 0xb9, 0x0b,
-	0x2f, 0x48, 0x92, 0x1f, 0xb3, 0x61, 0xf7, 0x88, 0xc6, 0xa9, 0x08, 0x2f, 0x01, 0x8c, 0x54, 0x24,
-	0x6b, 0xde, 0x8a, 0x8e, 0x1c, 0xf8, 0xd6, 0xf7, 0x48, 0x77, 0x7d, 0x9c, 0x76, 0x47, 0xef, 0x6a,
-	0x50, 0x61, 0xa7, 0x11, 0x8d, 0x75, 0xf3, 0xd4, 0x02, 0x3f, 0x81, 0xd5, 0x6e, 0x4c, 0x89, 0xa0,
-	0x7e, 0x47, 0x84, 0x7d, 0xaa, 0x7b, 0x58, 0xd5, 0xb1, 0x0f, 0xc3, 0x3e, 0x9d, 0xb5, 0xcf, 0xe2,
-	0xac, 0x7d, 0x12, 0x07, 0x70, 0x41, 0xc4, 0x90, 0x1b, 0x15, 0x79, 0xb4, 0x5e, 0x59, 0xdf, 0xcc,
-	0x50, 0x1b, 0xf7, 0xd5, 0x4e, 0xa9, 0x24, 0xec, 0x56, 0xf6, 0x8c, 0xdf, 0x7e, 0x69, 0xd5, 0xb4,
-	0x60, 0xef, 0xf8, 0x7e, 0x4c, 0x39, 0x3f, 0x14, 0x71, 0x18, 0x05, 0x29, 0xc9, 0xfd, 0x1c, 0x89,
-	0xff, 0x8b, 0x0f, 0x7e, 0x44, 0xda, 0xe8, 0x19, 0x21, 0x2d, 0xd6, 0x5b, 0xb0, 0xac, 0x25, 0x4d,
-	0x3d, 0x60, 0xde, 0xe1, 0x81, 0x54, 0xe6, 0x31, 0xfe, 0xff, 0x33, 0xc0, 0x9b, 0x60, 0x48, 0x76,
-	0x1f, 0x45, 0x3d, 0xd6, 0x3d, 0x3e, 0x94, 0x22, 0x16, 0x74, 0xc1, 0xdf, 0x08, 0x1e, 0xe6, 0xe4,
-	0xea, 0xdb, 0x25, 0x4d, 0x1e, 0xc6, 0x31, 0x8d, 0x84, 0x6a, 0xb2, 0x94, 0xdd, 0xad, 0xea, 0x98,
-	0x6c, 0x72, 0x13, 0xee, 0x25, 0xf7, 0xed, 0x9c, 0x86, 0xe2, 0xc8, 0x8f, 0xc9, 0x29, 0xf1, 0x7a,
-	0x6a, 0xcc, 0xcb, 0xee, 0xf3, 0xc9, 0xc6, 0x27, 0x13, 0x71, 0xfc, 0x32, 0x3c, 0x2b, 0xc1, 0xde,
-	0x30, 0x8e, 0x24, 0x50, 0xb9, 0x66, 0x35, 0x09, 0xee, 0xe9, 0x58, 0x32, 0xff, 0x23, 0x3a, 0x0d,
-	0x53, 0xd6, 0x59, 0x53, 0xe1, 0x31, 0xb0, 0x09, 0xf7, 0x34, 0x30, 0xa6, 0x22, 0x85, 0x56, 0x54,
-	0x69, 0xb5, 0xe1, 0x8e, 0xe3, 0x3b, 0x5f, 0x2f, 0x41, 0x45, 0x5e, 0x14, 0xff, 0x80, 0x60, 0x39,
-	0x1d, 0x48, 0xdc, 0xbc, 0xa3, 0x5b, 0x79, 0xef, 0x61, 0x7d, 0xbb, 0x18, 0x58, 0x89, 0x67, 0xed,
-	0x7e, 0xf9, 0xfb, 0x5f, 0x97, 0x25, 0x1b, 0x6f, 0x3b, 0x9f, 0xdf, 0x7e, 0x86, 0xb3, 0x77, 0xc0,
-	0x39, 0x9f, 0x18, 0x92, 0x0b, 0x7c, 0x89, 0x00, 0xb2, 0xd7, 0x06, 0xb7, 0x0a, 0x94, 0xcc, 0x1e,
-	0xbe, 0xba, 0x5d, 0x14, 0xae, 0x39, 0x3e, 0x95, 0x1c, 0x1b, 0xd8, 0x9c, 0xcf, 0x11, 0x7f, 0x87,
-	0xe0, 0x19, 0x6d, 0x60, 0xbc, 0x35, 0xaf, 0xc6, 0xf4, 0x1b, 0x54, 0x6f, 0x16, 0xc2, 0x6a, 0x32,
-	0x6d, 0x49, 0xa6, 0x89, 0x37, 0xf3, 0xc8, 0xa4, 0x53, 0xe3, 0x9c, 0x67, 0x76, 0xbe, 0xc0, 0x5f,
-	0x21, 0x58, 0x4e, 0x67, 0x12, 0x17, 0x29, 0xc6, 0x0b, 0xf5, 0x72, 0x76, 0xcc, 0xad, 0x57, 0x24,
-	0x35, 0x13, 0x3f, 0x9a, 0x47, 0x0d, 0xff, 0x8c, 0x60, 0x75, 0x72, 0x8e, 0xb0, 0x33, 0xaf, 0x48,
-	0xce, 0xb4, 0xd6, 0x5f, 0x2d, 0x9e, 0xa0, 0x99, 0xbd, 0x2e, 0x99, 0x39, 0xb8, 0x95, 0xc7, 0x6c,
-	0x32, 0x63, 0x4a, 0xb8, 0xbd, 0xf7, 0x7e, 0xbd, 0x36, 0xd1, 0xd5, 0xb5, 0x89, 0xfe, 0xbc, 0x36,
-	0xd1, 0xb7, 0x37, 0xe6, 0xc2, 0xd5, 0x8d, 0xb9, 0xf0, 0xc7, 0x8d, 0xb9, 0xf0, 0xa9, 0x1d, 0x84,
-	0xe2, 0x68, 0xe8, 0xd9, 0x5d, 0xd6, 0x77, 0x12, 0x32, 0x3d, 0xe2, 0x71, 0xf9, 0x71, 0xab, 0x80,
-	0x38, 0x1b, 0x50, 0xee, 0x2d, 0xc9, 0x7f, 0x88, 0xd7, 0xfe, 0x09, 0x00, 0x00, 0xff, 0xff, 0x7a,
-	0xed, 0x70, 0x47, 0x25, 0x09, 0x00, 0x00,
+	// 870 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0xcf, 0x6f, 0x1b, 0x45,
+	0x14, 0xce, 0xda, 0x4e, 0x70, 0x9e, 0x43, 0x4a, 0x07, 0xb7, 0x38, 0x56, 0xd9, 0xba, 0x2b, 0x68,
+	0xd2, 0x04, 0xef, 0xe2, 0x00, 0x07, 0xb8, 0x20, 0x0c, 0x2a, 0x45, 0xea, 0x01, 0x36, 0xfc, 0x90,
+	0xb8, 0x98, 0x59, 0xef, 0x68, 0x33, 0xaa, 0x3d, 0xe3, 0xee, 0x8c, 0x1d, 0xac, 0xa8, 0x17, 0x24,
+	0x4e, 0x48, 0x08, 0xa9, 0x70, 0xe3, 0xc6, 0x85, 0x3f, 0x80, 0x3f, 0xa2, 0xc7, 0x0a, 0x2e, 0x9c,
+	0x10, 0x4a, 0x38, 0xf1, 0x57, 0xa0, 0x9d, 0x99, 0x5d, 0x7b, 0x9b, 0xad, 0x59, 0x21, 0x6e, 0x9e,
+	0x37, 0xdf, 0xf7, 0xde, 0xf7, 0xde, 0xb7, 0xf3, 0x64, 0xb8, 0x21, 0x71, 0x40, 0x3d, 0xc9, 0xef,
+	0x11, 0xd6, 0x1d, 0x72, 0x36, 0x23, 0xb1, 0xf4, 0x66, 0x3d, 0xef, 0xfe, 0x94, 0xc4, 0x73, 0x77,
+	0x12, 0x73, 0xc9, 0xd1, 0x95, 0x04, 0xe2, 0x2a, 0xc8, 0xc0, 0x40, 0xdc, 0x59, 0xaf, 0xdd, 0x8c,
+	0x78, 0xc4, 0x15, 0xc2, 0x4b, 0x7e, 0x69, 0x70, 0xfb, 0x5a, 0xc4, 0x79, 0x34, 0x22, 0x1e, 0x9e,
+	0x50, 0x0f, 0x33, 0xc6, 0x25, 0x96, 0x94, 0x33, 0x61, 0x6e, 0x77, 0x86, 0x5c, 0x8c, 0xb9, 0x18,
+	0x68, 0x9a, 0x3e, 0x98, 0x2b, 0x5b, 0x9f, 0xbc, 0x00, 0x0b, 0xe2, 0xcd, 0x7a, 0x01, 0x91, 0xb8,
+	0xe7, 0x0d, 0x39, 0x65, 0xe6, 0x7e, 0x7f, 0xf9, 0x5e, 0xc9, 0xcb, 0x50, 0x13, 0x1c, 0x51, 0xa6,
+	0xea, 0x18, 0xec, 0xad, 0xe2, 0xa6, 0x72, 0x01, 0x0d, 0x75, 0xf6, 0xa1, 0xf9, 0x51, 0x92, 0xec,
+	0x48, 0xc6, 0x58, 0x92, 0x68, 0xee, 0x93, 0xfb, 0x53, 0x22, 0x24, 0x42, 0x50, 0x63, 0x78, 0x4c,
+	0x5a, 0x56, 0xc7, 0xda, 0xdb, 0xf4, 0xd5, 0x6f, 0x67, 0x04, 0x57, 0x9e, 0xc0, 0x8a, 0x09, 0x67,
+	0x82, 0x14, 0x81, 0xd1, 0x55, 0xd8, 0x98, 0x90, 0x98, 0xf2, 0xb0, 0x55, 0xe9, 0x58, 0x7b, 0x55,
+	0xdf, 0x9c, 0xd0, 0x2e, 0x5c, 0xd2, 0x0a, 0x04, 0xe5, 0x6c, 0x90, 0x24, 0x6a, 0x55, 0x15, 0x6d,
+	0x7b, 0x11, 0xf6, 0xb1, 0x24, 0xce, 0x17, 0x70, 0x75, 0xb9, 0x1a, 0x25, 0x22, 0xd5, 0x76, 0x1b,
+	0x60, 0xd1, 0xb2, 0x2a, 0xda, 0x38, 0xbc, 0xe9, 0x9a, 0x69, 0x26, 0xf3, 0x71, 0xb5, 0x7d, 0x66,
+	0x3e, 0xee, 0x87, 0x38, 0x22, 0x86, 0xeb, 0x2f, 0x31, 0x9d, 0x9f, 0x2c, 0x78, 0xe1, 0x42, 0x09,
+	0xd3, 0xd2, 0xdb, 0x00, 0x22, 0x8b, 0xb6, 0xac, 0x4e, 0x75, 0xaf, 0x71, 0x78, 0xdd, 0x2d, 0xfc,
+	0x12, 0xdc, 0x6c, 0x1e, 0x4b, 0x14, 0xf4, 0x7e, 0x4e, 0x64, 0x45, 0x89, 0xdc, 0xfd, 0x57, 0x91,
+	0xba, 0x7a, 0x4e, 0xe5, 0xeb, 0xf0, 0xbc, 0x12, 0xf9, 0x29, 0x9f, 0x0e, 0x8f, 0x49, 0x9c, 0x0e,
+	0xe1, 0x45, 0x80, 0x99, 0x8e, 0x0c, 0x68, 0x68, 0x26, 0xbf, 0x69, 0x22, 0x1f, 0x84, 0xce, 0xa9,
+	0xf1, 0x35, 0x63, 0x99, 0xbe, 0xb6, 0xa1, 0x92, 0xc1, 0x2b, 0x34, 0x44, 0x4d, 0x58, 0xe7, 0x27,
+	0x8c, 0xc4, 0x4a, 0xe1, 0xa6, 0xaf, 0x0f, 0xe8, 0x06, 0x6c, 0x0d, 0x63, 0x82, 0x25, 0x09, 0x07,
+	0x92, 0x8e, 0xb5, 0x43, 0x55, 0xbf, 0x61, 0x62, 0x1f, 0xd3, 0x31, 0x41, 0x6d, 0xa8, 0x9b, 0x6e,
+	0xe7, 0xad, 0x9a, 0xe2, 0x66, 0x67, 0xe7, 0x5b, 0x2b, 0x5f, 0x3d, 0x73, 0xce, 0x4d, 0xab, 0x29,
+	0x01, 0xfd, 0xd6, 0xaf, 0xbf, 0x74, 0x9b, 0x66, 0x24, 0xef, 0x84, 0x61, 0x4c, 0x84, 0x38, 0x92,
+	0x31, 0x65, 0x51, 0xaa, 0xe3, 0x76, 0xc1, 0x10, 0xff, 0x8b, 0xd3, 0x3f, 0x5a, 0xe6, 0xd3, 0x5d,
+	0x08, 0x32, 0xf3, 0x78, 0x0b, 0xea, 0x66, 0x68, 0xa9, 0xcb, 0xf6, 0x53, 0x5c, 0x4e, 0x27, 0x99,
+	0xe1, 0xff, 0x3f, 0x8b, 0xdf, 0x84, 0x96, 0x52, 0xf7, 0x09, 0x1b, 0xf1, 0xe1, 0xbd, 0x23, 0x89,
+	0xe5, 0x54, 0x94, 0xf4, 0xf9, 0xef, 0x0a, 0xec, 0x14, 0x70, 0x4d, 0x77, 0x89, 0x8f, 0xd3, 0x38,
+	0x26, 0x4c, 0x6a, 0x1f, 0x35, 0xbd, 0x61, 0x62, 0xca, 0xc7, 0xbb, 0x70, 0x39, 0xe9, 0x77, 0x70,
+	0x42, 0xe5, 0x71, 0x18, 0xe3, 0x13, 0x1c, 0x8c, 0x88, 0xe9, 0x65, 0x27, 0xd7, 0x4b, 0xda, 0xc5,
+	0xbb, 0x9c, 0xb2, 0x7e, 0xed, 0xd1, 0x1f, 0xd7, 0xd7, 0xfc, 0xe7, 0x12, 0xe6, 0x67, 0x4b, 0x44,
+	0xf4, 0x1e, 0x3c, 0xab, 0xb2, 0x05, 0xd3, 0x98, 0xa9, 0x4c, 0xd5, 0x72, 0x99, 0xb6, 0x12, 0x56,
+	0xdf, 0x90, 0xd0, 0x1d, 0xb8, 0x34, 0x23, 0xf9, 0x3c, 0xb5, 0x72, 0x79, 0xb6, 0x35, 0x2f, 0xcb,
+	0x74, 0x17, 0x2e, 0x9b, 0x4c, 0x31, 0x91, 0x69, 0xae, 0xf5, 0x92, 0xdd, 0x69, 0xa6, 0x9f, 0x11,
+	0x0f, 0xbf, 0xde, 0x80, 0x75, 0x35, 0x6c, 0xf4, 0xbd, 0x05, 0xf5, 0xf4, 0xd9, 0xa3, 0x83, 0xa7,
+	0x7c, 0x31, 0x45, 0x8b, 0xb5, 0xfd, 0x4a, 0x39, 0xb0, 0x36, 0xd0, 0xe9, 0x7e, 0xf5, 0xdb, 0x5f,
+	0x0f, 0x2b, 0xbb, 0xe8, 0x65, 0xef, 0xcb, 0x8b, 0xfb, 0x7c, 0xb1, 0x6d, 0xbc, 0xd3, 0x64, 0xe7,
+	0x3e, 0x40, 0x0f, 0x2d, 0x80, 0xc5, 0x32, 0x43, 0xdd, 0x12, 0xb5, 0x16, 0x7b, 0xb5, 0xed, 0x96,
+	0x85, 0x1b, 0x71, 0x37, 0x95, 0xb8, 0x0e, 0xb2, 0x57, 0x8b, 0x43, 0x3f, 0x58, 0xf0, 0x8c, 0x79,
+	0x3d, 0x68, 0x7f, 0x55, 0x8d, 0xfc, 0x8a, 0x6b, 0x1f, 0x94, 0xc2, 0x1a, 0x31, 0x3d, 0x25, 0xe6,
+	0x00, 0xdd, 0x2a, 0x12, 0x93, 0x3e, 0x59, 0xef, 0x74, 0xf1, 0x96, 0x1e, 0xa0, 0x6f, 0x2c, 0xa8,
+	0xa7, 0x0b, 0x01, 0x95, 0x29, 0x26, 0x4a, 0x99, 0xf8, 0xe4, 0x8e, 0x71, 0x5e, 0x52, 0xd2, 0x6c,
+	0x74, 0x6d, 0x95, 0x34, 0xf4, 0xb3, 0x05, 0x5b, 0xcb, 0x8f, 0x18, 0x79, 0xab, 0x8a, 0x14, 0xac,
+	0x8a, 0xf6, 0xab, 0xe5, 0x09, 0x46, 0xd9, 0x1b, 0x4a, 0x99, 0x87, 0xba, 0x45, 0xca, 0x96, 0x19,
+	0xb9, 0xc1, 0xf5, 0xef, 0x3c, 0x3a, 0xb3, 0xad, 0xc7, 0x67, 0xb6, 0xf5, 0xe7, 0x99, 0x6d, 0x7d,
+	0x77, 0x6e, 0xaf, 0x3d, 0x3e, 0xb7, 0xd7, 0x7e, 0x3f, 0xb7, 0xd7, 0x3e, 0x77, 0x23, 0x2a, 0x8f,
+	0xa7, 0x81, 0x3b, 0xe4, 0x63, 0x2f, 0x11, 0x33, 0xc2, 0x81, 0x50, 0x3f, 0x2e, 0x14, 0x90, 0xf3,
+	0x09, 0x11, 0xc1, 0x86, 0xfa, 0x17, 0xf2, 0xda, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x03, 0xa9,
+	0x3a, 0xeb, 0x87, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -918,10 +904,12 @@ func (m *QueryStrategyRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.StrategyId != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.StrategyId))
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Name)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -951,24 +939,19 @@ func (m *QueryStrategyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.ConversionRate)
 		i = encodeVarintQuery(dAtA, i, uint64(len(m.ConversionRate)))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x1a
 	}
 	if m.Period != 0 {
 		i = encodeVarintQuery(dAtA, i, uint64(m.Period))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x10
 	}
 	if len(m.Name) > 0 {
 		i -= len(m.Name)
 		copy(dAtA[i:], m.Name)
 		i = encodeVarintQuery(dAtA, i, uint64(len(m.Name)))
 		i--
-		dAtA[i] = 0x12
-	}
-	if m.Id != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.Id))
-		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -1077,10 +1060,12 @@ func (m *QueryVoucherRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.VoucherId != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.VoucherId))
+	if len(m.VoucherId) > 0 {
+		i -= len(m.VoucherId)
+		copy(dAtA[i:], m.VoucherId)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.VoucherId)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -1105,17 +1090,12 @@ func (m *QueryVoucherResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.Status) > 0 {
-		i -= len(m.Status)
-		copy(dAtA[i:], m.Status)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Status)))
+	if len(m.Strategy) > 0 {
+		i -= len(m.Strategy)
+		copy(dAtA[i:], m.Strategy)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Strategy)))
 		i--
-		dAtA[i] = 0x2a
-	}
-	if m.StrategyId != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.StrategyId))
-		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x22
 	}
 	if m.CreatedTime != 0 {
 		i = encodeVarintQuery(dAtA, i, uint64(m.CreatedTime))
@@ -1129,10 +1109,12 @@ func (m *QueryVoucherResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.Id != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.Id))
+	if len(m.Id) > 0 {
+		i -= len(m.Id)
+		copy(dAtA[i:], m.Id)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Id)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -1248,10 +1230,12 @@ func (m *QueryUnlockStatusRequest) MarshalToSizedBuffer(dAtA []byte) (int, error
 	_ = i
 	var l int
 	_ = l
-	if m.VoucherId != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.VoucherId))
+	if len(m.VoucherId) > 0 {
+		i -= len(m.VoucherId)
+		copy(dAtA[i:], m.VoucherId)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.VoucherId)))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -1276,26 +1260,46 @@ func (m *QueryUnlockStatusResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	_ = i
 	var l int
 	_ = l
-	if m.VetabiReturnable != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.VetabiReturnable))
-		i--
-		dAtA[i] = 0x28
+	{
+		size, err := m.VetabiReturnable.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
 	}
-	if m.VetabiBurnable != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.VetabiBurnable))
-		i--
-		dAtA[i] = 0x20
+	i--
+	dAtA[i] = 0x2a
+	{
+		size, err := m.VetabiBurnable.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
 	}
-	if m.TabiBurnable != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.TabiBurnable))
-		i--
-		dAtA[i] = 0x18
+	i--
+	dAtA[i] = 0x22
+	{
+		size, err := m.TabiBurnable.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
 	}
-	if m.TabiWithdrawable != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.TabiWithdrawable))
-		i--
-		dAtA[i] = 0x10
+	i--
+	dAtA[i] = 0x1a
+	{
+		size, err := m.TabiWithdrawable.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
 	}
+	i--
+	dAtA[i] = 0x12
 	if len(m.CurrentTime) > 0 {
 		i -= len(m.CurrentTime)
 		copy(dAtA[i:], m.CurrentTime)
@@ -1323,8 +1327,9 @@ func (m *QueryStrategyRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.StrategyId != 0 {
-		n += 1 + sovQuery(uint64(m.StrategyId))
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
 }
@@ -1335,9 +1340,6 @@ func (m *QueryStrategyResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Id != 0 {
-		n += 1 + sovQuery(uint64(m.Id))
-	}
 	l = len(m.Name)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
@@ -1390,8 +1392,9 @@ func (m *QueryVoucherRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VoucherId != 0 {
-		n += 1 + sovQuery(uint64(m.VoucherId))
+	l = len(m.VoucherId)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
 }
@@ -1402,8 +1405,9 @@ func (m *QueryVoucherResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Id != 0 {
-		n += 1 + sovQuery(uint64(m.Id))
+	l = len(m.Id)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
 	}
 	l = len(m.Owner)
 	if l > 0 {
@@ -1412,10 +1416,7 @@ func (m *QueryVoucherResponse) Size() (n int) {
 	if m.CreatedTime != 0 {
 		n += 1 + sovQuery(uint64(m.CreatedTime))
 	}
-	if m.StrategyId != 0 {
-		n += 1 + sovQuery(uint64(m.StrategyId))
-	}
-	l = len(m.Status)
+	l = len(m.Strategy)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -1464,8 +1465,9 @@ func (m *QueryUnlockStatusRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VoucherId != 0 {
-		n += 1 + sovQuery(uint64(m.VoucherId))
+	l = len(m.VoucherId)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
 }
@@ -1480,18 +1482,14 @@ func (m *QueryUnlockStatusResponse) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	if m.TabiWithdrawable != 0 {
-		n += 1 + sovQuery(uint64(m.TabiWithdrawable))
-	}
-	if m.TabiBurnable != 0 {
-		n += 1 + sovQuery(uint64(m.TabiBurnable))
-	}
-	if m.VetabiBurnable != 0 {
-		n += 1 + sovQuery(uint64(m.VetabiBurnable))
-	}
-	if m.VetabiReturnable != 0 {
-		n += 1 + sovQuery(uint64(m.VetabiReturnable))
-	}
+	l = m.TabiWithdrawable.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.TabiBurnable.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.VetabiBurnable.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.VetabiReturnable.Size()
+	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
 
@@ -1531,10 +1529,10 @@ func (m *QueryStrategyRequest) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field StrategyId", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
-			m.StrategyId = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -1544,11 +1542,24 @@ func (m *QueryStrategyRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.StrategyId |= int64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
@@ -1600,25 +1611,6 @@ func (m *QueryStrategyResponse) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
-			}
-			m.Id = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Id |= int64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
@@ -1650,7 +1642,7 @@ func (m *QueryStrategyResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Period", wireType)
 			}
@@ -1669,7 +1661,7 @@ func (m *QueryStrategyResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 4:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ConversionRate", wireType)
 			}
@@ -1958,10 +1950,10 @@ func (m *QueryVoucherRequest) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VoucherId", wireType)
 			}
-			m.VoucherId = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -1971,11 +1963,24 @@ func (m *QueryVoucherRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.VoucherId |= int64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VoucherId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
@@ -2027,10 +2032,10 @@ func (m *QueryVoucherResponse) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
 			}
-			m.Id = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -2040,11 +2045,24 @@ func (m *QueryVoucherResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Id |= int64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Id = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
@@ -2097,27 +2115,8 @@ func (m *QueryVoucherResponse) Unmarshal(dAtA []byte) error {
 				}
 			}
 		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field StrategyId", wireType)
-			}
-			m.StrategyId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.StrategyId |= int64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Strategy", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -2145,7 +2144,7 @@ func (m *QueryVoucherResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Status = string(dAtA[iNdEx:postIndex])
+			m.Strategy = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -2436,10 +2435,10 @@ func (m *QueryUnlockStatusRequest) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VoucherId", wireType)
 			}
-			m.VoucherId = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -2449,11 +2448,24 @@ func (m *QueryUnlockStatusRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.VoucherId |= int64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.VoucherId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
@@ -2537,10 +2549,10 @@ func (m *QueryUnlockStatusResponse) Unmarshal(dAtA []byte) error {
 			m.CurrentTime = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TabiWithdrawable", wireType)
 			}
-			m.TabiWithdrawable = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -2550,16 +2562,30 @@ func (m *QueryUnlockStatusResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.TabiWithdrawable |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.TabiWithdrawable.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 3:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field TabiBurnable", wireType)
 			}
-			m.TabiBurnable = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -2569,16 +2595,30 @@ func (m *QueryUnlockStatusResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.TabiBurnable |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.TabiBurnable.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 4:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VetabiBurnable", wireType)
 			}
-			m.VetabiBurnable = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -2588,16 +2628,30 @@ func (m *QueryUnlockStatusResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.VetabiBurnable |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.VetabiBurnable.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		case 5:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field VetabiReturnable", wireType)
 			}
-			m.VetabiReturnable = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -2607,11 +2661,25 @@ func (m *QueryUnlockStatusResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.VetabiReturnable |= int64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.VetabiReturnable.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])

@@ -4,6 +4,7 @@ package tabi.token_convert.v1;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos_proto/cosmos.proto";
+import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "tabi/token-convert/v1/token-convert.proto";
 
@@ -11,7 +12,7 @@ option go_package = "github.com/tabilabs/tabi/x/token-convert/types";
 
 service Query {
   rpc Strategy(QueryStrategyRequest) returns (QueryStrategyResponse) {
-    option (google.api.http).get = "/x/token-convert/v1/strategies/{strategy_id}";
+    option (google.api.http).get = "/x/token-convert/v1/strategies/{name}";
   }
 
   rpc Strategies(QueryStrategiesRequest) returns (QueryStrategiesResponse) {
@@ -37,15 +38,14 @@ service Query {
 
 // QueryStrategyRequest is the request type for the Query/Voucher RPC
 message QueryStrategyRequest {
-  int64 strategy_id = 1;
+  string name = 1;
 }
 
 // QueryVoucherRequest is the request type for the Query/Voucher RPC
 message QueryStrategyResponse {
-  int64 id = 1;
-  string name = 2;
-  int64 period = 3;
-  string conversion_rate = 4;
+  string name = 1;
+  int64 period = 2;
+  string conversion_rate = 3;
 }
 
 // QueryVoucherRequest is the request type for the Query/Voucher RPC
@@ -61,22 +61,21 @@ message QueryStrategiesResponse {
 
 // QueryVoucherRequest is the request type for the Query/Voucher RPC
 message QueryVoucherRequest {
-  int64 voucher_id = 1;
+  string voucher_id = 1;
 }
 
 // QueryVoucherResponse is the response type for the Query/Voucher RPC
 message QueryVoucherResponse {
-  int64 id = 1;
+  string id = 1;
   string owner = 2;
+
   int64 created_time = 3;
-  int64 strategy_id = 4;
-  string status = 5;
+  string strategy = 4;
 }
 
 // QueryVouchersRequest is the request type for the Query/Vouchers RPC
 message QueryVouchersRequest {
   string owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  ;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
@@ -88,14 +87,14 @@ message QueryVouchersResponse {
 
 // QueryUnlockStatusRequest is the request type for the Query/UnlockStatus RPC
 message QueryUnlockStatusRequest {
-  int64 voucher_id = 1;
+  string voucher_id = 1;
 }
 
 // QueryUnlockStatusResponse is the response type for the Query/UnlockStatus RPC
 message QueryUnlockStatusResponse {
   string current_time = 1;
-  int64 tabi_withdrawable = 2;
-  int64 tabi_burnable = 3;
-  int64 vetabi_burnable = 4;
-  int64 vetabi_returnable = 5;
+  cosmos.base.v1beta1.Coin tabi_withdrawable = 2 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin tabi_burnable = 3 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin vetabi_burnable = 4 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin vetabi_returnable = 5 [(gogoproto.nullable) = false];
 }

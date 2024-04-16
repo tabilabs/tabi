@@ -9,10 +9,10 @@ option go_package = "github.com/tabilabs/tabi/x/token-convert/types";
 // GenesisState defines the token-convert module's genesis state.
 message GenesisState {
   // strategy_sequence defines the current maximum strategy sequence.
-  int64 strategy_sequence = 1;
+  uint64 strategy_sequence = 1;
 
   // voucher_sequence defines the current maximum voucher sequence.
-  int64 voucher_sequence = 2;
+  uint64 voucher_sequence = 2;
 
   // strategies defines the list of strategies.
   repeated Strategy strategies = 3 [(gogoproto.nullable) = false];
