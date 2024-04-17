@@ -120,6 +120,7 @@ func (m msgServer) WithdrawTabi(goCtx context.Context, msg *types.MsgWithdrawTab
 
 	// delete voucher
 	m.deleteVoucher(ctx, msg.VoucherId)
+	m.deleteVoucherByOwner(ctx, sender, msg.VoucherId)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(

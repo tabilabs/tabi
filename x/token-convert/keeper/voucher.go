@@ -60,6 +60,12 @@ func (k Keeper) setVoucherByOwner(ctx sdk.Context, owner sdk.AccAddress, voucher
 	store.Set(types.VoucherByOwnerStoreKey(owner.Bytes(), voucherID), types.PlaceHolder)
 }
 
+// deleteVoucherByOwner deletes the VoucherByOwnerStore.
+func (k Keeper) deleteVoucherByOwner(ctx sdk.Context, owner sdk.AccAddress, voucherID string) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.VoucherByOwnerStoreKey(owner.Bytes(), voucherID))
+}
+
 // GetVoucherSeq returns the next usable voucher seq
 func (k Keeper) GetVoucherSeq(ctx sdk.Context) uint64 {
 	store := ctx.KVStore(k.storeKey)
