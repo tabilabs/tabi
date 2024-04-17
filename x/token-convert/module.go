@@ -1,18 +1,26 @@
 package token_convert
 
 import (
+	"context"
 	"encoding/json"
 	"math/rand"
+
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/spf13/cobra"
+
+	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/spf13/cobra"
-	abci "github.com/tendermint/tendermint/abci/types"
+	sdksim "github.com/cosmos/cosmos-sdk/types/simulation"
+
+	"github.com/tabilabs/tabi/x/token-convert/client/cli"
+	"github.com/tabilabs/tabi/x/token-convert/keeper"
+	"github.com/tabilabs/tabi/x/token-convert/simulation"
+	"github.com/tabilabs/tabi/x/token-convert/types"
 )
 
 const (
@@ -30,55 +38,78 @@ type AppModuleBasic struct {
 	cdc codec.Codec
 }
 
+// Name returns the token-convert module's name.
 func (AppModuleBasic) Name() string {
-	panic("not implemented")
+	return types.ModuleName
 }
 
 // RegisterLegacyAminoCodec registers the token-convert module's types on the given LegacyAmino codec.
-func (AppModuleBasic) RegisterLegacyAminoCodec(*codec.LegacyAmino) {
-	panic("not implemented")
-}
+func (AppModuleBasic) RegisterLegacyAminoCodec(*codec.LegacyAmino) {}
 
 // RegisterInterfaces registers the module's interface types
-func (AppModuleBasic) RegisterInterfaces(codectypes.InterfaceRegistry) {
-	panic("not implemented")
+func (AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {
+	types.RegisterInterfaces(registry)
 }
 
 // DefaultGenesis returns default genesis state as raw bytes for the token-convert module.
-func (AppModuleBasic) DefaultGenesis(codec.JSONCodec) json.RawMessage {
-	panic("not implemented")
+func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
+	return cdc.MustMarshalJSON(types.DefaultGenesisState())
 }
 
 // ValidateGenesis performs genesis state validation for the token-convert module.
-func (AppModuleBasic) ValidateGenesis(codec.JSONCodec, client.TxEncodingConfig, json.RawMessage) error {
-	panic("not implemented")
+func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, cfg client.TxEncodingConfig, bz json.RawMessage) error {
+	var data types.GenesisState
+	if err := cdc.UnmarshalJSON(bz, &data); err != nil {
+		return err
+	}
+
+	return types.ValidateGenesis(data)
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the token-convert module.
-func (AppModuleBasic) RegisterGRPCGatewayRoutes(client.Context, *runtime.ServeMux) {
-	panic("not implemented")
+func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
+	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
+		panic(err)
+	}
 }
 
 // GetTxCmd returns the root tx command for the token-convert module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
-	panic("not implemented")
+	return cli.NewTxCmd()
 }
 
 // GetQueryCmd returns the root query command for the token-convert module.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	panic("not implemented")
+	return cli.NewQueryCmd()
 }
 
 // AppModule implements an application module for the token-convert module.
 type AppModule struct {
 	AppModuleBasic
 
-	// TODO: add keepers
+	keeper        *keeper.Keeper
+	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
+}
+
+// NewAppModule creates a new AppModule object
+func NewAppModule(
+	cdc codec.Codec,
+	keeper *keeper.Keeper,
+	accountKeeper types.AccountKeeper,
+	bankKeeper types.BankKeeper,
+) AppModule {
+	return AppModule{
+		AppModuleBasic: AppModuleBasic{cdc: cdc},
+		keeper:         keeper,
+		accountKeeper:  accountKeeper,
+		bankKeeper:     bankKeeper,
+	}
 }
 
 // RegisterInvariants registers the token-convert module invariants.
-func (AppModule) RegisterInvariants(sdk.InvariantRegistry) {
-	panic("not implemented")
+func (am AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {
+	keeper.RegisterInvariants(ir, am.keeper)
 }
 
 // Route returns the message routing key for the token-convert module.
@@ -100,48 +131,54 @@ func (AppModule) LegacyQuerierHandler(*codec.LegacyAmino) sdk.Querier {
 }
 
 // RegisterServices registers module services
-func (AppModule) RegisterServices(cfg module.Configurator) {
-	panic("not implemented")
+func (am AppModule) RegisterServices(cfg module.Configurator) {
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
+
+	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQuerierImpl(am.keeper))
 }
 
 // ConsensusVersion implements AppModule/ConsensusVersion.
 func (AppModule) ConsensusVersion() uint64 {
-	panic("not implemented")
+	return consensusVersion
 }
 
 // InitGenesis performs genesis initialization for the token-convert module
-func (AppModule) InitGenesis(sdk.Context, codec.JSONCodec, json.RawMessage) []abci.ValidatorUpdate {
-	panic("not implemented")
+func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, bz json.RawMessage) []abci.ValidatorUpdate {
+	var data types.GenesisState
+	cdc.MustUnmarshalJSON(bz, &data)
+	am.keeper.InitGenesis(ctx, data)
+	return []abci.ValidatorUpdate{}
 }
 
 // ExportGenesis returns the exported genesis state as raw bytes for the token-convert module
-func (AppModule) ExportGenesis(sdk.Context, codec.JSONCodec) json.RawMessage {
-	panic("not implemented")
+func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
+	data := am.keeper.ExportGenesis(ctx)
+	return cdc.MustMarshalJSON(data)
 }
 
 // AppModuleSimulation functions
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	panic("not implemented")
+	simulation.RandomizedGenState(simState)
 }
 
 // ProposalContents returns all the token-convert content functions that simulate proposals
-func (AppModule) ProposalContents(simState module.SimulationState) []simulation.WeightedProposalContent {
+func (AppModule) ProposalContents(simState module.SimulationState) []sdksim.WeightedProposalContent {
 	return nil
 }
 
 // RandomizedParams creates randomized token-convert param changes for simulation
-func (AppModule) RandomizedParams(r *rand.Rand) []simulation.ParamChange {
+func (AppModule) RandomizedParams(r *rand.Rand) []sdksim.ParamChange {
 	panic("not implemented")
 }
 
 // RegisterStoreDecoder registers a decoder for the module's types
-func (AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
-	panic("not implemented")
+func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
+	sdr[types.StoreKey] = simulation.NewDecodeStore(am.cdc)
 }
 
 // WeightedOperations returns the all the module operations with their respective weights
-func (AppModule) WeightedOperations(simState module.SimulationState) []simulation.WeightedOperation {
+func (AppModule) WeightedOperations(simState module.SimulationState) []sdksim.WeightedOperation {
 	panic("not implemented")
 }

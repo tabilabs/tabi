@@ -9,6 +9,6 @@ func (k Keeper) InitGenesis(ctx sdktypes.Context, state types.GenesisState) {
 	panic("implement me")
 }
 
-func (k Keeper) ExportGenesis(ctx sdktypes.Context) types.GenesisState {
+func (k Keeper) ExportGenesis(ctx sdktypes.Context) *types.GenesisState {
 	panic("implement me")
 }
