@@ -37,8 +37,10 @@ type Params struct {
 	CurrentLevelForSale uint64 `protobuf:"varint,5,opt,name=current_level_for_sale,json=currentLevelForSale,proto3" json:"current_level_for_sale,omitempty"`
 	// maximum_number_of_holdings defines the maximum number of holdings for a captain
 	MaximumNumberOfHoldings uint64 `protobuf:"varint,6,opt,name=maximum_number_of_holdings,json=maximumNumberOfHoldings,proto3" json:"maximum_number_of_holdings,omitempty"`
+	// halving_era defines the halving era
+	HalvingEra uint64 `protobuf:"varint,7,opt,name=halving_era,json=halvingEra,proto3" json:"halving_era,omitempty"`
 	// authorized caller list
-	Callers []string `protobuf:"bytes,7,rep,name=callers,proto3" json:"callers,omitempty"`
+	Callers []string `protobuf:"bytes,8,rep,name=callers,proto3" json:"callers,omitempty"`
 }
 
 func (m *Params) Reset()         { *m = Params{} }
@@ -116,6 +118,13 @@ func (m *Params) GetMaximumNumberOfHoldings() uint64 {
 	return 0
 }
 
+func (m *Params) GetHalvingEra() uint64 {
+	if m != nil {
+		return m.HalvingEra
+	}
+	return 0
+}
+
 func (m *Params) GetCallers() []string {
 	if m != nil {
 		return m.Callers
@@ -130,12 +139,10 @@ type Division struct {
 	Level uint64 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
 	// total_count defines the total count of the node
 	TotalCount uint64 `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
-	// computing_power defines the computing power of the node
-	ComputingPower uint64 `protobuf:"varint,4,opt,name=computing_power,json=computingPower,proto3" json:"computing_power,omitempty"`
-	// low defines the low of the node
-	Low uint64 `protobuf:"varint,5,opt,name=low,proto3" json:"low,omitempty"`
-	// high defines the high of the node
-	High uint64 `protobuf:"varint,6,opt,name=high,proto3" json:"high,omitempty"`
+	// low_computing_power defines the low computing power of the node
+	LowComputingPower uint64 `protobuf:"varint,4,opt,name=low_computing_power,json=lowComputingPower,proto3" json:"low_computing_power,omitempty"`
+	// high_computing_power defines the high computing power of the node
+	HighComputingPower uint64 `protobuf:"varint,5,opt,name=high_computing_power,json=highComputingPower,proto3" json:"high_computing_power,omitempty"`
 }
 
 func (m *Division) Reset()         { *m = Division{} }
@@ -192,33 +199,26 @@ func (m *Division) GetTotalCount() uint64 {
 	return 0
 }
 
-func (m *Division) GetComputingPower() uint64 {
+func (m *Division) GetLowComputingPower() uint64 {
 	if m != nil {
-		return m.ComputingPower
+		return m.LowComputingPower
 	}
 	return 0
 }
 
-func (m *Division) GetLow() uint64 {
+func (m *Division) GetHighComputingPower() uint64 {
 	if m != nil {
-		return m.Low
-	}
-	return 0
-}
-
-func (m *Division) GetHigh() uint64 {
-	if m != nil {
-		return m.High
+		return m.HighComputingPower
 	}
 	return 0
 }
 
 // Node defines the node
 type Node struct {
-	Id         string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	DivisionId string `protobuf:"bytes,2,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
-	Owner      string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
-	Experience uint64 `protobuf:"varint,4,opt,name=experience,proto3" json:"experience,omitempty"`
+	Id             string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	DivisionId     string `protobuf:"bytes,2,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
+	Owner          string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
+	ComputingPower uint64 `protobuf:"varint,4,opt,name=computing_power,json=computingPower,proto3" json:"computing_power,omitempty"`
 }
 
 func (m *Node) Reset()         { *m = Node{} }
@@ -275,31 +275,31 @@ func (m *Node) GetOwner() string {
 	return ""
 }
 
-func (m *Node) GetExperience() uint64 {
+func (m *Node) GetComputingPower() uint64 {
 	if m != nil {
-		return m.Experience
+		return m.ComputingPower
 	}
 	return 0
 }
 
-// Experience defines the experience of the user
-type Experience struct {
-	Owner             string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
-	ExtractableAmount uint64 `protobuf:"varint,2,opt,name=extractable_amount,json=extractableAmount,proto3" json:"extractable_amount,omitempty"`
+// ExtractableComputingPower defines the extractable computing power
+type ExtractableComputingPower struct {
+	Owner  string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	Amount uint64 `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
 }
 
-func (m *Experience) Reset()         { *m = Experience{} }
-func (m *Experience) String() string { return proto.CompactTextString(m) }
-func (*Experience) ProtoMessage()    {}
-func (*Experience) Descriptor() ([]byte, []int) {
+func (m *ExtractableComputingPower) Reset()         { *m = ExtractableComputingPower{} }
+func (m *ExtractableComputingPower) String() string { return proto.CompactTextString(m) }
+func (*ExtractableComputingPower) ProtoMessage()    {}
+func (*ExtractableComputingPower) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cdb21c7c329a6c9e, []int{3}
 }
-func (m *Experience) XXX_Unmarshal(b []byte) error {
+func (m *ExtractableComputingPower) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *Experience) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ExtractableComputingPower) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_Experience.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ExtractableComputingPower.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -309,28 +309,28 @@ func (m *Experience) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *Experience) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Experience.Merge(m, src)
+func (m *ExtractableComputingPower) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ExtractableComputingPower.Merge(m, src)
 }
-func (m *Experience) XXX_Size() int {
+func (m *ExtractableComputingPower) XXX_Size() int {
 	return m.Size()
 }
-func (m *Experience) XXX_DiscardUnknown() {
-	xxx_messageInfo_Experience.DiscardUnknown(m)
+func (m *ExtractableComputingPower) XXX_DiscardUnknown() {
+	xxx_messageInfo_ExtractableComputingPower.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Experience proto.InternalMessageInfo
+var xxx_messageInfo_ExtractableComputingPower proto.InternalMessageInfo
 
-func (m *Experience) GetOwner() string {
+func (m *ExtractableComputingPower) GetOwner() string {
 	if m != nil {
 		return m.Owner
 	}
 	return ""
 }
 
-func (m *Experience) GetExtractableAmount() uint64 {
+func (m *ExtractableComputingPower) GetAmount() uint64 {
 	if m != nil {
-		return m.ExtractableAmount
+		return m.Amount
 	}
 	return 0
 }
@@ -339,7 +339,7 @@ func init() {
 	proto.RegisterType((*Params)(nil), "tabi.captain_node.v1.Params")
 	proto.RegisterType((*Division)(nil), "tabi.captain_node.v1.Division")
 	proto.RegisterType((*Node)(nil), "tabi.captain_node.v1.Node")
-	proto.RegisterType((*Experience)(nil), "tabi.captain_node.v1.Experience")
+	proto.RegisterType((*ExtractableComputingPower)(nil), "tabi.captain_node.v1.ExtractableComputingPower")
 }
 
 func init() {
@@ -347,39 +347,40 @@ func init() {
 }
 
 var fileDescriptor_cdb21c7c329a6c9e = []byte{
-	// 505 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x93, 0xcf, 0x6e, 0xd3, 0x40,
-	0x10, 0xc6, 0xe3, 0x24, 0x4d, 0xc9, 0x54, 0x2a, 0xb0, 0x44, 0x60, 0x55, 0xc2, 0xad, 0x72, 0x69,
-	0x2f, 0x49, 0xa8, 0x2a, 0x4e, 0x9c, 0x4a, 0xf9, 0x2b, 0xa1, 0x36, 0x98, 0x1b, 0x97, 0xd5, 0xda,
-	0xde, 0x38, 0x2b, 0xad, 0x77, 0xad, 0xf5, 0x3a, 0x09, 0x6f, 0xc1, 0x23, 0xf0, 0x38, 0x1c, 0x2b,
-	0x71, 0xe1, 0x88, 0x92, 0x17, 0x41, 0x1e, 0xaf, 0xdb, 0x44, 0x70, 0x9b, 0x99, 0xdf, 0x7c, 0xab,
-	0x6f, 0xbf, 0xd5, 0xc2, 0xa9, 0x65, 0x91, 0x98, 0xc4, 0x2c, 0xb7, 0x4c, 0xa8, 0x91, 0xd2, 0x09,
-	0x9f, 0x2c, 0xce, 0x77, 0xfa, 0x71, 0x6e, 0xb4, 0xd5, 0x64, 0x50, 0x2d, 0x8e, 0x1d, 0xa0, 0x08,
-	0x16, 0xe7, 0x47, 0x83, 0x54, 0xa7, 0x1a, 0x17, 0x26, 0x55, 0x55, 0xef, 0x0e, 0x7f, 0xb5, 0xa1,
-	0x37, 0x65, 0x86, 0x65, 0x05, 0x79, 0x01, 0x03, 0xab, 0x2d, 0x93, 0x34, 0xd6, 0xa5, 0xb2, 0xd4,
-	0xe9, 0x0b, 0xdf, 0x3b, 0xf1, 0xce, 0xba, 0x21, 0x41, 0x76, 0x55, 0xa1, 0x2b, 0x47, 0xc8, 0x4b,
-	0x78, 0x96, 0x09, 0x25, 0xb2, 0x32, 0xa3, 0xb9, 0x5e, 0x72, 0x43, 0xb5, 0xa2, 0x39, 0x37, 0x42,
-	0x27, 0x7e, 0x1b, 0x45, 0x03, 0x87, 0xa7, 0x15, 0xbd, 0x51, 0x53, 0x64, 0x28, 0x63, 0xab, 0xff,
-	0xca, 0x3a, 0x4e, 0x56, 0xe3, 0x5d, 0xd9, 0x73, 0x80, 0x58, 0xab, 0xc2, 0x32, 0x65, 0x29, 0xf3,
-	0xbb, 0xb8, 0xd9, 0x6f, 0x26, 0x97, 0xe4, 0x02, 0x9e, 0xc6, 0xa5, 0x31, 0x5c, 0x59, 0x2a, 0xf9,
-	0x82, 0x4b, 0x3a, 0xd3, 0x86, 0x16, 0x4c, 0x72, 0x7f, 0x0f, 0x57, 0x9f, 0x38, 0xfa, 0xa9, 0x82,
-	0xef, 0xb4, 0xf9, 0xc2, 0x24, 0x27, 0xaf, 0xe0, 0xa8, 0xb1, 0xa2, 0xca, 0x2c, 0xaa, 0xbc, 0xcc,
-	0xe8, 0x5c, 0xcb, 0x44, 0xa8, 0xb4, 0xf0, 0x7b, 0x28, 0x6c, 0xcc, 0x5e, 0xe3, 0xc2, 0xcd, 0xec,
-	0x83, 0xc3, 0xc4, 0x87, 0xfd, 0x98, 0x49, 0xc9, 0x4d, 0xe1, 0xef, 0x9f, 0x74, 0xce, 0xfa, 0x61,
-	0xd3, 0x0e, 0x7f, 0x78, 0xf0, 0xe0, 0x8d, 0x58, 0x88, 0x42, 0x68, 0x45, 0x0e, 0xa1, 0x2d, 0x12,
-	0x4c, 0xb1, 0x1f, 0xb6, 0x45, 0x42, 0x06, 0xb0, 0x87, 0x06, 0x5d, 0x46, 0x75, 0x43, 0x8e, 0xe1,
-	0x60, 0x2b, 0x7d, 0x17, 0x04, 0xdc, 0x87, 0x4e, 0x4e, 0xe1, 0x61, 0xac, 0xb3, 0xbc, 0xb4, 0x42,
-	0xa5, 0x75, 0x6e, 0x2e, 0x83, 0xc3, 0xbb, 0x31, 0xe6, 0x45, 0x1e, 0x41, 0x47, 0xea, 0xa5, 0xbb,
-	0x75, 0x55, 0x12, 0x02, 0xdd, 0xb9, 0x48, 0xe7, 0xee, 0x3e, 0x58, 0x0f, 0x33, 0xe8, 0x5e, 0xeb,
-	0x84, 0xff, 0xe3, 0xee, 0x18, 0x0e, 0x12, 0xe7, 0x9c, 0x8a, 0xfa, 0x1d, 0xfb, 0x21, 0x34, 0xa3,
-	0x8f, 0x68, 0x5f, 0x2f, 0x15, 0x37, 0x68, 0xb1, 0x1f, 0xd6, 0x0d, 0x09, 0x00, 0xf8, 0xaa, 0x7a,
-	0x44, 0xae, 0x62, 0xee, 0x8c, 0x6d, 0x4d, 0x86, 0x9f, 0x01, 0xde, 0xde, 0x75, 0xf7, 0x67, 0x78,
-	0xdb, 0x67, 0x8c, 0x80, 0xf0, 0x95, 0x35, 0x2c, 0xb6, 0x2c, 0x92, 0x9c, 0xb2, 0x0c, 0x93, 0xa8,
-	0x53, 0x7a, 0xbc, 0x45, 0x2e, 0x11, 0xbc, 0x7e, 0xff, 0x73, 0x1d, 0x78, 0xb7, 0xeb, 0xc0, 0xfb,
-	0xb3, 0x0e, 0xbc, 0xef, 0x9b, 0xa0, 0x75, 0xbb, 0x09, 0x5a, 0xbf, 0x37, 0x41, 0xeb, 0xeb, 0x28,
-	0x15, 0x76, 0x5e, 0x46, 0xe3, 0x58, 0x67, 0x93, 0xea, 0x2f, 0x48, 0x16, 0x15, 0x58, 0x4c, 0x56,
-	0xbb, 0xff, 0xc7, 0x7e, 0xcb, 0x79, 0x11, 0xf5, 0xf0, 0x2b, 0x5c, 0xfc, 0x0d, 0x00, 0x00, 0xff,
-	0xff, 0x9a, 0x9e, 0xcd, 0x14, 0x61, 0x03, 0x00, 0x00,
+	// 518 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x93, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0x86, 0xe3, 0x34, 0x4d, 0x9b, 0xa9, 0x54, 0xc4, 0x36, 0x2a, 0xa6, 0x12, 0x6e, 0x95, 0x4b,
+	0x7b, 0x69, 0x42, 0x55, 0x71, 0xe2, 0x04, 0xa1, 0x40, 0x25, 0xd4, 0x46, 0xe1, 0xc6, 0x65, 0xb5,
+	0xb6, 0x37, 0xce, 0x4a, 0xeb, 0x1d, 0x6b, 0xbd, 0x76, 0xc2, 0x5b, 0xf0, 0x2e, 0xbc, 0x04, 0xc7,
+	0x1e, 0x39, 0xa2, 0xe4, 0x15, 0x78, 0x00, 0xe4, 0xf5, 0x1a, 0x1a, 0xda, 0x9b, 0x67, 0xbf, 0xf9,
+	0xbd, 0xff, 0xfc, 0xa3, 0x85, 0x53, 0xc3, 0x42, 0x31, 0x8a, 0x58, 0x66, 0x98, 0x50, 0xe7, 0x0a,
+	0x63, 0x3e, 0x2a, 0x2f, 0x36, 0xea, 0x61, 0xa6, 0xd1, 0x20, 0xe9, 0x57, 0x8d, 0x43, 0x07, 0xa8,
+	0x05, 0xe5, 0xc5, 0x51, 0x3f, 0xc1, 0x04, 0x6d, 0xc3, 0xa8, 0xfa, 0xaa, 0x7b, 0x07, 0xbf, 0xdb,
+	0xd0, 0x9d, 0x30, 0xcd, 0xd2, 0x9c, 0xbc, 0x84, 0xbe, 0x41, 0xc3, 0x24, 0x8d, 0xb0, 0x50, 0x86,
+	0x3a, 0x7d, 0xee, 0x7b, 0x27, 0xde, 0x59, 0x67, 0x4a, 0x2c, 0x1b, 0x57, 0x68, 0xec, 0x08, 0x79,
+	0x05, 0xcf, 0x52, 0xa1, 0x44, 0x5a, 0xa4, 0x34, 0xc3, 0x05, 0xd7, 0x14, 0x15, 0xcd, 0xb8, 0x16,
+	0x18, 0xfb, 0x6d, 0x2b, 0xea, 0x3b, 0x3c, 0xa9, 0xe8, 0xad, 0x9a, 0x58, 0x66, 0x65, 0x6c, 0xf9,
+	0xa8, 0x6c, 0xcb, 0xc9, 0x6a, 0xbc, 0x29, 0x7b, 0x01, 0x10, 0xa1, 0xca, 0x0d, 0x53, 0x86, 0x32,
+	0xbf, 0x63, 0x3b, 0x7b, 0xcd, 0xc9, 0x1b, 0x72, 0x09, 0x87, 0x51, 0xa1, 0x35, 0x57, 0x86, 0x4a,
+	0x5e, 0x72, 0x49, 0x67, 0xa8, 0x69, 0xce, 0x24, 0xf7, 0xb7, 0x6d, 0xeb, 0x81, 0xa3, 0x9f, 0x2a,
+	0xf8, 0x1e, 0xf5, 0x67, 0x26, 0x39, 0x79, 0x0d, 0x47, 0x8d, 0x15, 0x55, 0xa4, 0x61, 0xe5, 0x65,
+	0x46, 0xe7, 0x28, 0x63, 0xa1, 0x92, 0xdc, 0xef, 0x5a, 0x61, 0x63, 0xf6, 0xc6, 0x36, 0xdc, 0xce,
+	0x3e, 0x3a, 0x4c, 0x8e, 0x61, 0x6f, 0xce, 0x64, 0x29, 0x54, 0x42, 0xb9, 0x66, 0xfe, 0x8e, 0xed,
+	0x06, 0x77, 0x74, 0xa5, 0x19, 0xf1, 0x61, 0x27, 0x62, 0x52, 0x72, 0x9d, 0xfb, 0xbb, 0x27, 0x5b,
+	0x67, 0xbd, 0x69, 0x53, 0x0e, 0xbe, 0x7b, 0xb0, 0xfb, 0x4e, 0x94, 0x22, 0x17, 0xa8, 0xc8, 0x3e,
+	0xb4, 0x45, 0x6c, 0x63, 0xee, 0x4d, 0xdb, 0x22, 0x26, 0x7d, 0xd8, 0xb6, 0x13, 0xb8, 0x10, 0xeb,
+	0xa2, 0xba, 0xed, 0xde, 0x7a, 0x5c, 0x52, 0xf0, 0x6f, 0x2b, 0x64, 0x08, 0x07, 0x12, 0x17, 0x34,
+	0xc2, 0x34, 0x2b, 0x4c, 0x65, 0xca, 0x86, 0xeb, 0x82, 0x7a, 0x2a, 0x71, 0x31, 0x6e, 0x88, 0xcd,
+	0xb5, 0xda, 0xf7, 0x5c, 0x24, 0xf3, 0x07, 0x82, 0x3a, 0x2e, 0x52, 0xb1, 0x4d, 0xc5, 0xa0, 0x84,
+	0xce, 0x0d, 0xc6, 0xfc, 0x81, 0xe1, 0x63, 0xd8, 0x8b, 0xdd, 0x30, 0x54, 0xd4, 0xbb, 0xef, 0x4d,
+	0xa1, 0x39, 0xba, 0xb6, 0x13, 0xe1, 0x42, 0x71, 0x6d, 0x5d, 0xf7, 0xa6, 0x75, 0x41, 0x4e, 0xe1,
+	0xc9, 0xe3, 0x66, 0xf7, 0xa3, 0xcd, 0x7b, 0xaf, 0xe1, 0xf9, 0xd5, 0xd2, 0x68, 0x16, 0x19, 0x16,
+	0x4a, 0xfe, 0xdf, 0x18, 0x7f, 0xff, 0xed, 0xdd, 0xff, 0xf7, 0x21, 0x74, 0x59, 0x6a, 0x83, 0xaa,
+	0x43, 0x74, 0xd5, 0xdb, 0x0f, 0x3f, 0x56, 0x81, 0x77, 0xb7, 0x0a, 0xbc, 0x5f, 0xab, 0xc0, 0xfb,
+	0xb6, 0x0e, 0x5a, 0x77, 0xeb, 0xa0, 0xf5, 0x73, 0x1d, 0xb4, 0xbe, 0x9c, 0x27, 0xc2, 0xcc, 0x8b,
+	0x70, 0x18, 0x61, 0x3a, 0xaa, 0x1e, 0x90, 0x64, 0x61, 0x6e, 0x3f, 0x46, 0xcb, 0xcd, 0x47, 0x67,
+	0xbe, 0x66, 0x3c, 0x0f, 0xbb, 0xf6, 0xfd, 0x5c, 0xfe, 0x09, 0x00, 0x00, 0xff, 0xff, 0xc1, 0x2e,
+	0x38, 0xc9, 0x96, 0x03, 0x00, 0x00,
 }
 
 func (m *Params) Marshal() (dAtA []byte, err error) {
@@ -408,8 +409,13 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			copy(dAtA[i:], m.Callers[iNdEx])
 			i = encodeVarintCaptainNode(dAtA, i, uint64(len(m.Callers[iNdEx])))
 			i--
-			dAtA[i] = 0x3a
+			dAtA[i] = 0x42
 		}
+	}
+	if m.HalvingEra != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.HalvingEra))
+		i--
+		dAtA[i] = 0x38
 	}
 	if m.MaximumNumberOfHoldings != 0 {
 		i = encodeVarintCaptainNode(dAtA, i, uint64(m.MaximumNumberOfHoldings))
@@ -464,18 +470,13 @@ func (m *Division) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.High != 0 {
-		i = encodeVarintCaptainNode(dAtA, i, uint64(m.High))
-		i--
-		dAtA[i] = 0x30
-	}
-	if m.Low != 0 {
-		i = encodeVarintCaptainNode(dAtA, i, uint64(m.Low))
+	if m.HighComputingPower != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.HighComputingPower))
 		i--
 		dAtA[i] = 0x28
 	}
-	if m.ComputingPower != 0 {
-		i = encodeVarintCaptainNode(dAtA, i, uint64(m.ComputingPower))
+	if m.LowComputingPower != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.LowComputingPower))
 		i--
 		dAtA[i] = 0x20
 	}
@@ -519,8 +520,8 @@ func (m *Node) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Experience != 0 {
-		i = encodeVarintCaptainNode(dAtA, i, uint64(m.Experience))
+	if m.ComputingPower != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.ComputingPower))
 		i--
 		dAtA[i] = 0x20
 	}
@@ -548,7 +549,7 @@ func (m *Node) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *Experience) Marshal() (dAtA []byte, err error) {
+func (m *ExtractableComputingPower) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -558,18 +559,18 @@ func (m *Experience) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *Experience) MarshalTo(dAtA []byte) (int, error) {
+func (m *ExtractableComputingPower) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *Experience) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ExtractableComputingPower) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.ExtractableAmount != 0 {
-		i = encodeVarintCaptainNode(dAtA, i, uint64(m.ExtractableAmount))
+	if m.Amount != 0 {
+		i = encodeVarintCaptainNode(dAtA, i, uint64(m.Amount))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -618,6 +619,9 @@ func (m *Params) Size() (n int) {
 	if m.MaximumNumberOfHoldings != 0 {
 		n += 1 + sovCaptainNode(uint64(m.MaximumNumberOfHoldings))
 	}
+	if m.HalvingEra != 0 {
+		n += 1 + sovCaptainNode(uint64(m.HalvingEra))
+	}
 	if len(m.Callers) > 0 {
 		for _, s := range m.Callers {
 			l = len(s)
@@ -643,14 +647,11 @@ func (m *Division) Size() (n int) {
 	if m.TotalCount != 0 {
 		n += 1 + sovCaptainNode(uint64(m.TotalCount))
 	}
-	if m.ComputingPower != 0 {
-		n += 1 + sovCaptainNode(uint64(m.ComputingPower))
+	if m.LowComputingPower != 0 {
+		n += 1 + sovCaptainNode(uint64(m.LowComputingPower))
 	}
-	if m.Low != 0 {
-		n += 1 + sovCaptainNode(uint64(m.Low))
-	}
-	if m.High != 0 {
-		n += 1 + sovCaptainNode(uint64(m.High))
+	if m.HighComputingPower != 0 {
+		n += 1 + sovCaptainNode(uint64(m.HighComputingPower))
 	}
 	return n
 }
@@ -673,13 +674,13 @@ func (m *Node) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovCaptainNode(uint64(l))
 	}
-	if m.Experience != 0 {
-		n += 1 + sovCaptainNode(uint64(m.Experience))
+	if m.ComputingPower != 0 {
+		n += 1 + sovCaptainNode(uint64(m.ComputingPower))
 	}
 	return n
 }
 
-func (m *Experience) Size() (n int) {
+func (m *ExtractableComputingPower) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -689,8 +690,8 @@ func (m *Experience) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovCaptainNode(uint64(l))
 	}
-	if m.ExtractableAmount != 0 {
-		n += 1 + sovCaptainNode(uint64(m.ExtractableAmount))
+	if m.Amount != 0 {
+		n += 1 + sovCaptainNode(uint64(m.Amount))
 	}
 	return n
 }
@@ -845,6 +846,25 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 				}
 			}
 		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HalvingEra", wireType)
+			}
+			m.HalvingEra = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowCaptainNode
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.HalvingEra |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Callers", wireType)
 			}
@@ -998,9 +1018,9 @@ func (m *Division) Unmarshal(dAtA []byte) error {
 			}
 		case 4:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ComputingPower", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field LowComputingPower", wireType)
 			}
-			m.ComputingPower = 0
+			m.LowComputingPower = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCaptainNode
@@ -1010,16 +1030,16 @@ func (m *Division) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ComputingPower |= uint64(b&0x7F) << shift
+				m.LowComputingPower |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 5:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Low", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field HighComputingPower", wireType)
 			}
-			m.Low = 0
+			m.HighComputingPower = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCaptainNode
@@ -1029,26 +1049,7 @@ func (m *Division) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Low |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 6:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field High", wireType)
-			}
-			m.High = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowCaptainNode
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.High |= uint64(b&0x7F) << shift
+				m.HighComputingPower |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1201,9 +1202,9 @@ func (m *Node) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Experience", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ComputingPower", wireType)
 			}
-			m.Experience = 0
+			m.ComputingPower = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCaptainNode
@@ -1213,7 +1214,7 @@ func (m *Node) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Experience |= uint64(b&0x7F) << shift
+				m.ComputingPower |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1239,7 +1240,7 @@ func (m *Node) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *Experience) Unmarshal(dAtA []byte) error {
+func (m *ExtractableComputingPower) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1262,10 +1263,10 @@ func (m *Experience) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: Experience: wiretype end group for non-group")
+			return fmt.Errorf("proto: ExtractableComputingPower: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Experience: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ExtractableComputingPower: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1302,9 +1303,9 @@ func (m *Experience) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ExtractableAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
 			}
-			m.ExtractableAmount = 0
+			m.Amount = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowCaptainNode
@@ -1314,7 +1315,7 @@ func (m *Experience) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ExtractableAmount |= uint64(b&0x7F) << shift
+				m.Amount |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

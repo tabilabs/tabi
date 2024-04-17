@@ -25,8 +25,11 @@ message Params {
     // maximum_number_of_holdings defines the maximum number of holdings for a captain
     uint64 maximum_number_of_holdings = 6;
 
+    // halving_era defines the halving era
+    uint64 halving_era = 7;
+
     // authorized caller list
-    repeated string callers = 7;
+    repeated string callers = 8;
 }
 
 // Rank defines the node class
@@ -36,12 +39,10 @@ message Division {
     uint64 level = 2;
     // total_count defines the total count of the node
     uint64 total_count = 3;
-    // computing_power defines the computing power of the node
-    uint64 computing_power = 4;
-    // low defines the low of the node
-    uint64 low = 5;
-    // high defines the high of the node
-    uint64 high = 6;
+    // low_computing_power defines the low computing power of the node
+    uint64 low_computing_power = 4;
+    // high_computing_power defines the high computing power of the node
+    uint64 high_computing_power = 5;
 }
 
 // Node defines the node
@@ -49,11 +50,11 @@ message Node {
     string id = 1;
     string division_id = 2;
     string owner = 3;
-    uint64 experience = 4;
+    uint64 computing_power = 4;
 }
 
-// Experience defines the experience of the user
-message Experience {
+// ExtractableComputingPower defines the extractable computing power
+message ExtractableComputingPower {
    string owner = 1;
-   uint64 extractable_amount = 2;
+   uint64 amount = 2;
 }

@@ -22,26 +22,26 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// EventMint is the mint event
-type EventMint struct {
+// EventCreateCaptainNode is the event for creating captain node
+type EventCreateCaptainNode struct {
 	Id         string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	NodeId     string `protobuf:"bytes,2,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 	DivisionId string `protobuf:"bytes,3,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
 	Owner      string `protobuf:"bytes,4,opt,name=owner,proto3" json:"owner,omitempty"`
 }
 
-func (m *EventMint) Reset()         { *m = EventMint{} }
-func (m *EventMint) String() string { return proto.CompactTextString(m) }
-func (*EventMint) ProtoMessage()    {}
-func (*EventMint) Descriptor() ([]byte, []int) {
+func (m *EventCreateCaptainNode) Reset()         { *m = EventCreateCaptainNode{} }
+func (m *EventCreateCaptainNode) String() string { return proto.CompactTextString(m) }
+func (*EventCreateCaptainNode) ProtoMessage()    {}
+func (*EventCreateCaptainNode) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f359615061b6a883, []int{0}
 }
-func (m *EventMint) XXX_Unmarshal(b []byte) error {
+func (m *EventCreateCaptainNode) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EventMint) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EventCreateCaptainNode) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_EventMint.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EventCreateCaptainNode.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -51,68 +51,68 @@ func (m *EventMint) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *EventMint) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EventMint.Merge(m, src)
+func (m *EventCreateCaptainNode) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventCreateCaptainNode.Merge(m, src)
 }
-func (m *EventMint) XXX_Size() int {
+func (m *EventCreateCaptainNode) XXX_Size() int {
 	return m.Size()
 }
-func (m *EventMint) XXX_DiscardUnknown() {
-	xxx_messageInfo_EventMint.DiscardUnknown(m)
+func (m *EventCreateCaptainNode) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventCreateCaptainNode.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_EventMint proto.InternalMessageInfo
+var xxx_messageInfo_EventCreateCaptainNode proto.InternalMessageInfo
 
-func (m *EventMint) GetId() string {
+func (m *EventCreateCaptainNode) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-func (m *EventMint) GetNodeId() string {
+func (m *EventCreateCaptainNode) GetNodeId() string {
 	if m != nil {
 		return m.NodeId
 	}
 	return ""
 }
 
-func (m *EventMint) GetDivisionId() string {
+func (m *EventCreateCaptainNode) GetDivisionId() string {
 	if m != nil {
 		return m.DivisionId
 	}
 	return ""
 }
 
-func (m *EventMint) GetOwner() string {
+func (m *EventCreateCaptainNode) GetOwner() string {
 	if m != nil {
 		return m.Owner
 	}
 	return ""
 }
 
-// EventReceiveExperience is the event for receiving experience
-type EventReceiveExperience struct {
-	NodeId                    string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
-	OldDivisionId             string `protobuf:"bytes,2,opt,name=old_division_id,json=oldDivisionId,proto3" json:"old_division_id,omitempty"`
-	NewDivisionId             string `protobuf:"bytes,3,opt,name=new_division_id,json=newDivisionId,proto3" json:"new_division_id,omitempty"`
-	ReceiveExperienceAmount   string `protobuf:"bytes,4,opt,name=receive_experience_amount,json=receiveExperienceAmount,proto3" json:"receive_experience_amount,omitempty"`
-	RemainingExperienceAmount string `protobuf:"bytes,5,opt,name=remaining_experience_amount,json=remainingExperienceAmount,proto3" json:"remaining_experience_amount,omitempty"`
-	Sender                    string `protobuf:"bytes,6,opt,name=sender,proto3" json:"sender,omitempty"`
+// EventWithdrawComputingPower is the event for withdrawing computing power
+type EventWithdrawComputingPower struct {
+	NodeId                        string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	OldDivisionId                 string `protobuf:"bytes,2,opt,name=old_division_id,json=oldDivisionId,proto3" json:"old_division_id,omitempty"`
+	NewDivisionId                 string `protobuf:"bytes,3,opt,name=new_division_id,json=newDivisionId,proto3" json:"new_division_id,omitempty"`
+	ReceiveComputingPowerAmount   string `protobuf:"bytes,4,opt,name=receive_computing_power_amount,json=receiveComputingPowerAmount,proto3" json:"receive_computing_power_amount,omitempty"`
+	RemainingComputingPowerAmount string `protobuf:"bytes,5,opt,name=remaining_computing_power_amount,json=remainingComputingPowerAmount,proto3" json:"remaining_computing_power_amount,omitempty"`
+	Sender                        string `protobuf:"bytes,6,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
-func (m *EventReceiveExperience) Reset()         { *m = EventReceiveExperience{} }
-func (m *EventReceiveExperience) String() string { return proto.CompactTextString(m) }
-func (*EventReceiveExperience) ProtoMessage()    {}
-func (*EventReceiveExperience) Descriptor() ([]byte, []int) {
+func (m *EventWithdrawComputingPower) Reset()         { *m = EventWithdrawComputingPower{} }
+func (m *EventWithdrawComputingPower) String() string { return proto.CompactTextString(m) }
+func (*EventWithdrawComputingPower) ProtoMessage()    {}
+func (*EventWithdrawComputingPower) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f359615061b6a883, []int{1}
 }
-func (m *EventReceiveExperience) XXX_Unmarshal(b []byte) error {
+func (m *EventWithdrawComputingPower) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EventReceiveExperience) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EventWithdrawComputingPower) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_EventReceiveExperience.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EventWithdrawComputingPower.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -122,80 +122,80 @@ func (m *EventReceiveExperience) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *EventReceiveExperience) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EventReceiveExperience.Merge(m, src)
+func (m *EventWithdrawComputingPower) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventWithdrawComputingPower.Merge(m, src)
 }
-func (m *EventReceiveExperience) XXX_Size() int {
+func (m *EventWithdrawComputingPower) XXX_Size() int {
 	return m.Size()
 }
-func (m *EventReceiveExperience) XXX_DiscardUnknown() {
-	xxx_messageInfo_EventReceiveExperience.DiscardUnknown(m)
+func (m *EventWithdrawComputingPower) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventWithdrawComputingPower.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_EventReceiveExperience proto.InternalMessageInfo
+var xxx_messageInfo_EventWithdrawComputingPower proto.InternalMessageInfo
 
-func (m *EventReceiveExperience) GetNodeId() string {
+func (m *EventWithdrawComputingPower) GetNodeId() string {
 	if m != nil {
 		return m.NodeId
 	}
 	return ""
 }
 
-func (m *EventReceiveExperience) GetOldDivisionId() string {
+func (m *EventWithdrawComputingPower) GetOldDivisionId() string {
 	if m != nil {
 		return m.OldDivisionId
 	}
 	return ""
 }
 
-func (m *EventReceiveExperience) GetNewDivisionId() string {
+func (m *EventWithdrawComputingPower) GetNewDivisionId() string {
 	if m != nil {
 		return m.NewDivisionId
 	}
 	return ""
 }
 
-func (m *EventReceiveExperience) GetReceiveExperienceAmount() string {
+func (m *EventWithdrawComputingPower) GetReceiveComputingPowerAmount() string {
 	if m != nil {
-		return m.ReceiveExperienceAmount
+		return m.ReceiveComputingPowerAmount
 	}
 	return ""
 }
 
-func (m *EventReceiveExperience) GetRemainingExperienceAmount() string {
+func (m *EventWithdrawComputingPower) GetRemainingComputingPowerAmount() string {
 	if m != nil {
-		return m.RemainingExperienceAmount
+		return m.RemainingComputingPowerAmount
 	}
 	return ""
 }
 
-func (m *EventReceiveExperience) GetSender() string {
+func (m *EventWithdrawComputingPower) GetSender() string {
 	if m != nil {
 		return m.Sender
 	}
 	return ""
 }
 
-// EventUpdatePowerOnPeriod is the event for updating power on period
-type EventUpdatePowerOnPeriod struct {
+// EventCommitReport is the event for committing report
+type EventCommitReport struct {
 	NodeId           string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 	OldPowerOnPeriod string `protobuf:"bytes,2,opt,name=old_power_on_period,json=oldPowerOnPeriod,proto3" json:"old_power_on_period,omitempty"`
 	NewPowerOnPeriod string `protobuf:"bytes,3,opt,name=new_power_on_period,json=newPowerOnPeriod,proto3" json:"new_power_on_period,omitempty"`
 	Sender           string `protobuf:"bytes,4,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
-func (m *EventUpdatePowerOnPeriod) Reset()         { *m = EventUpdatePowerOnPeriod{} }
-func (m *EventUpdatePowerOnPeriod) String() string { return proto.CompactTextString(m) }
-func (*EventUpdatePowerOnPeriod) ProtoMessage()    {}
-func (*EventUpdatePowerOnPeriod) Descriptor() ([]byte, []int) {
+func (m *EventCommitReport) Reset()         { *m = EventCommitReport{} }
+func (m *EventCommitReport) String() string { return proto.CompactTextString(m) }
+func (*EventCommitReport) ProtoMessage()    {}
+func (*EventCommitReport) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f359615061b6a883, []int{2}
 }
-func (m *EventUpdatePowerOnPeriod) XXX_Unmarshal(b []byte) error {
+func (m *EventCommitReport) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EventUpdatePowerOnPeriod) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EventCommitReport) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_EventUpdatePowerOnPeriod.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EventCommitReport.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -205,40 +205,40 @@ func (m *EventUpdatePowerOnPeriod) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *EventUpdatePowerOnPeriod) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EventUpdatePowerOnPeriod.Merge(m, src)
+func (m *EventCommitReport) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventCommitReport.Merge(m, src)
 }
-func (m *EventUpdatePowerOnPeriod) XXX_Size() int {
+func (m *EventCommitReport) XXX_Size() int {
 	return m.Size()
 }
-func (m *EventUpdatePowerOnPeriod) XXX_DiscardUnknown() {
-	xxx_messageInfo_EventUpdatePowerOnPeriod.DiscardUnknown(m)
+func (m *EventCommitReport) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventCommitReport.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_EventUpdatePowerOnPeriod proto.InternalMessageInfo
+var xxx_messageInfo_EventCommitReport proto.InternalMessageInfo
 
-func (m *EventUpdatePowerOnPeriod) GetNodeId() string {
+func (m *EventCommitReport) GetNodeId() string {
 	if m != nil {
 		return m.NodeId
 	}
 	return ""
 }
 
-func (m *EventUpdatePowerOnPeriod) GetOldPowerOnPeriod() string {
+func (m *EventCommitReport) GetOldPowerOnPeriod() string {
 	if m != nil {
 		return m.OldPowerOnPeriod
 	}
 	return ""
 }
 
-func (m *EventUpdatePowerOnPeriod) GetNewPowerOnPeriod() string {
+func (m *EventCommitReport) GetNewPowerOnPeriod() string {
 	if m != nil {
 		return m.NewPowerOnPeriod
 	}
 	return ""
 }
 
-func (m *EventUpdatePowerOnPeriod) GetSender() string {
+func (m *EventCommitReport) GetSender() string {
 	if m != nil {
 		return m.Sender
 	}
@@ -246,44 +246,44 @@ func (m *EventUpdatePowerOnPeriod) GetSender() string {
 }
 
 func init() {
-	proto.RegisterType((*EventMint)(nil), "tabi.captain_node.v1.EventMint")
-	proto.RegisterType((*EventReceiveExperience)(nil), "tabi.captain_node.v1.EventReceiveExperience")
-	proto.RegisterType((*EventUpdatePowerOnPeriod)(nil), "tabi.captain_node.v1.EventUpdatePowerOnPeriod")
+	proto.RegisterType((*EventCreateCaptainNode)(nil), "tabi.captain_node.v1.EventCreateCaptainNode")
+	proto.RegisterType((*EventWithdrawComputingPower)(nil), "tabi.captain_node.v1.EventWithdrawComputingPower")
+	proto.RegisterType((*EventCommitReport)(nil), "tabi.captain_node.v1.EventCommitReport")
 }
 
 func init() { proto.RegisterFile("tabi/captain-node/v1/events.proto", fileDescriptor_f359615061b6a883) }
 
 var fileDescriptor_f359615061b6a883 = []byte{
-	// 403 bytes of a gzipped FileDescriptorProto
+	// 416 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0xc1, 0x6e, 0xd3, 0x40,
-	0x10, 0x86, 0x63, 0xd3, 0x1a, 0x75, 0x50, 0x69, 0xe5, 0x56, 0xad, 0x2b, 0x24, 0x03, 0x39, 0x54,
-	0x5c, 0x6c, 0xab, 0xe2, 0xc6, 0x01, 0x09, 0x44, 0x85, 0x7a, 0x40, 0x44, 0x91, 0xb8, 0x70, 0x59,
-	0xd9, 0xde, 0x51, 0x58, 0xe1, 0xcc, 0x5a, 0xeb, 0x8d, 0x1d, 0xde, 0x82, 0x0b, 0x0f, 0xc1, 0x9b,
-	0x70, 0xcc, 0x91, 0x23, 0x4a, 0x5e, 0x04, 0xed, 0x3a, 0x24, 0x76, 0x42, 0x6f, 0x9e, 0x99, 0x6f,
-	0xfc, 0xff, 0xfb, 0x6b, 0xe0, 0xb9, 0x4e, 0x33, 0x91, 0xe4, 0x69, 0xa9, 0x53, 0x41, 0x11, 0x49,
-	0x8e, 0x49, 0x7d, 0x93, 0x60, 0x8d, 0xa4, 0xab, 0xb8, 0x54, 0x52, 0x4b, 0xff, 0xdc, 0x20, 0xf1,
-	0x1a, 0x61, 0x06, 0x89, 0xeb, 0x9b, 0xe1, 0x57, 0x38, 0xba, 0x35, 0xd4, 0x07, 0x41, 0xda, 0x7f,
-	0x0c, 0xae, 0xe0, 0x81, 0xf3, 0xcc, 0x79, 0x71, 0x34, 0x76, 0x05, 0xf7, 0x2f, 0xe1, 0xa1, 0xe1,
-	0x98, 0xe0, 0x81, 0x6b, 0x9b, 0x9e, 0x29, 0xef, 0xb8, 0xff, 0x14, 0x1e, 0x71, 0x51, 0x8b, 0x4a,
-	0x48, 0x32, 0xc3, 0x07, 0x76, 0x08, 0xff, 0x5a, 0x77, 0xdc, 0x3f, 0x87, 0x43, 0xd9, 0x10, 0xaa,
-	0xe0, 0xc0, 0x8e, 0xda, 0x62, 0xf8, 0xc3, 0x85, 0x0b, 0xab, 0x36, 0xc6, 0x1c, 0x45, 0x8d, 0xb7,
-	0xf3, 0x12, 0x95, 0x40, 0xca, 0xb1, 0x2b, 0xe5, 0xf4, 0xa4, 0xae, 0xe1, 0x44, 0x16, 0x9c, 0x75,
-	0xe5, 0x5a, 0x2f, 0xc7, 0xb2, 0xe0, 0xef, 0xb6, 0x8a, 0xd7, 0x70, 0x42, 0xd8, 0xb0, 0x7d, 0x5b,
-	0xc7, 0x84, 0x4d, 0x87, 0x7b, 0x05, 0x57, 0xaa, 0x55, 0x67, 0xb8, 0x91, 0x67, 0xe9, 0x54, 0xce,
-	0x48, 0xaf, 0xdd, 0x5e, 0xaa, 0x5d, 0x7b, 0x6f, 0xec, 0xd8, 0x7f, 0x0d, 0x4f, 0x14, 0x4e, 0x53,
-	0x41, 0x82, 0x26, 0xff, 0xd9, 0x3e, 0xb4, 0xdb, 0x57, 0x1b, 0x64, 0x6f, 0xff, 0x02, 0xbc, 0x0a,
-	0x89, 0xa3, 0x0a, 0xbc, 0xf6, 0x8d, 0x6d, 0x35, 0xfc, 0xe9, 0x40, 0x60, 0x73, 0xf9, 0x54, 0xf2,
-	0x54, 0xe3, 0x48, 0x36, 0xa8, 0x3e, 0xd2, 0x08, 0x95, 0x90, 0xfc, 0xfe, 0x64, 0x22, 0x38, 0x33,
-	0xc9, 0x94, 0x86, 0x66, 0x92, 0x58, 0x69, 0xf9, 0x75, 0x3a, 0xa7, 0xb2, 0xe0, 0xfd, 0xff, 0x44,
-	0x70, 0x66, 0x02, 0xda, 0xc5, 0xdb, 0x90, 0x4e, 0x09, 0x9b, 0x3e, 0xbe, 0xf5, 0x7a, 0xd0, 0xf5,
-	0xfa, 0xf6, 0xfd, 0xaf, 0x65, 0xe8, 0x2c, 0x96, 0xa1, 0xf3, 0x67, 0x19, 0x3a, 0xdf, 0x57, 0xe1,
-	0x60, 0xb1, 0x0a, 0x07, 0xbf, 0x57, 0xe1, 0xe0, 0x73, 0x34, 0x11, 0xfa, 0xcb, 0x2c, 0x8b, 0x73,
-	0x39, 0x4d, 0xcc, 0xad, 0x15, 0x69, 0x56, 0xd9, 0x8f, 0x64, 0xde, 0xbf, 0x4c, 0xfd, 0xad, 0xc4,
-	0x2a, 0xf3, 0xec, 0x59, 0xbe, 0xfc, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xd7, 0xb3, 0x83, 0xca, 0xbb,
-	0x02, 0x00, 0x00,
+	0x10, 0x86, 0x63, 0xd3, 0x1a, 0xb1, 0xa8, 0xb4, 0x98, 0xaa, 0x58, 0xaa, 0x30, 0x25, 0x87, 0x8a,
+	0x4b, 0x6c, 0x55, 0x3c, 0x01, 0x18, 0x54, 0xf5, 0x02, 0x55, 0x2f, 0x48, 0x5c, 0x56, 0x6b, 0xef,
+	0x28, 0x59, 0xc9, 0xde, 0xb1, 0xd6, 0x1b, 0x3b, 0xbc, 0x05, 0xcf, 0xc0, 0x99, 0x07, 0xe1, 0x98,
+	0x23, 0x47, 0x94, 0xbc, 0x08, 0xda, 0xdd, 0x84, 0xd8, 0xd0, 0xdc, 0x32, 0x33, 0xdf, 0xce, 0xff,
+	0xe7, 0xf7, 0x90, 0x57, 0x9a, 0xe5, 0x22, 0x2d, 0x58, 0xad, 0x99, 0x90, 0x13, 0x89, 0x1c, 0xd2,
+	0xf6, 0x2a, 0x85, 0x16, 0xa4, 0x6e, 0x92, 0x5a, 0xa1, 0xc6, 0xf0, 0xd4, 0x20, 0xc9, 0x06, 0xa1,
+	0x06, 0x49, 0xda, 0xab, 0xf1, 0x82, 0x9c, 0x7d, 0x30, 0x54, 0xa6, 0x80, 0x69, 0xc8, 0xdc, 0xf4,
+	0x23, 0x72, 0x08, 0x9f, 0x10, 0x5f, 0xf0, 0xc8, 0xbb, 0xf0, 0x5e, 0x3f, 0xba, 0xf3, 0x05, 0x0f,
+	0x9f, 0x93, 0x87, 0xe6, 0x11, 0x15, 0x3c, 0xf2, 0x6d, 0x33, 0x30, 0xe5, 0x0d, 0x0f, 0x5f, 0x92,
+	0xc7, 0x5c, 0xb4, 0xa2, 0x11, 0x28, 0xcd, 0xf0, 0x81, 0x1d, 0x92, 0x6d, 0xeb, 0x86, 0x87, 0xa7,
+	0xe4, 0x10, 0x3b, 0x09, 0x2a, 0x3a, 0xb0, 0x23, 0x57, 0x8c, 0x7f, 0xf8, 0xe4, 0xdc, 0x4a, 0x7f,
+	0x16, 0x7a, 0xc6, 0x15, 0xeb, 0x32, 0xac, 0xea, 0xb9, 0x16, 0x72, 0x7a, 0x8b, 0x1d, 0xa8, 0xbe,
+	0x9e, 0x37, 0xd0, 0xbb, 0x24, 0xc7, 0x58, 0x72, 0xda, 0xd7, 0x74, 0x86, 0x8e, 0xb0, 0xe4, 0xef,
+	0x77, 0xb2, 0x97, 0xe4, 0x58, 0x42, 0x47, 0xff, 0xf7, 0x76, 0x24, 0xa1, 0xeb, 0x71, 0x19, 0x89,
+	0x15, 0x14, 0x20, 0x5a, 0xa0, 0xc5, 0xd6, 0x02, 0xad, 0x8d, 0x07, 0xca, 0x2a, 0x9c, 0x4b, 0xbd,
+	0xf1, 0x7d, 0xbe, 0xa1, 0x86, 0x3e, 0xdf, 0x5a, 0x24, 0xbc, 0x26, 0x17, 0x0a, 0x2a, 0x26, 0xa4,
+	0x79, 0xbc, 0x67, 0xcd, 0xa1, 0x5d, 0xf3, 0xe2, 0x2f, 0x77, 0xef, 0xa2, 0x33, 0x12, 0x34, 0x20,
+	0x39, 0xa8, 0x28, 0x70, 0xff, 0xda, 0x55, 0xe3, 0xef, 0x1e, 0x79, 0xea, 0xbe, 0x14, 0x56, 0x95,
+	0xd0, 0x77, 0x50, 0xa3, 0xd2, 0xfb, 0x43, 0x9a, 0x90, 0x67, 0x26, 0x24, 0xa7, 0x8f, 0x92, 0xd6,
+	0xa0, 0x04, 0x6e, 0x83, 0x3a, 0xc1, 0x92, 0x5b, 0xcd, 0x4f, 0xf2, 0xd6, 0xf6, 0x0d, 0x6e, 0xb2,
+	0xfa, 0x17, 0x77, 0x79, 0x9d, 0x48, 0xe8, 0x86, 0xf8, 0xce, 0xe4, 0x41, 0xdf, 0xe4, 0xbb, 0xeb,
+	0x9f, 0xab, 0xd8, 0x5b, 0xae, 0x62, 0xef, 0xf7, 0x2a, 0xf6, 0xbe, 0xad, 0xe3, 0xd1, 0x72, 0x1d,
+	0x8f, 0x7e, 0xad, 0xe3, 0xd1, 0x97, 0xc9, 0x54, 0xe8, 0xd9, 0x3c, 0x4f, 0x0a, 0xac, 0x52, 0x73,
+	0x88, 0x25, 0xcb, 0x1b, 0xfb, 0x23, 0x5d, 0x0c, 0xcf, 0x56, 0x7f, 0xad, 0xa1, 0xc9, 0x03, 0x7b,
+	0xb3, 0x6f, 0xfe, 0x04, 0x00, 0x00, 0xff, 0xff, 0x83, 0xb0, 0x48, 0xcc, 0xd8, 0x02, 0x00, 0x00,
 }
 
-func (m *EventMint) Marshal() (dAtA []byte, err error) {
+func (m *EventCreateCaptainNode) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -293,12 +293,12 @@ func (m *EventMint) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EventMint) MarshalTo(dAtA []byte) (int, error) {
+func (m *EventCreateCaptainNode) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EventMint) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EventCreateCaptainNode) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -334,7 +334,7 @@ func (m *EventMint) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *EventReceiveExperience) Marshal() (dAtA []byte, err error) {
+func (m *EventWithdrawComputingPower) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -344,12 +344,12 @@ func (m *EventReceiveExperience) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EventReceiveExperience) MarshalTo(dAtA []byte) (int, error) {
+func (m *EventWithdrawComputingPower) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EventReceiveExperience) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EventWithdrawComputingPower) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -361,17 +361,17 @@ func (m *EventReceiveExperience) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 		i--
 		dAtA[i] = 0x32
 	}
-	if len(m.RemainingExperienceAmount) > 0 {
-		i -= len(m.RemainingExperienceAmount)
-		copy(dAtA[i:], m.RemainingExperienceAmount)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.RemainingExperienceAmount)))
+	if len(m.RemainingComputingPowerAmount) > 0 {
+		i -= len(m.RemainingComputingPowerAmount)
+		copy(dAtA[i:], m.RemainingComputingPowerAmount)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.RemainingComputingPowerAmount)))
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.ReceiveExperienceAmount) > 0 {
-		i -= len(m.ReceiveExperienceAmount)
-		copy(dAtA[i:], m.ReceiveExperienceAmount)
-		i = encodeVarintEvents(dAtA, i, uint64(len(m.ReceiveExperienceAmount)))
+	if len(m.ReceiveComputingPowerAmount) > 0 {
+		i -= len(m.ReceiveComputingPowerAmount)
+		copy(dAtA[i:], m.ReceiveComputingPowerAmount)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.ReceiveComputingPowerAmount)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -399,7 +399,7 @@ func (m *EventReceiveExperience) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *EventUpdatePowerOnPeriod) Marshal() (dAtA []byte, err error) {
+func (m *EventCommitReport) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -409,12 +409,12 @@ func (m *EventUpdatePowerOnPeriod) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EventUpdatePowerOnPeriod) MarshalTo(dAtA []byte) (int, error) {
+func (m *EventCommitReport) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EventUpdatePowerOnPeriod) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EventCommitReport) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -461,7 +461,7 @@ func encodeVarintEvents(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *EventMint) Size() (n int) {
+func (m *EventCreateCaptainNode) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -486,7 +486,7 @@ func (m *EventMint) Size() (n int) {
 	return n
 }
 
-func (m *EventReceiveExperience) Size() (n int) {
+func (m *EventWithdrawComputingPower) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -504,11 +504,11 @@ func (m *EventReceiveExperience) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
-	l = len(m.ReceiveExperienceAmount)
+	l = len(m.ReceiveComputingPowerAmount)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
-	l = len(m.RemainingExperienceAmount)
+	l = len(m.RemainingComputingPowerAmount)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
 	}
@@ -519,7 +519,7 @@ func (m *EventReceiveExperience) Size() (n int) {
 	return n
 }
 
-func (m *EventUpdatePowerOnPeriod) Size() (n int) {
+func (m *EventCommitReport) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -550,7 +550,7 @@ func sovEvents(x uint64) (n int) {
 func sozEvents(x uint64) (n int) {
 	return sovEvents(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *EventMint) Unmarshal(dAtA []byte) error {
+func (m *EventCreateCaptainNode) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -573,10 +573,10 @@ func (m *EventMint) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: EventMint: wiretype end group for non-group")
+			return fmt.Errorf("proto: EventCreateCaptainNode: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EventMint: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EventCreateCaptainNode: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -728,7 +728,7 @@ func (m *EventMint) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *EventReceiveExperience) Unmarshal(dAtA []byte) error {
+func (m *EventWithdrawComputingPower) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -751,10 +751,10 @@ func (m *EventReceiveExperience) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: EventReceiveExperience: wiretype end group for non-group")
+			return fmt.Errorf("proto: EventWithdrawComputingPower: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EventReceiveExperience: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EventWithdrawComputingPower: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -855,7 +855,7 @@ func (m *EventReceiveExperience) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReceiveExperienceAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ReceiveComputingPowerAmount", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -883,11 +883,11 @@ func (m *EventReceiveExperience) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ReceiveExperienceAmount = string(dAtA[iNdEx:postIndex])
+			m.ReceiveComputingPowerAmount = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RemainingExperienceAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field RemainingComputingPowerAmount", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -915,7 +915,7 @@ func (m *EventReceiveExperience) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.RemainingExperienceAmount = string(dAtA[iNdEx:postIndex])
+			m.RemainingComputingPowerAmount = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
@@ -970,7 +970,7 @@ func (m *EventReceiveExperience) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *EventUpdatePowerOnPeriod) Unmarshal(dAtA []byte) error {
+func (m *EventCommitReport) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -993,10 +993,10 @@ func (m *EventUpdatePowerOnPeriod) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: EventUpdatePowerOnPeriod: wiretype end group for non-group")
+			return fmt.Errorf("proto: EventCommitReport: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EventUpdatePowerOnPeriod: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EventCommitReport: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

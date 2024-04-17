@@ -22,10 +22,13 @@ func init() {
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateParams{},
-		&MsgMint{},
-		&MsgUpdateUserExperience{},
-		&MsgUpdatePowerOnPeriod{},
-		&MsgWithdrawExperience{},
+		&MsgCommitReport{},
+		&MsgRewardComputingPower{},
+		&MsgUpdateSaleLevel{},
+		&MsgAddCaller{},
+		&MsgRemoveCaller{},
+		&MsgWithdrawComputingPower{},
+		&MsgCreateCaptainNode{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

@@ -12,17 +12,12 @@ message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
   repeated Division divisions = 2;
   repeated Entry entries = 3;
-  
 }
 
 // Entry Defines all info owned by a person
 message Entry {
-  // owner is the owner address of the following node
-  string owner = 1;
-
-  // extractable_amount is the amount of experience that the owner can extract from the node
-  uint64 extractable_amount = 2;
-
+  // owner is the address of the owner
+  ExtractableComputingPower extractable_computing_power = 1;
   // nodes is the list of nodes that the owner has
   repeated Node nodes = 3;
 }

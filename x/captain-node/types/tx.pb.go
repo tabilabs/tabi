@@ -117,187 +117,26 @@ func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
-// MsgWithdrawExperience is the Msg/MsgWithdrawExperience request type.
-type MsgWithdrawExperience struct {
-	// user is the address that receives the experience.
-	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
-	// experience is the amount of experience to receive.
-	Experience uint64 `protobuf:"varint,2,opt,name=experience,proto3" json:"experience,omitempty"`
-	// node_id is the id of the captain node to receive experience.
-	NodeId string `protobuf:"bytes,3,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
-}
-
-func (m *MsgWithdrawExperience) Reset()         { *m = MsgWithdrawExperience{} }
-func (m *MsgWithdrawExperience) String() string { return proto.CompactTextString(m) }
-func (*MsgWithdrawExperience) ProtoMessage()    {}
-func (*MsgWithdrawExperience) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{2}
-}
-func (m *MsgWithdrawExperience) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgWithdrawExperience) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgWithdrawExperience.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgWithdrawExperience) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgWithdrawExperience.Merge(m, src)
-}
-func (m *MsgWithdrawExperience) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgWithdrawExperience) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgWithdrawExperience.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgWithdrawExperience proto.InternalMessageInfo
-
-// MsgWithdrawExperienceResponse defines the response structure for executing a
-// MsgWithdrawExperience message.
-type MsgWithdrawExperienceResponse struct {
-}
-
-func (m *MsgWithdrawExperienceResponse) Reset()         { *m = MsgWithdrawExperienceResponse{} }
-func (m *MsgWithdrawExperienceResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgWithdrawExperienceResponse) ProtoMessage()    {}
-func (*MsgWithdrawExperienceResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{3}
-}
-func (m *MsgWithdrawExperienceResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgWithdrawExperienceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgWithdrawExperienceResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgWithdrawExperienceResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgWithdrawExperienceResponse.Merge(m, src)
-}
-func (m *MsgWithdrawExperienceResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgWithdrawExperienceResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgWithdrawExperienceResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgWithdrawExperienceResponse proto.InternalMessageInfo
-
-// MsgMint is the Msg/Mint request type.
-type MsgMint struct {
-	// sender is the address of the owner of nft
-	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
-	// receiver is the receiver address of nft
-	Receiver   string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`
-	DivisionId string `protobuf:"bytes,3,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
-}
-
-func (m *MsgMint) Reset()         { *m = MsgMint{} }
-func (m *MsgMint) String() string { return proto.CompactTextString(m) }
-func (*MsgMint) ProtoMessage()    {}
-func (*MsgMint) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{4}
-}
-func (m *MsgMint) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgMint) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgMint.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgMint) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgMint.Merge(m, src)
-}
-func (m *MsgMint) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgMint) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgMint.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgMint proto.InternalMessageInfo
-
-// MsgMintResponse defines the response structure for executing a
-// MsgMint message.
-type MsgMintResponse struct {
-}
-
-func (m *MsgMintResponse) Reset()         { *m = MsgMintResponse{} }
-func (m *MsgMintResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgMintResponse) ProtoMessage()    {}
-func (*MsgMintResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{5}
-}
-func (m *MsgMintResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgMintResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgMintResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgMintResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgMintResponse.Merge(m, src)
-}
-func (m *MsgMintResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgMintResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgMintResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgMintResponse proto.InternalMessageInfo
-
-// MsgUpdatePowerOnPeriod is the Msg/UpdatePowerOnPeriod request type.
-type MsgUpdatePowerOnPeriod struct {
+// MsgCommitReport is the Msg/CommitReport request type.
+type MsgCommitReport struct {
 	// sender is the address of the owner of nft
 	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
 	// captain_node_power_on_periods is the captain node power on periods to update.
 	CaptainNodePowerOnPeriods []*CaptainNodePowerOnPeriod `protobuf:"bytes,2,rep,name=captain_node_power_on_periods,json=captainNodePowerOnPeriods,proto3" json:"captain_node_power_on_periods,omitempty"`
 }
 
-func (m *MsgUpdatePowerOnPeriod) Reset()         { *m = MsgUpdatePowerOnPeriod{} }
-func (m *MsgUpdatePowerOnPeriod) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdatePowerOnPeriod) ProtoMessage()    {}
-func (*MsgUpdatePowerOnPeriod) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{6}
+func (m *MsgCommitReport) Reset()         { *m = MsgCommitReport{} }
+func (m *MsgCommitReport) String() string { return proto.CompactTextString(m) }
+func (*MsgCommitReport) ProtoMessage()    {}
+func (*MsgCommitReport) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f8a53908bdb279a, []int{2}
 }
-func (m *MsgUpdatePowerOnPeriod) XXX_Unmarshal(b []byte) error {
+func (m *MsgCommitReport) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdatePowerOnPeriod) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCommitReport) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdatePowerOnPeriod.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCommitReport.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -307,17 +146,17 @@ func (m *MsgUpdatePowerOnPeriod) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdatePowerOnPeriod) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdatePowerOnPeriod.Merge(m, src)
+func (m *MsgCommitReport) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCommitReport.Merge(m, src)
 }
-func (m *MsgUpdatePowerOnPeriod) XXX_Size() int {
+func (m *MsgCommitReport) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdatePowerOnPeriod) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdatePowerOnPeriod.DiscardUnknown(m)
+func (m *MsgCommitReport) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCommitReport.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdatePowerOnPeriod proto.InternalMessageInfo
+var xxx_messageInfo_MsgCommitReport proto.InternalMessageInfo
 
 type CaptainNodePowerOnPeriod struct {
 	// power_on_period_rate is the period of time that the captain node is powered on.
@@ -330,7 +169,7 @@ func (m *CaptainNodePowerOnPeriod) Reset()         { *m = CaptainNodePowerOnPeri
 func (m *CaptainNodePowerOnPeriod) String() string { return proto.CompactTextString(m) }
 func (*CaptainNodePowerOnPeriod) ProtoMessage()    {}
 func (*CaptainNodePowerOnPeriod) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{7}
+	return fileDescriptor_3f8a53908bdb279a, []int{3}
 }
 func (m *CaptainNodePowerOnPeriod) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -359,23 +198,23 @@ func (m *CaptainNodePowerOnPeriod) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CaptainNodePowerOnPeriod proto.InternalMessageInfo
 
-// MsgUpdatePowerOnPeriodResponse defines the response structure for executing a
-// MsgUpdatePowerOnPeriod message.
-type MsgUpdatePowerOnPeriodResponse struct {
+// MsgCommitReportResponse defines the response structure for executing a
+// MsgCommitReport message.
+type MsgCommitReportResponse struct {
 }
 
-func (m *MsgUpdatePowerOnPeriodResponse) Reset()         { *m = MsgUpdatePowerOnPeriodResponse{} }
-func (m *MsgUpdatePowerOnPeriodResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdatePowerOnPeriodResponse) ProtoMessage()    {}
-func (*MsgUpdatePowerOnPeriodResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{8}
+func (m *MsgCommitReportResponse) Reset()         { *m = MsgCommitReportResponse{} }
+func (m *MsgCommitReportResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCommitReportResponse) ProtoMessage()    {}
+func (*MsgCommitReportResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f8a53908bdb279a, []int{4}
 }
-func (m *MsgUpdatePowerOnPeriodResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgCommitReportResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdatePowerOnPeriodResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCommitReportResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdatePowerOnPeriodResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCommitReportResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -385,19 +224,177 @@ func (m *MsgUpdatePowerOnPeriodResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdatePowerOnPeriodResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdatePowerOnPeriodResponse.Merge(m, src)
+func (m *MsgCommitReportResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCommitReportResponse.Merge(m, src)
 }
-func (m *MsgUpdatePowerOnPeriodResponse) XXX_Size() int {
+func (m *MsgCommitReportResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdatePowerOnPeriodResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdatePowerOnPeriodResponse.DiscardUnknown(m)
+func (m *MsgCommitReportResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCommitReportResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdatePowerOnPeriodResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgCommitReportResponse proto.InternalMessageInfo
 
-// MsgAddCaller defines a white list proposal to register some
+//MsgRewardComputingPower is the Msg/RewardComputingPower request type.
+type MsgRewardComputingPower struct {
+	// sender is the address of the owner of nft
+	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
+	// extractable_computing_powers is the extractable computing powers to reward.
+	ExtractableComputingPowers []*ExtractableComputingPower `protobuf:"bytes,2,rep,name=extractable_computing_powers,json=extractableComputingPowers,proto3" json:"extractable_computing_powers,omitempty"`
+}
+
+func (m *MsgRewardComputingPower) Reset()         { *m = MsgRewardComputingPower{} }
+func (m *MsgRewardComputingPower) String() string { return proto.CompactTextString(m) }
+func (*MsgRewardComputingPower) ProtoMessage()    {}
+func (*MsgRewardComputingPower) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f8a53908bdb279a, []int{5}
+}
+func (m *MsgRewardComputingPower) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRewardComputingPower) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRewardComputingPower.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRewardComputingPower) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRewardComputingPower.Merge(m, src)
+}
+func (m *MsgRewardComputingPower) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRewardComputingPower) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRewardComputingPower.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRewardComputingPower proto.InternalMessageInfo
+
+// MsgUpdateUserExperienceResponse defines the response structure for executing a
+// MsgUpdateUserExperience message.
+type MsgRewardComputingPowerResponse struct {
+}
+
+func (m *MsgRewardComputingPowerResponse) Reset()         { *m = MsgRewardComputingPowerResponse{} }
+func (m *MsgRewardComputingPowerResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRewardComputingPowerResponse) ProtoMessage()    {}
+func (*MsgRewardComputingPowerResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f8a53908bdb279a, []int{6}
+}
+func (m *MsgRewardComputingPowerResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRewardComputingPowerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRewardComputingPowerResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRewardComputingPowerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRewardComputingPowerResponse.Merge(m, src)
+}
+func (m *MsgRewardComputingPowerResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRewardComputingPowerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRewardComputingPowerResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRewardComputingPowerResponse proto.InternalMessageInfo
+
+// MsgUpdateSaleLevel is the Msg/UpdateSaleLevel request type.
+type MsgUpdateSaleLevel struct {
+	// sender is the address of the owner of nft
+	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
+	// sale_level is the sale levels to update.
+	SaleLevel uint64 `protobuf:"varint,2,opt,name=sale_level,json=saleLevel,proto3" json:"sale_level,omitempty"`
+}
+
+func (m *MsgUpdateSaleLevel) Reset()         { *m = MsgUpdateSaleLevel{} }
+func (m *MsgUpdateSaleLevel) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateSaleLevel) ProtoMessage()    {}
+func (*MsgUpdateSaleLevel) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f8a53908bdb279a, []int{7}
+}
+func (m *MsgUpdateSaleLevel) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateSaleLevel) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateSaleLevel.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateSaleLevel) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateSaleLevel.Merge(m, src)
+}
+func (m *MsgUpdateSaleLevel) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateSaleLevel) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateSaleLevel.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateSaleLevel proto.InternalMessageInfo
+
+// MsgUpdateSaleLevelResponse defines the response structure for executing a
+// MsgUpdateSaleLevel message.
+type MsgUpdateSaleLevelResponse struct {
+}
+
+func (m *MsgUpdateSaleLevelResponse) Reset()         { *m = MsgUpdateSaleLevelResponse{} }
+func (m *MsgUpdateSaleLevelResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateSaleLevelResponse) ProtoMessage()    {}
+func (*MsgUpdateSaleLevelResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f8a53908bdb279a, []int{8}
+}
+func (m *MsgUpdateSaleLevelResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateSaleLevelResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateSaleLevelResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateSaleLevelResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateSaleLevelResponse.Merge(m, src)
+}
+func (m *MsgUpdateSaleLevelResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateSaleLevelResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateSaleLevelResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateSaleLevelResponse proto.InternalMessageInfo
+
+// MsgAddCaller defines a allow list proposal to register some
 // callers for mint node.
 type MsgAddCaller struct {
 	// caller address list
@@ -477,7 +474,7 @@ func (m *MsgAddCallerResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgAddCallerResponse proto.InternalMessageInfo
 
-// MsgRemoveCaller defines a white list proposal to remove some
+// MsgRemoveCaller defines a allow list proposal to remove some
 // callers for mint node.
 type MsgRemoveCaller struct {
 	// caller address list
@@ -557,26 +554,28 @@ func (m *MsgRemoveCallerResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgRemoveCallerResponse proto.InternalMessageInfo
 
-//MsgUpdateUserExperience is the Msg/UpdateUserExperience request type.
-type MsgUpdateUserExperience struct {
-	// sender is the address of the owner of nft
+// MsgWithdrawComputingPower is the Msg/MsgWithdrawComputingPower request type.
+type MsgWithdrawComputingPower struct {
+	// user is the address that receives the experience.
 	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
-	// user_experience is the user experience to update.
-	UserExperiences []*UserExperience `protobuf:"bytes,2,rep,name=user_experiences,json=userExperiences,proto3" json:"user_experiences,omitempty"`
+	// computing_power_amount is the node to receive computing power amount.
+	ComputingPowerAmount uint64 `protobuf:"varint,2,opt,name=computing_power_amount,json=computingPowerAmount,proto3" json:"computing_power_amount,omitempty"`
+	// node_id is the id of the captain node to receive experience.
+	NodeId string `protobuf:"bytes,3,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 }
 
-func (m *MsgUpdateUserExperience) Reset()         { *m = MsgUpdateUserExperience{} }
-func (m *MsgUpdateUserExperience) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateUserExperience) ProtoMessage()    {}
-func (*MsgUpdateUserExperience) Descriptor() ([]byte, []int) {
+func (m *MsgWithdrawComputingPower) Reset()         { *m = MsgWithdrawComputingPower{} }
+func (m *MsgWithdrawComputingPower) String() string { return proto.CompactTextString(m) }
+func (*MsgWithdrawComputingPower) ProtoMessage()    {}
+func (*MsgWithdrawComputingPower) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3f8a53908bdb279a, []int{13}
 }
-func (m *MsgUpdateUserExperience) XXX_Unmarshal(b []byte) error {
+func (m *MsgWithdrawComputingPower) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateUserExperience) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgWithdrawComputingPower) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateUserExperience.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgWithdrawComputingPower.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -586,37 +585,35 @@ func (m *MsgUpdateUserExperience) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateUserExperience) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateUserExperience.Merge(m, src)
+func (m *MsgWithdrawComputingPower) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgWithdrawComputingPower.Merge(m, src)
 }
-func (m *MsgUpdateUserExperience) XXX_Size() int {
+func (m *MsgWithdrawComputingPower) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateUserExperience) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateUserExperience.DiscardUnknown(m)
+func (m *MsgWithdrawComputingPower) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgWithdrawComputingPower.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateUserExperience proto.InternalMessageInfo
+var xxx_messageInfo_MsgWithdrawComputingPower proto.InternalMessageInfo
 
-type UserExperience struct {
-	// experience is the amount of experience to update.
-	Experience uint64 `protobuf:"varint,1,opt,name=experience,proto3" json:"experience,omitempty"`
-	// receiver is the receiver address of node
-	Receiver string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`
+// MsgWithdrawComputingPowerResponse defines the response structure for executing a
+// MsgWithdrawComputingPower message.
+type MsgWithdrawComputingPowerResponse struct {
 }
 
-func (m *UserExperience) Reset()         { *m = UserExperience{} }
-func (m *UserExperience) String() string { return proto.CompactTextString(m) }
-func (*UserExperience) ProtoMessage()    {}
-func (*UserExperience) Descriptor() ([]byte, []int) {
+func (m *MsgWithdrawComputingPowerResponse) Reset()         { *m = MsgWithdrawComputingPowerResponse{} }
+func (m *MsgWithdrawComputingPowerResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgWithdrawComputingPowerResponse) ProtoMessage()    {}
+func (*MsgWithdrawComputingPowerResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3f8a53908bdb279a, []int{14}
 }
-func (m *UserExperience) XXX_Unmarshal(b []byte) error {
+func (m *MsgWithdrawComputingPowerResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *UserExperience) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgWithdrawComputingPowerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_UserExperience.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgWithdrawComputingPowerResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -626,76 +623,77 @@ func (m *UserExperience) XXX_Marshal(b []byte, deterministic bool) ([]byte, erro
 		return b[:n], nil
 	}
 }
-func (m *UserExperience) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_UserExperience.Merge(m, src)
+func (m *MsgWithdrawComputingPowerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgWithdrawComputingPowerResponse.Merge(m, src)
 }
-func (m *UserExperience) XXX_Size() int {
+func (m *MsgWithdrawComputingPowerResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *UserExperience) XXX_DiscardUnknown() {
-	xxx_messageInfo_UserExperience.DiscardUnknown(m)
+func (m *MsgWithdrawComputingPowerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgWithdrawComputingPowerResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_UserExperience proto.InternalMessageInfo
+var xxx_messageInfo_MsgWithdrawComputingPowerResponse proto.InternalMessageInfo
 
-// MsgUpdateUserExperienceResponse defines the response structure for executing a
-// MsgUpdateUserExperience message.
-type MsgUpdateUserExperienceResponse struct {
-}
-
-func (m *MsgUpdateUserExperienceResponse) Reset()         { *m = MsgUpdateUserExperienceResponse{} }
-func (m *MsgUpdateUserExperienceResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateUserExperienceResponse) ProtoMessage()    {}
-func (*MsgUpdateUserExperienceResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{15}
-}
-func (m *MsgUpdateUserExperienceResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgUpdateUserExperienceResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgUpdateUserExperienceResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgUpdateUserExperienceResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateUserExperienceResponse.Merge(m, src)
-}
-func (m *MsgUpdateUserExperienceResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgUpdateUserExperienceResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateUserExperienceResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgUpdateUserExperienceResponse proto.InternalMessageInfo
-
-// MsgUpdateSaleLevel is the Msg/UpdateSaleLevel request type.
-type MsgUpdateSaleLevel struct {
+// MsgCreateCaptainNode is the Msg/CreateCaptainNode request type.
+type MsgCreateCaptainNode struct {
 	// sender is the address of the owner of nft
 	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
-	// sale_level is the sale levels to update.
-	SaleLevel uint64 `protobuf:"varint,2,opt,name=sale_level,json=saleLevel,proto3" json:"sale_level,omitempty"`
+	// receiver is the receiver address of nft
+	Receiver   string `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver,omitempty"`
+	DivisionId string `protobuf:"bytes,3,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
 }
 
-func (m *MsgUpdateSaleLevel) Reset()         { *m = MsgUpdateSaleLevel{} }
-func (m *MsgUpdateSaleLevel) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateSaleLevel) ProtoMessage()    {}
-func (*MsgUpdateSaleLevel) Descriptor() ([]byte, []int) {
+func (m *MsgCreateCaptainNode) Reset()         { *m = MsgCreateCaptainNode{} }
+func (m *MsgCreateCaptainNode) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateCaptainNode) ProtoMessage()    {}
+func (*MsgCreateCaptainNode) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f8a53908bdb279a, []int{15}
+}
+func (m *MsgCreateCaptainNode) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreateCaptainNode) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreateCaptainNode.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreateCaptainNode) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateCaptainNode.Merge(m, src)
+}
+func (m *MsgCreateCaptainNode) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreateCaptainNode) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateCaptainNode.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreateCaptainNode proto.InternalMessageInfo
+
+// MsgMintResponse defines the response structure for executing a
+// MsgMint message.
+type MsgCreateCaptainNodeResponse struct {
+}
+
+func (m *MsgCreateCaptainNodeResponse) Reset()         { *m = MsgCreateCaptainNodeResponse{} }
+func (m *MsgCreateCaptainNodeResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreateCaptainNodeResponse) ProtoMessage()    {}
+func (*MsgCreateCaptainNodeResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3f8a53908bdb279a, []int{16}
 }
-func (m *MsgUpdateSaleLevel) XXX_Unmarshal(b []byte) error {
+func (m *MsgCreateCaptainNodeResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateSaleLevel) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgCreateCaptainNodeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateSaleLevel.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgCreateCaptainNodeResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -705,135 +703,96 @@ func (m *MsgUpdateSaleLevel) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateSaleLevel) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateSaleLevel.Merge(m, src)
+func (m *MsgCreateCaptainNodeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreateCaptainNodeResponse.Merge(m, src)
 }
-func (m *MsgUpdateSaleLevel) XXX_Size() int {
+func (m *MsgCreateCaptainNodeResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateSaleLevel) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateSaleLevel.DiscardUnknown(m)
+func (m *MsgCreateCaptainNodeResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreateCaptainNodeResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateSaleLevel proto.InternalMessageInfo
-
-// MsgUpdateSaleLevelResponse defines the response structure for executing a
-// MsgUpdateSaleLevel message.
-type MsgUpdateSaleLevelResponse struct {
-}
-
-func (m *MsgUpdateSaleLevelResponse) Reset()         { *m = MsgUpdateSaleLevelResponse{} }
-func (m *MsgUpdateSaleLevelResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateSaleLevelResponse) ProtoMessage()    {}
-func (*MsgUpdateSaleLevelResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f8a53908bdb279a, []int{17}
-}
-func (m *MsgUpdateSaleLevelResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgUpdateSaleLevelResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgUpdateSaleLevelResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgUpdateSaleLevelResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateSaleLevelResponse.Merge(m, src)
-}
-func (m *MsgUpdateSaleLevelResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgUpdateSaleLevelResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateSaleLevelResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgUpdateSaleLevelResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgCreateCaptainNodeResponse proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*MsgUpdateParams)(nil), "tabi.captain_node.v1.MsgUpdateParams")
 	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "tabi.captain_node.v1.MsgUpdateParamsResponse")
-	proto.RegisterType((*MsgWithdrawExperience)(nil), "tabi.captain_node.v1.MsgWithdrawExperience")
-	proto.RegisterType((*MsgWithdrawExperienceResponse)(nil), "tabi.captain_node.v1.MsgWithdrawExperienceResponse")
-	proto.RegisterType((*MsgMint)(nil), "tabi.captain_node.v1.MsgMint")
-	proto.RegisterType((*MsgMintResponse)(nil), "tabi.captain_node.v1.MsgMintResponse")
-	proto.RegisterType((*MsgUpdatePowerOnPeriod)(nil), "tabi.captain_node.v1.MsgUpdatePowerOnPeriod")
+	proto.RegisterType((*MsgCommitReport)(nil), "tabi.captain_node.v1.MsgCommitReport")
 	proto.RegisterType((*CaptainNodePowerOnPeriod)(nil), "tabi.captain_node.v1.CaptainNodePowerOnPeriod")
-	proto.RegisterType((*MsgUpdatePowerOnPeriodResponse)(nil), "tabi.captain_node.v1.MsgUpdatePowerOnPeriodResponse")
+	proto.RegisterType((*MsgCommitReportResponse)(nil), "tabi.captain_node.v1.MsgCommitReportResponse")
+	proto.RegisterType((*MsgRewardComputingPower)(nil), "tabi.captain_node.v1.MsgRewardComputingPower")
+	proto.RegisterType((*MsgRewardComputingPowerResponse)(nil), "tabi.captain_node.v1.MsgRewardComputingPowerResponse")
+	proto.RegisterType((*MsgUpdateSaleLevel)(nil), "tabi.captain_node.v1.MsgUpdateSaleLevel")
+	proto.RegisterType((*MsgUpdateSaleLevelResponse)(nil), "tabi.captain_node.v1.MsgUpdateSaleLevelResponse")
 	proto.RegisterType((*MsgAddCaller)(nil), "tabi.captain_node.v1.MsgAddCaller")
 	proto.RegisterType((*MsgAddCallerResponse)(nil), "tabi.captain_node.v1.MsgAddCallerResponse")
 	proto.RegisterType((*MsgRemoveCaller)(nil), "tabi.captain_node.v1.MsgRemoveCaller")
 	proto.RegisterType((*MsgRemoveCallerResponse)(nil), "tabi.captain_node.v1.MsgRemoveCallerResponse")
-	proto.RegisterType((*MsgUpdateUserExperience)(nil), "tabi.captain_node.v1.MsgUpdateUserExperience")
-	proto.RegisterType((*UserExperience)(nil), "tabi.captain_node.v1.UserExperience")
-	proto.RegisterType((*MsgUpdateUserExperienceResponse)(nil), "tabi.captain_node.v1.MsgUpdateUserExperienceResponse")
-	proto.RegisterType((*MsgUpdateSaleLevel)(nil), "tabi.captain_node.v1.MsgUpdateSaleLevel")
-	proto.RegisterType((*MsgUpdateSaleLevelResponse)(nil), "tabi.captain_node.v1.MsgUpdateSaleLevelResponse")
+	proto.RegisterType((*MsgWithdrawComputingPower)(nil), "tabi.captain_node.v1.MsgWithdrawComputingPower")
+	proto.RegisterType((*MsgWithdrawComputingPowerResponse)(nil), "tabi.captain_node.v1.MsgWithdrawComputingPowerResponse")
+	proto.RegisterType((*MsgCreateCaptainNode)(nil), "tabi.captain_node.v1.MsgCreateCaptainNode")
+	proto.RegisterType((*MsgCreateCaptainNodeResponse)(nil), "tabi.captain_node.v1.MsgCreateCaptainNodeResponse")
 }
 
 func init() { proto.RegisterFile("tabi/captain-node/v1/tx.proto", fileDescriptor_3f8a53908bdb279a) }
 
 var fileDescriptor_3f8a53908bdb279a = []byte{
-	// 860 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x4f, 0x4f, 0x1b, 0x47,
-	0x14, 0xf7, 0x62, 0x64, 0xea, 0x67, 0x04, 0x65, 0xeb, 0x82, 0x59, 0xe1, 0xb5, 0x6b, 0x95, 0xd6,
-	0xa2, 0xf5, 0x9a, 0x7f, 0xed, 0x81, 0x1b, 0xd0, 0x1e, 0xaa, 0xe2, 0x82, 0x16, 0xa1, 0x4a, 0xed,
-	0x61, 0xb5, 0xde, 0x99, 0x2e, 0xdb, 0xda, 0x3b, 0xab, 0x99, 0xb5, 0x01, 0xa9, 0xa7, 0x7c, 0x81,
-	0xe4, 0x90, 0x9c, 0x73, 0xce, 0x2d, 0x87, 0x7c, 0x08, 0x72, 0x43, 0x39, 0x45, 0x51, 0x84, 0x12,
-	0x38, 0xe4, 0x6b, 0x44, 0xfb, 0xc7, 0xe3, 0x5d, 0xb3, 0xc6, 0xe0, 0x28, 0xa7, 0xdd, 0x99, 0xf7,
-	0x7b, 0xbf, 0xf7, 0x7b, 0x33, 0x6f, 0xde, 0x0c, 0x14, 0x5d, 0xbd, 0x69, 0xd5, 0x0d, 0xdd, 0x71,
-	0x75, 0xcb, 0xae, 0xd9, 0x04, 0xe1, 0x7a, 0x77, 0xad, 0xee, 0x9e, 0x2a, 0x0e, 0x25, 0x2e, 0x11,
-	0xf3, 0x9e, 0x59, 0x09, 0xcd, 0x9a, 0x67, 0x56, 0xba, 0x6b, 0xd2, 0xf7, 0x89, 0x4e, 0xd1, 0x71,
-	0xe0, 0x2e, 0x2d, 0x18, 0x84, 0xb5, 0x09, 0xab, 0xb7, 0x99, 0xe9, 0x21, 0xda, 0xcc, 0x0c, 0x0d,
-	0x8b, 0x81, 0x41, 0xf3, 0x47, 0xf5, 0x60, 0x10, 0x9a, 0xf2, 0x26, 0x31, 0x49, 0x30, 0xef, 0xfd,
-	0x05, 0xb3, 0x95, 0x27, 0x02, 0xcc, 0x36, 0x98, 0x79, 0xe4, 0x20, 0xdd, 0xc5, 0x07, 0x3a, 0xd5,
-	0xdb, 0x4c, 0xfc, 0x19, 0xb2, 0x7a, 0xc7, 0x3d, 0x26, 0xd4, 0x72, 0xcf, 0x0a, 0x42, 0x59, 0xa8,
-	0x66, 0x77, 0x0a, 0xaf, 0x5e, 0xd4, 0xf2, 0x21, 0xdd, 0x36, 0x42, 0x14, 0x33, 0x76, 0xe8, 0x52,
-	0xcb, 0x36, 0xd5, 0x3e, 0x54, 0xdc, 0x82, 0x8c, 0xe3, 0x33, 0x14, 0x26, 0xca, 0x42, 0x35, 0xb7,
-	0xbe, 0xa4, 0x24, 0x65, 0xa9, 0x04, 0x51, 0x76, 0x26, 0xcf, 0x2f, 0x4b, 0x29, 0x35, 0xf4, 0xd8,
-	0x9a, 0x79, 0xf0, 0xe1, 0xf9, 0x4a, 0x9f, 0xab, 0xb2, 0x08, 0x0b, 0x03, 0xb2, 0x54, 0xcc, 0x1c,
-	0x62, 0x33, 0x5c, 0x79, 0x28, 0xc0, 0xd7, 0x0d, 0x66, 0xfe, 0x69, 0xb9, 0xc7, 0x88, 0xea, 0x27,
-	0xbf, 0x9e, 0x3a, 0x98, 0x5a, 0xd8, 0x36, 0xb0, 0xb8, 0x0a, 0x19, 0x86, 0x6d, 0x84, 0xe9, 0x48,
-	0xd5, 0x21, 0x4e, 0x94, 0x01, 0x30, 0xf7, 0xf7, 0x65, 0x4f, 0xaa, 0x91, 0x19, 0x71, 0x01, 0xa6,
-	0x3c, 0xd9, 0x9a, 0x85, 0x0a, 0x69, 0x8f, 0x52, 0xcd, 0x78, 0xc3, 0xdf, 0xd0, 0x56, 0xce, 0xd3,
-	0x1b, 0xb2, 0x54, 0x4a, 0x50, 0x4c, 0x14, 0xc4, 0x25, 0x3f, 0x15, 0x60, 0xaa, 0xc1, 0xcc, 0x86,
-	0x65, 0xbb, 0x63, 0x88, 0xdc, 0x84, 0x2f, 0x28, 0x36, 0xb0, 0xd5, 0xc5, 0xd4, 0x97, 0x78, 0x9b,
-	0x0f, 0x47, 0x8a, 0x25, 0xc8, 0x21, 0xab, 0x6b, 0x31, 0x8b, 0xd8, 0x7d, 0xf9, 0xd0, 0x9b, 0x1a,
-	0x4c, 0x61, 0xce, 0x2f, 0x03, 0x4f, 0x20, 0x17, 0xfd, 0x52, 0x80, 0xf9, 0xfe, 0x1e, 0x90, 0x13,
-	0x4c, 0xf7, 0xed, 0x03, 0x4c, 0x2d, 0x82, 0xc6, 0xc8, 0xc1, 0x81, 0x62, 0xb4, 0x0e, 0x34, 0xc7,
-	0xe3, 0xd3, 0x88, 0xad, 0x39, 0x3e, 0xa3, 0x57, 0x32, 0xe9, 0x6a, 0x6e, 0x5d, 0x49, 0x2e, 0x99,
-	0xdd, 0x60, 0xfc, 0x07, 0x41, 0x71, 0x21, 0xea, 0xa2, 0x31, 0xc4, 0xc2, 0xe2, 0xe9, 0x3d, 0x16,
-	0xa0, 0x30, 0x8c, 0x44, 0xd4, 0x20, 0x3f, 0x20, 0x47, 0xa3, 0xba, 0x8b, 0xc3, 0xdc, 0x14, 0xaf,
-	0x4e, 0xdf, 0x5c, 0x96, 0xbe, 0x33, 0x2d, 0xf7, 0xb8, 0xd3, 0x54, 0x0c, 0xd2, 0x0e, 0x0f, 0x56,
-	0xf8, 0xa9, 0x31, 0xf4, 0x5f, 0xdd, 0x3d, 0x73, 0x30, 0x53, 0x7e, 0xc1, 0x86, 0x3a, 0xe7, 0xc4,
-	0x14, 0xea, 0x6e, 0xac, 0x8a, 0x26, 0xa2, 0x55, 0x54, 0x29, 0x83, 0x9c, 0xbc, 0xc2, 0x7c, 0x13,
-	0x4c, 0x98, 0x6e, 0x30, 0x73, 0x1b, 0xa1, 0x5d, 0xbd, 0xd5, 0xc2, 0x54, 0x2c, 0xc0, 0x94, 0xe1,
-	0xff, 0xb1, 0x82, 0x50, 0x4e, 0x57, 0xb3, 0x6a, 0x6f, 0x18, 0xd9, 0x93, 0x89, 0xbb, 0xed, 0x49,
-	0x7c, 0x85, 0xe6, 0x21, 0x1f, 0x0d, 0xc4, 0x05, 0xfc, 0xeb, 0x17, 0x86, 0x8a, 0xdb, 0xa4, 0x8b,
-	0x3f, 0xb7, 0x86, 0xe0, 0xd0, 0x47, 0x63, 0x71, 0x19, 0xcf, 0x84, 0x48, 0x43, 0x38, 0x62, 0x98,
-	0x7e, 0xd2, 0xb1, 0xdf, 0x87, 0x2f, 0x3b, 0x0c, 0x53, 0xad, 0x7f, 0xd2, 0x7b, 0x05, 0xf8, 0x6d,
-	0x72, 0x01, 0xc6, 0x23, 0xaa, 0xb3, 0x9d, 0xd8, 0x78, 0xa0, 0xd8, 0xfe, 0x81, 0x99, 0x01, 0x85,
-	0xf1, 0x36, 0x23, 0xdc, 0x68, 0x33, 0x63, 0x9d, 0xf0, 0xca, 0x37, 0x50, 0x1a, 0xb2, 0x24, 0x7c,
-	0xd9, 0x28, 0x88, 0x1c, 0x72, 0xa8, 0xb7, 0xf0, 0x1e, 0xee, 0xe2, 0xd6, 0x18, 0x0b, 0x56, 0x04,
-	0x60, 0x7a, 0x0b, 0x6b, 0x2d, 0xcf, 0x3f, 0xec, 0x93, 0x59, 0xd6, 0x23, 0x8c, 0xa7, 0xbf, 0x04,
-	0xd2, 0xcd, 0x98, 0x3d, 0x45, 0xeb, 0x6f, 0x33, 0x90, 0x6e, 0x30, 0x53, 0x44, 0x30, 0x1d, 0xbb,
-	0x74, 0x96, 0x93, 0x17, 0x7e, 0xe0, 0x12, 0x90, 0x6a, 0x77, 0x82, 0xf5, 0xa2, 0x89, 0x67, 0xf0,
-	0x55, 0x52, 0xff, 0xfa, 0x71, 0x14, 0x4b, 0x14, 0x2d, 0x6d, 0xde, 0x07, 0xcd, 0x43, 0xff, 0x0f,
-	0xf9, 0xc4, 0x6a, 0x1d, 0x95, 0x41, 0x1c, 0x2e, 0xfd, 0x74, 0x2f, 0x38, 0x8f, 0xde, 0x86, 0xd9,
-	0xc1, 0x5d, 0xaf, 0x8e, 0x60, 0xe2, 0x48, 0x69, 0xf5, 0xae, 0x48, 0x1e, 0xee, 0x6f, 0xc8, 0xf6,
-	0x7b, 0x54, 0x65, 0xa8, 0x3b, 0xc7, 0x48, 0x2b, 0xa3, 0x31, 0x9c, 0x1c, 0xc1, 0x74, 0xac, 0xff,
-	0x0c, 0x2f, 0x95, 0x28, 0xec, 0x96, 0x52, 0x49, 0xea, 0x30, 0x62, 0x17, 0xc4, 0x84, 0x27, 0xc5,
-	0x0f, 0x43, 0x49, 0x6e, 0x82, 0xa5, 0x8d, 0x7b, 0x80, 0x79, 0xdc, 0x3d, 0x98, 0xf4, 0xdf, 0x05,
-	0xc5, 0xa1, 0xce, 0x9e, 0x59, 0x5a, 0xbe, 0xd5, 0xdc, 0x63, 0xdb, 0xf9, 0xfd, 0xfc, 0xbd, 0x9c,
-	0x3a, 0xbf, 0x92, 0x85, 0x8b, 0x2b, 0x59, 0x78, 0x77, 0x25, 0x0b, 0x8f, 0xae, 0xe5, 0xd4, 0xc5,
-	0xb5, 0x9c, 0x7a, 0x7d, 0x2d, 0xa7, 0xfe, 0xaa, 0x45, 0xee, 0x30, 0x8f, 0xae, 0xa5, 0x37, 0x99,
-	0xff, 0x53, 0x3f, 0x8d, 0x3f, 0x3b, 0xfd, 0xeb, 0xac, 0x99, 0xf1, 0xdf, 0x88, 0x1b, 0x1f, 0x03,
-	0x00, 0x00, 0xff, 0xff, 0x9d, 0xc8, 0xf1, 0x29, 0xcd, 0x0a, 0x00, 0x00,
+	// 864 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x4f, 0x6f, 0xe3, 0x44,
+	0x14, 0x8f, 0x37, 0xab, 0x2c, 0x79, 0x59, 0xb1, 0x5a, 0x2b, 0x6a, 0x13, 0x2b, 0x75, 0xba, 0x41,
+	0x0b, 0xd1, 0x4a, 0xb1, 0x77, 0xc3, 0x3f, 0xa9, 0xb7, 0x36, 0x70, 0x40, 0x10, 0xa8, 0xbc, 0x42,
+	0x48, 0x70, 0xb0, 0x26, 0x9e, 0x91, 0x6b, 0xb0, 0x3d, 0x66, 0x66, 0x92, 0xb6, 0x12, 0xa7, 0x7e,
+	0x02, 0x0e, 0xf0, 0x21, 0x90, 0x38, 0x70, 0xe0, 0x13, 0x70, 0xaa, 0xc4, 0xa5, 0xe2, 0x84, 0x38,
+	0x54, 0xd0, 0x1e, 0xf8, 0x10, 0x5c, 0x90, 0xff, 0xc6, 0x4e, 0xed, 0x36, 0x2d, 0xe2, 0x14, 0x8f,
+	0xdf, 0xef, 0xbd, 0xf7, 0xfb, 0xfd, 0xc6, 0xf3, 0x32, 0xb0, 0x25, 0xd0, 0xcc, 0xd1, 0x2d, 0x14,
+	0x08, 0xe4, 0xf8, 0x23, 0x9f, 0x62, 0xa2, 0x2f, 0x5e, 0xe8, 0xe2, 0x48, 0x0b, 0x18, 0x15, 0x54,
+	0x6e, 0x87, 0x61, 0x2d, 0x09, 0x9b, 0x61, 0x58, 0x5b, 0xbc, 0x50, 0xde, 0x28, 0x4d, 0xca, 0xaf,
+	0xe3, 0x74, 0x65, 0xd3, 0xa2, 0xdc, 0xa3, 0x5c, 0xf7, 0xb8, 0x1d, 0x22, 0x3c, 0x6e, 0x27, 0x81,
+	0x6e, 0x1c, 0x30, 0xa3, 0x95, 0x1e, 0x2f, 0x92, 0x50, 0xdb, 0xa6, 0x36, 0x8d, 0xdf, 0x87, 0x4f,
+	0xf1, 0xdb, 0xc1, 0xf7, 0x12, 0x3c, 0x9a, 0x72, 0xfb, 0xd3, 0x00, 0x23, 0x41, 0xf6, 0x11, 0x43,
+	0x1e, 0x97, 0xdf, 0x81, 0x26, 0x9a, 0x8b, 0x03, 0xca, 0x1c, 0x71, 0xdc, 0x91, 0xb6, 0xa5, 0x61,
+	0x73, 0xaf, 0xf3, 0xdb, 0xcf, 0xa3, 0x76, 0x52, 0x6e, 0x17, 0x63, 0x46, 0x38, 0x7f, 0x29, 0x98,
+	0xe3, 0xdb, 0xc6, 0x12, 0x2a, 0xef, 0x40, 0x23, 0x88, 0x2a, 0x74, 0xee, 0x6d, 0x4b, 0xc3, 0xd6,
+	0xb8, 0xa7, 0x95, 0xa9, 0xd4, 0xe2, 0x2e, 0x7b, 0xf7, 0x4f, 0xcf, 0xfb, 0x35, 0x23, 0xc9, 0xd8,
+	0x79, 0xf5, 0xe4, 0xef, 0x9f, 0x9e, 0x2d, 0x6b, 0x0d, 0xba, 0xb0, 0xb9, 0x42, 0xcb, 0x20, 0x3c,
+	0xa0, 0x3e, 0x27, 0x83, 0x5f, 0x62, 0xca, 0x13, 0xea, 0x79, 0x8e, 0x30, 0x48, 0x40, 0x99, 0x90,
+	0x9f, 0x43, 0x83, 0x13, 0x1f, 0x13, 0x76, 0x23, 0xdf, 0x04, 0x27, 0x07, 0xb0, 0x95, 0x27, 0x66,
+	0x06, 0xf4, 0x90, 0x30, 0x93, 0xfa, 0x66, 0x40, 0x98, 0x43, 0x71, 0xa8, 0xa1, 0x3e, 0x6c, 0x8d,
+	0xb5, 0x72, 0x0d, 0x93, 0x78, 0xfd, 0x31, 0xc5, 0x64, 0x3f, 0x4c, 0xfc, 0xc4, 0xdf, 0x8f, 0xd2,
+	0x8c, 0xae, 0x55, 0x11, 0xe1, 0x3b, 0xad, 0x50, 0x62, 0xd2, 0x7e, 0xf0, 0x9d, 0x04, 0x9d, 0xaa,
+	0x22, 0xb2, 0x09, 0xed, 0x15, 0x3a, 0x26, 0x43, 0x82, 0x24, 0xda, 0xb4, 0xd0, 0xb8, 0x3f, 0xce,
+	0xfb, 0xaf, 0xdb, 0x8e, 0x38, 0x98, 0xcf, 0x34, 0x8b, 0x7a, 0xc9, 0x4e, 0x27, 0x3f, 0x23, 0x8e,
+	0xbf, 0xd2, 0xc5, 0x71, 0x40, 0xb8, 0xf6, 0x1e, 0xb1, 0x8c, 0xc7, 0x41, 0x81, 0x21, 0x12, 0x44,
+	0xde, 0x84, 0x07, 0x91, 0x68, 0x07, 0x47, 0x5b, 0xd5, 0x34, 0x1a, 0xe1, 0xf2, 0x03, 0x9c, 0xd8,
+	0x9e, 0xb7, 0x36, 0xb3, 0xfd, 0x57, 0x29, 0x8a, 0x19, 0xe4, 0x10, 0x31, 0x3c, 0xa1, 0x5e, 0x30,
+	0x17, 0x8e, 0x6f, 0x47, 0xc4, 0xef, 0x60, 0xff, 0xd7, 0xd0, 0x23, 0x47, 0x82, 0x21, 0x4b, 0xa0,
+	0x99, 0x4b, 0x4c, 0x2b, 0xad, 0x17, 0xef, 0x43, 0xea, 0xbe, 0x5e, 0xee, 0xfe, 0xfb, 0xcb, 0xcc,
+	0x22, 0x11, 0x43, 0x21, 0x55, 0xa1, 0x15, 0xff, 0x9f, 0x40, 0xbf, 0x42, 0x4c, 0x26, 0x98, 0x81,
+	0x9c, 0x7d, 0x82, 0x2f, 0x91, 0x4b, 0x3e, 0x22, 0x0b, 0xe2, 0xde, 0x41, 0xea, 0x16, 0x00, 0x47,
+	0x2e, 0x31, 0xdd, 0x30, 0x3f, 0xf2, 0xfb, 0xbe, 0xd1, 0xe4, 0x69, 0xc1, 0x22, 0xad, 0x1e, 0x28,
+	0x57, 0x7b, 0x66, 0x8c, 0x6c, 0x78, 0x38, 0xe5, 0xf6, 0x2e, 0xc6, 0x13, 0xe4, 0xba, 0x84, 0xc9,
+	0x1d, 0x78, 0x60, 0x45, 0x4f, 0xbc, 0x23, 0x6d, 0xd7, 0x87, 0x4d, 0x23, 0x5d, 0xe6, 0x58, 0xde,
+	0x5b, 0x8f, 0x65, 0x91, 0xc6, 0x06, 0xb4, 0xf3, 0x8d, 0x32, 0x02, 0x5f, 0x46, 0x27, 0xcf, 0x20,
+	0x1e, 0x5d, 0x90, 0xff, 0x9b, 0x43, 0x37, 0xf9, 0xdc, 0x96, 0xbd, 0x32, 0x1a, 0x3f, 0x48, 0xd0,
+	0x9d, 0x72, 0xfb, 0x33, 0x47, 0x1c, 0x60, 0x86, 0x0e, 0xff, 0xf3, 0xc7, 0xf8, 0x16, 0x6c, 0xac,
+	0x7c, 0x80, 0x26, 0xf2, 0xe8, 0xdc, 0x17, 0xc9, 0x6e, 0xb5, 0xad, 0x42, 0x87, 0xdd, 0x28, 0x96,
+	0x3f, 0x44, 0xf5, 0xfc, 0x21, 0x2a, 0xca, 0x78, 0x0d, 0x9e, 0x54, 0x52, 0xcd, 0x04, 0xfd, 0x28,
+	0x45, 0x86, 0x4f, 0x18, 0x41, 0x82, 0xe4, 0xc6, 0xc2, 0x9d, 0xb4, 0xbc, 0xc2, 0x88, 0x45, 0x9c,
+	0xc5, 0x1a, 0xbe, 0x67, 0x48, 0xb9, 0x0f, 0x2d, 0xec, 0x2c, 0x1c, 0xee, 0x50, 0x7f, 0xa9, 0x07,
+	0xd2, 0x57, 0xab, 0x9a, 0x54, 0xe8, 0x95, 0xb1, 0x4d, 0xe5, 0x8c, 0xff, 0x69, 0x40, 0x7d, 0xca,
+	0x6d, 0x19, 0xc3, 0xc3, 0xc2, 0x1f, 0xcb, 0xd3, 0xf2, 0xe3, 0xbc, 0x32, 0xe8, 0x95, 0xd1, 0x5a,
+	0xb0, 0xb4, 0x5b, 0xd8, 0xa5, 0xf0, 0x5f, 0x50, 0xdd, 0x25, 0x0f, 0xbb, 0xa6, 0x4b, 0xd9, 0xf8,
+	0x93, 0xbf, 0x81, 0x76, 0xe9, 0xe8, 0xab, 0x2e, 0x53, 0x06, 0x57, 0xde, 0xbe, 0x15, 0x3c, 0xeb,
+	0xee, 0xc1, 0xa3, 0xd5, 0x41, 0x34, 0xbc, 0xc1, 0xa5, 0x0c, 0xa9, 0x3c, 0x5f, 0x17, 0x99, 0xb5,
+	0xfb, 0x02, 0x9a, 0xcb, 0x29, 0x33, 0xa8, 0x4c, 0xcf, 0x30, 0xca, 0xb3, 0x9b, 0x31, 0xf9, 0xfd,
+	0x2a, 0x4c, 0x90, 0xa7, 0xd7, 0x58, 0xb2, 0x84, 0x29, 0xa3, 0xb5, 0x60, 0x59, 0x97, 0x13, 0x09,
+	0x36, 0x2a, 0x06, 0x84, 0x5e, 0x59, 0xa9, 0x3c, 0x41, 0x79, 0xf7, 0x96, 0x09, 0x19, 0x09, 0x0e,
+	0x8f, 0xaf, 0x9e, 0xe9, 0x6a, 0xaf, 0xae, 0x60, 0x95, 0xf1, 0xfa, 0xd8, 0xb4, 0xe9, 0xde, 0x87,
+	0xa7, 0x7f, 0xa9, 0xb5, 0xd3, 0x0b, 0x55, 0x3a, 0xbb, 0x50, 0xa5, 0x3f, 0x2f, 0x54, 0xe9, 0xdb,
+	0x4b, 0xb5, 0x76, 0x76, 0xa9, 0xd6, 0x7e, 0xbf, 0x54, 0x6b, 0x9f, 0x8f, 0x72, 0xb7, 0x86, 0xb0,
+	0xb6, 0x8b, 0x66, 0x3c, 0x7a, 0xd0, 0x8f, 0x8a, 0x37, 0xcf, 0xe8, 0x02, 0x31, 0x6b, 0x44, 0xd7,
+	0xc4, 0x37, 0xff, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x88, 0x26, 0x36, 0x9d, 0xd0, 0x0a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -852,23 +811,21 @@ type MsgClient interface {
 	// module parameters. The authority is defined in the keeper.
 	//
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
-	// UpdatePowerOnPeriod defines a white list operation for updating the power on period.
-	UpdatePowerOnPeriod(ctx context.Context, in *MsgUpdatePowerOnPeriod, opts ...grpc.CallOption) (*MsgUpdatePowerOnPeriodResponse, error)
-	// UpdateUserExperience defines a white list operation for updating the user experience.
-	UpdateUserExperience(ctx context.Context, in *MsgUpdateUserExperience, opts ...grpc.CallOption) (*MsgUpdateUserExperienceResponse, error)
-	// UpdateSaleLevel defines a white list operation for updating the sale level.
+	// CommitReport defines a allow list operation for committing a report.
+	CommitReport(ctx context.Context, in *MsgCommitReport, opts ...grpc.CallOption) (*MsgCommitReportResponse, error)
+	// RewardComputingPower defines a allow list operation for rewarding computing power to a captain node's owner.
+	RewardComputingPower(ctx context.Context, in *MsgRewardComputingPower, opts ...grpc.CallOption) (*MsgRewardComputingPowerResponse, error)
+	// UpdateSaleLevel defines a allow list operation for updating the sale level.
 	UpdateSaleLevel(ctx context.Context, in *MsgUpdateSaleLevel, opts ...grpc.CallOption) (*MsgUpdateSaleLevelResponse, error)
-	// AddCaller defines a white list  operation for registering some
-	// callers for mint node.
+	// AddCaller defines a allow list  operation for registering some callers for mint node.
 	AddCaller(ctx context.Context, in *MsgAddCaller, opts ...grpc.CallOption) (*MsgAddCallerResponse, error)
-	// RemoveCaller defines a white list  operation for removing some
+	// RemoveCaller defines a allow list  operation for removing some
 	// callers for mint node.
 	RemoveCaller(ctx context.Context, in *MsgRemoveCaller, opts ...grpc.CallOption) (*MsgRemoveCallerResponse, error)
-	// WithdrawExperience defines a user operation for receiving experience
-	// to a captain node.
-	WithdrawExperience(ctx context.Context, in *MsgWithdrawExperience, opts ...grpc.CallOption) (*MsgWithdrawExperienceResponse, error)
-	// Mint defines a white list operation for minting a captain node.
-	Mint(ctx context.Context, in *MsgMint, opts ...grpc.CallOption) (*MsgMintResponse, error)
+	// WithdrawComputingPower defines a user operation for receiving computing power to a captain node.
+	WithdrawComputingPower(ctx context.Context, in *MsgWithdrawComputingPower, opts ...grpc.CallOption) (*MsgWithdrawComputingPowerResponse, error)
+	// CreateCaptainNode defines a user operation for creating a captain node.
+	CreateCaptainNode(ctx context.Context, in *MsgCreateCaptainNode, opts ...grpc.CallOption) (*MsgCreateCaptainNodeResponse, error)
 }
 
 type msgClient struct {
@@ -888,18 +845,18 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
-func (c *msgClient) UpdatePowerOnPeriod(ctx context.Context, in *MsgUpdatePowerOnPeriod, opts ...grpc.CallOption) (*MsgUpdatePowerOnPeriodResponse, error) {
-	out := new(MsgUpdatePowerOnPeriodResponse)
-	err := c.cc.Invoke(ctx, "/tabi.captain_node.v1.Msg/UpdatePowerOnPeriod", in, out, opts...)
+func (c *msgClient) CommitReport(ctx context.Context, in *MsgCommitReport, opts ...grpc.CallOption) (*MsgCommitReportResponse, error) {
+	out := new(MsgCommitReportResponse)
+	err := c.cc.Invoke(ctx, "/tabi.captain_node.v1.Msg/CommitReport", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) UpdateUserExperience(ctx context.Context, in *MsgUpdateUserExperience, opts ...grpc.CallOption) (*MsgUpdateUserExperienceResponse, error) {
-	out := new(MsgUpdateUserExperienceResponse)
-	err := c.cc.Invoke(ctx, "/tabi.captain_node.v1.Msg/UpdateUserExperience", in, out, opts...)
+func (c *msgClient) RewardComputingPower(ctx context.Context, in *MsgRewardComputingPower, opts ...grpc.CallOption) (*MsgRewardComputingPowerResponse, error) {
+	out := new(MsgRewardComputingPowerResponse)
+	err := c.cc.Invoke(ctx, "/tabi.captain_node.v1.Msg/RewardComputingPower", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -933,18 +890,18 @@ func (c *msgClient) RemoveCaller(ctx context.Context, in *MsgRemoveCaller, opts 
 	return out, nil
 }
 
-func (c *msgClient) WithdrawExperience(ctx context.Context, in *MsgWithdrawExperience, opts ...grpc.CallOption) (*MsgWithdrawExperienceResponse, error) {
-	out := new(MsgWithdrawExperienceResponse)
-	err := c.cc.Invoke(ctx, "/tabi.captain_node.v1.Msg/WithdrawExperience", in, out, opts...)
+func (c *msgClient) WithdrawComputingPower(ctx context.Context, in *MsgWithdrawComputingPower, opts ...grpc.CallOption) (*MsgWithdrawComputingPowerResponse, error) {
+	out := new(MsgWithdrawComputingPowerResponse)
+	err := c.cc.Invoke(ctx, "/tabi.captain_node.v1.Msg/WithdrawComputingPower", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) Mint(ctx context.Context, in *MsgMint, opts ...grpc.CallOption) (*MsgMintResponse, error) {
-	out := new(MsgMintResponse)
-	err := c.cc.Invoke(ctx, "/tabi.captain_node.v1.Msg/Mint", in, out, opts...)
+func (c *msgClient) CreateCaptainNode(ctx context.Context, in *MsgCreateCaptainNode, opts ...grpc.CallOption) (*MsgCreateCaptainNodeResponse, error) {
+	out := new(MsgCreateCaptainNodeResponse)
+	err := c.cc.Invoke(ctx, "/tabi.captain_node.v1.Msg/CreateCaptainNode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -957,23 +914,21 @@ type MsgServer interface {
 	// module parameters. The authority is defined in the keeper.
 	//
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
-	// UpdatePowerOnPeriod defines a white list operation for updating the power on period.
-	UpdatePowerOnPeriod(context.Context, *MsgUpdatePowerOnPeriod) (*MsgUpdatePowerOnPeriodResponse, error)
-	// UpdateUserExperience defines a white list operation for updating the user experience.
-	UpdateUserExperience(context.Context, *MsgUpdateUserExperience) (*MsgUpdateUserExperienceResponse, error)
-	// UpdateSaleLevel defines a white list operation for updating the sale level.
+	// CommitReport defines a allow list operation for committing a report.
+	CommitReport(context.Context, *MsgCommitReport) (*MsgCommitReportResponse, error)
+	// RewardComputingPower defines a allow list operation for rewarding computing power to a captain node's owner.
+	RewardComputingPower(context.Context, *MsgRewardComputingPower) (*MsgRewardComputingPowerResponse, error)
+	// UpdateSaleLevel defines a allow list operation for updating the sale level.
 	UpdateSaleLevel(context.Context, *MsgUpdateSaleLevel) (*MsgUpdateSaleLevelResponse, error)
-	// AddCaller defines a white list  operation for registering some
-	// callers for mint node.
+	// AddCaller defines a allow list  operation for registering some callers for mint node.
 	AddCaller(context.Context, *MsgAddCaller) (*MsgAddCallerResponse, error)
-	// RemoveCaller defines a white list  operation for removing some
+	// RemoveCaller defines a allow list  operation for removing some
 	// callers for mint node.
 	RemoveCaller(context.Context, *MsgRemoveCaller) (*MsgRemoveCallerResponse, error)
-	// WithdrawExperience defines a user operation for receiving experience
-	// to a captain node.
-	WithdrawExperience(context.Context, *MsgWithdrawExperience) (*MsgWithdrawExperienceResponse, error)
-	// Mint defines a white list operation for minting a captain node.
-	Mint(context.Context, *MsgMint) (*MsgMintResponse, error)
+	// WithdrawComputingPower defines a user operation for receiving computing power to a captain node.
+	WithdrawComputingPower(context.Context, *MsgWithdrawComputingPower) (*MsgWithdrawComputingPowerResponse, error)
+	// CreateCaptainNode defines a user operation for creating a captain node.
+	CreateCaptainNode(context.Context, *MsgCreateCaptainNode) (*MsgCreateCaptainNodeResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -983,11 +938,11 @@ type UnimplementedMsgServer struct {
 func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
 }
-func (*UnimplementedMsgServer) UpdatePowerOnPeriod(ctx context.Context, req *MsgUpdatePowerOnPeriod) (*MsgUpdatePowerOnPeriodResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePowerOnPeriod not implemented")
+func (*UnimplementedMsgServer) CommitReport(ctx context.Context, req *MsgCommitReport) (*MsgCommitReportResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CommitReport not implemented")
 }
-func (*UnimplementedMsgServer) UpdateUserExperience(ctx context.Context, req *MsgUpdateUserExperience) (*MsgUpdateUserExperienceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserExperience not implemented")
+func (*UnimplementedMsgServer) RewardComputingPower(ctx context.Context, req *MsgRewardComputingPower) (*MsgRewardComputingPowerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RewardComputingPower not implemented")
 }
 func (*UnimplementedMsgServer) UpdateSaleLevel(ctx context.Context, req *MsgUpdateSaleLevel) (*MsgUpdateSaleLevelResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSaleLevel not implemented")
@@ -998,11 +953,11 @@ func (*UnimplementedMsgServer) AddCaller(ctx context.Context, req *MsgAddCaller)
 func (*UnimplementedMsgServer) RemoveCaller(ctx context.Context, req *MsgRemoveCaller) (*MsgRemoveCallerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveCaller not implemented")
 }
-func (*UnimplementedMsgServer) WithdrawExperience(ctx context.Context, req *MsgWithdrawExperience) (*MsgWithdrawExperienceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method WithdrawExperience not implemented")
+func (*UnimplementedMsgServer) WithdrawComputingPower(ctx context.Context, req *MsgWithdrawComputingPower) (*MsgWithdrawComputingPowerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WithdrawComputingPower not implemented")
 }
-func (*UnimplementedMsgServer) Mint(ctx context.Context, req *MsgMint) (*MsgMintResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Mint not implemented")
+func (*UnimplementedMsgServer) CreateCaptainNode(ctx context.Context, req *MsgCreateCaptainNode) (*MsgCreateCaptainNodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCaptainNode not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -1027,38 +982,38 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_UpdatePowerOnPeriod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUpdatePowerOnPeriod)
+func _Msg_CommitReport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCommitReport)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).UpdatePowerOnPeriod(ctx, in)
+		return srv.(MsgServer).CommitReport(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tabi.captain_node.v1.Msg/UpdatePowerOnPeriod",
+		FullMethod: "/tabi.captain_node.v1.Msg/CommitReport",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdatePowerOnPeriod(ctx, req.(*MsgUpdatePowerOnPeriod))
+		return srv.(MsgServer).CommitReport(ctx, req.(*MsgCommitReport))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_UpdateUserExperience_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUpdateUserExperience)
+func _Msg_RewardComputingPower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRewardComputingPower)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).UpdateUserExperience(ctx, in)
+		return srv.(MsgServer).RewardComputingPower(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tabi.captain_node.v1.Msg/UpdateUserExperience",
+		FullMethod: "/tabi.captain_node.v1.Msg/RewardComputingPower",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdateUserExperience(ctx, req.(*MsgUpdateUserExperience))
+		return srv.(MsgServer).RewardComputingPower(ctx, req.(*MsgRewardComputingPower))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1117,38 +1072,38 @@ func _Msg_RemoveCaller_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_WithdrawExperience_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgWithdrawExperience)
+func _Msg_WithdrawComputingPower_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgWithdrawComputingPower)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).WithdrawExperience(ctx, in)
+		return srv.(MsgServer).WithdrawComputingPower(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tabi.captain_node.v1.Msg/WithdrawExperience",
+		FullMethod: "/tabi.captain_node.v1.Msg/WithdrawComputingPower",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).WithdrawExperience(ctx, req.(*MsgWithdrawExperience))
+		return srv.(MsgServer).WithdrawComputingPower(ctx, req.(*MsgWithdrawComputingPower))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_Mint_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgMint)
+func _Msg_CreateCaptainNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreateCaptainNode)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).Mint(ctx, in)
+		return srv.(MsgServer).CreateCaptainNode(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tabi.captain_node.v1.Msg/Mint",
+		FullMethod: "/tabi.captain_node.v1.Msg/CreateCaptainNode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).Mint(ctx, req.(*MsgMint))
+		return srv.(MsgServer).CreateCaptainNode(ctx, req.(*MsgCreateCaptainNode))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1162,12 +1117,12 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_UpdateParams_Handler,
 		},
 		{
-			MethodName: "UpdatePowerOnPeriod",
-			Handler:    _Msg_UpdatePowerOnPeriod_Handler,
+			MethodName: "CommitReport",
+			Handler:    _Msg_CommitReport_Handler,
 		},
 		{
-			MethodName: "UpdateUserExperience",
-			Handler:    _Msg_UpdateUserExperience_Handler,
+			MethodName: "RewardComputingPower",
+			Handler:    _Msg_RewardComputingPower_Handler,
 		},
 		{
 			MethodName: "UpdateSaleLevel",
@@ -1182,12 +1137,12 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_RemoveCaller_Handler,
 		},
 		{
-			MethodName: "WithdrawExperience",
-			Handler:    _Msg_WithdrawExperience_Handler,
+			MethodName: "WithdrawComputingPower",
+			Handler:    _Msg_WithdrawComputingPower_Handler,
 		},
 		{
-			MethodName: "Mint",
-			Handler:    _Msg_Mint_Handler,
+			MethodName: "CreateCaptainNode",
+			Handler:    _Msg_CreateCaptainNode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1257,7 +1212,7 @@ func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgWithdrawExperience) Marshal() (dAtA []byte, err error) {
+func (m *MsgCommitReport) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1267,144 +1222,12 @@ func (m *MsgWithdrawExperience) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgWithdrawExperience) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCommitReport) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgWithdrawExperience) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.NodeId) > 0 {
-		i -= len(m.NodeId)
-		copy(dAtA[i:], m.NodeId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.NodeId)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if m.Experience != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.Experience))
-		i--
-		dAtA[i] = 0x10
-	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgWithdrawExperienceResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgWithdrawExperienceResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgWithdrawExperienceResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgMint) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgMint) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgMint) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.DivisionId) > 0 {
-		i -= len(m.DivisionId)
-		copy(dAtA[i:], m.DivisionId)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.DivisionId)))
-		i--
-		dAtA[i] = 0x1a
-	}
-	if len(m.Receiver) > 0 {
-		i -= len(m.Receiver)
-		copy(dAtA[i:], m.Receiver)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Receiver)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgMintResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgMintResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgMintResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUpdatePowerOnPeriod) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdatePowerOnPeriod) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdatePowerOnPeriod) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCommitReport) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1473,7 +1296,7 @@ func (m *CaptainNodePowerOnPeriod) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdatePowerOnPeriodResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgCommitReportResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1483,12 +1306,137 @@ func (m *MsgUpdatePowerOnPeriodResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdatePowerOnPeriodResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgCommitReportResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdatePowerOnPeriodResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgCommitReportResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRewardComputingPower) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRewardComputingPower) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRewardComputingPower) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ExtractableComputingPowers) > 0 {
+		for iNdEx := len(m.ExtractableComputingPowers) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.ExtractableComputingPowers[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRewardComputingPowerResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRewardComputingPowerResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRewardComputingPowerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateSaleLevel) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateSaleLevel) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateSaleLevel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.SaleLevel != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.SaleLevel))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateSaleLevelResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateSaleLevelResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateSaleLevelResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1620,7 +1568,7 @@ func (m *MsgRemoveCallerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateUserExperience) Marshal() (dAtA []byte, err error) {
+func (m *MsgWithdrawComputingPower) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1630,120 +1578,25 @@ func (m *MsgUpdateUserExperience) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateUserExperience) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgWithdrawComputingPower) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateUserExperience) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgWithdrawComputingPower) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.UserExperiences) > 0 {
-		for iNdEx := len(m.UserExperiences) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.UserExperiences[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintTx(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x12
-		}
-	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+	if len(m.NodeId) > 0 {
+		i -= len(m.NodeId)
+		copy(dAtA[i:], m.NodeId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.NodeId)))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x1a
 	}
-	return len(dAtA) - i, nil
-}
-
-func (m *UserExperience) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *UserExperience) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *UserExperience) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Receiver) > 0 {
-		i -= len(m.Receiver)
-		copy(dAtA[i:], m.Receiver)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Receiver)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if m.Experience != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.Experience))
-		i--
-		dAtA[i] = 0x8
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUpdateUserExperienceResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdateUserExperienceResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdateUserExperienceResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUpdateSaleLevel) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdateSaleLevel) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdateSaleLevel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.SaleLevel != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.SaleLevel))
+	if m.ComputingPowerAmount != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ComputingPowerAmount))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -1757,7 +1610,7 @@ func (m *MsgUpdateSaleLevel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateSaleLevelResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgWithdrawComputingPowerResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1767,12 +1620,79 @@ func (m *MsgUpdateSaleLevelResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateSaleLevelResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgWithdrawComputingPowerResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateSaleLevelResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgWithdrawComputingPowerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateCaptainNode) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateCaptainNode) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateCaptainNode) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.DivisionId) > 0 {
+		i -= len(m.DivisionId)
+		copy(dAtA[i:], m.DivisionId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.DivisionId)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Receiver) > 0 {
+		i -= len(m.Receiver)
+		copy(dAtA[i:], m.Receiver)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Receiver)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreateCaptainNodeResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreateCaptainNodeResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreateCaptainNodeResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1815,66 +1735,7 @@ func (m *MsgUpdateParamsResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgWithdrawExperience) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Sender)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	if m.Experience != 0 {
-		n += 1 + sovTx(uint64(m.Experience))
-	}
-	l = len(m.NodeId)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	return n
-}
-
-func (m *MsgWithdrawExperienceResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
-func (m *MsgMint) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Sender)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.Receiver)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.DivisionId)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	return n
-}
-
-func (m *MsgMintResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
-func (m *MsgUpdatePowerOnPeriod) Size() (n int) {
+func (m *MsgCommitReport) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1908,7 +1769,60 @@ func (m *CaptainNodePowerOnPeriod) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdatePowerOnPeriodResponse) Size() (n int) {
+func (m *MsgCommitReportResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgRewardComputingPower) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if len(m.ExtractableComputingPowers) > 0 {
+		for _, e := range m.ExtractableComputingPowers {
+			l = e.Size()
+			n += 1 + l + sovTx(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *MsgRewardComputingPowerResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgUpdateSaleLevel) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.SaleLevel != 0 {
+		n += 1 + sovTx(uint64(m.SaleLevel))
+	}
+	return n
+}
+
+func (m *MsgUpdateSaleLevelResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1973,7 +1887,7 @@ func (m *MsgRemoveCallerResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdateUserExperience) Size() (n int) {
+func (m *MsgWithdrawComputingPower) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1983,57 +1897,47 @@ func (m *MsgUpdateUserExperience) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if len(m.UserExperiences) > 0 {
-		for _, e := range m.UserExperiences {
-			l = e.Size()
-			n += 1 + l + sovTx(uint64(l))
-		}
+	if m.ComputingPowerAmount != 0 {
+		n += 1 + sovTx(uint64(m.ComputingPowerAmount))
+	}
+	l = len(m.NodeId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
 
-func (m *UserExperience) Size() (n int) {
+func (m *MsgWithdrawComputingPowerResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Experience != 0 {
-		n += 1 + sovTx(uint64(m.Experience))
+	return n
+}
+
+func (m *MsgCreateCaptainNode) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.Receiver)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	return n
-}
-
-func (m *MsgUpdateUserExperienceResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
-func (m *MsgUpdateSaleLevel) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Sender)
+	l = len(m.DivisionId)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if m.SaleLevel != 0 {
-		n += 1 + sovTx(uint64(m.SaleLevel))
-	}
 	return n
 }
 
-func (m *MsgUpdateSaleLevelResponse) Size() (n int) {
+func (m *MsgCreateCaptainNodeResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2213,7 +2117,7 @@ func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgWithdrawExperience) Unmarshal(dAtA []byte) error {
+func (m *MsgCommitReport) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2236,389 +2140,10 @@ func (m *MsgWithdrawExperience) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgWithdrawExperience: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCommitReport: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgWithdrawExperience: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Sender = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Experience", wireType)
-			}
-			m.Experience = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Experience |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NodeId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.NodeId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgWithdrawExperienceResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgWithdrawExperienceResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgWithdrawExperienceResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgMint) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgMint: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgMint: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Sender = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Receiver", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Receiver = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DivisionId", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.DivisionId = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgMintResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgMintResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgMintResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgUpdatePowerOnPeriod) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdatePowerOnPeriod: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdatePowerOnPeriod: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCommitReport: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2824,7 +2349,7 @@ func (m *CaptainNodePowerOnPeriod) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdatePowerOnPeriodResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgCommitReportResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2847,10 +2372,327 @@ func (m *MsgUpdatePowerOnPeriodResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdatePowerOnPeriodResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCommitReportResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdatePowerOnPeriodResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCommitReportResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRewardComputingPower) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRewardComputingPower: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRewardComputingPower: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExtractableComputingPowers", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ExtractableComputingPowers = append(m.ExtractableComputingPowers, &ExtractableComputingPower{})
+			if err := m.ExtractableComputingPowers[len(m.ExtractableComputingPowers)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRewardComputingPowerResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRewardComputingPowerResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRewardComputingPowerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateSaleLevel) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateSaleLevel: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateSaleLevel: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SaleLevel", wireType)
+			}
+			m.SaleLevel = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.SaleLevel |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateSaleLevelResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateSaleLevelResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateSaleLevelResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -3202,7 +3044,7 @@ func (m *MsgRemoveCallerResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateUserExperience) Unmarshal(dAtA []byte) error {
+func (m *MsgWithdrawComputingPower) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3225,10 +3067,10 @@ func (m *MsgUpdateUserExperience) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateUserExperience: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgWithdrawComputingPower: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateUserExperience: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgWithdrawComputingPower: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3264,10 +3106,10 @@ func (m *MsgUpdateUserExperience) Unmarshal(dAtA []byte) error {
 			m.Sender = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field UserExperiences", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ComputingPowerAmount", wireType)
 			}
-			var msglen int
+			m.ComputingPowerAmount = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -3277,25 +3119,42 @@ func (m *MsgUpdateUserExperience) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				m.ComputingPowerAmount |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NodeId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthTx
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthTx
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.UserExperiences = append(m.UserExperiences, &UserExperience{})
-			if err := m.UserExperiences[len(m.UserExperiences)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
+			m.NodeId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -3318,7 +3177,7 @@ func (m *MsgUpdateUserExperience) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *UserExperience) Unmarshal(dAtA []byte) error {
+func (m *MsgWithdrawComputingPowerResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3341,17 +3200,67 @@ func (m *UserExperience) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: UserExperience: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgWithdrawComputingPowerResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: UserExperience: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgWithdrawComputingPowerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreateCaptainNode) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreateCaptainNode: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreateCaptainNode: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Experience", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
 			}
-			m.Experience = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -3361,11 +3270,24 @@ func (m *UserExperience) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Experience |= uint64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Receiver", wireType)
@@ -3398,109 +3320,9 @@ func (m *UserExperience) Unmarshal(dAtA []byte) error {
 			}
 			m.Receiver = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgUpdateUserExperienceResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateUserExperienceResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateUserExperienceResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgUpdateSaleLevel) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateSaleLevel: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateSaleLevel: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
+		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field DivisionId", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -3528,27 +3350,8 @@ func (m *MsgUpdateSaleLevel) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Sender = string(dAtA[iNdEx:postIndex])
+			m.DivisionId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SaleLevel", wireType)
-			}
-			m.SaleLevel = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.SaleLevel |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -3570,7 +3373,7 @@ func (m *MsgUpdateSaleLevel) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateSaleLevelResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgCreateCaptainNodeResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3593,10 +3396,10 @@ func (m *MsgUpdateSaleLevelResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateSaleLevelResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgCreateCaptainNodeResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateSaleLevelResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgCreateCaptainNodeResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

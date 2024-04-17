@@ -48,7 +48,12 @@ func (k Keeper) CreateNode(ctx sdk.Context, node types.Node, receiver sdk.AccAdd
 	return nil
 }
 
-func (k Keeper) UpdateNode(ctx sdk.Context, nodeID string, experience uint64, owner sdk.AccAddress) error {
+func (k Keeper) UpdateNode(
+	ctx sdk.Context,
+	nodeID string,
+	computingPower uint64,
+	owner sdk.AccAddress,
+) error {
 	// Check if the node exists
 	if !k.HasNode(ctx, nodeID) {
 		return errorsmod.Wrap(types.ErrNodeNotExists, nodeID)
@@ -59,8 +64,8 @@ func (k Keeper) UpdateNode(ctx sdk.Context, nodeID string, experience uint64, ow
 		return errorsmod.Wrap(types.ErrUnauthorized, owner.String())
 	}
 
-	// Check if the node has enough experience
-	if k.GetExperience(ctx, owner) < experience {
+	// Check if the node has enough extractable computing power
+	if k.getExtractableComputingPower(ctx, owner) < computingPower {
 		return errorsmod.Wrap(types.ErrInsufficientExperience, nodeID)
 	}
 
@@ -68,13 +73,14 @@ func (k Keeper) UpdateNode(ctx sdk.Context, nodeID string, experience uint64, ow
 	node, _ := k.GetNode(ctx, nodeID)
 	currentDivision, _ := k.GetDivision(ctx, node.DivisionId)
 
-	node.Experience += experience
+	node.ComputingPower += computingPower
 
 	// Check if the node has enough experience to be promoted to the next division
-	if node.Experience > currentDivision.High {
+	if node.ComputingPower > currentDivision.HighComputingPower {
 		divisions := k.GetDivisions(ctx)
 		for _, division := range divisions {
-			if node.Experience <= division.High && node.Experience >= division.Low {
+			// the node should be promoted to the next division
+			if node.ComputingPower <= division.HighComputingPower && node.ComputingPower >= division.LowComputingPower {
 				node.DivisionId = division.Id
 				break
 			}
@@ -84,7 +90,7 @@ func (k Keeper) UpdateNode(ctx sdk.Context, nodeID string, experience uint64, ow
 	// Set the node
 	k.setNode(ctx, node)
 	// Set the experience
-	k.decrExperience(ctx, owner, experience)
+	k.decrExtractableComputingPower(ctx, owner, computingPower)
 	return nil
 }
 
