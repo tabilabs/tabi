@@ -29,10 +29,10 @@ func (m msgServer) ConvertTabi(goCtx context.Context, msg *types.MsgConvertTabi)
 	}
 
 	// check if the sender has enough coins
-	balance := m.bankKeeper.GetBalance(ctx, sender, MinDenomTabi)
+	balance := m.bankKeeper.GetBalance(ctx, sender, types.MinDenomTabi)
 	_, hasNeg := sdk.Coins{balance}.SafeSub(msg.Coin)
 	if hasNeg {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, MinDenomTabi)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, types.MinDenomTabi)
 	}
 
 	// execute conversion
@@ -62,16 +62,16 @@ func (m msgServer) ConvertVetabi(goCtx context.Context, msg *types.MsgConvertVet
 	}
 
 	// check balances
-	balance := m.bankKeeper.GetBalance(ctx, sender, MinDenomTabi)
+	balance := m.bankKeeper.GetBalance(ctx, sender, types.MinDenomTabi)
 	_, hasNeg := sdk.Coins{balance}.SafeSub(msg.Coin)
 	if hasNeg {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, MinDenomVetabi)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, types.MinDenomVetabi)
 	}
 
 	// get strategy
 	strategy, found := m.GetStrategy(ctx, msg.Strategy)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrStrategyNotFound, "strategy %s not found", msg.Strategy)
+		return nil, sdkerrors.Wrapf(types.ErrInvalidStrategy, "strategy-%s not found", msg.Strategy)
 	}
 
 	expiryTime, voucherID, err := m.LockVetabiAndCreateVoucher(ctx, sender, strategy, msg.Coin)
@@ -105,7 +105,7 @@ func (m msgServer) WithdrawTabi(goCtx context.Context, msg *types.MsgWithdrawTab
 
 	voucher, found := m.GetVoucher(ctx, msg.VoucherId)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrVoucherNotFound, "voucher %d not found", msg.VoucherId)
+		return nil, sdkerrors.Wrapf(types.ErrInvalidVoucher, "voucher %d not found", msg.VoucherId)
 	}
 
 	if voucher.Owner != msg.Sender {
@@ -147,7 +147,7 @@ func (m msgServer) CancelConvert(goCtx context.Context, msg *types.MsgCancelConv
 
 	voucher, found := m.GetVoucher(ctx, msg.VoucherId)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrVoucherNotFound, "voucher %d not found", msg.VoucherId)
+		return nil, sdkerrors.Wrapf(types.ErrInvalidVoucher, "voucher %d not found", msg.VoucherId)
 	}
 
 	if voucher.Owner != msg.Sender {
@@ -155,11 +155,11 @@ func (m msgServer) CancelConvert(goCtx context.Context, msg *types.MsgCancelConv
 	}
 
 	moduleAcc := m.authKeeper.GetModuleAddress(types.ModuleName)
-	balance := m.bankKeeper.GetBalance(ctx, moduleAcc, MinDenomVetabi)
+	balance := m.bankKeeper.GetBalance(ctx, moduleAcc, types.MinDenomVetabi)
 	_, hasNeg := sdk.Coins{balance}.SafeSub(voucher.Amount)
 	if hasNeg {
 		// WARN: this error shall never happen
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, MinDenomVetabi)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, types.MinDenomVetabi)
 	}
 
 	err = m.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sender, sdk.NewCoins(voucher.Amount))

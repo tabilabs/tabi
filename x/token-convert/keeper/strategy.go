@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tabilabs/tabi/x/token-convert/types"
@@ -11,7 +12,7 @@ func (k Keeper) createStrategy(ctx sdk.Context, name string, period int64, conve
 	store := ctx.KVStore(k.storeKey)
 
 	if k.HasStrategy(ctx, name) {
-		return types.ErrStrategyAlreadyExists
+		return sdkerrors.Wrapf(types.ErrInvalidStrategy, "strategy-%s already exists", name)
 	}
 
 	strategy := types.Strategy{

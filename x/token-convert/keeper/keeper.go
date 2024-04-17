@@ -11,11 +11,6 @@ import (
 	"github.com/tabilabs/tabi/x/token-convert/types"
 )
 
-const (
-	MinDenomTabi   = "utabi"
-	MinDenomVetabi = "uvetabi"
-)
-
 type Keeper struct {
 	storeKey storetypes.StoreKey
 	cdc      codec.BinaryCodec
@@ -47,7 +42,7 @@ func (k Keeper) ConvertTabi(ctx sdk.Context, sender sdk.AccAddress, coin sdk.Coi
 	}
 
 	// mint vetabi to the module
-	mintCoin := sdk.NewCoin(MinDenomVetabi, coin.Amount)
+	mintCoin := sdk.NewCoin(types.MinDenomVetabi, coin.Amount)
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintCoin)); err != nil {
 		return err
 	}
@@ -83,7 +78,7 @@ func (k Keeper) LockVetabiAndCreateVoucher(ctx sdk.Context, sender sdk.AccAddres
 func (k Keeper) InstantWithdrawVetabi(ctx sdk.Context, sender sdk.AccAddress, coin sdk.Coin) error {
 	strategy, found := k.GetStrategy(ctx, k.instantStrategy)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrStrategyNotFound, "strategy instant not found")
+		return sdkerrors.Wrapf(types.ErrInvalidStrategy, "strategy-instant not found")
 	}
 
 	// send vetabi to the module
@@ -97,7 +92,7 @@ func (k Keeper) InstantWithdrawVetabi(ctx sdk.Context, sender sdk.AccAddress, co
 	}
 
 	mintAmt := sdk.NewDecFromInt(coin.Amount).Mul(strategy.ConversionRate).RoundInt()
-	mintCoin := sdk.NewCoin(MinDenomTabi, mintAmt)
+	mintCoin := sdk.NewCoin(types.MinDenomTabi, mintAmt)
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintCoin)); err != nil {
 		return err
 	}
@@ -114,7 +109,7 @@ func (k Keeper) InstantWithdrawVetabi(ctx sdk.Context, sender sdk.AccAddress, co
 func (k Keeper) WithdrawTabi(ctx sdk.Context, sender sdk.AccAddress, voucher types.Voucher) (sdk.Coin, sdk.Coin, error) {
 	strategy, found := k.GetStrategy(ctx, voucher.Strategy)
 	if !found {
-		return sdk.Coin{}, sdk.Coin{}, sdkerrors.Wrapf(types.ErrStrategyNotFound, "strategy %s not found", voucher.Strategy)
+		return sdk.Coin{}, sdk.Coin{}, sdkerrors.Wrapf(types.ErrInvalidStrategy, "strategy-%s not found", voucher.Strategy)
 	}
 
 	// release_ratio = (current_time - created_time) / period
@@ -130,9 +125,9 @@ func (k Keeper) WithdrawTabi(ctx sdk.Context, sender sdk.AccAddress, voucher typ
 	returnableVetabiAmt := lockedVetabiAmt.Sub(burnableVetabiAmt)
 	withdrawableTabiAmt := sdk.NewDecFromInt(burnableVetabiAmt).Mul(strategy.ConversionRate).RoundInt()
 
-	withdrawableTabi := sdk.NewCoin(MinDenomTabi, withdrawableTabiAmt)
-	burnableVetabi := sdk.NewCoin(MinDenomVetabi, burnableVetabiAmt)
-	returnableVetabi := sdk.NewCoin(MinDenomVetabi, returnableVetabiAmt)
+	withdrawableTabi := sdk.NewCoin(types.MinDenomTabi, withdrawableTabiAmt)
+	burnableVetabi := sdk.NewCoin(types.MinDenomVetabi, burnableVetabiAmt)
+	returnableVetabi := sdk.NewCoin(types.MinDenomVetabi, returnableVetabiAmt)
 
 	// make sure the owner has the minimum amount of tabi to withdraw
 	if !withdrawableTabi.IsPositive() {
