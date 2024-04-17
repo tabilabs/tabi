@@ -32,7 +32,7 @@ func NewTxCmd() *cobra.Command {
 	return cmd
 }
 
-// NewTxCmdConvertTabi is the cli cmd for ConvertT
+// NewTxCmdConvertTabi is the cli cmd for ConvertTabi
 func NewTxCmdConvertTabi() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "convert-tabi [amount]",
