@@ -66,8 +66,8 @@ func (k Keeper) LockVetabiAndCreateVoucher(ctx sdk.Context, sender sdk.AccAddres
 		return "", "", err
 	}
 
-	voucherID := k.createVoucher(ctx, sender, strategy.Name, coin)
-	k.setVoucherByOwner(ctx, sender, voucherID)
+	voucherID := k.createVoucher(ctx, sender.String(), strategy.Name, coin)
+	k.setVoucherByOwner(ctx, sender.String(), voucherID)
 
 	expiryTime := ctx.BlockTime().Add(time.Duration(strategy.Period) * time.Second).String()
 

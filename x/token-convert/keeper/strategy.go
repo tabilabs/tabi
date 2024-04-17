@@ -44,3 +44,16 @@ func (k Keeper) GetStrategy(ctx sdk.Context, name string) (types.Strategy, bool)
 	k.cdc.MustUnmarshal(bz, &strategy)
 	return strategy, true
 }
+
+// GetStrategies gets all strategies
+func (k Keeper) GetStrategies(ctx sdk.Context) (strategies []types.Strategy) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.StrategyKey)
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var strategy types.Strategy
+		k.cdc.MustUnmarshal(iterator.Value(), &strategy)
+		strategies = append(strategies, strategy)
+	}
+	return
+}
