@@ -170,6 +170,7 @@ func (m msgServer) CancelConvert(goCtx context.Context, msg *types.MsgCancelConv
 
 	// delete voucher
 	m.deleteVoucher(ctx, msg.VoucherId)
+	m.deleteVoucherByOwner(ctx, sender, msg.VoucherId)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(

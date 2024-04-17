@@ -29,10 +29,9 @@ service Query {
     option (google.api.http).get = "/x/token-convert/v1/vouchers";
   }
 
-  // UnlockStatus returns the info about the amount of tabi withdrawable and burnable as well as vetabi burnable and
-  // returnable
-  rpc UnlockStatus(QueryUnlockStatusRequest) returns (QueryUnlockStatusResponse) {
-    option (google.api.http).get = "/x/token-convert/v1/UnlockStatus/{voucher_id}";
+  // Voucher returns the info about the amount of tabi withdrawable and vetabi returnable
+  rpc VoucherStatus(QueryVoucherStatusRequest) returns (QueryVoucherStatusResponse) {
+    option (google.api.http).get = "/x/token-convert/v1/voucher-status/{voucher_id}";
   }
 }
 
@@ -55,7 +54,7 @@ message QueryStrategiesRequest {
 
 // QueryVoucherResponse is the response type for the Query/Voucher RPC
 message QueryStrategiesResponse {
-  repeated Strategy strategies = 1;
+  repeated Strategy strategies = 1  [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -81,20 +80,18 @@ message QueryVouchersRequest {
 
 // QueryVouchersResponse is the response type for the Query/Vouchers RPC
 message QueryVouchersResponse {
-  repeated Voucher vouchers = 1;
+  repeated Voucher vouchers = 1  [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// QueryUnlockStatusRequest is the request type for the Query/UnlockStatus RPC
-message QueryUnlockStatusRequest {
+// QueryVoucherStatusRequest is the request type for the Query/VoucherStatus RPC
+message QueryVoucherStatusRequest {
   string voucher_id = 1;
 }
 
-// QueryUnlockStatusResponse is the response type for the Query/UnlockStatus RPC
-message QueryUnlockStatusResponse {
+// QueryVoucherStatusResponse is the response type for the Query/VoucherStatus RPC
+message QueryVoucherStatusResponse {
   string current_time = 1;
   cosmos.base.v1beta1.Coin tabi_withdrawable = 2 [(gogoproto.nullable) = false];
-  cosmos.base.v1beta1.Coin tabi_burnable = 3 [(gogoproto.nullable) = false];
-  cosmos.base.v1beta1.Coin vetabi_burnable = 4 [(gogoproto.nullable) = false];
-  cosmos.base.v1beta1.Coin vetabi_returnable = 5 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin vetabi_returnable = 3 [(gogoproto.nullable) = false];
 }

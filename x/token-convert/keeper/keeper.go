@@ -112,22 +112,7 @@ func (k Keeper) WithdrawTabi(ctx sdk.Context, sender sdk.AccAddress, voucher typ
 		return sdk.Coin{}, sdk.Coin{}, sdkerrors.Wrapf(types.ErrInvalidStrategy, "strategy-%s not found", voucher.Strategy)
 	}
 
-	// release_ratio = (current_time - created_time) / period
-	createdTime := voucher.CreatedTime
-	currentTime := ctx.BlockTime().Unix()
-	releaseRatio := sdk.NewDec(currentTime - createdTime).Quo(sdk.NewDec(strategy.Period))
-
-	// burnable_vetabi_amt = locked_vatabi_amt * release_ratio
-	// returnable_vetabi_amt = locked_vetabi_amt * (1 - release_ratio)
-	// withdrawable_tabi_amt = burnable_vetabi_amt * conversion_rate
-	lockedVetabiAmt := voucher.Amount.Amount
-	burnableVetabiAmt := sdk.NewDecFromInt(lockedVetabiAmt).Mul(releaseRatio).RoundInt()
-	returnableVetabiAmt := lockedVetabiAmt.Sub(burnableVetabiAmt)
-	withdrawableTabiAmt := sdk.NewDecFromInt(burnableVetabiAmt).Mul(strategy.ConversionRate).RoundInt()
-
-	withdrawableTabi := sdk.NewCoin(types.MinDenomTabi, withdrawableTabiAmt)
-	burnableVetabi := sdk.NewCoin(types.MinDenomVetabi, burnableVetabiAmt)
-	returnableVetabi := sdk.NewCoin(types.MinDenomVetabi, returnableVetabiAmt)
+	withdrawableTabi, burnableVetabi, returnableVetabi := k.calVoucher(ctx, voucher, strategy)
 
 	// make sure the owner has the minimum amount of tabi to withdraw
 	if !withdrawableTabi.IsPositive() {
@@ -153,7 +138,7 @@ func (k Keeper) WithdrawTabi(ctx sdk.Context, sender sdk.AccAddress, voucher typ
 	}
 
 	// check if there is any returnable vetabi
-	if !returnableVetabiAmt.IsPositive() {
+	if !returnableVetabi.IsPositive() {
 		return withdrawableTabi, sdk.Coin{}, nil
 	}
 
@@ -164,4 +149,28 @@ func (k Keeper) WithdrawTabi(ctx sdk.Context, sender sdk.AccAddress, voucher typ
 	}
 
 	return withdrawableTabi, returnableVetabi, nil
+}
+
+// calVoucher calculates the withdrawable tabi, burnable vetabi, and returnable vetabi.
+func (k Keeper) calVoucher(ctx sdk.Context, voucher types.Voucher, strategy types.Strategy) (
+	sdk.Coin, sdk.Coin, sdk.Coin,
+) {
+	// release_ratio = (current_time - created_time) / period
+	createdTime := voucher.CreatedTime
+	currentTime := ctx.BlockTime().Unix()
+	releaseRatio := sdk.NewDec(currentTime - createdTime).Quo(sdk.NewDec(strategy.Period))
+
+	// burnable_vetabi_amt = locked_vatabi_amt * release_ratio
+	// returnable_vetabi_amt = locked_vetabi_amt * (1 - release_ratio)
+	// withdrawable_tabi_amt = burnable_vetabi_amt * conversion_rate
+	lockedVetabiAmt := voucher.Amount.Amount
+	burnableVetabiAmt := sdk.NewDecFromInt(lockedVetabiAmt).Mul(releaseRatio).RoundInt()
+	returnableVetabiAmt := lockedVetabiAmt.Sub(burnableVetabiAmt)
+	withdrawableTabiAmt := sdk.NewDecFromInt(burnableVetabiAmt).Mul(strategy.ConversionRate).RoundInt()
+
+	withdrawableTabi := sdk.NewCoin(types.MinDenomTabi, withdrawableTabiAmt)
+	burnableVetabi := sdk.NewCoin(types.MinDenomVetabi, burnableVetabiAmt)
+	returnableVetabi := sdk.NewCoin(types.MinDenomVetabi, returnableVetabiAmt)
+
+	return withdrawableTabi, burnableVetabi, returnableVetabi
 }
