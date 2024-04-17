@@ -2,44 +2,6 @@ package keeper
 
 import sdk "github.com/cosmos/cosmos-sdk/types"
 
-var (
-	smallestPledgeRate = sdk.NewDecWithPrec(3, 1) // 0.3
-)
-
-// CalculatePledgeRate calculates the pledge rate of global
-// pledgeRate = pledgeCoin / mintCoin
-// if pledgeRate < 0.3 then return 0.3
-// if pledgeRate >= 0.3 then return pledgeRate
-func (k Keeper) CalculatePledgeRate(ctx sdk.Context) sdk.Dec {
-	owners := k.captainNodeKeeper.GetOwners(ctx)
-	pledgeTotalCount := k.calculatePledgeTotalCount(ctx, owners)
-	mintTotalCount := k.calculateMintTotalCount(ctx, owners)
-	pledgeRate := sdk.NewDecFromInt(pledgeTotalCount.Amount).Quo(sdk.NewDecFromInt(mintTotalCount.Amount))
-	if pledgeRate.LT(smallestPledgeRate) {
-		return smallestPledgeRate
-	}
-	return pledgeRate
-}
-
-func (k Keeper) calculatePledgeTotalCount(ctx sdk.Context, owners []sdk.AccAddress) sdk.Coin {
-
-	totalCoinFromAllOwners := sdk.NewCoin(k.stakingKeeper.BondDenom(ctx), sdk.ZeroInt())
-	for _, owner := range owners {
-		totalCoinFromXn := k.calculatePledgeTotalCountFromForXn(ctx, owner)
-		totalCoinFromAllOwners = totalCoinFromAllOwners.Add(totalCoinFromXn)
-	}
-	return totalCoinFromAllOwners
-}
-
-func (k Keeper) calculateMintTotalCount(ctx sdk.Context, owners []sdk.AccAddress) sdk.Coin {
-	totalCoinFromAllOwners := sdk.NewCoin(k.stakingKeeper.BondDenom(ctx), sdk.ZeroInt())
-	for _, owner := range owners {
-		totalCoinFromXn := k.calculateMintTotalCountFromXN(ctx, owner)
-		totalCoinFromAllOwners = totalCoinFromAllOwners.Add(totalCoinFromXn)
-	}
-	return sdk.NewCoin(k.stakingKeeper.BondDenom(ctx), sdk.ZeroInt())
-}
-
 // CalculatePledgeRateForXN calculates the pledge rate of the owner
 // pledgeRate = pledgeCoin / mintCoin
 func (k Keeper) CalculatePledgeRateForXN(ctx sdk.Context, owner sdk.AccAddress) sdk.Dec {
