@@ -10,10 +10,10 @@ import (
 
 // caption-node message types
 const (
-	TypeMsgMint                 = "mint"
+	TypeMsgCreateCaptainNode    = "mint"
 	TypeMsgReceiveExperience    = "receive_experience"
-	TypeMsgUpdatePowerOnPeriod  = "update_power_on_period"
-	TypeMsgUpdateUserExperience = "update_user_experience"
+	TypeMsgCommitReport         = "update_power_on_period"
+	TypeMsgRewardComputingPower = "update_user_experience"
 	TypeMsgAddCaller            = "add_caller"
 	TypeMsgRemoveCaller         = "remove_caller"
 	TypeMsgUpdateSaleLevel      = "update_sale_level"
@@ -21,10 +21,10 @@ const (
 
 var (
 	_ sdk.Msg = &MsgUpdateParams{}
-	_ sdk.Msg = &MsgMint{}
-	_ sdk.Msg = &MsgWithdrawExperience{}
-	_ sdk.Msg = &MsgUpdatePowerOnPeriod{}
-	_ sdk.Msg = &MsgUpdateUserExperience{}
+	_ sdk.Msg = &MsgCreateCaptainNode{}
+	_ sdk.Msg = &MsgWithdrawComputingPower{}
+	_ sdk.Msg = &MsgCommitReport{}
+	_ sdk.Msg = &MsgRewardComputingPower{}
 	_ sdk.Msg = &MsgAddCaller{}
 	_ sdk.Msg = &MsgRemoveCaller{}
 	_ sdk.Msg = &MsgUpdateSaleLevel{}
@@ -51,8 +51,8 @@ func (m *MsgUpdateParams) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{addr}
 }
 
-func NewMsgMint(divisionId string, receiver string, sender string) *MsgMint {
-	return &MsgMint{
+func NewMsgCreateCaptainNode(divisionId string, receiver string, sender string) *MsgCreateCaptainNode {
+	return &MsgCreateCaptainNode{
 		DivisionId: divisionId,
 		Receiver:   receiver,
 		Sender:     sender,
@@ -60,13 +60,13 @@ func NewMsgMint(divisionId string, receiver string, sender string) *MsgMint {
 }
 
 // Route Implements Msg.
-func (m MsgMint) Route() string { return RouterKey }
+func (m MsgCreateCaptainNode) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (m MsgMint) Type() string { return TypeMsgMint }
+func (m MsgCreateCaptainNode) Type() string { return TypeMsgCreateCaptainNode }
 
 // ValidateBasic Implements Msg.
-func (msg MsgMint) ValidateBasic() error {
+func (msg MsgCreateCaptainNode) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
@@ -81,39 +81,39 @@ func (msg MsgMint) ValidateBasic() error {
 }
 
 // GetSignBytes Implements Msg.
-func (msg MsgMint) GetSignBytes() []byte {
+func (msg MsgCreateCaptainNode) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
 }
 
 // GetSigners Implements Msg.
-func (msg MsgMint) GetSigners() []sdk.AccAddress {
+func (msg MsgCreateCaptainNode) GetSigners() []sdk.AccAddress {
 	fromAddress, _ := sdk.AccAddressFromBech32(msg.Sender)
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewMsgWithdrawExperience(nodeId string, experience uint64, sender string) *MsgWithdrawExperience {
-	return &MsgWithdrawExperience{
-		NodeId:     nodeId,
-		Experience: experience,
-		Sender:     sender,
+func NewMsgWithdrawComputingPower(nodeId string, computingPowerAmount uint64, sender string) *MsgWithdrawComputingPower {
+	return &MsgWithdrawComputingPower{
+		NodeId:               nodeId,
+		ComputingPowerAmount: computingPowerAmount,
+		Sender:               sender,
 	}
 }
 
 // Route Implements Msg.
-func (m MsgWithdrawExperience) Route() string { return RouterKey }
+func (m MsgWithdrawComputingPower) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (m MsgWithdrawExperience) Type() string { return TypeMsgReceiveExperience }
+func (m MsgWithdrawComputingPower) Type() string { return TypeMsgReceiveExperience }
 
 // ValidateBasic Implements Msg.
-func (msg MsgWithdrawExperience) ValidateBasic() error {
+func (msg MsgWithdrawComputingPower) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 	if len(msg.NodeId) == 0 {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node id cannot be empty")
 	}
-	if msg.Experience == 0 {
+	if msg.ComputingPowerAmount == 0 {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "experience cannot be zero")
 	}
 
@@ -121,34 +121,34 @@ func (msg MsgWithdrawExperience) ValidateBasic() error {
 }
 
 // GetSignBytes Implements Msg.
-func (msg MsgWithdrawExperience) GetSignBytes() []byte {
+func (msg MsgWithdrawComputingPower) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
 }
 
 // GetSigners Implements Msg.
-func (msg MsgWithdrawExperience) GetSigners() []sdk.AccAddress {
+func (msg MsgWithdrawComputingPower) GetSigners() []sdk.AccAddress {
 	fromAddress, _ := sdk.AccAddressFromBech32(msg.Sender)
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewMsgUpdatePowerOnPeriod(
+func NewMsgCommitReport(
 	captainNodePowerOnPeriods []*CaptainNodePowerOnPeriod,
 	sender string,
-) *MsgUpdatePowerOnPeriod {
-	return &MsgUpdatePowerOnPeriod{
+) *MsgCommitReport {
+	return &MsgCommitReport{
 		CaptainNodePowerOnPeriods: captainNodePowerOnPeriods,
 		Sender:                    sender,
 	}
 }
 
 // Route Implements Msg.
-func (m MsgUpdatePowerOnPeriod) Route() string { return RouterKey }
+func (m MsgCommitReport) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (m MsgUpdatePowerOnPeriod) Type() string { return TypeMsgUpdatePowerOnPeriod }
+func (m MsgCommitReport) Type() string { return TypeMsgCommitReport }
 
 // ValidateBasic Implements Msg.
-func (msg MsgUpdatePowerOnPeriod) ValidateBasic() error {
+func (msg MsgCommitReport) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 
@@ -171,47 +171,47 @@ func (msg MsgUpdatePowerOnPeriod) ValidateBasic() error {
 }
 
 // GetSignBytes Implements Msg.
-func (msg MsgUpdatePowerOnPeriod) GetSignBytes() []byte {
+func (msg MsgCommitReport) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
 }
 
 // GetSigners Implements Msg.
-func (msg MsgUpdatePowerOnPeriod) GetSigners() []sdk.AccAddress {
+func (msg MsgCommitReport) GetSigners() []sdk.AccAddress {
 	fromAddress, _ := sdk.AccAddressFromBech32(msg.Sender)
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewMsgUpdateUserExperience(
-	userExperiences []*UserExperience,
+func NewMsgRewardComputingPower(
+	extractableComputingPowers []*ExtractableComputingPower,
 	sender string,
-) *MsgUpdateUserExperience {
-	return &MsgUpdateUserExperience{
-		Sender:          sender,
-		UserExperiences: userExperiences,
+) *MsgRewardComputingPower {
+	return &MsgRewardComputingPower{
+		Sender:                     sender,
+		ExtractableComputingPowers: extractableComputingPowers,
 	}
 }
 
 // Route Implements Msg.
-func (m MsgUpdateUserExperience) Route() string { return RouterKey }
+func (m MsgRewardComputingPower) Route() string { return RouterKey }
 
 // Type Implements Msg.
-func (m MsgUpdateUserExperience) Type() string { return TypeMsgUpdateUserExperience }
+func (m MsgRewardComputingPower) Type() string { return TypeMsgRewardComputingPower }
 
 // ValidateBasic Implements Msg.
-func (msg MsgUpdateUserExperience) ValidateBasic() error {
+func (msg MsgRewardComputingPower) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 
 	}
-	if len(msg.UserExperiences) == 0 {
+	if len(msg.ExtractableComputingPowers) == 0 {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "user experiences cannot be empty")
 	}
 
-	for _, userExperience := range msg.UserExperiences {
-		if userExperience.Experience == 0 {
+	for _, userExperience := range msg.ExtractableComputingPowers {
+		if userExperience.Amount == 0 {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "experience cannot be zero")
 		}
-		if _, err := sdk.AccAddressFromBech32(userExperience.Receiver); err != nil {
+		if _, err := sdk.AccAddressFromBech32(userExperience.Owner); err != nil {
 			return errorsmod.Wrap(err, "invalid receiver address")
 		}
 	}
@@ -220,12 +220,12 @@ func (msg MsgUpdateUserExperience) ValidateBasic() error {
 }
 
 // GetSignBytes Implements Msg.
-func (msg MsgUpdateUserExperience) GetSignBytes() []byte {
+func (msg MsgRewardComputingPower) GetSignBytes() []byte {
 	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
 }
 
 // GetSigners Implements Msg.
-func (msg MsgUpdateUserExperience) GetSigners() []sdk.AccAddress {
+func (msg MsgRewardComputingPower) GetSigners() []sdk.AccAddress {
 	fromAddress, _ := sdk.AccAddressFromBech32(msg.Sender)
 	return []sdk.AccAddress{fromAddress}
 }

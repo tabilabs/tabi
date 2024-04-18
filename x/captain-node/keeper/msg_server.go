@@ -51,8 +51,11 @@ func (m msgServer) UpdateParams(
 /*****************************************************************************/
 /*****************************************************************************/
 
-// Mint implement the interface of types.MsgServer
-func (m msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMintResponse, error) {
+// CreateCaptainNode implement the interface of types.MsgServer
+func (m msgServer) CreateCaptainNode(
+	goCtx context.Context,
+	msg *types.MsgCreateCaptainNode,
+) (*types.MsgCreateCaptainNodeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
@@ -93,10 +96,13 @@ func (m msgServer) Mint(goCtx context.Context, msg *types.MsgMint) (*types.MsgMi
 		),
 	})
 
-	return &types.MsgMintResponse{}, nil
+	return &types.MsgCreateCaptainNodeResponse{}, nil
 }
 
-func (m msgServer) UpdatePowerOnPeriod(goCtx context.Context, msg *types.MsgUpdatePowerOnPeriod) (*types.MsgUpdatePowerOnPeriodResponse, error) {
+func (m msgServer) CommitReport(
+	goCtx context.Context,
+	msg *types.MsgCommitReport,
+) (*types.MsgCommitReportResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
@@ -127,10 +133,13 @@ func (m msgServer) UpdatePowerOnPeriod(goCtx context.Context, msg *types.MsgUpda
 	)}
 	resultEvents = append(resultEvents, events...)
 	ctx.EventManager().EmitEvents(resultEvents)
-	return &types.MsgUpdatePowerOnPeriodResponse{}, nil
+	return &types.MsgCommitReportResponse{}, nil
 }
 
-func (m msgServer) UpdateUserExperience(goCtx context.Context, msg *types.MsgUpdateUserExperience) (*types.MsgUpdateUserExperienceResponse, error) {
+func (m msgServer) RewardComputingPower(
+	goCtx context.Context,
+	msg *types.MsgRewardComputingPower,
+) (*types.MsgRewardComputingPowerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
@@ -144,13 +153,13 @@ func (m msgServer) UpdateUserExperience(goCtx context.Context, msg *types.MsgUpd
 			"invalid sender; not in allow list",
 		)
 	}
-	if len(msg.UserExperiences) == 0 {
+	if len(msg.ExtractableComputingPowers) == 0 {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrInvalidRequest,
 			"invalid user experience; empty",
 		)
 	}
-	events := m.k.UpdateAllUserExperience(ctx, msg.UserExperiences)
+	events := m.k.UpdateExtractableComputingPowerForUsers(ctx, msg.ExtractableComputingPowers)
 
 	resultEvents := sdk.Events{sdk.NewEvent(
 		sdk.EventTypeMessage,
@@ -159,7 +168,7 @@ func (m msgServer) UpdateUserExperience(goCtx context.Context, msg *types.MsgUpd
 	)}
 	resultEvents = append(resultEvents, events...)
 	ctx.EventManager().EmitEvents(resultEvents)
-	return &types.MsgUpdateUserExperienceResponse{}, nil
+	return &types.MsgRewardComputingPowerResponse{}, nil
 }
 
 func (m msgServer) UpdateSaleLevel(goCtx context.Context, msg *types.MsgUpdateSaleLevel) (*types.MsgUpdateSaleLevelResponse, error) {
@@ -260,14 +269,17 @@ func (m msgServer) RemoveCaller(goCtx context.Context, msg *types.MsgRemoveCalle
 /*****************************************************************************/
 /*****************************************************************************/
 
-func (m msgServer) WithdrawExperience(goCtx context.Context, msg *types.MsgWithdrawExperience) (*types.MsgWithdrawExperienceResponse, error) {
+func (m msgServer) WithdrawComputingPower(
+	goCtx context.Context,
+	msg *types.MsgWithdrawComputingPower,
+) (*types.MsgWithdrawComputingPowerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := m.k.UpdateNode(ctx, msg.NodeId, msg.Experience, sender); err != nil {
+	if err := m.k.UpdateNode(ctx, msg.NodeId, msg.ComputingPowerAmount, sender); err != nil {
 		return nil, err
 	}
 
@@ -275,7 +287,7 @@ func (m msgServer) WithdrawExperience(goCtx context.Context, msg *types.MsgWithd
 		sdk.NewEvent(
 			types.EventTypeMintNode,
 			sdk.NewAttribute(types.AttributeKeyNodeID, msg.NodeId),
-			sdk.NewAttribute(types.AttributeKeyExperience, fmt.Sprintf("%d", msg.Experience)),
+			sdk.NewAttribute(types.AttributeKeyExperience, fmt.Sprintf("%d", msg.ComputingPowerAmount)),
 			sdk.NewAttribute(types.AttributeKeyReceiver, msg.Sender),
 		),
 		sdk.NewEvent(
@@ -285,5 +297,5 @@ func (m msgServer) WithdrawExperience(goCtx context.Context, msg *types.MsgWithd
 		),
 	})
 
-	return &types.MsgWithdrawExperienceResponse{}, nil
+	return &types.MsgWithdrawComputingPowerResponse{}, nil
 }

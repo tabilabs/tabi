@@ -32,7 +32,7 @@ func GetTxCmd() *cobra.Command {
 	captionNodeTxCmd.AddCommand(
 		NewMintNodeTxCmd(),
 		NewUpdateUserExperienceCmd(),
-		NewUpdatePowerOnPeriodCmd(),
+		NewCommitReportCmd(),
 		NewWithdrawExperienceCmd(),
 	)
 
@@ -69,7 +69,7 @@ func NewMintNodeTxCmd() *cobra.Command {
 				panic("receiver cannot be empty")
 			}
 
-			msg := types.NewMsgMint(divisionID, receiver, sender)
+			msg := types.NewMsgCreateCaptainNode(divisionID, receiver, sender)
 
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -83,13 +83,13 @@ func NewMintNodeTxCmd() *cobra.Command {
 	return cmd
 }
 
-func NewUpdatePowerOnPeriodCmd() *cobra.Command {
+func NewCommitReportCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-power-on-period [path/to/update_power_on_period.json] --from [sender]",
+		Use:   "commit-report [path/to/update_power_on_period.json] --from [sender]",
 		Args:  cobra.ExactArgs(2),
 		Short: "update power on period for multiple nodes",
 		Long: strings.TrimSpace(fmt.Sprintf(`
-			$ %s tx %s update-power-on-period ./update_power_on_period.json --from <sender> --chain-id <chain-id>
+			$ %s tx %s commit-report ./update_power_on_period.json --from <sender> --chain-id <chain-id>
 Where update_power_on_period.json contains:
 
 [
@@ -129,7 +129,7 @@ Where update_power_on_period.json contains:
 				return fmt.Errorf("failed to unmarshal JSON: %w", err)
 			}
 
-			msg := types.NewMsgUpdatePowerOnPeriod(captainNodePowerOnPeriods, sender)
+			msg := types.NewMsgCommitReport(captainNodePowerOnPeriods, sender)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -144,11 +144,11 @@ Where update_power_on_period.json contains:
 
 func NewUpdateUserExperienceCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-power-on-experience [path/to/update_user_experience.json] --from [sender]",
+		Use:   "reward-computing-power [path/to/update_user_experience.json] --from [sender]",
 		Args:  cobra.ExactArgs(2),
 		Short: "Mint a new Node and set the owner to the receiver",
 		Long: strings.TrimSpace(fmt.Sprintf(`
-			$ %s tx %s mint <division-id> <receiver> --from <sender> --chain-id <chain-id>
+			$ %s tx %s reward-computing-power <division-id> <receiver> --from <sender> --chain-id <chain-id>
 Where update_power_on_period.json contains:
 {
   // array of proto-JSON-encoded sdk.Msgs
@@ -184,12 +184,12 @@ Where update_power_on_period.json contains:
 				messages = string(messagesContent)
 			}
 
-			var userExperiences []*types.UserExperience
-			if err := json.Unmarshal([]byte(messages), &userExperiences); err != nil {
+			var extractableComputingPowers []*types.ExtractableComputingPower
+			if err := json.Unmarshal([]byte(messages), &extractableComputingPowers); err != nil {
 				return fmt.Errorf("failed to unmarshal JSON: %w", err)
 			}
 
-			msg := types.NewMsgUpdateUserExperience(userExperiences, sender)
+			msg := types.NewMsgRewardComputingPower(extractableComputingPowers, sender)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -204,7 +204,7 @@ Where update_power_on_period.json contains:
 
 func NewWithdrawExperienceCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw-experience [node-id] [experience-amount] --from [sender]",
+		Use:   "withdraw-computing-power [node-id] [computing-power-amount] --from [sender]",
 		Args:  cobra.ExactArgs(2),
 		Short: "Withdraw experience to a node",
 		Long: strings.TrimSpace(fmt.Sprintf(`
@@ -233,7 +233,7 @@ func NewWithdrawExperienceCmd() *cobra.Command {
 				panic(err)
 			}
 
-			msg := types.NewMsgWithdrawExperience(nodeID, experienceAmount, sender)
+			msg := types.NewMsgWithdrawComputingPower(nodeID, experienceAmount, sender)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
