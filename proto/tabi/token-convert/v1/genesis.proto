@@ -1,0 +1,19 @@
+syntax = "proto3";
+package tabi.token_convert.v1;
+
+import "gogoproto/gogo.proto";
+import "tabi/token-convert/v1/token-convert.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/token-convert/types";
+
+// GenesisState defines the token-convert module's genesis state.
+message GenesisState {
+  // voucher_sequence defines the current maximum voucher sequence.
+  uint64 voucher_sequence = 1;
+
+  // strategies defines the list of strategies.
+  repeated Strategy strategies = 2 [(gogoproto.nullable) = false];
+
+  // vouchers defines the list of vouchers.
+  repeated Voucher vouchers = 3 [(gogoproto.nullable) = false];
+}

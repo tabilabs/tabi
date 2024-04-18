@@ -1,0 +1,70 @@
+syntax = "proto3";
+package tabi.token_convert.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/token-convert/types";
+
+// Msg defines the token-convert msg service
+service Msg {
+  // ConvertTabi converts Tabi to Vetabi at a 1:1 ratio.
+  rpc ConvertTabi(MsgConvertTabi) returns (MsgConvertTabiResponse);
+
+  // ConvertVetabi converts Vetabi to Tabi with the given unlock strategy
+  // and return a voucher for redeeming Tabi.
+  rpc ConvertVetabi(MsgConvertVetabi) returns (MsgConvertVetabiResponse);
+
+  // WithdrawTabi sends the unlocked Tabi to owner of the voucher and
+  // burns Vetabi as well as Tabi according to the unlock strategy.
+  rpc WithdrawTabi(MsgWithdrawTabi) returns (MsgWithdrawTabiResponse);
+
+  // CancelConvert cancels the conversion of Vetabi to Tabi.
+  rpc CancelConvert(MsgCancelConvert) returns (MsgCancelConvertResponse);
+}
+
+// MsgConvertTabi represents a message to convert Tabi to Vetabi.
+message MsgConvertTabi {
+  cosmos.base.v1beta1.Coin coin = 1  [(gogoproto.nullable) = false];
+  string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgConvertTabiResponse defines the Msg/ConvertTabi response type.
+message MsgConvertTabiResponse {}
+
+// MsgConvertVetabi represents a message to convert Vetabi to Tabi.
+message MsgConvertVetabi {
+  cosmos.base.v1beta1.Coin coin = 1  [(gogoproto.nullable) = false];
+  string strategy = 2;
+  string sender = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgConvertVetabiResponse defines the Msg/ConvertVetabi response type.
+message MsgConvertVetabiResponse {
+  string voucher_id = 1;
+  string expiry_time = 2;
+}
+
+// MsgWithdrawTabi represents a message to withdraw Tabi as per voucher.
+message MsgWithdrawTabi {
+  string voucher_id = 1;
+  string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgWithdrawTabiResponse defines the Msg/WithdrawTabi response type.
+message MsgWithdrawTabiResponse {
+  cosmos.base.v1beta1.Coin tabi_withdrawn = 1  [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin vetabi_returned = 2 [(gogoproto.nullable) = false];
+}
+
+// MsgCancelConvert represents a message to cancel the conversion of Vetabi to Tabi.
+message MsgCancelConvert {
+  string voucher_id = 1;
+  string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgCancelConvertResponse defines the Msg/CancelConvert response type.
+message MsgCancelConvertResponse {
+  cosmos.base.v1beta1.Coin vetabi_unlocked = 1 [(gogoproto.nullable) = false];
+}
