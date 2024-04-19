@@ -11,6 +11,9 @@ option (gogoproto.goproto_getters_all) = false;
 
 // Msg defines the captains Msg service
 service Msg {
+  // UpdateParams updates the module params.
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
   // CreateCaptainNode creates a captain node and assign it to the owner.
   rpc CreateCaptainNode(MsgCreateCaptainNode) returns (MsgCreateCaptainNodeResponse);
 
@@ -32,6 +35,18 @@ service Msg {
   // ClaimComputingPower allows captain node owner to claim and increase node's computing power.
   rpc ClaimComputingPower(MsgClaimComputingPower) returns (MsgClaimComputingPowerResponse);
 }
+
+// MsgUpdateParams defines the Msg/UpdateParams request type.
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  Params params = 2 [(gogoproto.nullable) = false];
+}
+
+// MsgUpdateParamsResponse defines the Msg/UpdateParamsResponse response type.
+message MsgUpdateParamsResponse {}
 
 // MsgCreateCaptainNode defines the Msg/CreateCaptainNode request type.
 message MsgCreateCaptainNode {

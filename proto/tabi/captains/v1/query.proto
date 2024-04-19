@@ -129,5 +129,5 @@ message QueryAuthorizedMembersRequest {
 
 // QueryAuthorizedMembersResponse is the response type for the Query/AuthorizedMembers RPC method
 message QueryAuthorizedMembersResponse {
-  repeated string callers = 1;
+  repeated string members = 1;
 }
