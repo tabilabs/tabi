@@ -1,0 +1,147 @@
+syntax = "proto3";
+package tabi.captains.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "tabi/captains/v1/captains.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/captains/types";
+option (gogoproto.goproto_getters_all) = false;
+
+// Msg defines the captains Msg service
+service Msg {
+  // UpdateParams updates the module params.
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // CreateCaptainNode creates a captain node and assign it to the owner.
+  rpc CreateCaptainNode(MsgCreateCaptainNode) returns (MsgCreateCaptainNodeResponse);
+
+  // CommitReport commits the running state report of captain nodes
+  rpc CommitReport(MsgCommitReport) returns (MsgCommitReportResponse);
+
+  // AddAuthorizedMember adds authorized members allowed to access permission interface.
+  rpc AddAuthorizedMember(MsgAddAuthorizedMember) returns (MsgAddAuthorizedMemberResponse);
+
+  // RemoveAuthorized removes authorized members.
+  rpc RemoveAuthorizedMember(MsgRemoveAuthorizedMember) returns (MsgRemoveAuthorizedMemberResponse);
+
+  // UpdateSaleLevel updates CurrentLevelForSale in module params.
+  rpc UpdateSaleLevel(MsgUpdateSaleLevel) returns (MsgUpdateSaleLevelResponse);
+
+  // CommitComputingPower assign pending computing power reward to users for later claiming.
+  rpc CommitComputingPower(MsgCommitComputingPower) returns (MsgCommitComputingPowerResponse);
+
+  // ClaimComputingPower allows captain node owner to claim and increase node's computing power.
+  rpc ClaimComputingPower(MsgClaimComputingPower) returns (MsgClaimComputingPowerResponse);
+}
+
+// MsgUpdateParams defines the Msg/UpdateParams request type.
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  Params params = 2 [(gogoproto.nullable) = false];
+}
+
+// MsgUpdateParamsResponse defines the Msg/UpdateParamsResponse response type.
+message MsgUpdateParamsResponse {}
+
+// MsgCreateCaptainNode defines the Msg/CreateCaptainNode request type.
+message MsgCreateCaptainNode {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  string owner = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  string division_id = 3;
+}
+
+// MsgCreateCaptainNodeResponse defines the Msg/CreateCaptainNode response type.
+message MsgCreateCaptainNodeResponse{}
+
+// MsgCommitReport is the Msg/CommitReport request type.
+message MsgCommitReport {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // TODO: report to be redesigned.
+  string report = 2;
+}
+
+// MsgCommitReportResponse defines the Msg/CommitReportResponse response type.
+message MsgCommitReportResponse{}
+
+// MsgAddAuthorizedMember defines the Msg/AddAuthorizedMember request type.
+message MsgAddAuthorizedMember {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  repeated string members = 2;
+}
+
+// MsgAddAuthorizedMemberResponse defines the Msg/AddAuthorizedMemberResponse response type.
+message MsgAddAuthorizedMemberResponse {}
+
+// MsgRemoveAuthorizedMember defines the Msg/RemoveAuthorizedMember request type.
+message MsgRemoveAuthorizedMember {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  repeated string members = 2;
+}
+
+// MsgRemoveAuthorizedMemberResponse defines the Msg/RemoveAuthorizedMemberResponse response type.
+message MsgRemoveAuthorizedMemberResponse {}
+
+// MsgUpdateSaleLevel defines the Msg/UpdateSaleLevel request type.
+message MsgUpdateSaleLevel {
+  option (cosmos.msg.v1.signer) = "authority";
+  // sender is the address of the owner of nft
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // sale_level is the sale levels to update.
+  uint64 sale_level = 2;
+}
+
+// MsgUpdateSaleLevelResponse defines the Msg/UpdateSaleLevelResponse response type.
+message MsgUpdateSaleLevelResponse{}
+
+// MsgCommitComputingPower defines the Msg/CommitComputingPowerResponse request type.
+message MsgCommitComputingPower {
+  option (cosmos.msg.v1.signer) = "authority";
+  // sender is the address of the owner of nft
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // computing_power_rewards is the extractable computing powers to reward.
+  repeated ClaimableComputingPower computing_power_rewards = 2;
+}
+
+// MsgCommitComputingPowerResponse defines the Msg/CommitComputingPowerResponse response type.
+message MsgCommitComputingPowerResponse {
+}
+
+// MsgClaimComputingPower defines the Msg/ClaimComputingPower request type.
+message MsgClaimComputingPower {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  uint64 computing_power_amount = 2;
+
+  string node_id = 3;
+}
+
+// MsgClaimComputingPowerResponse defines the Msg/ClaimComputingPowerResponse response type.
+message MsgClaimComputingPowerResponse{}
+
+
+
+
+
+

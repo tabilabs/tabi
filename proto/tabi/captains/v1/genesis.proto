@@ -1,0 +1,16 @@
+syntax = "proto3";
+package tabi.captains.v1;
+
+import "gogoproto/gogo.proto";
+import "tabi/captains/v1/captains.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/captains/types";
+
+// GenesisState defines the module's genesis state
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated Division divisions = 2 [(gogoproto.nullable) = false];
+  repeated Node  nodes = 3 [(gogoproto.nullable) = false];
+  repeated Epoch epochs = 4 [(gogoproto.nullable) = false];
+  repeated ClaimableComputingPower claimable_computing_powers = 5 [(gogoproto.nullable) = false];
+}
