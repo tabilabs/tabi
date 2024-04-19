@@ -40,7 +40,7 @@ message QueryStrategyRequest {
   string name = 1;
 }
 
-// QueryVoucherRequest is the request type for the Query/Voucher RPC
+// QueryVoucherResponse is the response type for the Query/Voucher RPC
 message QueryStrategyResponse {
   string name = 1;
   int64 period = 2;

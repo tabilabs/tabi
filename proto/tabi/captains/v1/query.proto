@@ -1,0 +1,133 @@
+syntax = "proto3";
+package tabi.captains.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos_proto/cosmos.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "tabi/captains/v1/captains.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/captains/types";
+
+// Query creates service with guardian as rpc
+service Query {
+  // Params queries the captains module parameters
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/x/captains/v1/params";
+  }
+
+  // Node queries an Node based on its id.
+  rpc Node(QueryNodeRequest) returns (QueryNodeResponse) {
+    option (google.api.http).get = "/x/captains/v1/nodes/{node_id}";
+  }
+
+  // Nodes queries all node of a given owner
+  rpc Nodes(QueryNodesRequest) returns (QueryNodesResponse) {
+    option (google.api.http).get = "/x/captains/v1/nodes";
+  }
+
+  // Divisions queries all Node divisions
+  rpc Divisions(QueryDivisionsRequest) returns (QueryDivisionsResponse) {
+    option (google.api.http).get = "/x/captains/v1/divisions";
+  }
+
+  // Division queries a division by its id.
+  rpc Division(QueryDivisionRequest) returns (QueryDivisionResponse) {
+    option (google.api.http).get = "/x/captains/v1/divisions/{division_id}";
+  }
+
+  // Supply queries the number of nodes under the division
+  rpc Supply(QuerySupplyRequest) returns (QuerySupplyResponse) {
+    option (google.api.http).get = "/x/captains/v1/supply/{division_id}";
+  }
+
+  // SaleLevel queries current sale level
+  rpc SaleLevel(QuerySaleLevelRequest) returns (QuerySaleLevelResponse) {
+    option (google.api.http).get = "/x/captains/v1/sale_level";
+  }
+
+  // AuthorizedMembers queries all the callers
+  rpc AuthorizedMembers(QueryAuthorizedMembersRequest) returns (QueryAuthorizedMembersResponse) {
+    option (google.api.http).get = "/x/captains/v1/authorized-members";
+  }
+}
+
+// QueryParamsRequest is request type for the Query/Parameters RPC method
+message QueryParamsRequest {
+}
+
+// QueryParamsResponse is response type for the Query/Parameters RPC method
+message QueryParamsResponse {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryNodeRequest is the request type for the Query/Node RPC method
+message QueryNodeRequest {
+  string node_id = 1;
+}
+
+// QueryNodeResponse is the response type for the Query/Node RPC method
+message QueryNodeResponse {
+  Node node = 1;
+}
+
+// QueryNodesRequest is the request type for the Query/Nodes RPC method
+message QueryNodesRequest {
+  string                                owner      = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryNodesResponse is the response type for the Query/Nodes RPC methods
+message QueryNodesResponse {
+  repeated Node nodes = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryDivisionRequest is the request type for the Query/Division RPC method
+message QueryDivisionRequest {
+  string division_id = 1;
+}
+
+// QueryDivisionResponse is the response type for the Query/Division RPC method
+message QueryDivisionResponse {
+  Division division = 1;
+}
+
+// QueryDivisionsRequest is the request type for the Query/Divisions RPC method
+message QueryDivisionsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryDivisionsResponse is the response type for the Query/Divisions RPC method
+message QueryDivisionsResponse {
+  repeated Division      divisions    = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QuerySupplyRequest is the request type for the Query/Supply RPC method
+message QuerySupplyRequest {
+  string division_id = 1;
+}
+
+// QuerySupplyResponse is the response type for the Query/Supply RPC method
+message QuerySupplyResponse {
+  uint64 amount = 1;
+}
+
+// QuerySaleLevelRequest is the request type for the Query/SaleLevel RPC method
+message QuerySaleLevelRequest {
+}
+
+// QuerySaleLevelResponse is the response type for the Query/SaleLevel RPC method
+message QuerySaleLevelResponse {
+  uint64 sale_level = 1;
+}
+
+// QueryAuthorizedMembersRequest is the request type for the Query/AuthorizedMembers RPC method
+message QueryAuthorizedMembersRequest {
+}
+
+// QueryAuthorizedMembersResponse is the response type for the Query/AuthorizedMembers RPC method
+message QueryAuthorizedMembersResponse {
+  repeated string callers = 1;
+}

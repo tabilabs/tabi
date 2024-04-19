@@ -77,7 +77,7 @@ func (m *QueryStrategyRequest) GetName() string {
 	return ""
 }
 
-// QueryVoucherRequest is the request type for the Query/Voucher RPC
+// QueryVoucherResponse is the response type for the Query/Voucher RPC
 type QueryStrategyResponse struct {
 	Name           string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Period         int64  `protobuf:"varint,2,opt,name=period,proto3" json:"period,omitempty"`
