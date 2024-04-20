@@ -30,6 +30,82 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// MsgUpdateParams defines the Msg/UpdateParams request type.
+type MsgUpdateParams struct {
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	Params    Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
+}
+
+func (m *MsgUpdateParams) Reset()         { *m = MsgUpdateParams{} }
+func (m *MsgUpdateParams) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateParams) ProtoMessage()    {}
+func (*MsgUpdateParams) Descriptor() ([]byte, []int) {
+	return fileDescriptor_37c8063cf8a41f43, []int{0}
+}
+func (m *MsgUpdateParams) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateParams.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateParams) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateParams.Merge(m, src)
+}
+func (m *MsgUpdateParams) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateParams) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateParams.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateParams proto.InternalMessageInfo
+
+// MsgUpdateParamsResponse defines the Msg/UpdateParamsResponse response type.
+type MsgUpdateParamsResponse struct {
+}
+
+func (m *MsgUpdateParamsResponse) Reset()         { *m = MsgUpdateParamsResponse{} }
+func (m *MsgUpdateParamsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateParamsResponse) ProtoMessage()    {}
+func (*MsgUpdateParamsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_37c8063cf8a41f43, []int{1}
+}
+func (m *MsgUpdateParamsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateParamsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateParamsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateParamsResponse.Merge(m, src)
+}
+func (m *MsgUpdateParamsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateParamsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
+
 // MsgCreateCaptainNode defines the Msg/CreateCaptainNode request type.
 type MsgCreateCaptainNode struct {
 	Authority  string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
@@ -41,7 +117,7 @@ func (m *MsgCreateCaptainNode) Reset()         { *m = MsgCreateCaptainNode{} }
 func (m *MsgCreateCaptainNode) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateCaptainNode) ProtoMessage()    {}
 func (*MsgCreateCaptainNode) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{0}
+	return fileDescriptor_37c8063cf8a41f43, []int{2}
 }
 func (m *MsgCreateCaptainNode) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -78,7 +154,7 @@ func (m *MsgCreateCaptainNodeResponse) Reset()         { *m = MsgCreateCaptainNo
 func (m *MsgCreateCaptainNodeResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateCaptainNodeResponse) ProtoMessage()    {}
 func (*MsgCreateCaptainNodeResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{1}
+	return fileDescriptor_37c8063cf8a41f43, []int{3}
 }
 func (m *MsgCreateCaptainNodeResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -118,7 +194,7 @@ func (m *MsgCommitReport) Reset()         { *m = MsgCommitReport{} }
 func (m *MsgCommitReport) String() string { return proto.CompactTextString(m) }
 func (*MsgCommitReport) ProtoMessage()    {}
 func (*MsgCommitReport) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{2}
+	return fileDescriptor_37c8063cf8a41f43, []int{4}
 }
 func (m *MsgCommitReport) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -155,7 +231,7 @@ func (m *MsgCommitReportResponse) Reset()         { *m = MsgCommitReportResponse
 func (m *MsgCommitReportResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCommitReportResponse) ProtoMessage()    {}
 func (*MsgCommitReportResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{3}
+	return fileDescriptor_37c8063cf8a41f43, []int{5}
 }
 func (m *MsgCommitReportResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -184,100 +260,24 @@ func (m *MsgCommitReportResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgCommitReportResponse proto.InternalMessageInfo
 
-// MsgAddAuthorizedMember defines the Msg/AddAuthorizedMember request type.
-type MsgAddAuthorizedMember struct {
+// MsgAddAuthorizedMembers defines the Msg/AddAuthorizedMembers request type.
+type MsgAddAuthorizedMembers struct {
 	Authority string   `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
 	Members   []string `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
 }
 
-func (m *MsgAddAuthorizedMember) Reset()         { *m = MsgAddAuthorizedMember{} }
-func (m *MsgAddAuthorizedMember) String() string { return proto.CompactTextString(m) }
-func (*MsgAddAuthorizedMember) ProtoMessage()    {}
-func (*MsgAddAuthorizedMember) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{4}
-}
-func (m *MsgAddAuthorizedMember) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgAddAuthorizedMember) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgAddAuthorizedMember.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgAddAuthorizedMember) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddAuthorizedMember.Merge(m, src)
-}
-func (m *MsgAddAuthorizedMember) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgAddAuthorizedMember) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddAuthorizedMember.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgAddAuthorizedMember proto.InternalMessageInfo
-
-// MsgAddAuthorizedMemberResponse defines the Msg/AddAuthorizedMemberResponse response type.
-type MsgAddAuthorizedMemberResponse struct {
-}
-
-func (m *MsgAddAuthorizedMemberResponse) Reset()         { *m = MsgAddAuthorizedMemberResponse{} }
-func (m *MsgAddAuthorizedMemberResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgAddAuthorizedMemberResponse) ProtoMessage()    {}
-func (*MsgAddAuthorizedMemberResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{5}
-}
-func (m *MsgAddAuthorizedMemberResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgAddAuthorizedMemberResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgAddAuthorizedMemberResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgAddAuthorizedMemberResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddAuthorizedMemberResponse.Merge(m, src)
-}
-func (m *MsgAddAuthorizedMemberResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgAddAuthorizedMemberResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddAuthorizedMemberResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgAddAuthorizedMemberResponse proto.InternalMessageInfo
-
-// MsgRemoveAuthorizedMember defines the Msg/RemoveAuthorizedMember request type.
-type MsgRemoveAuthorizedMember struct {
-	Authority string   `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
-	Members   []string `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
-}
-
-func (m *MsgRemoveAuthorizedMember) Reset()         { *m = MsgRemoveAuthorizedMember{} }
-func (m *MsgRemoveAuthorizedMember) String() string { return proto.CompactTextString(m) }
-func (*MsgRemoveAuthorizedMember) ProtoMessage()    {}
-func (*MsgRemoveAuthorizedMember) Descriptor() ([]byte, []int) {
+func (m *MsgAddAuthorizedMembers) Reset()         { *m = MsgAddAuthorizedMembers{} }
+func (m *MsgAddAuthorizedMembers) String() string { return proto.CompactTextString(m) }
+func (*MsgAddAuthorizedMembers) ProtoMessage()    {}
+func (*MsgAddAuthorizedMembers) Descriptor() ([]byte, []int) {
 	return fileDescriptor_37c8063cf8a41f43, []int{6}
 }
-func (m *MsgRemoveAuthorizedMember) XXX_Unmarshal(b []byte) error {
+func (m *MsgAddAuthorizedMembers) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgRemoveAuthorizedMember) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAddAuthorizedMembers) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgRemoveAuthorizedMember.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAddAuthorizedMembers.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -287,34 +287,34 @@ func (m *MsgRemoveAuthorizedMember) XXX_Marshal(b []byte, deterministic bool) ([
 		return b[:n], nil
 	}
 }
-func (m *MsgRemoveAuthorizedMember) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgRemoveAuthorizedMember.Merge(m, src)
+func (m *MsgAddAuthorizedMembers) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddAuthorizedMembers.Merge(m, src)
 }
-func (m *MsgRemoveAuthorizedMember) XXX_Size() int {
+func (m *MsgAddAuthorizedMembers) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgRemoveAuthorizedMember) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgRemoveAuthorizedMember.DiscardUnknown(m)
+func (m *MsgAddAuthorizedMembers) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddAuthorizedMembers.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgRemoveAuthorizedMember proto.InternalMessageInfo
+var xxx_messageInfo_MsgAddAuthorizedMembers proto.InternalMessageInfo
 
-// MsgRemoveAuthorizedMemberResponse defines the Msg/RemoveAuthorizedMemberResponse response type.
-type MsgRemoveAuthorizedMemberResponse struct {
+// MsgAddAuthorizedMemberResponse defines the Msg/AddAuthorizedMemberResponse response type.
+type MsgAddAuthorizedMembersResponse struct {
 }
 
-func (m *MsgRemoveAuthorizedMemberResponse) Reset()         { *m = MsgRemoveAuthorizedMemberResponse{} }
-func (m *MsgRemoveAuthorizedMemberResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgRemoveAuthorizedMemberResponse) ProtoMessage()    {}
-func (*MsgRemoveAuthorizedMemberResponse) Descriptor() ([]byte, []int) {
+func (m *MsgAddAuthorizedMembersResponse) Reset()         { *m = MsgAddAuthorizedMembersResponse{} }
+func (m *MsgAddAuthorizedMembersResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddAuthorizedMembersResponse) ProtoMessage()    {}
+func (*MsgAddAuthorizedMembersResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_37c8063cf8a41f43, []int{7}
 }
-func (m *MsgRemoveAuthorizedMemberResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgAddAuthorizedMembersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgRemoveAuthorizedMemberResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAddAuthorizedMembersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgRemoveAuthorizedMemberResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAddAuthorizedMembersResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -324,17 +324,93 @@ func (m *MsgRemoveAuthorizedMemberResponse) XXX_Marshal(b []byte, deterministic 
 		return b[:n], nil
 	}
 }
-func (m *MsgRemoveAuthorizedMemberResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgRemoveAuthorizedMemberResponse.Merge(m, src)
+func (m *MsgAddAuthorizedMembersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddAuthorizedMembersResponse.Merge(m, src)
 }
-func (m *MsgRemoveAuthorizedMemberResponse) XXX_Size() int {
+func (m *MsgAddAuthorizedMembersResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgRemoveAuthorizedMemberResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgRemoveAuthorizedMemberResponse.DiscardUnknown(m)
+func (m *MsgAddAuthorizedMembersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddAuthorizedMembersResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgRemoveAuthorizedMemberResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgAddAuthorizedMembersResponse proto.InternalMessageInfo
+
+// MsgRemoveAuthorizedMembers defines the Msg/RemoveAuthorizedMembers request type.
+type MsgRemoveAuthorizedMembers struct {
+	Authority string   `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	Members   []string `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
+}
+
+func (m *MsgRemoveAuthorizedMembers) Reset()         { *m = MsgRemoveAuthorizedMembers{} }
+func (m *MsgRemoveAuthorizedMembers) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveAuthorizedMembers) ProtoMessage()    {}
+func (*MsgRemoveAuthorizedMembers) Descriptor() ([]byte, []int) {
+	return fileDescriptor_37c8063cf8a41f43, []int{8}
+}
+func (m *MsgRemoveAuthorizedMembers) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveAuthorizedMembers) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveAuthorizedMembers.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveAuthorizedMembers) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveAuthorizedMembers.Merge(m, src)
+}
+func (m *MsgRemoveAuthorizedMembers) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveAuthorizedMembers) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveAuthorizedMembers.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveAuthorizedMembers proto.InternalMessageInfo
+
+// MsgRemoveAuthorizedMembersResponse defines the Msg/RemoveAuthorizedMembersResponse response type.
+type MsgRemoveAuthorizedMembersResponse struct {
+}
+
+func (m *MsgRemoveAuthorizedMembersResponse) Reset()         { *m = MsgRemoveAuthorizedMembersResponse{} }
+func (m *MsgRemoveAuthorizedMembersResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveAuthorizedMembersResponse) ProtoMessage()    {}
+func (*MsgRemoveAuthorizedMembersResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_37c8063cf8a41f43, []int{9}
+}
+func (m *MsgRemoveAuthorizedMembersResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveAuthorizedMembersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveAuthorizedMembersResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveAuthorizedMembersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveAuthorizedMembersResponse.Merge(m, src)
+}
+func (m *MsgRemoveAuthorizedMembersResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveAuthorizedMembersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveAuthorizedMembersResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveAuthorizedMembersResponse proto.InternalMessageInfo
 
 // MsgUpdateSaleLevel defines the Msg/UpdateSaleLevel request type.
 type MsgUpdateSaleLevel struct {
@@ -348,7 +424,7 @@ func (m *MsgUpdateSaleLevel) Reset()         { *m = MsgUpdateSaleLevel{} }
 func (m *MsgUpdateSaleLevel) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateSaleLevel) ProtoMessage()    {}
 func (*MsgUpdateSaleLevel) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{8}
+	return fileDescriptor_37c8063cf8a41f43, []int{10}
 }
 func (m *MsgUpdateSaleLevel) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -385,7 +461,7 @@ func (m *MsgUpdateSaleLevelResponse) Reset()         { *m = MsgUpdateSaleLevelRe
 func (m *MsgUpdateSaleLevelResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateSaleLevelResponse) ProtoMessage()    {}
 func (*MsgUpdateSaleLevelResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{9}
+	return fileDescriptor_37c8063cf8a41f43, []int{11}
 }
 func (m *MsgUpdateSaleLevelResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -426,7 +502,7 @@ func (m *MsgCommitComputingPower) Reset()         { *m = MsgCommitComputingPower
 func (m *MsgCommitComputingPower) String() string { return proto.CompactTextString(m) }
 func (*MsgCommitComputingPower) ProtoMessage()    {}
 func (*MsgCommitComputingPower) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{10}
+	return fileDescriptor_37c8063cf8a41f43, []int{12}
 }
 func (m *MsgCommitComputingPower) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -463,7 +539,7 @@ func (m *MsgCommitComputingPowerResponse) Reset()         { *m = MsgCommitComput
 func (m *MsgCommitComputingPowerResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCommitComputingPowerResponse) ProtoMessage()    {}
 func (*MsgCommitComputingPowerResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{11}
+	return fileDescriptor_37c8063cf8a41f43, []int{13}
 }
 func (m *MsgCommitComputingPowerResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -503,7 +579,7 @@ func (m *MsgClaimComputingPower) Reset()         { *m = MsgClaimComputingPower{}
 func (m *MsgClaimComputingPower) String() string { return proto.CompactTextString(m) }
 func (*MsgClaimComputingPower) ProtoMessage()    {}
 func (*MsgClaimComputingPower) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{12}
+	return fileDescriptor_37c8063cf8a41f43, []int{14}
 }
 func (m *MsgClaimComputingPower) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -540,7 +616,7 @@ func (m *MsgClaimComputingPowerResponse) Reset()         { *m = MsgClaimComputin
 func (m *MsgClaimComputingPowerResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgClaimComputingPowerResponse) ProtoMessage()    {}
 func (*MsgClaimComputingPowerResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_37c8063cf8a41f43, []int{13}
+	return fileDescriptor_37c8063cf8a41f43, []int{15}
 }
 func (m *MsgClaimComputingPowerResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -570,14 +646,16 @@ func (m *MsgClaimComputingPowerResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgClaimComputingPowerResponse proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterType((*MsgUpdateParams)(nil), "tabi.captains.v1.MsgUpdateParams")
+	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "tabi.captains.v1.MsgUpdateParamsResponse")
 	proto.RegisterType((*MsgCreateCaptainNode)(nil), "tabi.captains.v1.MsgCreateCaptainNode")
 	proto.RegisterType((*MsgCreateCaptainNodeResponse)(nil), "tabi.captains.v1.MsgCreateCaptainNodeResponse")
 	proto.RegisterType((*MsgCommitReport)(nil), "tabi.captains.v1.MsgCommitReport")
 	proto.RegisterType((*MsgCommitReportResponse)(nil), "tabi.captains.v1.MsgCommitReportResponse")
-	proto.RegisterType((*MsgAddAuthorizedMember)(nil), "tabi.captains.v1.MsgAddAuthorizedMember")
-	proto.RegisterType((*MsgAddAuthorizedMemberResponse)(nil), "tabi.captains.v1.MsgAddAuthorizedMemberResponse")
-	proto.RegisterType((*MsgRemoveAuthorizedMember)(nil), "tabi.captains.v1.MsgRemoveAuthorizedMember")
-	proto.RegisterType((*MsgRemoveAuthorizedMemberResponse)(nil), "tabi.captains.v1.MsgRemoveAuthorizedMemberResponse")
+	proto.RegisterType((*MsgAddAuthorizedMembers)(nil), "tabi.captains.v1.MsgAddAuthorizedMembers")
+	proto.RegisterType((*MsgAddAuthorizedMembersResponse)(nil), "tabi.captains.v1.MsgAddAuthorizedMembersResponse")
+	proto.RegisterType((*MsgRemoveAuthorizedMembers)(nil), "tabi.captains.v1.MsgRemoveAuthorizedMembers")
+	proto.RegisterType((*MsgRemoveAuthorizedMembersResponse)(nil), "tabi.captains.v1.MsgRemoveAuthorizedMembersResponse")
 	proto.RegisterType((*MsgUpdateSaleLevel)(nil), "tabi.captains.v1.MsgUpdateSaleLevel")
 	proto.RegisterType((*MsgUpdateSaleLevelResponse)(nil), "tabi.captains.v1.MsgUpdateSaleLevelResponse")
 	proto.RegisterType((*MsgCommitComputingPower)(nil), "tabi.captains.v1.MsgCommitComputingPower")
@@ -589,52 +667,56 @@ func init() {
 func init() { proto.RegisterFile("tabi/captains/v1/tx.proto", fileDescriptor_37c8063cf8a41f43) }
 
 var fileDescriptor_37c8063cf8a41f43 = []byte{
-	// 715 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x56, 0xcb, 0x6e, 0xd3, 0x4c,
-	0x14, 0x8e, 0xdb, 0xfe, 0xa9, 0x72, 0xfa, 0x8b, 0x82, 0x09, 0xb9, 0x58, 0xc5, 0x69, 0x0b, 0x42,
-	0x2d, 0x17, 0xbb, 0x17, 0xc4, 0xa2, 0xbb, 0x34, 0x0b, 0x54, 0x89, 0x20, 0xe4, 0x8a, 0x0d, 0x42,
-	0x8a, 0x9c, 0xcc, 0x68, 0x6a, 0x61, 0x7b, 0x5c, 0xcf, 0x24, 0xbd, 0x20, 0x36, 0xbc, 0x00, 0x3c,
-	0x05, 0x5b, 0x58, 0xf0, 0x10, 0x15, 0xab, 0x8a, 0x15, 0x2b, 0x04, 0xed, 0x82, 0xd7, 0x40, 0xbe,
-	0xa6, 0x89, 0x27, 0x6d, 0x28, 0x0b, 0x76, 0x1e, 0x9f, 0x6f, 0xbe, 0xcb, 0x1c, 0xcf, 0x91, 0xa1,
-	0xca, 0xcd, 0xb6, 0xa5, 0x77, 0x4c, 0x8f, 0x9b, 0x96, 0xcb, 0xf4, 0xde, 0xaa, 0xce, 0xf7, 0x35,
-	0xcf, 0xa7, 0x9c, 0xca, 0x57, 0x83, 0x92, 0x96, 0x94, 0xb4, 0xde, 0xaa, 0x52, 0x24, 0x94, 0xd0,
-	0xb0, 0xa8, 0x07, 0x4f, 0x11, 0x4e, 0x29, 0x77, 0x28, 0x73, 0x28, 0xd3, 0x1d, 0x46, 0x82, 0xfd,
-	0x0e, 0x23, 0x71, 0xa1, 0x1a, 0x15, 0x5a, 0xd1, 0x8e, 0x68, 0x11, 0x97, 0x6a, 0x19, 0xd9, 0x54,
-	0x27, 0x04, 0x2c, 0x7e, 0x94, 0xa0, 0xd8, 0x64, 0xa4, 0xe1, 0x63, 0x93, 0xe3, 0x46, 0x54, 0x7b,
-	0x4a, 0x11, 0x96, 0x1f, 0x41, 0xc1, 0xec, 0xf2, 0x1d, 0xea, 0x5b, 0xfc, 0xa0, 0x22, 0xcd, 0x4b,
-	0x4b, 0x85, 0xcd, 0xca, 0xd7, 0xcf, 0x0f, 0x8a, 0x31, 0x7d, 0x1d, 0x21, 0x1f, 0x33, 0xb6, 0xcd,
-	0x7d, 0xcb, 0x25, 0x46, 0x1f, 0x2a, 0x6b, 0xf0, 0x1f, 0xdd, 0x73, 0xb1, 0x5f, 0x99, 0xb8, 0x60,
-	0x4f, 0x04, 0x93, 0x6b, 0x30, 0x83, 0xac, 0x9e, 0xc5, 0x2c, 0xea, 0xb6, 0x2c, 0x54, 0x99, 0x0c,
-	0x76, 0x19, 0x90, 0xbc, 0xda, 0x42, 0x1b, 0x57, 0xde, 0xfe, 0xfa, 0x74, 0xb7, 0x2f, 0xb0, 0xa8,
-	0xc2, 0x9c, 0xc8, 0xb0, 0x81, 0x99, 0x47, 0x5d, 0x86, 0x17, 0x77, 0x61, 0x36, 0xa8, 0x53, 0xc7,
-	0xb1, 0xb8, 0x81, 0x3d, 0xea, 0xf3, 0x4b, 0x67, 0x29, 0x41, 0xde, 0x0f, 0x19, 0xa2, 0x30, 0x46,
-	0xbc, 0xca, 0x58, 0xaa, 0x42, 0x79, 0x48, 0x32, 0x75, 0x73, 0x08, 0xa5, 0x26, 0x23, 0x75, 0x84,
-	0xea, 0x11, 0xfa, 0x10, 0xa3, 0x26, 0x76, 0xda, 0xd8, 0xbf, 0xb4, 0xa9, 0x0a, 0x4c, 0x3b, 0x21,
-	0x03, 0xab, 0x4c, 0xcc, 0x4f, 0x2e, 0x15, 0x8c, 0x64, 0x99, 0xb1, 0x35, 0x0f, 0xaa, 0x58, 0x3b,
-	0x75, 0xf7, 0x06, 0xaa, 0x4d, 0x46, 0x0c, 0xec, 0xd0, 0x1e, 0xfe, 0x07, 0x06, 0x6f, 0xc1, 0xc2,
-	0x48, 0xf9, 0xd4, 0xe3, 0x6b, 0x90, 0x9b, 0x8c, 0x3c, 0xf7, 0x90, 0xc9, 0xf1, 0xb6, 0x69, 0xe3,
-	0x27, 0xb8, 0x87, 0xed, 0x4b, 0x9b, 0xbb, 0x09, 0xc0, 0x4c, 0x1b, 0xb7, 0xec, 0x80, 0x25, 0x6c,
-	0xeb, 0x94, 0x51, 0x60, 0x09, 0x6d, 0xc6, 0xe1, 0x1c, 0x28, 0x59, 0xf1, 0xd4, 0xda, 0x17, 0xe9,
-	0x4c, 0xe3, 0x1b, 0xd4, 0xf1, 0xba, 0xdc, 0x72, 0xc9, 0x33, 0xba, 0xf7, 0x17, 0xa7, 0x47, 0xa0,
-	0xdc, 0x49, 0x98, 0x5a, 0x5e, 0x40, 0xd5, 0xf2, 0xf1, 0x9e, 0xe9, 0xa3, 0xe8, 0x34, 0x67, 0xd6,
-	0x96, 0xb5, 0xe1, 0x79, 0xa1, 0x35, 0x6c, 0xd3, 0x72, 0xcc, 0xb6, 0x8d, 0x07, 0x3d, 0x6c, 0x4e,
-	0x1d, 0x7d, 0xaf, 0xe5, 0x8c, 0x1b, 0x9d, 0x81, 0xb7, 0x46, 0xc4, 0x96, 0x89, 0xba, 0x00, 0xb5,
-	0x11, 0x59, 0xd2, 0xbc, 0x1f, 0xa4, 0xf0, 0x6b, 0x0e, 0xe5, 0x86, 0xe2, 0xae, 0x40, 0x9e, 0x61,
-	0x17, 0x61, 0xff, 0xc2, 0xac, 0x31, 0x4e, 0x7e, 0x08, 0xa5, 0xe1, 0xa0, 0xa6, 0x43, 0xbb, 0x2e,
-	0x8f, 0xbb, 0x52, 0x1c, 0xb4, 0x5d, 0x0f, 0x6b, 0x72, 0x19, 0xa6, 0x5d, 0x8a, 0x70, 0x7f, 0x54,
-	0xe4, 0x83, 0xe5, 0x16, 0xda, 0x98, 0x09, 0xe2, 0xc4, 0xdc, 0xf1, 0x97, 0x2f, 0xf0, 0x99, 0x44,
-	0x59, 0x7b, 0x97, 0x87, 0xc9, 0x26, 0x23, 0xf2, 0x2b, 0xb8, 0x96, 0x9d, 0x7d, 0x77, 0xb2, 0x47,
-	0x2c, 0x1a, 0x39, 0x8a, 0x36, 0x1e, 0x2e, 0x11, 0x95, 0x5f, 0xc2, 0xff, 0x03, 0x73, 0x69, 0x41,
-	0xbc, 0xff, 0x0c, 0x44, 0x59, 0xbe, 0x10, 0x92, 0xb2, 0xef, 0xc2, 0x75, 0xd1, 0x9c, 0x59, 0x12,
-	0x32, 0x08, 0x90, 0xca, 0xca, 0xb8, 0xc8, 0x54, 0xf2, 0x10, 0x4a, 0x23, 0x86, 0xc7, 0x3d, 0x21,
-	0x97, 0x18, 0xac, 0xac, 0xff, 0x01, 0x38, 0xd5, 0xc6, 0x30, 0x3b, 0x3c, 0x14, 0x6e, 0x0b, 0x79,
-	0x86, 0x50, 0xca, 0xfd, 0x71, 0x50, 0xa9, 0x0c, 0x87, 0xa2, 0xf0, 0x7e, 0x9f, 0xd7, 0x98, 0x41,
-	0xa8, 0xb2, 0x3a, 0x36, 0xf4, 0x6c, 0x2f, 0x45, 0xb7, 0x4c, 0xdc, 0x4b, 0x01, 0x72, 0x44, 0x2f,
-	0xcf, 0xb9, 0x11, 0x9b, 0x8f, 0x8f, 0x7e, 0xaa, 0xb9, 0xa3, 0x13, 0x55, 0x3a, 0x3e, 0x51, 0xa5,
-	0x1f, 0x27, 0xaa, 0xf4, 0xfe, 0x54, 0xcd, 0x1d, 0x9f, 0xaa, 0xb9, 0x6f, 0xa7, 0x6a, 0xee, 0xc5,
-	0x32, 0xb1, 0xf8, 0x4e, 0xb7, 0xad, 0x75, 0xa8, 0xa3, 0x07, 0xcc, 0xb6, 0xd9, 0x66, 0xe1, 0x83,
-	0xbe, 0xdf, 0xff, 0xbd, 0xe0, 0x07, 0x1e, 0x66, 0xed, 0x7c, 0xf8, 0x67, 0xb1, 0xfe, 0x3b, 0x00,
-	0x00, 0xff, 0xff, 0xd8, 0x87, 0x60, 0x50, 0xf3, 0x08, 0x00, 0x00,
+	// 773 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x56, 0xcd, 0x4e, 0xdb, 0x4a,
+	0x14, 0x8e, 0x81, 0x1b, 0x94, 0x13, 0x74, 0xb9, 0xd7, 0x37, 0x97, 0x04, 0x8b, 0x3a, 0x21, 0x42,
+	0x55, 0xa8, 0xa8, 0x03, 0x14, 0xb1, 0x60, 0x17, 0xb2, 0xa8, 0x90, 0x9a, 0x0a, 0x19, 0x75, 0x53,
+	0x21, 0x45, 0x93, 0x78, 0x64, 0xac, 0xc6, 0x1e, 0x33, 0x33, 0x09, 0xd0, 0xaa, 0x5d, 0xf4, 0x09,
+	0xda, 0x97, 0xe8, 0xb6, 0x5d, 0xf4, 0x21, 0x50, 0x57, 0xa8, 0xab, 0xae, 0xaa, 0x16, 0x16, 0x7d,
+	0x80, 0xbe, 0x40, 0xe5, 0xdf, 0xfc, 0xd8, 0x0e, 0x69, 0x36, 0xdd, 0x79, 0x7c, 0xbe, 0xf9, 0x7e,
+	0xce, 0x8c, 0x8f, 0x0c, 0xcb, 0x1c, 0xb5, 0x8c, 0x6a, 0x1b, 0xd9, 0x1c, 0x19, 0x16, 0xab, 0xf6,
+	0xb6, 0xaa, 0xfc, 0x5c, 0xb1, 0x29, 0xe1, 0x44, 0xfc, 0xc7, 0x29, 0x29, 0x41, 0x49, 0xe9, 0x6d,
+	0x49, 0x39, 0x9d, 0xe8, 0xc4, 0x2d, 0x56, 0x9d, 0x27, 0x0f, 0x27, 0xe5, 0xdb, 0x84, 0x99, 0x84,
+	0x55, 0x4d, 0xa6, 0x3b, 0xfb, 0x4d, 0xa6, 0xfb, 0x85, 0x65, 0xaf, 0xd0, 0xf4, 0x76, 0x78, 0x0b,
+	0xbf, 0x54, 0x8c, 0xc8, 0x86, 0x3a, 0x2e, 0xa0, 0xfc, 0x56, 0x80, 0xc5, 0x06, 0xd3, 0x9f, 0xd8,
+	0x1a, 0xe2, 0xf8, 0x10, 0x51, 0x64, 0x32, 0x71, 0x17, 0x32, 0xa8, 0xcb, 0x4f, 0x08, 0x35, 0xf8,
+	0x45, 0x41, 0x28, 0x09, 0x95, 0xcc, 0x7e, 0xe1, 0xf3, 0xc7, 0xfb, 0x39, 0x9f, 0xb9, 0xa6, 0x69,
+	0x14, 0x33, 0x76, 0xc4, 0xa9, 0x61, 0xe9, 0x6a, 0x1f, 0x2a, 0xee, 0x42, 0xda, 0x76, 0x19, 0x0a,
+	0x33, 0x25, 0xa1, 0x92, 0xdd, 0x2e, 0x28, 0xa3, 0xc9, 0x14, 0x4f, 0x61, 0x7f, 0xee, 0xf2, 0x6b,
+	0x31, 0xa5, 0xfa, 0xe8, 0xbd, 0xbf, 0x5f, 0xff, 0xf8, 0x70, 0xaf, 0xcf, 0x53, 0x5e, 0x86, 0xfc,
+	0x88, 0x25, 0x15, 0x33, 0x9b, 0x58, 0x0c, 0x97, 0xdf, 0x0b, 0x90, 0x6b, 0x30, 0xbd, 0x4e, 0x31,
+	0xe2, 0xb8, 0xee, 0x11, 0x3f, 0x26, 0x1a, 0x9e, 0xda, 0xb3, 0x02, 0x7f, 0x91, 0x33, 0x0b, 0x53,
+	0xd7, 0xf2, 0xb8, 0x3d, 0x1e, 0x4c, 0x2c, 0x42, 0x56, 0x33, 0x7a, 0x06, 0x33, 0x88, 0xd5, 0x34,
+	0xb4, 0xc2, 0xac, 0xb3, 0x4b, 0x85, 0xe0, 0xd5, 0x81, 0x16, 0x09, 0x23, 0xc3, 0x4a, 0x9c, 0xe1,
+	0x30, 0xd1, 0xa9, 0xdb, 0xff, 0x3a, 0x31, 0x4d, 0x83, 0xab, 0xd8, 0x26, 0x94, 0x4f, 0x9d, 0x65,
+	0x09, 0xd2, 0xd4, 0x65, 0xf0, 0xc2, 0xa8, 0xfe, 0x2a, 0xa1, 0xbf, 0x83, 0x92, 0xa1, 0x9b, 0x17,
+	0x6e, 0xa9, 0xa6, 0x69, 0x35, 0x0f, 0xfd, 0x1c, 0x6b, 0x0d, 0x6c, 0xb6, 0x30, 0x9d, 0xfe, 0x56,
+	0x14, 0x60, 0xde, 0xf4, 0x28, 0x0a, 0x33, 0xa5, 0xd9, 0x4a, 0x46, 0x0d, 0x96, 0x11, 0x5f, 0xab,
+	0x50, 0x4c, 0x10, 0x0f, 0xfd, 0xbd, 0x02, 0xa9, 0xc1, 0x74, 0x15, 0x9b, 0xa4, 0x87, 0xff, 0x84,
+	0xc5, 0x35, 0x28, 0x27, 0xeb, 0x0f, 0x74, 0x51, 0x0c, 0x2f, 0xf0, 0x11, 0xea, 0xe0, 0x47, 0xb8,
+	0x87, 0x3b, 0x53, 0xbb, 0xbb, 0x03, 0xc0, 0x50, 0x07, 0x37, 0x3b, 0x0e, 0x8b, 0x7b, 0xb4, 0x73,
+	0x6a, 0x86, 0x05, 0xb4, 0x11, 0x8b, 0x2b, 0x6e, 0x8b, 0x46, 0xc4, 0x43, 0x6b, 0x9f, 0x84, 0x81,
+	0xc3, 0xaf, 0x13, 0xd3, 0xee, 0x72, 0xc3, 0xd2, 0x0f, 0xc9, 0x19, 0xa6, 0x53, 0x1b, 0xd4, 0x21,
+	0xdf, 0x0e, 0x98, 0x9a, 0xb6, 0x43, 0xd5, 0xa4, 0xf8, 0x0c, 0x51, 0xcd, 0x6b, 0x67, 0x76, 0x7b,
+	0x3d, 0x3a, 0x08, 0xea, 0x1d, 0x64, 0x98, 0xa8, 0xd5, 0xc1, 0xc3, 0x1e, 0xfc, 0xc9, 0xf0, 0x7f,
+	0x7b, 0xe8, 0xad, 0xea, 0xb1, 0x25, 0x5c, 0x98, 0xb8, 0x2c, 0x61, 0xde, 0x77, 0x02, 0x2c, 0x39,
+	0x18, 0x47, 0x6e, 0x24, 0xee, 0x26, 0xa4, 0x19, 0xb6, 0x34, 0x4c, 0x6f, 0xcd, 0xea, 0xe3, 0xc4,
+	0x1d, 0x58, 0x1a, 0x0d, 0x8a, 0x4c, 0xd2, 0xb5, 0xb8, 0x7f, 0x2a, 0xb9, 0x61, 0xdb, 0x35, 0xb7,
+	0x26, 0xe6, 0x61, 0xde, 0x22, 0x1a, 0xee, 0x8f, 0x8b, 0xb4, 0xb3, 0x3c, 0xd0, 0xf6, 0xb2, 0x4e,
+	0x1c, 0x9f, 0xbb, 0x5c, 0x02, 0x39, 0xde, 0x67, 0x10, 0x65, 0xfb, 0x67, 0x1a, 0x66, 0x1b, 0x4c,
+	0x17, 0x8f, 0x61, 0x61, 0x68, 0x5c, 0xaf, 0x46, 0xbb, 0x3b, 0x32, 0x3e, 0xa5, 0xf5, 0x5b, 0x21,
+	0x81, 0x8a, 0xf8, 0x0c, 0xfe, 0x8d, 0x4e, 0xd7, 0xbb, 0xb1, 0xfb, 0x23, 0x38, 0x49, 0x99, 0x0c,
+	0x17, 0x8a, 0x1d, 0xc3, 0xc2, 0xd0, 0xe4, 0x8b, 0x8f, 0x32, 0x08, 0x49, 0x88, 0x12, 0x37, 0xcc,
+	0x44, 0x0e, 0xb9, 0xd8, 0x49, 0x16, 0x4f, 0x11, 0x07, 0x95, 0xb6, 0x26, 0x86, 0x86, 0xaa, 0x2f,
+	0x21, 0x9f, 0x34, 0x9f, 0x36, 0x62, 0xd9, 0x12, 0xd0, 0xd2, 0xce, 0xef, 0xa0, 0x43, 0x79, 0x0c,
+	0x8b, 0xa3, 0x83, 0x67, 0x6d, 0xcc, 0xe9, 0x87, 0x28, 0x69, 0x63, 0x12, 0xd4, 0x60, 0x6f, 0x63,
+	0x67, 0xc8, 0xb8, 0xe3, 0x19, 0x86, 0x26, 0xf4, 0x76, 0xdc, 0xd7, 0x2c, 0x9e, 0xc2, 0x7f, 0x71,
+	0x5f, 0x72, 0x25, 0x9e, 0x29, 0x8a, 0x94, 0x36, 0x27, 0x45, 0x06, 0x92, 0xfb, 0x0f, 0x2f, 0xbf,
+	0xcb, 0xa9, 0xcb, 0x6b, 0x59, 0xb8, 0xba, 0x96, 0x85, 0x6f, 0xd7, 0xb2, 0xf0, 0xe6, 0x46, 0x4e,
+	0x5d, 0xdd, 0xc8, 0xa9, 0x2f, 0x37, 0x72, 0xea, 0xe9, 0xba, 0x6e, 0xf0, 0x93, 0x6e, 0x4b, 0x69,
+	0x13, 0xb3, 0xea, 0x30, 0x77, 0x50, 0x8b, 0xb9, 0x0f, 0xd5, 0xf3, 0xfe, 0x5f, 0x17, 0xbf, 0xb0,
+	0x31, 0x6b, 0xa5, 0xdd, 0x1f, 0xae, 0x07, 0xbf, 0x02, 0x00, 0x00, 0xff, 0xff, 0xf9, 0xe3, 0x17,
+	0xf3, 0x0a, 0x0a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -649,14 +731,16 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// UpdateParams updates the module params.
+	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
 	// CreateCaptainNode creates a captain node and assign it to the owner.
 	CreateCaptainNode(ctx context.Context, in *MsgCreateCaptainNode, opts ...grpc.CallOption) (*MsgCreateCaptainNodeResponse, error)
 	// CommitReport commits the running state report of captain nodes
 	CommitReport(ctx context.Context, in *MsgCommitReport, opts ...grpc.CallOption) (*MsgCommitReportResponse, error)
-	// AddAuthorizedMember adds authorized members allowed to access permission interface.
-	AddAuthorizedMember(ctx context.Context, in *MsgAddAuthorizedMember, opts ...grpc.CallOption) (*MsgAddAuthorizedMemberResponse, error)
-	// RemoveAuthorized removes authorized members.
-	RemoveAuthorizedMember(ctx context.Context, in *MsgRemoveAuthorizedMember, opts ...grpc.CallOption) (*MsgRemoveAuthorizedMemberResponse, error)
+	// AddAuthorizedMembers adds authorized members allowed to access permission interface.
+	AddAuthorizedMembers(ctx context.Context, in *MsgAddAuthorizedMembers, opts ...grpc.CallOption) (*MsgAddAuthorizedMembersResponse, error)
+	// RemoveAuthorizedMembers removes authorized members.
+	RemoveAuthorizedMembers(ctx context.Context, in *MsgRemoveAuthorizedMembers, opts ...grpc.CallOption) (*MsgRemoveAuthorizedMembersResponse, error)
 	// UpdateSaleLevel updates CurrentLevelForSale in module params.
 	UpdateSaleLevel(ctx context.Context, in *MsgUpdateSaleLevel, opts ...grpc.CallOption) (*MsgUpdateSaleLevelResponse, error)
 	// CommitComputingPower assign pending computing power reward to users for later claiming.
@@ -671,6 +755,15 @@ type msgClient struct {
 
 func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
+}
+
+func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error) {
+	out := new(MsgUpdateParamsResponse)
+	err := c.cc.Invoke(ctx, "/tabi.captains.v1.Msg/UpdateParams", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *msgClient) CreateCaptainNode(ctx context.Context, in *MsgCreateCaptainNode, opts ...grpc.CallOption) (*MsgCreateCaptainNodeResponse, error) {
@@ -691,18 +784,18 @@ func (c *msgClient) CommitReport(ctx context.Context, in *MsgCommitReport, opts 
 	return out, nil
 }
 
-func (c *msgClient) AddAuthorizedMember(ctx context.Context, in *MsgAddAuthorizedMember, opts ...grpc.CallOption) (*MsgAddAuthorizedMemberResponse, error) {
-	out := new(MsgAddAuthorizedMemberResponse)
-	err := c.cc.Invoke(ctx, "/tabi.captains.v1.Msg/AddAuthorizedMember", in, out, opts...)
+func (c *msgClient) AddAuthorizedMembers(ctx context.Context, in *MsgAddAuthorizedMembers, opts ...grpc.CallOption) (*MsgAddAuthorizedMembersResponse, error) {
+	out := new(MsgAddAuthorizedMembersResponse)
+	err := c.cc.Invoke(ctx, "/tabi.captains.v1.Msg/AddAuthorizedMembers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) RemoveAuthorizedMember(ctx context.Context, in *MsgRemoveAuthorizedMember, opts ...grpc.CallOption) (*MsgRemoveAuthorizedMemberResponse, error) {
-	out := new(MsgRemoveAuthorizedMemberResponse)
-	err := c.cc.Invoke(ctx, "/tabi.captains.v1.Msg/RemoveAuthorizedMember", in, out, opts...)
+func (c *msgClient) RemoveAuthorizedMembers(ctx context.Context, in *MsgRemoveAuthorizedMembers, opts ...grpc.CallOption) (*MsgRemoveAuthorizedMembersResponse, error) {
+	out := new(MsgRemoveAuthorizedMembersResponse)
+	err := c.cc.Invoke(ctx, "/tabi.captains.v1.Msg/RemoveAuthorizedMembers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -738,14 +831,16 @@ func (c *msgClient) ClaimComputingPower(ctx context.Context, in *MsgClaimComputi
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// UpdateParams updates the module params.
+	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
 	// CreateCaptainNode creates a captain node and assign it to the owner.
 	CreateCaptainNode(context.Context, *MsgCreateCaptainNode) (*MsgCreateCaptainNodeResponse, error)
 	// CommitReport commits the running state report of captain nodes
 	CommitReport(context.Context, *MsgCommitReport) (*MsgCommitReportResponse, error)
-	// AddAuthorizedMember adds authorized members allowed to access permission interface.
-	AddAuthorizedMember(context.Context, *MsgAddAuthorizedMember) (*MsgAddAuthorizedMemberResponse, error)
-	// RemoveAuthorized removes authorized members.
-	RemoveAuthorizedMember(context.Context, *MsgRemoveAuthorizedMember) (*MsgRemoveAuthorizedMemberResponse, error)
+	// AddAuthorizedMembers adds authorized members allowed to access permission interface.
+	AddAuthorizedMembers(context.Context, *MsgAddAuthorizedMembers) (*MsgAddAuthorizedMembersResponse, error)
+	// RemoveAuthorizedMembers removes authorized members.
+	RemoveAuthorizedMembers(context.Context, *MsgRemoveAuthorizedMembers) (*MsgRemoveAuthorizedMembersResponse, error)
 	// UpdateSaleLevel updates CurrentLevelForSale in module params.
 	UpdateSaleLevel(context.Context, *MsgUpdateSaleLevel) (*MsgUpdateSaleLevelResponse, error)
 	// CommitComputingPower assign pending computing power reward to users for later claiming.
@@ -758,17 +853,20 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
 func (*UnimplementedMsgServer) CreateCaptainNode(ctx context.Context, req *MsgCreateCaptainNode) (*MsgCreateCaptainNodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCaptainNode not implemented")
 }
 func (*UnimplementedMsgServer) CommitReport(ctx context.Context, req *MsgCommitReport) (*MsgCommitReportResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CommitReport not implemented")
 }
-func (*UnimplementedMsgServer) AddAuthorizedMember(ctx context.Context, req *MsgAddAuthorizedMember) (*MsgAddAuthorizedMemberResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddAuthorizedMember not implemented")
+func (*UnimplementedMsgServer) AddAuthorizedMembers(ctx context.Context, req *MsgAddAuthorizedMembers) (*MsgAddAuthorizedMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAuthorizedMembers not implemented")
 }
-func (*UnimplementedMsgServer) RemoveAuthorizedMember(ctx context.Context, req *MsgRemoveAuthorizedMember) (*MsgRemoveAuthorizedMemberResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RemoveAuthorizedMember not implemented")
+func (*UnimplementedMsgServer) RemoveAuthorizedMembers(ctx context.Context, req *MsgRemoveAuthorizedMembers) (*MsgRemoveAuthorizedMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveAuthorizedMembers not implemented")
 }
 func (*UnimplementedMsgServer) UpdateSaleLevel(ctx context.Context, req *MsgUpdateSaleLevel) (*MsgUpdateSaleLevelResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSaleLevel not implemented")
@@ -782,6 +880,24 @@ func (*UnimplementedMsgServer) ClaimComputingPower(ctx context.Context, req *Msg
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tabi.captains.v1.Msg/UpdateParams",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateParams(ctx, req.(*MsgUpdateParams))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_CreateCaptainNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -820,38 +936,38 @@ func _Msg_CommitReport_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_AddAuthorizedMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgAddAuthorizedMember)
+func _Msg_AddAuthorizedMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddAuthorizedMembers)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).AddAuthorizedMember(ctx, in)
+		return srv.(MsgServer).AddAuthorizedMembers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tabi.captains.v1.Msg/AddAuthorizedMember",
+		FullMethod: "/tabi.captains.v1.Msg/AddAuthorizedMembers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).AddAuthorizedMember(ctx, req.(*MsgAddAuthorizedMember))
+		return srv.(MsgServer).AddAuthorizedMembers(ctx, req.(*MsgAddAuthorizedMembers))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_RemoveAuthorizedMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgRemoveAuthorizedMember)
+func _Msg_RemoveAuthorizedMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoveAuthorizedMembers)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).RemoveAuthorizedMember(ctx, in)
+		return srv.(MsgServer).RemoveAuthorizedMembers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tabi.captains.v1.Msg/RemoveAuthorizedMember",
+		FullMethod: "/tabi.captains.v1.Msg/RemoveAuthorizedMembers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).RemoveAuthorizedMember(ctx, req.(*MsgRemoveAuthorizedMember))
+		return srv.(MsgServer).RemoveAuthorizedMembers(ctx, req.(*MsgRemoveAuthorizedMembers))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -915,6 +1031,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "UpdateParams",
+			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
 			MethodName: "CreateCaptainNode",
 			Handler:    _Msg_CreateCaptainNode_Handler,
 		},
@@ -923,12 +1043,12 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_CommitReport_Handler,
 		},
 		{
-			MethodName: "AddAuthorizedMember",
-			Handler:    _Msg_AddAuthorizedMember_Handler,
+			MethodName: "AddAuthorizedMembers",
+			Handler:    _Msg_AddAuthorizedMembers_Handler,
 		},
 		{
-			MethodName: "RemoveAuthorizedMember",
-			Handler:    _Msg_RemoveAuthorizedMember_Handler,
+			MethodName: "RemoveAuthorizedMembers",
+			Handler:    _Msg_RemoveAuthorizedMembers_Handler,
 		},
 		{
 			MethodName: "UpdateSaleLevel",
@@ -945,6 +1065,69 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "tabi/captains/v1/tx.proto",
+}
+
+func (m *MsgUpdateParams) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateParams) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateParamsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateParamsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
 }
 
 func (m *MsgCreateCaptainNode) Marshal() (dAtA []byte, err error) {
@@ -1074,7 +1257,7 @@ func (m *MsgCommitReportResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgAddAuthorizedMember) Marshal() (dAtA []byte, err error) {
+func (m *MsgAddAuthorizedMembers) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1084,12 +1267,12 @@ func (m *MsgAddAuthorizedMember) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddAuthorizedMember) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAddAuthorizedMembers) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddAuthorizedMember) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAddAuthorizedMembers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1113,7 +1296,7 @@ func (m *MsgAddAuthorizedMember) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgAddAuthorizedMemberResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgAddAuthorizedMembersResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1123,12 +1306,12 @@ func (m *MsgAddAuthorizedMemberResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddAuthorizedMemberResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAddAuthorizedMembersResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddAuthorizedMemberResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAddAuthorizedMembersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1136,7 +1319,7 @@ func (m *MsgAddAuthorizedMemberResponse) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgRemoveAuthorizedMember) Marshal() (dAtA []byte, err error) {
+func (m *MsgRemoveAuthorizedMembers) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1146,12 +1329,12 @@ func (m *MsgRemoveAuthorizedMember) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgRemoveAuthorizedMember) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgRemoveAuthorizedMembers) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgRemoveAuthorizedMember) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgRemoveAuthorizedMembers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1175,7 +1358,7 @@ func (m *MsgRemoveAuthorizedMember) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgRemoveAuthorizedMemberResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgRemoveAuthorizedMembersResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1185,12 +1368,12 @@ func (m *MsgRemoveAuthorizedMemberResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgRemoveAuthorizedMemberResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgRemoveAuthorizedMembersResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgRemoveAuthorizedMemberResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgRemoveAuthorizedMembersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1399,6 +1582,30 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *MsgUpdateParams) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Params.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgUpdateParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
 func (m *MsgCreateCaptainNode) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1455,7 +1662,7 @@ func (m *MsgCommitReportResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgAddAuthorizedMember) Size() (n int) {
+func (m *MsgAddAuthorizedMembers) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1474,7 +1681,7 @@ func (m *MsgAddAuthorizedMember) Size() (n int) {
 	return n
 }
 
-func (m *MsgAddAuthorizedMemberResponse) Size() (n int) {
+func (m *MsgAddAuthorizedMembersResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1483,7 +1690,7 @@ func (m *MsgAddAuthorizedMemberResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgRemoveAuthorizedMember) Size() (n int) {
+func (m *MsgRemoveAuthorizedMembers) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1502,7 +1709,7 @@ func (m *MsgRemoveAuthorizedMember) Size() (n int) {
 	return n
 }
 
-func (m *MsgRemoveAuthorizedMemberResponse) Size() (n int) {
+func (m *MsgRemoveAuthorizedMembersResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1598,6 +1805,171 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgUpdateParams) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateParams: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateParams: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Params", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateParamsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *MsgCreateCaptainNode) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -1959,7 +2331,7 @@ func (m *MsgCommitReportResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgAddAuthorizedMember) Unmarshal(dAtA []byte) error {
+func (m *MsgAddAuthorizedMembers) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1982,10 +2354,10 @@ func (m *MsgAddAuthorizedMember) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddAuthorizedMember: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAddAuthorizedMembers: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddAuthorizedMember: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAddAuthorizedMembers: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2073,7 +2445,7 @@ func (m *MsgAddAuthorizedMember) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgAddAuthorizedMemberResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgAddAuthorizedMembersResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2096,10 +2468,10 @@ func (m *MsgAddAuthorizedMemberResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddAuthorizedMemberResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAddAuthorizedMembersResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddAuthorizedMemberResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAddAuthorizedMembersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -2123,7 +2495,7 @@ func (m *MsgAddAuthorizedMemberResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgRemoveAuthorizedMember) Unmarshal(dAtA []byte) error {
+func (m *MsgRemoveAuthorizedMembers) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2146,10 +2518,10 @@ func (m *MsgRemoveAuthorizedMember) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgRemoveAuthorizedMember: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgRemoveAuthorizedMembers: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgRemoveAuthorizedMember: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgRemoveAuthorizedMembers: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2237,7 +2609,7 @@ func (m *MsgRemoveAuthorizedMember) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgRemoveAuthorizedMemberResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgRemoveAuthorizedMembersResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2260,10 +2632,10 @@ func (m *MsgRemoveAuthorizedMemberResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgRemoveAuthorizedMemberResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgRemoveAuthorizedMembersResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgRemoveAuthorizedMemberResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgRemoveAuthorizedMembersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

@@ -25,25 +25,25 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 }
 
 // UpdateParams implement the interface of types.MsgServer
-//func (m msgServer) UpdateParams(
-//	goCtx context.Context,
-//	msg *types.MsgUpdateParams,
-//) (*types.MsgUpdateParamsResponse, error) {
-//	if m.k.authority.String() != msg.Authority {
-//		return nil, sdkerrors.Wrapf(
-//			sdkerrors.ErrUnauthorized,
-//			"invalid authority; expected %s, got %s",
-//			m.k.authority.String(),
-//			msg.Authority,
-//		)
-//	}
-//
-//	ctx := sdk.UnwrapSDKContext(goCtx)
-//	if err := m.k.SetParams(ctx, msg.Params); err != nil {
-//		return nil, err
-//	}
-//	return &types.MsgUpdateParamsResponse{}, nil
-//}
+func (m msgServer) UpdateParams(
+	goCtx context.Context,
+	msg *types.MsgUpdateParams,
+) (*types.MsgUpdateParamsResponse, error) {
+	if m.k.authority.String() != msg.Authority {
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"invalid authority; expected %s, got %s",
+			m.k.authority.String(),
+			msg.Authority,
+		)
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	if err := m.k.SetParams(ctx, msg.Params); err != nil {
+		return nil, err
+	}
+	return &types.MsgUpdateParamsResponse{}, nil
+}
 
 // CreateCaptainNode implement the interface of types.MsgServer
 func (m msgServer) CreateCaptainNode(
@@ -132,10 +132,10 @@ func (m msgServer) CommitReport(
 	return &types.MsgCommitReportResponse{}, nil
 }
 
-func (m msgServer) AddAuthorizedMember(
+func (m msgServer) AddAuthorizedMembers(
 	goCtx context.Context,
-	msg *types.MsgAddAuthorizedMember,
-) (*types.MsgAddAuthorizedMemberResponse, error) {
+	msg *types.MsgAddAuthorizedMembers,
+) (*types.MsgAddAuthorizedMembersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	sender, err := sdk.AccAddressFromBech32(msg.Authority)
 	if err != nil {
@@ -163,13 +163,13 @@ func (m msgServer) AddAuthorizedMember(
 	resultEvents = append(resultEvents, events...)
 	ctx.EventManager().EmitEvents(resultEvents)
 
-	return &types.MsgAddAuthorizedMemberResponse{}, nil
+	return &types.MsgAddAuthorizedMembersResponse{}, nil
 }
 
-func (m msgServer) RemoveAuthorizedMember(
+func (m msgServer) RemoveAuthorizedMembers(
 	goCtx context.Context,
-	msg *types.MsgRemoveAuthorizedMember,
-) (*types.MsgRemoveAuthorizedMemberResponse, error) {
+	msg *types.MsgRemoveAuthorizedMembers,
+) (*types.MsgRemoveAuthorizedMembersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	sender, err := sdk.AccAddressFromBech32(msg.Authority)
 	if err != nil {
@@ -197,7 +197,7 @@ func (m msgServer) RemoveAuthorizedMember(
 	resultEvents = append(resultEvents, events...)
 	ctx.EventManager().EmitEvents(resultEvents)
 
-	return &types.MsgRemoveAuthorizedMemberResponse{}, nil
+	return &types.MsgRemoveAuthorizedMembersResponse{}, nil
 }
 
 func (m msgServer) UpdateSaleLevel(

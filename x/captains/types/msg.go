@@ -20,8 +20,8 @@ const (
 var (
 	_ sdk.Msg = &MsgCreateCaptainNode{}
 	_ sdk.Msg = &MsgCommitReport{}
-	_ sdk.Msg = &MsgAddAuthorizedMember{}
-	_ sdk.Msg = &MsgRemoveAuthorizedMember{}
+	_ sdk.Msg = &MsgAddAuthorizedMembers{}
+	_ sdk.Msg = &MsgRemoveAuthorizedMembers{}
 	_ sdk.Msg = &MsgUpdateSaleLevel{}
 	_ sdk.Msg = &MsgCommitComputingPower{}
 	_ sdk.Msg = &MsgClaimComputingPower{}
@@ -82,12 +82,12 @@ func (msg *MsgCommitReport) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewAddAuthorizedMember() *MsgAddAuthorizedMember {
-	return &MsgAddAuthorizedMember{}
+func NewAddAuthorizedMembers() *MsgAddAuthorizedMembers {
+	return &MsgAddAuthorizedMembers{}
 }
 
 // ValidateBasic Implements Msg.
-func (msg *MsgAddAuthorizedMember) ValidateBasic() error {
+func (msg *MsgAddAuthorizedMembers) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
@@ -105,17 +105,17 @@ func (msg *MsgAddAuthorizedMember) ValidateBasic() error {
 	return nil
 }
 
-func (msg *MsgAddAuthorizedMember) GetSigners() []sdk.AccAddress {
+func (msg *MsgAddAuthorizedMembers) GetSigners() []sdk.AccAddress {
 	addr, _ := sdk.AccAddressFromBech32(msg.Authority)
 	return []sdk.AccAddress{addr}
 }
 
-func NewMsgRemoveAuthorizedMember() *MsgRemoveAuthorizedMember {
-	return &MsgRemoveAuthorizedMember{}
+func NewMsgRemoveAuthorizedMembers() *MsgRemoveAuthorizedMembers {
+	return &MsgRemoveAuthorizedMembers{}
 }
 
 // ValidateBasic Implements Msg.
-func (msg *MsgRemoveAuthorizedMember) ValidateBasic() error {
+func (msg *MsgRemoveAuthorizedMembers) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
@@ -134,7 +134,7 @@ func (msg *MsgRemoveAuthorizedMember) ValidateBasic() error {
 }
 
 // GetSigners Implements Msg.
-func (msg *MsgRemoveAuthorizedMember) GetSigners() []sdk.AccAddress {
+func (msg *MsgRemoveAuthorizedMembers) GetSigners() []sdk.AccAddress {
 	addr, _ := sdk.AccAddressFromBech32(msg.Authority)
 	return []sdk.AccAddress{addr}
 }
