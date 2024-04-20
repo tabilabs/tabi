@@ -3,7 +3,7 @@ package keeper
 import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 func (k Keeper) SaveDivision(ctx sdk.Context, division types.Division) error {
@@ -44,14 +44,14 @@ func (k Keeper) GetDivision(ctx sdk.Context, divisionID string) (types.Division,
 	return division, true
 }
 
-func (k Keeper) GetDivisions(ctx sdk.Context) (divisions []*types.Division) {
+func (k Keeper) GetDivisions(ctx sdk.Context) (divisions []types.Division) {
 	store := ctx.KVStore(k.storeKey)
 	iterator := sdk.KVStorePrefixIterator(store, types.DivisionKey)
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var division types.Division
 		k.cdc.MustUnmarshal(iterator.Value(), &division)
-		divisions = append(divisions, &division)
+		divisions = append(divisions, division)
 	}
 	return
 }

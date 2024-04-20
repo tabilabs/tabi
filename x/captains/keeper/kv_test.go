@@ -9,7 +9,7 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 
 	"github.com/stretchr/testify/require"
 	dbm "github.com/tendermint/tm-db"

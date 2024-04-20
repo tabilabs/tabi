@@ -21,14 +21,13 @@ func init() {
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgUpdateParams{},
-		&MsgCommitReport{},
-		&MsgRewardComputingPower{},
-		&MsgUpdateSaleLevel{},
-		&MsgAddCaller{},
-		&MsgRemoveCaller{},
-		&MsgWithdrawComputingPower{},
 		&MsgCreateCaptainNode{},
+		&MsgCommitReport{},
+		&MsgAddAuthorizedMember{},
+		&MsgRemoveAuthorizedMember{},
+		&MsgUpdateSaleLevel{},
+		&MsgCommitComputingPower{},
+		&MsgClaimComputingPower{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

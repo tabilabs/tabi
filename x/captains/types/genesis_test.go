@@ -26,13 +26,16 @@ func (suite *GenesisTestSuite) TestValidateGenesis() {
 			expPass:  true,
 		},
 		{
+			// TODO: complete test here
 			name: "TestValidateGenesisWithInvalidParams",
 			genState: &GenesisState{
 				Params: Params{
 					// Set invalid params here
 				},
-				Divisions: DefaultDivision(),
-				Entries:   nil,
+				Divisions:                DefaultDivision(),
+				Nodes:                    nil,
+				Epochs:                   nil,
+				ClaimableComputingPowers: nil,
 			},
 			expPass: false,
 		},

@@ -31,7 +31,7 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/stretchr/testify/suite"
 	"github.com/tabilabs/tabi/app"
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 type KeeperTestSuite struct {

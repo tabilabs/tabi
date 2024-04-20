@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 // InitGenesis stores the NFT genesis.
@@ -18,7 +18,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 	}
 
 	for _, division := range data.Divisions {
-		if err := k.SaveDivision(ctx, *division); err != nil {
+		if err := k.SaveDivision(ctx, division); err != nil {
 			panic(fmt.Errorf("failed to save division: %s", err.Error()))
 		}
 	}

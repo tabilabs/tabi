@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 const nodeIdPrefix = "node-%d"
@@ -76,11 +76,11 @@ func (k Keeper) UpdateNode(
 	node.ComputingPower += computingPower
 
 	// Check if the node has enough experience to be promoted to the next division
-	if node.ComputingPower > currentDivision.HighComputingPower {
+	if node.ComputingPower > currentDivision.ComputingPowerUpperBound {
 		divisions := k.GetDivisions(ctx)
 		for _, division := range divisions {
 			// the node should be promoted to the next division
-			if node.ComputingPower <= division.HighComputingPower && node.ComputingPower >= division.LowComputingPower {
+			if node.ComputingPower <= division.ComputingPowerUpperBound && node.ComputingPower >= division.ComputingPowerLowerBound {
 				node.DivisionId = division.Id
 				break
 			}
@@ -237,8 +237,8 @@ func (k Keeper) getNodesStoreByOwner(ctx sdk.Context, owner sdk.AccAddress) pref
 // if exceeded, return true
 func (k Keeper) isUserHoldingQuantityExceeded(ctx sdk.Context, owner sdk.AccAddress) bool {
 	params := k.GetParams(ctx)
-	maximumNumberOfHoldings := params.MaximumNumberOfHoldings
-	if k.getUserHoldingQuantity(ctx, owner) >= maximumNumberOfHoldings {
+	maximumHoldingAmount := params.MaximumHoldingAmount
+	if k.getUserHoldingQuantity(ctx, owner) >= maximumHoldingAmount {
 		return true
 	}
 	return false

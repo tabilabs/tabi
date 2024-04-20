@@ -18,9 +18,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"github.com/tabilabs/tabi/x/captain-node/client/cli"
-	"github.com/tabilabs/tabi/x/captain-node/keeper"
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/client/cli"
+	"github.com/tabilabs/tabi/x/captains/keeper"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 // AppModuleBasic defines the basic application module used by the mint module.

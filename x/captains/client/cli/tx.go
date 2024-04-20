@@ -15,7 +15,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/spf13/cobra"
 
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 // GetTxCmd returns the transaction commands for this module
@@ -124,12 +124,13 @@ Where update_power_on_period.json contains:
 				messages = string(messagesContent)
 			}
 
-			var captainNodePowerOnPeriods []*types.CaptainNodePowerOnPeriod
-			if err := json.Unmarshal([]byte(messages), &captainNodePowerOnPeriods); err != nil {
-				return fmt.Errorf("failed to unmarshal JSON: %w", err)
-			}
+			// FIXME: we need report!
+			//var captainNodePowerOnPeriods []*types.CaptainNodePowerOnPeriod
+			//if err := json.Unmarshal([]byte(messages), &captainNodePowerOnPeriods); err != nil {
+			//	return fmt.Errorf("failed to unmarshal JSON: %w", err)
+			//}
 
-			msg := types.NewMsgCommitReport(captainNodePowerOnPeriods, sender)
+			msg := types.NewMsgCommitReport(sender, "")
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -184,12 +185,12 @@ Where update_power_on_period.json contains:
 				messages = string(messagesContent)
 			}
 
-			var extractableComputingPowers []*types.ExtractableComputingPower
+			var extractableComputingPowers []types.ClaimableComputingPower
 			if err := json.Unmarshal([]byte(messages), &extractableComputingPowers); err != nil {
 				return fmt.Errorf("failed to unmarshal JSON: %w", err)
 			}
 
-			msg := types.NewMsgRewardComputingPower(extractableComputingPowers, sender)
+			msg := types.NewMsgCommitComputingPower(extractableComputingPowers, sender)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

@@ -13,7 +13,7 @@ const (
 	DefaultParamSpace = ModuleName
 )
 
-// ParamTable for mint module
+// ParamKeyTable for captains node
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
@@ -21,31 +21,37 @@ func ParamKeyTable() paramtypes.KeyTable {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return Params{
-		TotalCountCaptains:      100000,
-		MaximumPowerOnPeriod:    24,
-		MinimumPowerOnPeriod:    6,
-		ConstantA:               300000,
-		CurrentLevelForSale:     1,
-		MaximumNumberOfHoldings: 5,
+		CaptainsTotalCount:    100000,
+		MinimumPowerOnPeriod:  6,
+		MaximumPowerOnPeriod:  24,
+		CaptainsConstant:      300000,
+		MaximumHoldingAmount:  5,
+		HalvingEraCoefficient: 0,
+		CurrentSaleLevel:      1,
+		AuthorizedMembers:     nil,
 	}
 }
 
-// NewParams creates a new Params instance
+// NewParams creates a Params.
 func NewParams(
-	totalCountCaptains uint64,
-	maximumPowerOnPeriod uint64,
+	captainsTotalCount uint64,
 	minimumPowerOnPeriod uint64,
-	constantA uint64,
-	currentLevelForSale uint64,
-	maximumNumberOfHoldings uint64,
+	maximumPowerOnPeriod uint64,
+	captainsConstant uint64,
+	maximumHoldingAmount uint64,
+	halvingEraCoefficient uint64,
+	currentSaleLevel uint64,
+	authorizedMembers []string,
 ) Params {
 	return Params{
-		TotalCountCaptains:      totalCountCaptains,
-		MaximumPowerOnPeriod:    maximumPowerOnPeriod,
-		MinimumPowerOnPeriod:    minimumPowerOnPeriod,
-		ConstantA:               constantA,
-		CurrentLevelForSale:     currentLevelForSale,
-		MaximumNumberOfHoldings: maximumNumberOfHoldings,
+		CaptainsTotalCount:    captainsTotalCount,
+		MinimumPowerOnPeriod:  minimumPowerOnPeriod,
+		MaximumPowerOnPeriod:  maximumPowerOnPeriod,
+		CaptainsConstant:      captainsConstant,
+		MaximumHoldingAmount:  maximumHoldingAmount,
+		HalvingEraCoefficient: halvingEraCoefficient,
+		CurrentSaleLevel:      currentSaleLevel,
+		AuthorizedMembers:     authorizedMembers,
 	}
 }
 
@@ -60,8 +66,8 @@ func (p *Params) GetParamSpace() string {
 }
 
 // Validate returns err if the Params is invalid
-func (p Params) Validate() error {
-	if p.TotalCountCaptains <= 0 {
+func (p *Params) Validate() error {
+	if p.CaptainsTotalCount <= 0 {
 		return fmt.Errorf("total count of captains should be positive")
 	}
 
@@ -73,20 +79,20 @@ func (p Params) Validate() error {
 		return fmt.Errorf("minimum power on period should be positive, less than or equal to 24 and less than or equal to maximum power on period")
 	}
 
-	if p.ConstantA <= 0 {
-		return fmt.Errorf("constant A should be positive")
+	if p.CaptainsConstant <= 0 {
+		return fmt.Errorf("captains constant should be positive")
 	}
-	if p.CurrentLevelForSale <= 0 || p.CurrentLevelForSale > 5 {
-		return fmt.Errorf("current level for sale should be positive and less than or equal to 7")
+	if p.CurrentSaleLevel <= 0 || p.CurrentSaleLevel > 5 {
+		return fmt.Errorf("current sale level should be non-negative and less than or equal to 7")
 	}
 
-	if p.MaximumNumberOfHoldings <= 0 || p.MaximumNumberOfHoldings > p.TotalCountCaptains {
+	if p.MaximumHoldingAmount <= 0 || p.MaximumHoldingAmount > p.CaptainsTotalCount {
 		return fmt.Errorf("maximum number of holdings should be positive and less than or equal to total count of captains")
 	}
 
-	for _, caller := range p.Callers {
-		if _, err := sdk.AccAddressFromBech32(caller); err != nil {
-			return fmt.Errorf("caller address is invalid: %s", err)
+	for _, memeber := range p.AuthorizedMembers {
+		if _, err := sdk.AccAddressFromBech32(memeber); err != nil {
+			return fmt.Errorf("memeber address is invalid: %s", err)
 		}
 	}
 	return nil

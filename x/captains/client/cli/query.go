@@ -12,7 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 // Flag names and values
@@ -31,7 +31,6 @@ func GetQueryCmd() *cobra.Command {
 	}
 	captionNodeQueryCmd.AddCommand(
 		GetCmdQueryParams(),
-		GetOwnerCmd(),
 		GetSupplyCmd(),
 		GetDivisionCmd(),
 		GetDivisionsCmd(),
@@ -61,38 +60,6 @@ func GetCmdQueryParams() *cobra.Command {
 			}
 
 			return clientCtx.PrintProto(&res.Params)
-		},
-	}
-	flags.AddQueryFlagsToCmd(cmd)
-	return cmd
-}
-
-func GetOwnerCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "owner [node-id]",
-		Short: "Query the node of owner",
-		Long: fmt.Sprintf(` Query the node of owner
-
-Example:
-$ %s query %s owner <node-id>
-`, version.AppName, types.ModuleName),
-		Args: cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			queryClient := types.NewQueryClient(clientCtx)
-
-			nodeId := args[0]
-
-			res, err := queryClient.Owner(context.Background(), &types.QueryOwnerRequest{Id: nodeId})
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintProto(res)
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
@@ -226,7 +193,7 @@ $ %s query %s node <node-id>
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.Node(context.Background(), &types.QueryNodeRequest{
-				Id: args[0],
+				NodeId: args[0],
 			})
 			if err != nil {
 				return err

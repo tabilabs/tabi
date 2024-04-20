@@ -5,12 +5,12 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 func (k Keeper) UpdateExtractableComputingPowerForUsers(
 	ctx sdk.Context,
-	extractableComputingPowers []*types.ExtractableComputingPower,
+	extractableComputingPowers []types.ClaimableComputingPower,
 ) []sdk.Event {
 	events := make([]sdk.Event, 0)
 	for _, extractableComputingPower := range extractableComputingPowers {

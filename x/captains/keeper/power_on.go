@@ -2,45 +2,45 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 var (
 	smallestOperationalRate = sdk.NewDecWithPrec(47, 2) // constant 0.47
 )
 
-func (k Keeper) UpdateAllNodesPowerOnPeriod(
-	ctx sdk.Context,
-	NodesPowerOnPeriod []*types.CaptainNodePowerOnPeriod,
-) []sdk.Event {
-	events := make([]sdk.Event, 0)
-
-	totalNumber := 0
-	for _, nodePowerOnPeriod := range NodesPowerOnPeriod {
-		// update the power on period of the node
-		oldPowerOnPeriod := k.GetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId)
-		if k.isAConsistentPowerOnPeriod(ctx, nodePowerOnPeriod.PowerOnPeriodRate) {
-			totalNumber += 1
-		}
-		// set the new power on period
-		k.SetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId, nodePowerOnPeriod.PowerOnPeriodRate)
-		newPowerOnPeriod := k.GetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId)
-		events = append(
-			events,
-			sdk.NewEvent(
-				types.EventTypeUpdatePowerOnPeriod,
-				sdk.NewAttribute(types.AttributeKeyNodeID, nodePowerOnPeriod.NodeId),
-				sdk.NewAttribute(types.AttributeKeyOldPowerOnPeriod, oldPowerOnPeriod.String()),
-				sdk.NewAttribute(types.AttributeKeyNewPowerOnPeriod, newPowerOnPeriod.String()),
-			),
-		)
-	}
-
-	operationalRate := k.calculateOperationalRate(ctx, totalNumber)
-	k.SetOperationalRate(ctx, operationalRate)
-
-	return events
-}
+//func (k Keeper) UpdateAllNodesPowerOnPeriod(
+//	ctx sdk.Context,
+//	NodesPowerOnPeriod []*types.CaptainNodePowerOnPeriod,
+//) []sdk.Event {
+//	events := make([]sdk.Event, 0)
+//
+//	totalNumber := 0
+//	for _, nodePowerOnPeriod := range NodesPowerOnPeriod {
+//		// update the power on period of the node
+//		oldPowerOnPeriod := k.GetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId)
+//		if k.isAConsistentPowerOnPeriod(ctx, nodePowerOnPeriod.PowerOnPeriodRate) {
+//			totalNumber += 1
+//		}
+//		// set the new power on period
+//		k.SetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId, nodePowerOnPeriod.PowerOnPeriodRate)
+//		newPowerOnPeriod := k.GetNodePowerOnPeriod(ctx, nodePowerOnPeriod.NodeId)
+//		events = append(
+//			events,
+//			sdk.NewEvent(
+//				types.EventTypeUpdatePowerOnPeriod,
+//				sdk.NewAttribute(types.AttributeKeyNodeID, nodePowerOnPeriod.NodeId),
+//				sdk.NewAttribute(types.AttributeKeyOldPowerOnPeriod, oldPowerOnPeriod.String()),
+//				sdk.NewAttribute(types.AttributeKeyNewPowerOnPeriod, newPowerOnPeriod.String()),
+//			),
+//		)
+//	}
+//
+//	operationalRate := k.calculateOperationalRate(ctx, totalNumber)
+//	k.SetOperationalRate(ctx, operationalRate)
+//
+//	return events
+//}
 
 // SetNodePowerOnPeriod set the proportion of online nodes
 func (k Keeper) SetNodePowerOnPeriod(ctx sdk.Context, nodeID string, powerOnPeriod sdk.Dec) {

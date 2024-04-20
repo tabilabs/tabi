@@ -4,17 +4,17 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/x/captain-node/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 func (k Keeper) UpdateSaleLevel(ctx sdk.Context, saleLevel uint64) (sdk.Event, error) {
 	params := k.GetParams(ctx)
-	oldLevel := params.CurrentLevelForSale
+	oldLevel := params.CurrentSaleLevel
 	if oldLevel > saleLevel {
 		return sdk.Event{}, types.ErrInvalidSaleLevel
 	}
 
-	params.CurrentLevelForSale = saleLevel
+	params.CurrentSaleLevel = saleLevel
 	event := sdk.NewEvent(
 		types.EventTypeAddCaller,
 		sdk.NewAttribute(types.AttributeKeyOldSaleLevel, fmt.Sprintf("%d", oldLevel)),
@@ -52,5 +52,5 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
 }
 
 func (k Keeper) GetSaleLevel(ctx sdk.Context) uint64 {
-	return k.GetParams(ctx).CurrentLevelForSale
+	return k.GetParams(ctx).CurrentSaleLevel
 }

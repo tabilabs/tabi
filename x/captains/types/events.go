@@ -1,7 +1,7 @@
 package types
 
 const (
-	EventTypeMintNode = "mint_node"
+	EventTypeCreateNode = "create_node"
 
 	AttributeValueCategory = ModuleName
 
