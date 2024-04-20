@@ -315,7 +315,7 @@ func skipDynamicFee(dAtA []byte) (n int, err error) {
 }
 
 var (
-	ErrInvalidLengthDynamicFee        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrInvalidLengthDynamicFee        = fmt.Errorf("proto: negative length found during unmarshalling")
 	ErrIntOverflowDynamicFee          = fmt.Errorf("proto: integer overflow")
 	ErrUnexpectedEndOfGroupDynamicFee = fmt.Errorf("proto: unexpected end of group")
 )
