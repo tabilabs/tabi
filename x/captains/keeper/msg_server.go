@@ -286,9 +286,9 @@ func (m msgServer) ClaimComputingPower(
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
-			types.EventTypeAddCaller, // TODO: fix event type
+			types.EventClaimComputingPower,
 			sdk.NewAttribute(types.AttributeKeyNodeID, msg.NodeId),
-			sdk.NewAttribute(types.AttributeKeyExperience, fmt.Sprintf("%d", msg.ComputingPowerAmount)),
+			sdk.NewAttribute(types.AttributeKeyComputingPower, fmt.Sprintf("%d", msg.ComputingPowerAmount)),
 			sdk.NewAttribute(types.AttributeKeyReceiver, msg.Sender),
 		),
 		sdk.NewEvent(

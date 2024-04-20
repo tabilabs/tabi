@@ -23,10 +23,10 @@ func (k Keeper) UpdateExtractableComputingPowerForUsers(
 		events = append(
 			events,
 			sdk.NewEvent(
-				types.EventTypeUpdateUserExperience,
+				types.EventCommitComputingPower,
 				sdk.NewAttribute(types.AttributeKeyOwner, extractableComputingPower.Owner),
-				sdk.NewAttribute(types.AttributeKeyOldExperience, fmt.Sprintf("%d", oldExperience)),
-				sdk.NewAttribute(types.AttributeKeyNewExperience, fmt.Sprintf("%d", newExperience)),
+				sdk.NewAttribute(types.AttributeKeyComputingPowerBefore, fmt.Sprintf("%d", oldExperience)),
+				sdk.NewAttribute(types.AttributeKeyComputingPowerAfter, fmt.Sprintf("%d", newExperience)),
 			),
 		)
 	}

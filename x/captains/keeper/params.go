@@ -16,9 +16,9 @@ func (k Keeper) UpdateSaleLevel(ctx sdk.Context, saleLevel uint64) (sdk.Event, e
 
 	params.CurrentSaleLevel = saleLevel
 	event := sdk.NewEvent(
-		types.EventTypeAddCaller,
-		sdk.NewAttribute(types.AttributeKeyOldSaleLevel, fmt.Sprintf("%d", oldLevel)),
-		sdk.NewAttribute(types.AttributeKeyNewSaleLevel, fmt.Sprintf("%d", saleLevel)),
+		types.EventTypeAddAuthorizedMembers,
+		sdk.NewAttribute(types.AttributeKeySaleLevelBefore, fmt.Sprintf("%d", oldLevel)),
+		sdk.NewAttribute(types.AttributeKeySaleLevelAfter, fmt.Sprintf("%d", saleLevel)),
 	)
 	return event, k.SetParams(ctx, params)
 }

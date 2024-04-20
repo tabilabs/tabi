@@ -21,8 +21,8 @@ func (k Keeper) SetAuthorizedMembers(ctx sdk.Context, members []string) ([]sdk.E
 			events = append(
 				events,
 				sdk.NewEvent(
-					types.EventTypeAddCaller,
-					sdk.NewAttribute(types.AttributeCaller, member),
+					types.EventTypeAddAuthorizedMembers,
+					sdk.NewAttribute(types.AttributeKeyAuthorizedMember, member),
 				),
 			)
 		}
@@ -50,8 +50,8 @@ func (k Keeper) RemoveCaller(ctx sdk.Context, members []string) ([]sdk.Event, er
 			events = append(
 				events,
 				sdk.NewEvent(
-					types.EventTypeRemoveCaller,
-					sdk.NewAttribute(types.AttributeCaller, member),
+					types.EventTypeRemoveAuthorizedMembers,
+					sdk.NewAttribute(types.AttributeKeyAuthorizedMember, member),
 				),
 			)
 		}
