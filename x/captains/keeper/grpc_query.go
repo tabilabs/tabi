@@ -179,7 +179,6 @@ func (k Keeper) AuthorizedMembers(
 	_ *types.QueryAuthorizedMembersRequest,
 ) (*types.QueryAuthorizedMembersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	// TODO: fixme
-	_ = k.GetAuthorizedMembers(ctx)
-	return &types.QueryAuthorizedMembersResponse{}, nil
+	members := k.GetAuthorizedMembers(ctx)
+	return &types.QueryAuthorizedMembersResponse{Members: members}, nil
 }
