@@ -1,8 +1,6 @@
 package types
 
 import (
-	"bytes"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 )
@@ -23,24 +21,29 @@ const (
 )
 
 var (
-	ParamsKey              = []byte{0x00}
-	NodeKey                = []byte{0x01}
-	NodeByOwnerKey         = []byte{0x02}
-	OwnerKey               = []byte{0x03}
-	DivisionKey            = []byte{0x04}
-	DivisionTotalSupplyKey = []byte{0x05}
-	OwnerHoldingKey        = []byte{0x06}
-	PowerOnPeriodKey       = []byte{0x07}
-	ExperienceKey          = []byte{0x08}
-	OperationalRateKey     = []byte{0x09}
+	NodeKey                            = []byte{0x01}
+	NodeByOwnerKey                     = []byte{0x02}
+	DivisionKey                        = []byte{0x03}
+	DivisionByNode                     = []byte{0x04}
+	HistoricalEmissionSumOnEpochKey    = []byte{0x05}
+	HistoricalEmissionByNodeOnEpochKey = []byte{0x06}
+	HistoricalEmissionLastClaimedKey   = []byte{0x07}
+	ComputingPowerClaimableKey         = []byte{0x08}
+	ComputingPowerSumOnEpochKey        = []byte{0x09}
+	ComputingPowerByNodeOnEpochKey     = []byte{0x0A}
+	PledgeAmountSumOnEpochKey          = []byte{0x0B}
+
+	ReportValidationSumOnEpochKey = []byte{0x0C}
+	ComputingPowerCalcCountKey    = []byte{0x0D}
+	RewardCalcCountKey            = []byte{0x0E}
 
 	Delimiter   = []byte{0x00}
-	Placeholder = []byte{0x01}
+	PlaceHolder = []byte{0x01}
 )
 
 // NodeStoreKey returns the byte representation of the node key
 // Items are stored with the following key: values
-// 0x01<nodeID>
+// 0x01<node_id> -> <node_info_bz>
 func NodeStoreKey(nodeID string) []byte {
 	key := make([]byte, len(NodeKey)+len(nodeID))
 	copy(key, NodeKey)
@@ -50,86 +53,142 @@ func NodeStoreKey(nodeID string) []byte {
 
 // NodeByOwnerStoreKey returns the byte representation of the node owner
 // Items are stored with the following key: values
-// 0x02<owner><Delimiter>
-func NodeByOwnerStoreKey(owner sdk.AccAddress) []byte {
+// 0x02<owner><delimiter><node_id> -> <place_holder>
+func NodeByOwnerStoreKey(owner sdk.AccAddress, nodeID string) []byte {
 	owner = address.MustLengthPrefix(owner)
 
-	key := make([]byte, len(NodeByOwnerKey)+len(owner)+len(Delimiter))
+	key := make([]byte, len(NodeByOwnerKey)+len(owner)+len(Delimiter)+len(nodeID))
 	copy(key, NodeByOwnerKey)
 	copy(key[len(NodeByOwnerKey):], owner)
 	copy(key[len(NodeByOwnerKey)+len(owner):], Delimiter)
-	return key
-}
-
-// OwnerStoreKey returns the byte representation of the owner key
-// Items are stored with the following key: values
-// 0x03<nodeID>
-func OwnerStoreKey(nodeId string) []byte {
-
-	key := make([]byte, len(OwnerKey)+len(nodeId))
-	copy(key, OwnerKey)
-	copy(key[len(OwnerKey):], nodeId)
+	copy(key[len(NodeByOwnerKey)+len(owner)+len(Delimiter):], nodeID)
 	return key
 }
 
 // DivisionStoreKey returns the byte representation of the divisions key
 // Items are stored with the following key: values
-// 0x04<divisionsID>
-func DivisionStoreKey(divisionsID string) []byte {
-	key := make([]byte, len(DivisionKey)+len(divisionsID))
+// 0x03<division_id> -> <divisions_info_bz>
+func DivisionStoreKey(divisionID string) []byte {
+	key := make([]byte, len(DivisionKey)+len(divisionID))
 	copy(key, DivisionKey)
-	copy(key[len(DivisionKey):], divisionsID)
+	copy(key[len(DivisionKey):], divisionID)
 	return key
 }
 
-// DivisionTotalSupplyStoreKey returns the byte representation of the divisions total supply key
+// DivisionByNodeStoreKey returns the byte representation of the division by node key
 // Items are stored with the following key: values
-// 0x05<divisionsID>
-func DivisionTotalSupplyStoreKey(divisionsID string) []byte {
-	key := make([]byte, len(DivisionTotalSupplyKey)+len(divisionsID))
-	copy(key, DivisionTotalSupplyKey)
-	copy(key[len(DivisionTotalSupplyKey):], divisionsID)
+// 0x04<division_id><delimiter><node_id> -> <place_holder>
+func DivisionByNodeStoreKey(divisionID, nodeID string) []byte {
+	key := make([]byte, len(DivisionByNode)+len(divisionID)+len(Delimiter)+len(nodeID))
+	copy(key, DivisionByNode)
+	copy(key[len(DivisionByNode):], nodeID)
+	copy(key[len(DivisionByNode)+len(nodeID):], Delimiter)
+	copy(key[len(DivisionByNode)+len(nodeID)+len(Delimiter):], divisionID)
 	return key
 }
 
-// OwnerHoldingTotalSupplyStoreKey returns the byte representation of the owner holding total supply key
+// HistoricalEmissionSumOnEpochStoreKey returns the byte representation of the historical emission sum on epoch key
 // Items are stored with the following key: values
-// 0x06<owner>
-func OwnerHoldingTotalSupplyStoreKey(owner sdk.AccAddress) []byte {
+// 0x05<epoch_id> -> <emission>
+func HistoricalEmissionSumOnEpochStoreKey(epochID string) []byte {
+	key := make([]byte, len(HistoricalEmissionSumOnEpochKey)+len(epochID))
+	copy(key, HistoricalEmissionSumOnEpochKey)
+	copy(key[len(HistoricalEmissionSumOnEpochKey):], epochID)
+	return key
+}
+
+// HistoricalEmissionByNodeOnEpochStoreKey returns the byte representation of the historical emission by node on epoch key
+// Items are stored with the following key: values
+// 0x06<epoch_id><delimiter><node_id> -> <emission>
+func HistoricalEmissionByNodeOnEpochStoreKey(epochID, nodeID string) []byte {
+	key := make([]byte, len(HistoricalEmissionByNodeOnEpochKey)+len(epochID)+len(Delimiter)+len(nodeID))
+	copy(key, HistoricalEmissionByNodeOnEpochKey)
+	copy(key[len(HistoricalEmissionByNodeOnEpochKey):], epochID)
+	copy(key[len(HistoricalEmissionByNodeOnEpochKey)+len(epochID):], Delimiter)
+	copy(key[len(HistoricalEmissionByNodeOnEpochKey)+len(epochID)+len(Delimiter):], nodeID)
+	return key
+}
+
+// HistoricalEmissionLastClaimedStoreKey returns the byte representation of the historical emission last claimed key
+// Items are stored with the following key: values
+// 0x07<node_id> -> <emission>
+func HistoricalEmissionLastClaimedStoreKey(nodeID string) []byte {
+	key := make([]byte, len(HistoricalEmissionLastClaimedKey)+len(nodeID))
+	copy(key, HistoricalEmissionLastClaimedKey)
+	copy(key[len(HistoricalEmissionLastClaimedKey):], nodeID)
+	return key
+}
+
+// ComputingPowerClaimableStoreKey returns the byte representation of the computing power claimable key
+// Items are stored with the following key: values
+// 0x08<owner> -> <computing_power>
+func ComputingPowerClaimableStoreKey(owner sdk.AccAddress) []byte {
 	owner = address.MustLengthPrefix(owner)
-	key := make([]byte, len(OwnerHoldingKey)+len(owner))
-	copy(key, OwnerHoldingKey)
-	copy(key[len(OwnerHoldingKey):], owner)
+
+	key := make([]byte, len(ComputingPowerClaimableKey)+len(owner))
+	copy(key, ComputingPowerClaimableKey)
+	copy(key[len(ComputingPowerClaimableKey):], owner)
 	return key
 }
 
-// NodePowerOnPeriodStoreKey returns the byte representation of the node power on period key
+// ComputingPowerSumOnEpochStoreKey returns the byte representation of the computing power sum on epoch key
 // Items are stored with the following key: values
-// 0x07<nodeID>
-func NodePowerOnPeriodStoreKey(nodeID string) []byte {
-	key := make([]byte, len(PowerOnPeriodKey)+len(nodeID))
-	copy(key, PowerOnPeriodKey)
-	copy(key[len(PowerOnPeriodKey):], nodeID)
+// 0x09<epoch_id> -> <computing_power>
+func ComputingPowerSumOnEpochStoreKey(epochID string) []byte {
+	key := make([]byte, len(ComputingPowerSumOnEpochKey)+len(epochID))
+	copy(key, ComputingPowerSumOnEpochKey)
+	copy(key[len(ComputingPowerSumOnEpochKey):], epochID)
 	return key
 }
 
-// ExperienceStoreKey returns the byte representation of the experience key
+// ComputingPowerByNodeOnEpochStoreKey returns the byte representation of the computing power by node on epoch key
 // Items are stored with the following key: values
-// 0x08<owner>
-func ExperienceStoreKey(owner sdk.AccAddress) []byte {
-	owner = address.MustLengthPrefix(owner)
-	key := make([]byte, len(ExperienceKey)+len(owner))
-	copy(key, ExperienceKey)
-	copy(key[len(ExperienceKey):], owner)
+// 0x0A<epoch_id><delimiter><node_id> -> <computing_power>
+func ComputingPowerByNodeOnEpochStoreKey(epochID, nodeID string) []byte {
+	key := make([]byte, len(ComputingPowerByNodeOnEpochKey)+len(epochID)+len(Delimiter)+len(nodeID))
+	copy(key, ComputingPowerByNodeOnEpochKey)
+	copy(key[len(ComputingPowerByNodeOnEpochKey):], epochID)
+	copy(key[len(ComputingPowerByNodeOnEpochKey)+len(epochID):], Delimiter)
+	copy(key[len(ComputingPowerByNodeOnEpochKey)+len(epochID)+len(Delimiter):], nodeID)
 	return key
 }
 
-func ParseNodeByOwnerStoreKey(key []byte) (owner sdk.AccAddress, nodeId string) {
-	ret := bytes.Split(key, Delimiter)
-	if len(ret) != 2 {
-		panic("invalid nftOfClassByOwnerStoreKey")
-	}
-	owner = address.MustLengthPrefix(owner)
-	nodeId = string(ret[1])
-	return
+// PledgeAmountSumOnEpochStoreKey returns the byte representation of the pledge amount sum on epoch key
+// Items are stored with the following key: values
+// 0x0B<epoch_id> -> <pledge_amount>
+func PledgeAmountSumOnEpochStoreKey(epochID string) []byte {
+	key := make([]byte, len(PledgeAmountSumOnEpochKey)+len(epochID))
+	copy(key, PledgeAmountSumOnEpochKey)
+	copy(key[len(PledgeAmountSumOnEpochKey):], epochID)
+	return key
+}
+
+// ReportValidationSumOnEpochStoreKey returns the byte representation of the report validation sum on epoch key
+// Items are stored with the following key: values
+// 0x0C<epoch_id> -> <report_validation>
+func ReportValidationSumOnEpochStoreKey(epochID string) []byte {
+	key := make([]byte, len(ReportValidationSumOnEpochKey)+len(epochID))
+	copy(key, ReportValidationSumOnEpochKey)
+	copy(key[len(ReportValidationSumOnEpochKey):], epochID)
+	return key
+}
+
+// ComputingPowerCalcCountStoreKey returns the byte representation of the computing power calculation count key
+// Items are stored with the following key: values
+// 0x0D<epoch_id> -> <computing_power_calc_count>
+func ComputingPowerCalcCountStoreKey(epochID string) []byte {
+	key := make([]byte, len(ComputingPowerCalcCountKey)+len(epochID))
+	copy(key, ComputingPowerCalcCountKey)
+	copy(key[len(ComputingPowerCalcCountKey):], epochID)
+	return key
+}
+
+// RewardCalcCountStoreKey returns the byte representation of the reward calculation count key
+// Items are stored with the following key: values
+// 0x0E<epoch_id> -> <reward_calc_count>
+func RewardCalcCountStoreKey(epochID string) []byte {
+	key := make([]byte, len(RewardCalcCountKey)+len(epochID))
+	copy(key, RewardCalcCountKey)
+	copy(key[len(RewardCalcCountKey):], epochID)
+	return key
 }

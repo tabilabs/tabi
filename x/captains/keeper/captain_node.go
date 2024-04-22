@@ -224,7 +224,7 @@ func (k Keeper) setOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddress) {
 	ownerStore := k.getNodesStoreByOwner(ctx, owner)
 
 	// 0x02<owner><Delimiter><nodeID> -> Placeholder
-	ownerStore.Set([]byte(nodeID), types.Placeholder)
+	ownerStore.Set([]byte(nodeID), types.PlaceHolder)
 }
 
 func (k Keeper) getNodesStoreByOwner(ctx sdk.Context, owner sdk.AccAddress) prefix.Store {

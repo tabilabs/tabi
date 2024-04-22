@@ -25,7 +25,7 @@ func TestKv(t *testing.T) {
 	require.NoError(t, err)
 
 	ownerStore := GetPrefixStoreKey(gasStore, owner)
-	ownerStore.Set([]byte("35971be6e9bb024a895582fe0e42e04848a86da550aaef0fccbfba86f99f617d"), types.Placeholder)
+	ownerStore.Set([]byte("35971be6e9bb024a895582fe0e42e04848a86da550aaef0fccbfba86f99f617d"), types.PlaceHolder)
 
 	// for each
 	ownerStore2 := GetPrefixStoreKey(gasStore, owner)
