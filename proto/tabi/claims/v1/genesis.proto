@@ -14,7 +14,7 @@ message GenesisState {
     Params params = 1 [(gogoproto.nullable) = false];
 
     // holder_withdraw_infos defines the holder withdraw infos at genesis.
-    repeated HolderWithdrawInfo holder_withdraw_infos = 3 [(gogoproto.nullable) = false];
+    repeated HolderWithdrawInfo holder_withdraw_infos = 2 [(gogoproto.nullable) = false];
 }
 
 message HolderWithdrawInfo {
