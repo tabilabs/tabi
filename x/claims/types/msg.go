@@ -6,13 +6,12 @@ import (
 )
 
 const (
-	TypeMsgWithdrawNodeReward = "withdraw_node_reward"
+	TypeMsgClaims = "claims"
 )
 
 var (
 	_ sdk.Msg = &MsgUpdateParams{}
-	_ sdk.Msg = &MsgFundCommunityPool{}
-	_ sdk.Msg = &MsgWithdrawReward{}
+	_ sdk.Msg = &MsgClaims{}
 )
 
 // GetSignBytes returns the raw bytes for a MsgUpdateParams message that
@@ -36,53 +35,35 @@ func (m *MsgUpdateParams) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{addr}
 }
 
-// GetSignBytes returns the raw bytes for a MsgUpdateParams message that
-// the expected signer needs to sign.
-func (m *MsgFundCommunityPool) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(m)
-	return sdk.MustSortJSON(bz)
-}
-
-// ValidateBasic executes sanity validation on the provided data
-func (m *MsgFundCommunityPool) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(m.Depositor); err != nil {
-		return sdkerrors.Wrap(err, "invalid authority address")
-	}
-	return nil
-}
-
-// GetSigners returns the expected signers for a MsgUpdateParams message
-func (m *MsgFundCommunityPool) GetSigners() []sdk.AccAddress {
-	addr, _ := sdk.AccAddressFromBech32(m.Depositor)
-	return []sdk.AccAddress{addr}
-}
-
-func NewMsgWithdrawNodeReward(nodeOwnerAddr sdk.AccAddress, nodeId string) *MsgWithdrawReward {
-	return &MsgWithdrawReward{
-		NodeOwnerAddress: nodeOwnerAddr.String(),
-		NodeId:           nodeId,
+func NewMsgClaims(sender sdk.AccAddress, receiver sdk.AccAddress) *MsgClaims {
+	return &MsgClaims{
+		Sender:   sender.String(),
+		Receiver: receiver.String(),
 	}
 }
 
-func (msg MsgWithdrawReward) Route() string { return ModuleName }
-func (msg MsgWithdrawReward) Type() string  { return TypeMsgWithdrawNodeReward }
+func (msg MsgClaims) Route() string { return ModuleName }
+func (msg MsgClaims) Type() string  { return TypeMsgClaims }
 
 // Return address that must sign over msg.GetSignBytes()
-func (msg MsgWithdrawReward) GetSigners() []sdk.AccAddress {
-	nodeOwner, _ := sdk.AccAddressFromBech32(msg.NodeOwnerAddress)
-	return []sdk.AccAddress{nodeOwner}
+func (msg MsgClaims) GetSigners() []sdk.AccAddress {
+	sender, _ := sdk.AccAddressFromBech32(msg.Sender)
+	return []sdk.AccAddress{sender}
 }
 
 // get the bytes for the message signer to sign on
-func (msg MsgWithdrawReward) GetSignBytes() []byte {
+func (msg MsgClaims) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(&msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // quick validity check
-func (msg MsgWithdrawReward) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.NodeOwnerAddress); err != nil {
-		return sdkerrors.ErrInvalidAddress.Wrapf("invalid node owner address: %s", err)
+func (msg MsgClaims) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Sender); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid sender address: %s", err)
+	}
+	if _, err := sdk.AccAddressFromBech32(msg.Receiver); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid receiver address: %s", err)
 	}
 	return nil
 }

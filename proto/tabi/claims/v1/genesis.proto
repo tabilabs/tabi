@@ -13,9 +13,6 @@ message GenesisState {
     // params defines all the parameters of the module.
     Params params = 1 [(gogoproto.nullable) = false];
 
-    // fee_pool defines the fee pool at genesis.
-    FeePool fee_pool = 2 [(gogoproto.nullable) = false];
-
     // holder_withdraw_infos defines the holder withdraw infos at genesis.
     repeated HolderWithdrawInfo holder_withdraw_infos = 3 [(gogoproto.nullable) = false];
 }

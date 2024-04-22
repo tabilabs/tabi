@@ -17,12 +17,9 @@ service Msg {
   // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
 
-  // WithdrawReward defines a method to withdraw the rewards
-  rpc WithdrawReward(MsgWithdrawReward) returns (MsgWithdrawRewardResponse);
+  // Claims defines a method to withdraw the rewards
+  rpc Claims(MsgClaims) returns (MsgClaimsResponse);
 
-  // FundCommunityPool defines a method to allow an account to directly
-  // fund the community pool.
-  rpc FundCommunityPool(MsgFundCommunityPool) returns (MsgFundCommunityPoolResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -43,37 +40,21 @@ message MsgUpdateParams {
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
 
-// MsgWithdrawNodeReward represents delegation withdrawal to a delegator
-// from a single Node.
-message MsgWithdrawReward {
-  option (cosmos.msg.v1.signer) = "node_owner_address";
+// MsgClaims
+message MsgClaims {
+  option (cosmos.msg.v1.signer) = "sender";
 
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
-  string node_owner_address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  string node_id = 2;
+  string receiver = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
-// MsgWithdrawNodeRewardResponse defines the Msg/WithdrawNodeReward response type.
-message MsgWithdrawRewardResponse {
+// MsgClaimsResponse defines the Msg/Claims response type.
+message MsgClaimsResponse {
   // Since: cosmos-sdk 0.46
   repeated cosmos.base.v1beta1.Coin amount = 1
       [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
-
-// MsgFundCommunityPool allows an account to directly
-// fund the community pool.
-message MsgFundCommunityPool {
-  option (cosmos.msg.v1.signer) = "depositor";
-
-  option (gogoproto.equal)           = false;
-  option (gogoproto.goproto_getters) = false;
-
-  repeated cosmos.base.v1beta1.Coin amount = 1
-  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
-  string depositor = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-}
-
-// MsgFundCommunityPoolResponse defines the Msg/FundCommunityPool response type.
-message MsgFundCommunityPoolResponse {}

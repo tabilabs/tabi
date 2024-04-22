@@ -24,8 +24,7 @@ type Keeper struct {
 	stakingKeeper types.StakingKeeper
 
 	// self module keepers
-	mintKeeper        types.MintKeeper
-	captainNodeKeeper types.CaptainNodeKeeper
+	mintKeeper types.MintKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this should be the x/gov module account.
 	authority sdk.AccAddress

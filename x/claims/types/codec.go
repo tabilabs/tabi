@@ -22,8 +22,7 @@ func init() {
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateParams{},
-		&MsgWithdrawReward{},
-		&MsgFundCommunityPool{},
+		&MsgClaims{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
