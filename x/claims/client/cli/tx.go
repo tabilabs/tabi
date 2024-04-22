@@ -18,31 +18,29 @@ import (
 func NewTxCmd() *cobra.Command {
 	claimsTxCmd := &cobra.Command{
 		Use:                        types.ModuleName,
-		Short:                      "Distribution transactions subcommands",
+		Short:                      "Claims transactions subcommands",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
 
 	claimsTxCmd.AddCommand(
-		NewWithdrawRewardsCmd(),
+		NewClaimsCmd(),
 	)
 
 	return claimsTxCmd
 }
 
-// NewWithdrawRewardsCmd returns a CLI command handler for creating a MsgWithdrawDelegatorReward transaction.
-func NewWithdrawRewardsCmd() *cobra.Command {
+// NewClaimsCmd returns a CLI command handler for creating a MsgWithdrawDelegatorReward transaction.
+func NewClaimsCmd() *cobra.Command {
 
 	cmd := &cobra.Command{
-		Use:   "withdraw-rewards [node_id]",
-		Short: "Withdraw rewards from a given delegation address, and optionally withdraw validator commission if the delegation address given is a validator operator",
+		Use:   "claims [receiver]",
+		Short: "claims rewards",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Withdraw rewards from a given delegation address,
-and optionally withdraw validator commission if the delegation address given is a validator operator.
-
+			fmt.Sprintf(`Claims rewards. 
 Example:
-$ %s tx distribution withdraw-rewards xxxxxxx --from mykey
+$ %s tx claims claims xxxxxxx --from mykey
 `,
 				version.AppName,
 			),
@@ -53,9 +51,12 @@ $ %s tx distribution withdraw-rewards xxxxxxx --from mykey
 			if err != nil {
 				return err
 			}
-			ownerAddr := clientCtx.GetFromAddress()
-
-			msgs := []sdk.Msg{types.NewMsgWithdrawNodeReward(ownerAddr, args[0])}
+			sender := clientCtx.GetFromAddress()
+			receiver, err := sdk.AccAddressFromBech32(args[0])
+			if err != nil {
+				return err
+			}
+			msgs := []sdk.Msg{types.NewMsgClaims(sender, receiver)}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msgs...)
 		},

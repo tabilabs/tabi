@@ -23,14 +23,9 @@ service Query {
     option (google.api.http).get = "/x/claims/v1/nodes/{node_id}/total_rewards";
   }
 
-  // HolderUnclaimedRewards queries the total rewards accrued by a delegation.
-  rpc HolderUnclaimedRewards(QueryHolderUnclaimedRewardsRequest) returns (QueryHolderUnclaimedRewardsResponse) {
-    option (google.api.http).get = "/x/claims/v1/holders/{user_id}/unclaimed_rewards";
-  }
-
   // HolderTotalRewards queries the total rewards accrued by a delegation.
   rpc HolderTotalRewards(QueryHolderTotalRewardsRequest) returns (QueryHolderTotalRewardsResponse) {
-    option (google.api.http).get = "/x/claims/v1/holders/{user_id}/total_rewards";
+    option (google.api.http).get = "/x/claims/v1/holders/{owner}/total_rewards";
   }
 }
 
@@ -55,19 +50,9 @@ message QueryNodeTotalRewardsResponse {
   cosmos.base.v1beta1.Coin total_rewards = 1;
 }
 
-// QueryHolderUnclaimedRewardsRequest is request type for the Query/HolderUnclaimedRewards RPC method
-message QueryHolderUnclaimedRewardsRequest {
-  string user_id = 1;
-}
-
-// QueryHolderUnclaimedRewardsResponse is response type for the Query/HolderUnclaimedRewards RPC method
-message QueryHolderUnclaimedRewardsResponse {
-  cosmos.base.v1beta1.Coin unclaimed_rewards = 1;
-}
-
 // QueryHolderTotalRewardsRequest is request type for the Query/HolderTotalRewards RPC method
 message QueryHolderTotalRewardsRequest {
-  string user_id = 1;
+  string owner = 1;
 }
 
 // QueryHolderTotalRewardsResponse is response type for the Query/HolderTotalRewards RPC method

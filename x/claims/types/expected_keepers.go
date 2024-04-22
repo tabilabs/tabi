@@ -53,18 +53,8 @@ type DistrKeeper interface {
 
 type CaptainNodeKeeper interface {
 	GetParams(ctx sdk.Context) captainnodetypes.Params
-	GetSaleLevel(ctx sdk.Context) uint64
-	GetOperationalRate(ctx sdk.Context) sdk.Dec
-
-	GetOwner(ctx sdk.Context, nodeID string) sdk.AccAddress
-	GetOwners(ctx sdk.Context) (owners []sdk.AccAddress)
-
-	GetNodePowerOnPeriod(ctx sdk.Context, nodeID string) sdk.Dec
-	GetNodeSequence(ctx sdk.Context) uint64
-	GetNode(ctx sdk.Context, nodeID string) (captainnodetypes.Node, bool)
-	GetNodes(ctx sdk.Context) (nodes []captainnodetypes.Node)
-
-	GetDivision(ctx sdk.Context, divisionID string) (captainnodetypes.Division, bool)
+	GetEpochs(ctx sdk.Context, sender sdk.AccAddress) []string
+	PruneEpochs(ctx sdk.Context, sender sdk.AccAddress) // setHook
 }
 
 type MintKeeper interface {

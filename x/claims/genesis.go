@@ -21,8 +21,7 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data types.GenesisState)
 
 func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 	params := keeper.GetParams(ctx)
-	feePool := keeper.GetFeePool(ctx)
-	return types.NewGenesisState(params, feePool)
+	return types.NewGenesisState(params)
 }
 
 // ValidateGenesis performs basic validation of supply genesis data returning an

@@ -3,9 +3,14 @@ package types
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
-	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
+)
+
+const (
+	// Amino names
+	updateParamsName = "claims/MsgUpdateParams"
+	claimsName       = "claims/MsgClaims"
 )
 
 var (
@@ -15,15 +20,20 @@ var (
 )
 
 func init() {
-	cryptocodec.RegisterCrypto(amino)
+	RegisterLegacyAminoCodec(amino)
 	amino.Seal()
 }
 
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateParams{},
-		&MsgWithdrawReward{},
-		&MsgFundCommunityPool{},
+		&MsgClaims{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
+}
+
+// RegisterLegacyAminoCodec required for EIP-712
+func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	cdc.RegisterConcrete(&MsgUpdateParams{}, updateParamsName, nil)
+	cdc.RegisterConcrete(&MsgUpdateParams{}, claimsName, nil)
 }
