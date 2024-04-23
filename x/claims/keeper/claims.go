@@ -1,10 +1,11 @@
 package keeper
 
 import (
+	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	tabitypes "github.com/tabilabs/tabi/types"
 	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
-	"github.com/tabilabs/tabi/x/evm/types"
+	"github.com/tabilabs/tabi/x/claims/types"
 )
 
 func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (sdk.Coins, error) {
@@ -13,21 +14,26 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 	// calculate the rewards
 	totalRewards, err := k.CalculateRewards(ctx, nodes)
 	if err != nil {
-		return sdk.Coins{}, err
+		return sdk.Coins{}, types.ErrCalculateRewards
 	}
 
 	// Truncate the rewards
 	truncatedCoins, _ := totalRewards.TruncateDecimal()
 	// send the rewards to the receiver
 	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver.Bytes(), truncatedCoins); err != nil {
-		return sdk.Coins{}, err
+		return sdk.Coins{}, errorsmod.Wrapf(
+			types.ErrSendCoins,
+			"error while sending coins from module(%s) to account(%s)",
+			types.ModuleName, receiver.String())
 	}
 	for _, node := range nodes {
 		if err := k.captainsKeeper.UpdateNodeHistoricalEmissionOnLastClaim(
 			ctx,
 			node.Id,
 		); err != nil {
-			return sdk.Coins{}, err
+			return sdk.Coins{}, errorsmod.Wrapf(
+				types.ErrUpdateNodeHistoricalEmissionOnLastClaim,
+				"error while updating node(%s) historical emission on last claim", node.Id)
 		}
 	}
 

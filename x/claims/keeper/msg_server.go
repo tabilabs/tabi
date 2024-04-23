@@ -3,6 +3,9 @@ package keeper
 import (
 	"context"
 
+	"github.com/armon/go-metrics"
+	"github.com/cosmos/cosmos-sdk/telemetry"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -70,6 +73,27 @@ func (m msgServer) Claims(goCtx context.Context, msg *types.MsgClaims) (*types.M
 	if err != nil {
 		return nil, err
 	}
+
+	defer func() {
+		for _, a := range amount {
+			if a.Amount.IsInt64() {
+				telemetry.SetGaugeWithLabels(
+					[]string{"tx", "msg", "claims"},
+					float32(a.Amount.Int64()),
+					[]metrics.Label{telemetry.NewLabel("denom", a.Denom)},
+				)
+			}
+		}
+	}()
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Sender),
+			sdk.NewAttribute(types.AttributeValueReceiver, msg.Receiver),
+		),
+	)
 
 	return &types.MsgClaimsResponse{
 		Amount: amount,
