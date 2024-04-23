@@ -43,9 +43,9 @@ import (
 	ibc "github.com/cosmos/ibc-go/v6/modules/core"
 	ibcclientclient "github.com/cosmos/ibc-go/v6/modules/core/02-client/client"
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
-	captainnode "github.com/tabilabs/tabi/x/captain-node"
+	captainnode "github.com/tabilabs/tabi/x/captains"
 
-	captainnodetypes "github.com/tabilabs/tabi/x/captain-node/types"
+	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
 	"github.com/tabilabs/tabi/x/claims"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 	"github.com/tabilabs/tabi/x/evm"

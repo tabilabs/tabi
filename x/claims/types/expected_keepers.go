@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	captainnodetypes "github.com/tabilabs/tabi/x/captain-node/types"
+	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
 	minttypes "github.com/tabilabs/tabi/x/mint/types"
 )
 

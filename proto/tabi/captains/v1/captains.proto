@@ -31,12 +31,16 @@ message Division {
     string id = 1;
     // level defines the level of the node.
     uint64 level = 2;
-    // total_count defines the total count of the node in the division.
-    uint64 total_count = 3;
+    // initial_supply defines the initial supply of the node in the division.
+    uint64 initial_supply = 3;
+    // sold_count defines the total count of the node in the division.
+    uint64 sold_count = 4;
+    // total_count defines the supply count of nodes in the division.
+    uint64 total_count = 5;
     // computing_power_lower_bound defines the low bound of computing power in the division.
-    uint64 computing_power_lower_bound = 4;
+    uint64 computing_power_lower_bound = 6;
     // computing_power_upper_bound defines the upper bound of computing power in the division.
-    uint64 computing_power_upper_bound = 5;
+    uint64 computing_power_upper_bound = 7;
 }
 
 // Node defines the node
@@ -51,10 +55,12 @@ message Node {
 // EpochInfo defines the epoch information
 message Epoch {
     uint64 epoch_id = 1;
-    uint64 historical_emission_sum = 2;
-    uint64 computing_power_sum = 3;
-    uint64 pledge_amount_sum = 4;
-    EpochState epoch_state = 5 [(gogoproto.nullable) = false];
+    uint64 start_height = 2;
+    uint64 end_height = 3;
+    uint64 historical_emission_sum = 4;
+    uint64 computing_power_sum = 5;
+    uint64 pledge_amount_sum = 6;
+    EpochState epoch_state = 7 [(gogoproto.nullable) = false];
 }
 
 // EpochState defines the epoch state
