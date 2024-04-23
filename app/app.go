@@ -389,6 +389,14 @@ func NewTabi(
 	)
 
 	// Tabi module keepers
+
+	app.CaptainNodeKeeper = captainnodekeeper.NewKeeper(
+		appCodec,
+		keys[captainnodetypes.StoreKey],
+		app.GetSubspace(captainnodetypes.ModuleName),
+		authtypes.NewModuleAddress(govtypes.ModuleName),
+	)
+
 	app.Claimskeeper = claimskeeper.NewKeeper(
 		appCodec,
 		authtypes.NewModuleAddress(govtypes.ModuleName),
@@ -396,13 +404,7 @@ func NewTabi(
 		app.GetSubspace(claimstypes.ModuleName),
 		app.AccountKeeper,
 		app.BankKeeper,
-	)
-
-	app.CaptainNodeKeeper = captainnodekeeper.NewKeeper(
-		appCodec,
-		keys[captainnodetypes.StoreKey],
-		app.GetSubspace(captainnodetypes.ModuleName),
-		authtypes.NewModuleAddress(govtypes.ModuleName),
+		app.CaptainNodeKeeper,
 	)
 
 	// Create IBC Keeper
