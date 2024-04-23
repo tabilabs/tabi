@@ -53,7 +53,10 @@ type DistrKeeper interface {
 
 type CaptainsKeeper interface {
 	GetParams(ctx sdk.Context) captainnodetypes.Params
-	GetEpochs(ctx sdk.Context, sender sdk.Address) []string
+
+	GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []captainnodetypes.Node)
+
+	GetEpochs(ctx sdk.Context, nodeID string, sender sdk.Address) []string
 	PruneEpochs(ctx sdk.Context, sender sdk.Address) // setHook
 
 	GetUserHoldingQuantity(ctx sdk.Context, sender sdk.Address) uint64

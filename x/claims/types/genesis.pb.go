@@ -28,8 +28,6 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type GenesisState struct {
 	// params defines all the parameters of the module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	// holder_withdraw_infos defines the holder withdraw infos at genesis.
-	HolderWithdrawInfos []HolderWithdrawInfo `protobuf:"bytes,2,rep,name=holder_withdraw_infos,json=holderWithdrawInfos,proto3" json:"holder_withdraw_infos"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -72,80 +70,27 @@ func (m *GenesisState) GetParams() Params {
 	return Params{}
 }
 
-func (m *GenesisState) GetHolderWithdrawInfos() []HolderWithdrawInfo {
-	if m != nil {
-		return m.HolderWithdrawInfos
-	}
-	return nil
-}
-
-type HolderWithdrawInfo struct {
-	// holder_address is the address of the holder.
-	HolderAddress string `protobuf:"bytes,1,opt,name=holder_address,json=holderAddress,proto3" json:"holder_address,omitempty"`
-}
-
-func (m *HolderWithdrawInfo) Reset()         { *m = HolderWithdrawInfo{} }
-func (m *HolderWithdrawInfo) String() string { return proto.CompactTextString(m) }
-func (*HolderWithdrawInfo) ProtoMessage()    {}
-func (*HolderWithdrawInfo) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d3dd7655ce23c4bb, []int{1}
-}
-func (m *HolderWithdrawInfo) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *HolderWithdrawInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_HolderWithdrawInfo.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *HolderWithdrawInfo) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_HolderWithdrawInfo.Merge(m, src)
-}
-func (m *HolderWithdrawInfo) XXX_Size() int {
-	return m.Size()
-}
-func (m *HolderWithdrawInfo) XXX_DiscardUnknown() {
-	xxx_messageInfo_HolderWithdrawInfo.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_HolderWithdrawInfo proto.InternalMessageInfo
-
 func init() {
 	proto.RegisterType((*GenesisState)(nil), "tabi.claims.v1.GenesisState")
-	proto.RegisterType((*HolderWithdrawInfo)(nil), "tabi.claims.v1.HolderWithdrawInfo")
 }
 
 func init() { proto.RegisterFile("tabi/claims/v1/genesis.proto", fileDescriptor_d3dd7655ce23c4bb) }
 
 var fileDescriptor_d3dd7655ce23c4bb = []byte{
-	// 317 bytes of a gzipped FileDescriptorProto
+	// 208 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0x29, 0x49, 0x4c, 0xca,
 	0xd4, 0x4f, 0xce, 0x49, 0xcc, 0xcc, 0x2d, 0xd6, 0x2f, 0x33, 0xd4, 0x4f, 0x4f, 0xcd, 0x4b, 0x2d,
 	0xce, 0x2c, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x03, 0xc9, 0xea, 0x41, 0x64, 0xf5,
 	0xca, 0x0c, 0xa5, 0x44, 0xd2, 0xf3, 0xd3, 0xf3, 0xc1, 0x52, 0xfa, 0x20, 0x16, 0x44, 0x95, 0x94,
 	0x64, 0x72, 0x7e, 0x71, 0x6e, 0x7e, 0x71, 0x3c, 0x44, 0x02, 0xc2, 0x81, 0x4a, 0x49, 0xa3, 0x19,
-	0x0f, 0x35, 0x0a, 0x2c, 0xa9, 0xb4, 0x88, 0x91, 0x8b, 0xc7, 0x1d, 0x62, 0x5f, 0x70, 0x49, 0x62,
-	0x49, 0xaa, 0x90, 0x09, 0x17, 0x5b, 0x41, 0x62, 0x51, 0x62, 0x6e, 0xb1, 0x04, 0xa3, 0x02, 0xa3,
-	0x06, 0xb7, 0x91, 0x98, 0x1e, 0xaa, 0xfd, 0x7a, 0x01, 0x60, 0x59, 0x27, 0x96, 0x13, 0xf7, 0xe4,
-	0x19, 0x82, 0xa0, 0x6a, 0x85, 0x62, 0xb8, 0x44, 0x33, 0xf2, 0x73, 0x52, 0x52, 0x8b, 0xe2, 0xcb,
-	0x33, 0x4b, 0x32, 0x52, 0x8a, 0x12, 0xcb, 0xe3, 0x33, 0xf3, 0xd2, 0xf2, 0x8b, 0x25, 0x98, 0x14,
-	0x98, 0x35, 0xb8, 0x8d, 0x94, 0xd0, 0x0d, 0xf1, 0x00, 0x2b, 0x0e, 0x87, 0xaa, 0xf5, 0xcc, 0x4b,
-	0xcb, 0x87, 0x1a, 0x28, 0x9c, 0x81, 0x21, 0x53, 0xac, 0x14, 0xcf, 0x25, 0x84, 0xa9, 0x41, 0xc8,
-	0x9e, 0x8b, 0x0f, 0x6a, 0x67, 0x62, 0x4a, 0x4a, 0x51, 0x6a, 0x31, 0xc4, 0xc5, 0x9c, 0x4e, 0x12,
-	0x97, 0xb6, 0xe8, 0x8a, 0x40, 0x43, 0xc0, 0x11, 0x22, 0x13, 0x5c, 0x52, 0x94, 0x99, 0x97, 0x1e,
-	0xc4, 0x0b, 0x51, 0x0f, 0x15, 0xb4, 0xe2, 0xe8, 0x58, 0x20, 0xcf, 0xf0, 0x62, 0x81, 0x3c, 0x83,
-	0x93, 0xe3, 0x89, 0x47, 0x72, 0x8c, 0x17, 0x1e, 0xc9, 0x31, 0x3e, 0x78, 0x24, 0xc7, 0x38, 0xe1,
-	0xb1, 0x1c, 0xc3, 0x85, 0xc7, 0x72, 0x0c, 0x37, 0x1e, 0xcb, 0x31, 0x44, 0xa9, 0xa7, 0x67, 0x96,
-	0x64, 0x94, 0x26, 0xe9, 0x25, 0xe7, 0xe7, 0xea, 0x83, 0xfc, 0x90, 0x93, 0x98, 0x54, 0x0c, 0x66,
-	0xe8, 0x57, 0xc0, 0x82, 0xb4, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0x1c, 0x9e, 0xc6, 0x80,
-	0x00, 0x00, 0x00, 0xff, 0xff, 0x14, 0xe9, 0x6b, 0xab, 0xcd, 0x01, 0x00, 0x00,
+	0x0f, 0x35, 0x0a, 0x2c, 0xa9, 0xe4, 0xc2, 0xc5, 0xe3, 0x0e, 0xb1, 0x2e, 0xb8, 0x24, 0xb1, 0x24,
+	0x55, 0xc8, 0x84, 0x8b, 0xad, 0x20, 0xb1, 0x28, 0x31, 0xb7, 0x58, 0x82, 0x51, 0x81, 0x51, 0x83,
+	0xdb, 0x48, 0x4c, 0x0f, 0xd5, 0x7a, 0xbd, 0x00, 0xb0, 0xac, 0x13, 0xcb, 0x89, 0x7b, 0xf2, 0x0c,
+	0x41, 0x50, 0xb5, 0x4e, 0x8e, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0, 0x91,
+	0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7, 0x10, 0xa5,
+	0x9e, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4, 0x97, 0x9c, 0x9f, 0xab, 0x0f, 0x32, 0x29, 0x27, 0x31,
+	0xa9, 0x18, 0xcc, 0xd0, 0xaf, 0x80, 0x39, 0xa9, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0xec,
+	0x1e, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0xb9, 0x95, 0xf8, 0xd3, 0x0d, 0x01, 0x00, 0x00,
 }
 
 func (m *GenesisState) Marshal() (dAtA []byte, err error) {
@@ -168,20 +113,6 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.HolderWithdrawInfos) > 0 {
-		for iNdEx := len(m.HolderWithdrawInfos) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.HolderWithdrawInfos[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintGenesis(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x12
-		}
-	}
 	{
 		size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
@@ -192,36 +123,6 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *HolderWithdrawInfo) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *HolderWithdrawInfo) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *HolderWithdrawInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.HolderAddress) > 0 {
-		i -= len(m.HolderAddress)
-		copy(dAtA[i:], m.HolderAddress)
-		i = encodeVarintGenesis(dAtA, i, uint64(len(m.HolderAddress)))
-		i--
-		dAtA[i] = 0xa
-	}
 	return len(dAtA) - i, nil
 }
 
@@ -244,25 +145,6 @@ func (m *GenesisState) Size() (n int) {
 	_ = l
 	l = m.Params.Size()
 	n += 1 + l + sovGenesis(uint64(l))
-	if len(m.HolderWithdrawInfos) > 0 {
-		for _, e := range m.HolderWithdrawInfos {
-			l = e.Size()
-			n += 1 + l + sovGenesis(uint64(l))
-		}
-	}
-	return n
-}
-
-func (m *HolderWithdrawInfo) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.HolderAddress)
-	if l > 0 {
-		n += 1 + l + sovGenesis(uint64(l))
-	}
 	return n
 }
 
@@ -333,122 +215,6 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HolderWithdrawInfos", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenesis
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.HolderWithdrawInfos = append(m.HolderWithdrawInfos, HolderWithdrawInfo{})
-			if err := m.HolderWithdrawInfos[len(m.HolderWithdrawInfos)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipGenesis(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *HolderWithdrawInfo) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowGenesis
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: HolderWithdrawInfo: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: HolderWithdrawInfo: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HolderAddress", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenesis
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.HolderAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
