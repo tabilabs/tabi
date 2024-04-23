@@ -11,6 +11,10 @@ import (
 func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (sdk.Coins, error) {
 	// Get the Node associated with the sender and traverse the epochs associated with the Node
 	nodes := k.captainsKeeper.GetNodesByOwner(ctx, sender.Bytes())
+	// check if the sender has not held node
+	if len(nodes) == 0 {
+		return sdk.Coins{}, types.ErrHolderNotFound
+	}
 	// calculate the rewards
 	totalRewards, err := k.CalculateRewards(ctx, nodes)
 	if err != nil {

@@ -60,15 +60,6 @@ func (m msgServer) Claims(goCtx context.Context, msg *types.MsgClaims) (*types.M
 		return nil, err
 	}
 
-	// check if the sender has not held node
-	if !m.k.HasNode(ctx, sender) {
-		return nil, sdkerrors.Wrapf(
-			sdkerrors.ErrUnauthorized,
-			"sender %s has not held node",
-			msg.Sender,
-		)
-	}
-
 	amount, err := m.k.WithdrawRewards(ctx, sender, receiver)
 	if err != nil {
 		return nil, err

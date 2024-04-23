@@ -23,7 +23,6 @@ type Keeper struct {
 	bankKeeper types.BankKeeper
 
 	// self module keepers
-	mintKeeper     types.MintKeeper
 	captainsKeeper types.CaptainsKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this should be the x/gov module account.
@@ -33,19 +32,20 @@ type Keeper struct {
 // NewKeeper returns a mint keeper
 func NewKeeper(cdc codec.Codec, authority sdk.AccAddress,
 	key storetypes.StoreKey, paramSpace paramtypes.Subspace,
-	ak types.AccountKeeper, bk types.BankKeeper) Keeper {
+	ak types.AccountKeeper, bk types.BankKeeper, ck types.CaptainsKeeper) Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ClaimsCollectorName); addr == nil {
 		panic("the climas collector account has not been set")
 	}
 
 	keeper := Keeper{
-		storeKey:   key,
-		cdc:        cdc,
-		paramSpace: paramSpace.WithKeyTable(types.ParamKeyTable()),
-		authKeeper: ak,
-		bankKeeper: bk,
-		authority:  authority,
+		storeKey:       key,
+		cdc:            cdc,
+		paramSpace:     paramSpace.WithKeyTable(types.ParamKeyTable()),
+		authKeeper:     ak,
+		bankKeeper:     bk,
+		captainsKeeper: ck,
+		authority:      authority,
 	}
 	return keeper
 }
