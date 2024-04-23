@@ -19,12 +19,12 @@ type Keeper struct {
 	paramSpace paramtypes.Subspace
 
 	// cosmos keepers
-	authKeeper    types.AccountKeeper
-	bankKeeper    types.BankKeeper
-	stakingKeeper types.StakingKeeper
+	authKeeper types.AccountKeeper
+	bankKeeper types.BankKeeper
 
 	// self module keepers
-	mintKeeper types.MintKeeper
+	mintKeeper     types.MintKeeper
+	captainsKeeper types.CaptainsKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this should be the x/gov module account.
 	authority sdk.AccAddress

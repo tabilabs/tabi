@@ -51,10 +51,12 @@ type DistrKeeper interface {
 	FundCommunityPool(ctx sdk.Context, amount sdk.Coins, sender sdk.AccAddress) error
 }
 
-type CaptainNodeKeeper interface {
+type CaptainsKeeper interface {
 	GetParams(ctx sdk.Context) captainnodetypes.Params
-	GetEpochs(ctx sdk.Context, sender sdk.AccAddress) []string
-	PruneEpochs(ctx sdk.Context, sender sdk.AccAddress) // setHook
+	GetEpochs(ctx sdk.Context, sender sdk.Address) []string
+	PruneEpochs(ctx sdk.Context, sender sdk.Address) // setHook
+
+	GetUserHoldingQuantity(ctx sdk.Context, sender sdk.Address) uint64
 }
 
 type MintKeeper interface {
