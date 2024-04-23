@@ -11,7 +11,7 @@ const (
 )
 
 func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (sdk.Coins, error) {
-	// 1. Get the Node associated with the sender and traverse the epochs associated with the Node
+	// Get the Node associated with the sender and traverse the epochs associated with the Node
 	nodes := k.captainsKeeper.GetNodesByOwner(ctx, sender.Bytes())
 	// calculate the rewards
 	totalRewards, err := k.CalculateRewards(ctx, nodes)
@@ -19,7 +19,7 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 		return sdk.Coins{}, err
 	}
 
-	//
+	// Truncate the rewards
 	truncatedCoins, _ := totalRewards.TruncateDecimal()
 	// send the rewards to the receiver
 	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver.Bytes(), truncatedCoins); err != nil {
