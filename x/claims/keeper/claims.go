@@ -2,12 +2,9 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
 	"github.com/tabilabs/tabi/x/evm/types"
-)
-
-const (
-	denom = "avetabi"
 )
 
 func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (sdk.Coins, error) {
@@ -59,5 +56,5 @@ func (k Keeper) CalculateRewardsByNodeId(ctx sdk.Context, nodeId string) (sdk.De
 	historicalEmissionOnLastClaim := k.captainsKeeper.GetNodeHistoricalEmissionOnLastClaim(ctx, nodeId)
 	reward := historicalEmission.Sub(historicalEmissionOnLastClaim)
 
-	return sdk.NewDecCoins(sdk.NewDecCoinFromDec(denom, reward)), nil
+	return sdk.NewDecCoins(sdk.NewDecCoinFromDec(tabitypes.AttoVeTabi, reward)), nil
 }
