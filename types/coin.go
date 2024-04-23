@@ -36,6 +36,8 @@ const (
 
 	// DefaultGasPrice is default gas price for evm transactions
 	DefaultGasPrice = 20
+
+	AttoVeTabi string = "avetabi"
 )
 
 // PowerReduction defines the default power reduction value for staking

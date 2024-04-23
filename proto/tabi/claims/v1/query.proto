@@ -47,7 +47,9 @@ message QueryNodeTotalRewardsRequest {
 
 // QueryNodeTotalRewardsResponse is response type for the Query/NodeTotalRewards RPC method
 message QueryNodeTotalRewardsResponse {
-  cosmos.base.v1beta1.Coin total_rewards = 1;
+  // rewards defines the rewards accrued by a delegation.
+  repeated cosmos.base.v1beta1.DecCoin rewards = 1
+  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"];
 }
 
 // QueryHolderTotalRewardsRequest is request type for the Query/HolderTotalRewards RPC method
@@ -57,6 +59,8 @@ message QueryHolderTotalRewardsRequest {
 
 // QueryHolderTotalRewardsResponse is response type for the Query/HolderTotalRewards RPC method
 message QueryHolderTotalRewardsResponse {
-  cosmos.base.v1beta1.Coin total_rewards = 1;
+  // rewards defines the rewards accrued by a delegation.
+  repeated cosmos.base.v1beta1.DecCoin rewards = 1
+  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"];
 }
 

@@ -3,6 +3,9 @@ package keeper
 import (
 	"context"
 
+	"github.com/armon/go-metrics"
+	"github.com/cosmos/cosmos-sdk/telemetry"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -41,6 +44,58 @@ func (m msgServer) UpdateParams(goCtx context.Context, msg *types.MsgUpdateParam
 
 // WithdrawNodeReward implement the interface of types.MsgServer
 func (m msgServer) Claims(goCtx context.Context, msg *types.MsgClaims) (*types.MsgClaimsResponse, error) {
-	// todo: implement the logic
-	return nil, nil
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// if receiver is empty, set receiver to sender
+	if len(msg.Receiver) == 0 {
+		msg.Receiver = msg.Sender
+	}
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
+	}
+
+	receiver, err := sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return nil, err
+	}
+
+	// check if the sender has not held node
+	if !m.k.HasNode(ctx, sender) {
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"sender %s has not held node",
+			msg.Sender,
+		)
+	}
+
+	amount, err := m.k.WithdrawRewards(ctx, sender, receiver)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		for _, a := range amount {
+			if a.Amount.IsInt64() {
+				telemetry.SetGaugeWithLabels(
+					[]string{"tx", "msg", "claims"},
+					float32(a.Amount.Int64()),
+					[]metrics.Label{telemetry.NewLabel("denom", a.Denom)},
+				)
+			}
+		}
+	}()
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Sender),
+			sdk.NewAttribute(types.AttributeValueReceiver, msg.Receiver),
+		),
+	)
+
+	return &types.MsgClaimsResponse{
+		Amount: amount,
+	}, nil
 }
