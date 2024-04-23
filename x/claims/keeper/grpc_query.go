@@ -22,8 +22,19 @@ func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.Q
 }
 
 func (k Keeper) NodeTotalRewards(goCtx context.Context, request *types.QueryNodeTotalRewardsRequest) (*types.QueryNodeTotalRewardsResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	if request == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	if request.NodeId == "" {
+		return nil, status.Error(codes.InvalidArgument, "empty holder address")
+	}
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	rewards, err := k.CalculateRewardsByNodeId(ctx, request.NodeId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryNodeTotalRewardsResponse{Rewards: rewards}, nil
 }
 
 func (k Keeper) HolderTotalRewards(goCtx context.Context, request *types.QueryHolderTotalRewardsRequest) (*types.QueryHolderTotalRewardsResponse, error) {
@@ -39,7 +50,9 @@ func (k Keeper) HolderTotalRewards(goCtx context.Context, request *types.QueryHo
 		return nil, err
 	}
 
-	rewards, err := k.CalculateRewardsByOwner(ctx, owner)
+	nodes := k.captainsKeeper.GetNodesByOwner(ctx, owner.Bytes())
+
+	rewards, err := k.CalculateRewards(ctx, nodes)
 	if err != nil {
 		return nil, err
 	}
