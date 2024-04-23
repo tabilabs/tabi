@@ -14,12 +14,15 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 	// 1. Get the Node associated with the sender and traverse the epochs associated with the Node
 	nodes := k.captainsKeeper.GetNodesByOwner(ctx, sender.Bytes())
 	// calculate the rewards
-	reward, err := k.CalculateRewards(ctx, nodes)
+	totalRewards, err := k.CalculateRewards(ctx, nodes)
 	if err != nil {
 		return sdk.Coins{}, err
 	}
+
+	//
+	truncatedCoins, _ := totalRewards.TruncateDecimal()
 	// send the rewards to the receiver
-	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver.Bytes(), reward); err != nil {
+	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver.Bytes(), truncatedCoins); err != nil {
 		return sdk.Coins{}, err
 	}
 	for _, node := range nodes {
@@ -34,19 +37,19 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 	return sdk.Coins{}, nil
 }
 
-func (k Keeper) CalculateRewards(ctx sdk.Context, nodes []captainnodetypes.Node) (sdk.Coins, error) {
+func (k Keeper) CalculateRewards(ctx sdk.Context, nodes []captainnodetypes.Node) (sdk.DecCoins, error) {
 	// Calculate the rewards for each node
 	totalRewards := sdk.DecCoins{}
 	for _, node := range nodes {
 		reward, err := k.CalculateRewardsByNodeId(ctx, node.Id)
 		if err != nil {
-			return sdk.Coins{}, err
+			return sdk.DecCoins{}, err
 		}
 		// Sum the rewards
 		totalRewards = totalRewards.Add(reward...)
 	}
-	truncatedCoins, _ := totalRewards.TruncateDecimal()
-	return truncatedCoins, nil
+
+	return totalRewards, nil
 }
 
 func (k Keeper) CalculateRewardsByNodeId(ctx sdk.Context, nodeId string) (sdk.DecCoins, error) {

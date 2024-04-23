@@ -57,5 +57,5 @@ func (k Keeper) HolderTotalRewards(goCtx context.Context, request *types.QueryHo
 		return nil, err
 	}
 
-	return &types.QueryHolderTotalRewardsResponse{Rewards: sdk.NewDecCoinsFromCoins(rewards...)}, nil
+	return &types.QueryHolderTotalRewardsResponse{Rewards: rewards}, nil
 }
