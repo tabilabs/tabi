@@ -17,7 +17,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-
 	"io"
 	"net/http"
 	"os"
@@ -110,8 +109,8 @@ import (
 
 	// tabi modules
 
-	captainnodekeeper "github.com/tabilabs/tabi/x/captain-node/keeper"
-	captainnodetypes "github.com/tabilabs/tabi/x/captain-node/types"
+	captainnodekeeper "github.com/tabilabs/tabi/x/captains/keeper"
+	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
 	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 	mintkeeper "github.com/tabilabs/tabi/x/mint/keeper"

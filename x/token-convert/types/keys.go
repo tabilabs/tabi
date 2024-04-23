@@ -7,7 +7,7 @@ import (
 
 const (
 	// ModuleName is the name of the module
-	ModuleName = "token-convert"
+	ModuleName = "tokenconvert"
 
 	// StoreKey is the store key for token-convert
 	StoreKey = ModuleName
