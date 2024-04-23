@@ -13,7 +13,7 @@ type Captains interface {
 	GetCurrentEpoch(ctx sdk.Context) uint64
 
 	// GetNodeHistoricalEmissionOnEpoch returns the historical mission of the node at the end of epoch.
-	GetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string)
+	GetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec
 
 	// GetNodeHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
 	// That says, if the user claims on epoch(T+1), the user will get rewards accrued at the end of epoch(T).
