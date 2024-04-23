@@ -6,6 +6,7 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
+// SaveDivision saves a division to the store
 func (k Keeper) SaveDivision(ctx sdk.Context, division types.Division) error {
 	if k.HasDivision(ctx, division.Id) {
 		return errorsmod.Wrap(types.ErrDivisionExists, division.Id)
@@ -19,6 +20,7 @@ func (k Keeper) SaveDivision(ctx sdk.Context, division types.Division) error {
 	return nil
 }
 
+// UpdateDivision updates a division in the store
 func (k Keeper) UpdateDivision(ctx sdk.Context, division types.Division) error {
 	if !k.HasDivision(ctx, division.Id) {
 		return errorsmod.Wrap(types.ErrDivisionNotExists, division.Id)
@@ -32,6 +34,13 @@ func (k Keeper) UpdateDivision(ctx sdk.Context, division types.Division) error {
 	return nil
 }
 
+// HasDivision checks if the division exists in the store
+func (k Keeper) HasDivision(ctx sdk.Context, divisionID string) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.DivisionStoreKey(divisionID))
+}
+
+// GetDivision returns the division by the specified division ID
 func (k Keeper) GetDivision(ctx sdk.Context, divisionID string) (types.Division, bool) {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.DivisionStoreKey(divisionID))
@@ -44,6 +53,45 @@ func (k Keeper) GetDivision(ctx sdk.Context, divisionID string) (types.Division,
 	return division, true
 }
 
+func (k Keeper) incrDivisionSoldCount(ctx sdk.Context, divisionID string) error {
+	panic("impl me")
+}
+
+func (k Keeper) incrDivisionTotalCount() {
+	panic("impl me")
+}
+
+func (k Keeper) decrDivisionTotalCount() {
+	panic("impl me")
+}
+
+// GetDivisionSoldCount returns the number of all sold nodes by the specified division ID
+func (k Keeper) GetDivisionSoldCount(ctx sdk.Context, divisionID string) uint64 {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.DivisionStoreKey(divisionID))
+
+	var division types.Division
+	if len(bz) == 0 {
+		return 0
+	}
+	k.cdc.MustUnmarshal(bz, &division)
+	return division.SoldCount
+}
+
+// IsDivisionSoldOut checks if the division is sold out
+func (k Keeper) IsDivisionSoldOut(ctx sdk.Context, divisionID string) bool {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.DivisionStoreKey(divisionID))
+
+	var division types.Division
+	if len(bz) == 0 {
+		return false
+	}
+	k.cdc.MustUnmarshal(bz, &division)
+	return division.SoldCount == division.InitialSupply
+}
+
+// GetDivisions returns all divisions
 func (k Keeper) GetDivisions(ctx sdk.Context) (divisions []types.Division) {
 	store := ctx.KVStore(k.storeKey)
 	iterator := sdk.KVStorePrefixIterator(store, types.DivisionKey)
@@ -54,18 +102,4 @@ func (k Keeper) GetDivisions(ctx sdk.Context) (divisions []types.Division) {
 		divisions = append(divisions, division)
 	}
 	return
-}
-
-// GetDivisionTotalSupply returns the number of all sold nodes by the specified division ID
-func (k Keeper) GetDivisionTotalSupply(ctx sdk.Context, divisionID string) uint64 {
-	panic("implement me")
-}
-
-func (k Keeper) HasDivision(ctx sdk.Context, divisionID string) bool {
-	store := ctx.KVStore(k.storeKey)
-	return store.Has(types.DivisionStoreKey(divisionID))
-}
-
-func (k Keeper) IsDivisionSoldOut(ctx sdk.Context, divisionID string) bool {
-	panic("implement me")
 }

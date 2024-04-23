@@ -85,9 +85,7 @@ func (k Keeper) UpdateNode(
 		}
 	}
 
-	// Set the node
 	k.setNode(ctx, node)
-	// Set the experience
 	k.decrComputingPowerClaimable(ctx, owner, computingPower)
 	return nil
 }
@@ -115,7 +113,7 @@ func (k Keeper) HasNode(ctx sdk.Context, nodeID string) bool {
 
 // AuthorizeNode defines a method for checking if the sender is the owner of the given node
 func (k Keeper) AuthorizeNode(ctx sdk.Context, nodeID string, owner sdk.AccAddress) error {
-	if !owner.Equals(k.GetOwner(ctx, nodeID)) {
+	if !owner.Equals(k.GetNodeOwner(ctx, nodeID)) {
 		return errorsmod.Wrap(types.ErrUnauthorized, owner.String())
 	}
 	return nil
@@ -164,8 +162,8 @@ func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []
 	return nodes
 }
 
-// GetOwner returns the owner of the specified node
-func (k Keeper) GetOwner(ctx sdk.Context, nodeID string) sdk.AccAddress {
+// GetNodeOwner returns the owner of the specified node
+func (k Keeper) GetNodeOwner(ctx sdk.Context, nodeID string) sdk.AccAddress {
 	panic("implement me")
 }
 

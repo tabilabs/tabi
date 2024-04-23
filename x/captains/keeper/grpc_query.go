@@ -14,21 +14,29 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-var _ types.QueryServer = Keeper{}
+type Querier struct {
+	*Keeper
+}
+
+// NewQuerierImpl returns an implementation of the captains QueryServer interface.
+func NewQuerierImpl(k *Keeper) types.QueryServer {
+	return &Querier{k}
+}
+
+var _ types.QueryServer = Querier{}
 
 // Params queries the captains module parameters
-func (k Keeper) Params(
+func (q Querier) Params(
 	goCtx context.Context,
 	_ *types.QueryParamsRequest,
 ) (*types.QueryParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	params := k.GetParams(ctx)
-
+	params := q.GetParams(ctx)
 	return &types.QueryParamsResponse{Params: params}, nil
 }
 
-// Node queries an Node based on its id.
-func (k Keeper) Node(
+// Node queries a Node.
+func (q Querier) Node(
 	goCtx context.Context,
 	request *types.QueryNodeRequest,
 ) (*types.QueryNodeResponse, error) {
@@ -37,17 +45,18 @@ func (k Keeper) Node(
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	node, found := k.GetNode(ctx, request.NodeId)
+	node, found := q.GetNode(ctx, request.NodeId)
 	if !found {
 		return nil, types.ErrNodeNotExists.Wrapf("not found node: %s", request.NodeId)
 	}
+
 	return &types.QueryNodeResponse{
 		Node: &node,
 	}, nil
 }
 
 // Nodes queries all node of a given owner
-func (k Keeper) Nodes(
+func (q Querier) Nodes(
 	goCtx context.Context,
 	request *types.QueryNodesRequest,
 ) (*types.QueryNodesResponse, error) {
@@ -71,8 +80,8 @@ func (k Keeper) Nodes(
 	switch {
 	case len(request.Owner) > 0:
 
-		if pageRes, err = query.Paginate(k.getNodeByOwnerPrefixStore(ctx, owner), request.Pagination, func(key []byte, value []byte) error {
-			node, has := k.GetNode(ctx, string(key))
+		if pageRes, err = query.Paginate(q.getNodeByOwnerPrefixStore(ctx, owner), request.Pagination, func(key []byte, value []byte) error {
+			node, has := q.GetNode(ctx, string(key))
 			if has {
 				nodes = append(nodes, node)
 			}
@@ -82,10 +91,10 @@ func (k Keeper) Nodes(
 		}
 	default:
 		// return all nodes
-		nodeStore := k.getNodesStore(ctx)
+		nodeStore := q.getNodesStore(ctx)
 		if pageRes, err = query.Paginate(nodeStore, request.Pagination, func(_ []byte, value []byte) error {
 			var node types.Node
-			if err := k.cdc.Unmarshal(value, &node); err != nil {
+			if err := q.cdc.Unmarshal(value, &node); err != nil {
 				return err
 			}
 			nodes = append(nodes, node)
@@ -102,7 +111,7 @@ func (k Keeper) Nodes(
 }
 
 // Division queries an node division by its ID
-func (k Keeper) Division(
+func (q Querier) Division(
 	goCtx context.Context,
 	request *types.QueryDivisionRequest,
 ) (*types.QueryDivisionResponse, error) {
@@ -111,7 +120,7 @@ func (k Keeper) Division(
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	division, found := k.GetDivision(ctx, request.DivisionId)
+	division, found := q.GetDivision(ctx, request.DivisionId)
 	if !found {
 		return nil, types.ErrDivisionNotExists.Wrapf("division not found: %s", request.DivisionId)
 
@@ -120,7 +129,7 @@ func (k Keeper) Division(
 }
 
 // Divisions queries all Node divisions
-func (k Keeper) Divisions(
+func (q Querier) Divisions(
 	goCtx context.Context,
 	request *types.QueryDivisionsRequest,
 ) (*types.QueryDivisionsResponse, error) {
@@ -129,14 +138,14 @@ func (k Keeper) Divisions(
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	store := ctx.KVStore(k.storeKey)
+	store := ctx.KVStore(q.storeKey)
 
 	divisionStore := prefix.NewStore(store, types.DivisionKey)
 
 	var divisions []types.Division
 	pageRes, err := query.Paginate(divisionStore, request.Pagination, func(key []byte, value []byte) error {
 		var division types.Division
-		if err := k.cdc.Unmarshal(value, &division); err != nil {
+		if err := q.cdc.Unmarshal(value, &division); err != nil {
 			return err
 		}
 		divisions = append(divisions, division)
@@ -153,7 +162,7 @@ func (k Keeper) Divisions(
 }
 
 // Supply queries the number of Node from the given division
-func (k Keeper) Supply(
+func (q Querier) Supply(
 	goCtx context.Context,
 	request *types.QuerySupplyRequest,
 ) (*types.QuerySupplyResponse, error) {
@@ -161,24 +170,26 @@ func (k Keeper) Supply(
 		return nil, sdkerrors.ErrInvalidRequest.Wrap("empty request")
 	}
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	supply := k.GetDivisionTotalSupply(ctx, request.DivisionId)
+	supply := q.GetDivisionSoldCount(ctx, request.DivisionId)
 	return &types.QuerySupplyResponse{Amount: supply}, nil
 }
 
-func (k Keeper) SaleLevel(
+// SaleLevel queries the current sale level
+func (q Querier) SaleLevel(
 	goCtx context.Context,
 	_ *types.QuerySaleLevelRequest,
 ) (*types.QuerySaleLevelResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	level := k.GetSaleLevel(ctx)
+	level := q.GetSaleLevel(ctx)
 	return &types.QuerySaleLevelResponse{SaleLevel: level}, nil
 }
 
-func (k Keeper) AuthorizedMembers(
+// AuthorizedMembers queries the list of authorized members
+func (q Querier) AuthorizedMembers(
 	goCtx context.Context,
 	_ *types.QueryAuthorizedMembersRequest,
 ) (*types.QueryAuthorizedMembersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	members := k.GetAuthorizedMembers(ctx)
+	members := q.GetAuthorizedMembers(ctx)
 	return &types.QueryAuthorizedMembersResponse{Members: members}, nil
 }

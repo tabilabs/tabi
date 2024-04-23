@@ -184,7 +184,7 @@ func (m msgServer) RemoveAuthorizedMembers(
 		)
 	}
 
-	events, err := m.k.RemoveCaller(ctx, msg.Members)
+	events, err := m.k.DeleteAuthorizedMembers(ctx, msg.Members)
 	if err != nil {
 		return nil, err
 	}

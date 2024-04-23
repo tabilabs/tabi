@@ -5,6 +5,7 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
+// SetAuthorizedMembers sets the list of authorized members
 func (k Keeper) SetAuthorizedMembers(ctx sdk.Context, members []string) ([]sdk.Event, error) {
 	params := k.GetParams(ctx)
 
@@ -34,7 +35,8 @@ func (k Keeper) SetAuthorizedMembers(ctx sdk.Context, members []string) ([]sdk.E
 	return events, nil
 }
 
-func (k Keeper) RemoveCaller(ctx sdk.Context, members []string) ([]sdk.Event, error) {
+// DeleteAuthorizedMembers deletes the list of authorized members
+func (k Keeper) DeleteAuthorizedMembers(ctx sdk.Context, members []string) ([]sdk.Event, error) {
 	params := k.GetParams(ctx)
 
 	events := make([]sdk.Event, 0)
@@ -76,6 +78,7 @@ func (k Keeper) HasAuthorizedMember(ctx sdk.Context, member sdk.AccAddress) bool
 	return allowAuthz
 }
 
+// GetAuthorizedMembers returns the list of authorized members
 func (k Keeper) GetAuthorizedMembers(ctx sdk.Context) []string {
 	return k.GetParams(ctx).AuthorizedMembers
 }
