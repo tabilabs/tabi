@@ -115,7 +115,7 @@ func (am AppModule) Route() sdk.Route {
 }
 
 // QuerierRoute returns the mint module's querier route name.
-func (AppModule) QuerierRoute() string { return types.RouterKey }
+func (AppModule) QuerierRoute() string { return "" }
 
 // LegacyQuerierHandler returns the mint module sdk.Querier.
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {

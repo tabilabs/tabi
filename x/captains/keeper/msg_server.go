@@ -258,7 +258,7 @@ func (m msgServer) CommitComputingPower(
 	}
 
 	// TODO: rename method.
-	events := m.k.UpdateExtractableComputingPowerForUsers(ctx, msg.ComputingPowerRewards)
+	events := m.k.CommitComputingPower(ctx, msg.ComputingPowerRewards)
 
 	resultEvents := sdk.Events{sdk.NewEvent(
 		sdk.EventTypeMessage,

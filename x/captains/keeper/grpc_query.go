@@ -71,7 +71,7 @@ func (k Keeper) Nodes(
 	switch {
 	case len(request.Owner) > 0:
 
-		if pageRes, err = query.Paginate(k.getNodesStoreByOwner(ctx, owner), request.Pagination, func(key []byte, value []byte) error {
+		if pageRes, err = query.Paginate(k.getNodeByOwnerPrefixStore(ctx, owner), request.Pagination, func(key []byte, value []byte) error {
 			node, has := k.GetNode(ctx, string(key))
 			if has {
 				nodes = append(nodes, node)

@@ -58,9 +58,7 @@ func (k Keeper) GetDivisions(ctx sdk.Context) (divisions []types.Division) {
 
 // GetDivisionTotalSupply returns the number of all sold nodes by the specified division ID
 func (k Keeper) GetDivisionTotalSupply(ctx sdk.Context, divisionID string) uint64 {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.DivisionTotalSupplyStoreKey(divisionID))
-	return sdk.BigEndianToUint64(bz)
+	panic("implement me")
 }
 
 func (k Keeper) HasDivision(ctx sdk.Context, divisionID string) bool {
@@ -69,20 +67,5 @@ func (k Keeper) HasDivision(ctx sdk.Context, divisionID string) bool {
 }
 
 func (k Keeper) IsDivisionSoldOut(ctx sdk.Context, divisionID string) bool {
-	division, _ := k.GetDivision(ctx, divisionID)
-	if k.GetDivisionTotalSupply(ctx, divisionID) >= division.TotalCount {
-		return true
-	}
-	return false
-}
-
-func (k Keeper) incrDivisionTotalSupply(ctx sdk.Context, divisionID string) {
-	supply := k.GetDivisionTotalSupply(ctx, divisionID) + 1
-	k.updateDivisionTotalSupply(ctx, divisionID, supply)
-}
-
-func (k Keeper) updateDivisionTotalSupply(ctx sdk.Context, divisionID string, supply uint64) {
-	store := ctx.KVStore(k.storeKey)
-	supplyKey := types.DivisionTotalSupplyStoreKey(divisionID)
-	store.Set(supplyKey, sdk.Uint64ToBigEndian(supply))
+	panic("implement me")
 }

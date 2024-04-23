@@ -2,6 +2,29 @@ package keeper
 
 import sdk "github.com/cosmos/cosmos-sdk/types"
 
+func PledgeRatioGlobal(ctx sdk.Context, epochID string) sdk.Dec {
+	panic("implement me")
+}
+
+func PledgeRatioByNode(ctx sdk.Context, nodeID string, epochID string) {
+	panic("implement me")
+}
+
+func PledgeRatioByOwner(ctx sdk.Context, owner sdk.AccAddress, epochID string) {
+	panic("implement me")
+}
+
+// PledgeSum returns the total pledge amount of captains' owners on the epoch end.
+func PledgeSum(ctx sdk.Context, epochID string) sdk.Dec {
+	panic("implement me")
+}
+
+func PledgeByOwner(ctx sdk.Context, owner sdk.AccAddress, epochID string) sdk.Dec {
+	panic("implement me")
+}
+
+// TODO: legacy functions
+
 // CalculatePledgeRateForXN calculates the pledge rate of the owner
 // pledgeRate = pledgeCoin / mintCoin
 func (k Keeper) CalculatePledgeRateForXN(ctx sdk.Context, owner sdk.AccAddress) sdk.Dec {

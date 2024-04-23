@@ -14,3 +14,11 @@ func (k Keeper) CalculateTechProgressCoefficient(ctx sdk.Context) sdk.Dec {
 	techProgressCoefficient := TechProgressCoefficientCardinality.Power(captainNodeSaleLevel - 1)
 	return techProgressCoefficient
 }
+
+func (k Keeper) GetHalvingEraCoefficient(ctx sdk.Context) sdk.Dec {
+	panic("implement me")
+}
+
+func (k Keeper) SetHalvingEraCoefficient(ctx sdk.Context, era uint64) {
+	panic("implement me")
+}

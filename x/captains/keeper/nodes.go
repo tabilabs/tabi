@@ -14,7 +14,11 @@ import (
 const nodeIdPrefix = "node-%d"
 
 // CreateNode defines a method for create a new node
-func (k Keeper) CreateNode(ctx sdk.Context, node types.Node, receiver sdk.AccAddress) error {
+func (k Keeper) CreateNode(
+	ctx sdk.Context,
+	node types.Node,
+	receiver sdk.AccAddress,
+) error {
 	// Check Division exists
 	if !k.HasDivision(ctx, node.DivisionId) {
 		return errorsmod.Wrap(types.ErrDivisionNotExists, node.DivisionId)
@@ -36,14 +40,8 @@ func (k Keeper) CreateNode(ctx sdk.Context, node types.Node, receiver sdk.AccAdd
 		return errorsmod.Wrap(types.ErrUserHoldingQuantityExceeded, receiver.String())
 	}
 
-	// Set the node
 	k.setNode(ctx, node)
-	// Set the owner
-	k.setOwner(ctx, node.Id, receiver)
-	// Set user-holding quantity
-	k.incrUserHoldingQuantity(ctx, receiver)
-	// Set the division total supply
-	k.incrDivisionTotalSupply(ctx, node.DivisionId)
+	k.setNodeByOwner(ctx, node.Id, receiver)
 
 	return nil
 }
@@ -65,7 +63,7 @@ func (k Keeper) UpdateNode(
 	}
 
 	// Check if the node has enough extractable computing power
-	if k.getExtractableComputingPower(ctx, owner) < computingPower {
+	if k.GetComputingPowerClaimable(ctx, owner) < computingPower {
 		return errorsmod.Wrap(types.ErrInsufficientExperience, nodeID)
 	}
 
@@ -90,7 +88,7 @@ func (k Keeper) UpdateNode(
 	// Set the node
 	k.setNode(ctx, node)
 	// Set the experience
-	k.decrExtractableComputingPower(ctx, owner, computingPower)
+	k.decrComputingPowerClaimable(ctx, owner, computingPower)
 	return nil
 }
 
@@ -153,8 +151,8 @@ func (k Keeper) GetNodes(ctx sdk.Context) (nodes []types.Node) {
 
 // GetNodesByOwner return all nodes owned by the specified owner
 func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []types.Node) {
-	ownerStore := k.getNodesStoreByOwner(ctx, owner)
-	iterator := ownerStore.Iterator(nil, nil)
+	store := k.getNodeByOwnerPrefixStore(ctx, owner)
+	iterator := store.Iterator(nil, nil)
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		node, has := k.GetNode(ctx, string(iterator.Key()))
@@ -168,99 +166,34 @@ func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []
 
 // GetOwner returns the owner of the specified node
 func (k Keeper) GetOwner(ctx sdk.Context, nodeID string) sdk.AccAddress {
-	store := ctx.KVStore(k.storeKey)
-	key := types.OwnerStoreKey(nodeID)
-	bz := store.Get(key)
-	return sdk.AccAddress(bz)
-}
-
-// GetOwners returns all owners
-func (k Keeper) GetOwners(ctx sdk.Context) (owners []sdk.AccAddress) {
-	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, types.NodeByOwnerKey)
-	defer iterator.Close()
-	// Need to filter duplicates from the iterator
-	ownerMap := make(map[string]struct{})
-	for ; iterator.Valid(); iterator.Next() {
-		// iterator.Key() = <owner><Delimiter><nodeID>
-		// strings.Split(string(iterator.Key()), types.Delimiter)[0] = <owner>
-		owner, _ := types.ParseNodeByOwnerStoreKey(iterator.Key())
-		ownerMap[owner.String()] = struct{}{}
-	}
-	for owner := range ownerMap {
-		accAddr, _ := sdk.AccAddressFromBech32(owner)
-		owners = append(owners, accAddr)
-	}
-	return owners
-
+	panic("implement me")
 }
 
 // GetUserHoldingQuantity returns the amount of nodes owned by the specified owner
 func (k Keeper) GetUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress) uint64 {
-	return k.getUserHoldingQuantity(ctx, owner)
+	panic("implement me")
 }
 
 // setNode defines a method for setting the node
-// only can have one owner
 func (k Keeper) setNode(ctx sdk.Context, node types.Node) {
-	bz := k.cdc.MustMarshal(&node)
-	store := ctx.KVStore(k.storeKey)
-	store.Set(types.NodeStoreKey(node.Id), bz)
-	fmt.Println("store.Get(types.NodeStoreKey(node.Id)): ", store.Get(types.NodeStoreKey(node.Id)))
+	panic("implement me")
 }
 
 // SetOwner defines a method for setting the owner of the specified node
-// and setting the owner of the specified node
-// user can have multiple nodes
-func (k Keeper) setOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddress) {
-	store := ctx.KVStore(k.storeKey)
-
-	// nodeID -> owner
-	key := types.OwnerStoreKey(nodeID)
-	store.Set(key, owner.Bytes())
-
-	// Set the node by owner
-	// 0x02<owner><Delimiter>
-	ownerStore := k.getNodesStoreByOwner(ctx, owner)
-
-	// 0x02<owner><Delimiter><nodeID> -> Placeholder
-	ownerStore.Set([]byte(nodeID), types.PlaceHolder)
+func (k Keeper) setNodeByOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddress) {
+	panic("implement me")
 }
 
-func (k Keeper) getNodesStoreByOwner(ctx sdk.Context, owner sdk.AccAddress) prefix.Store {
+// getNodesStoreByOwner returns the store for the nodes owned by the specified owner
+func (k Keeper) getNodeByOwnerPrefixStore(ctx sdk.Context, owner sdk.AccAddress) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
-	key := types.NodeByOwnerStoreKey(owner) // 0x02<owner><Delimiter>
+	key := types.NodeByOwnerPrefixStoreKey(owner)
 	return prefix.NewStore(store, key)
 }
 
 // isUserHoldingQuantityExceeded checks if the user holding quantity exceeded
-// if exceeded, return true
 func (k Keeper) isUserHoldingQuantityExceeded(ctx sdk.Context, owner sdk.AccAddress) bool {
-	params := k.GetParams(ctx)
-	maximumHoldingAmount := params.MaximumHoldingAmount
-	if k.getUserHoldingQuantity(ctx, owner) >= maximumHoldingAmount {
-		return true
-	}
-	return false
-}
-
-func (k Keeper) getUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress) uint64 {
-	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.OwnerHoldingTotalSupplyStoreKey(owner))
-	if bz == nil {
-		return 0
-	}
-	return sdk.BigEndianToUint64(bz)
-}
-
-func (k Keeper) incrUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress) {
-	supply := k.getUserHoldingQuantity(ctx, owner) + 1
-	k.updateUserHoldingQuantity(ctx, owner, supply)
-}
-
-func (k Keeper) updateUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress, supply uint64) {
-	store := ctx.KVStore(k.storeKey)
-	store.Set(types.OwnerHoldingTotalSupplyStoreKey(owner), sdk.Uint64ToBigEndian(supply))
+	panic("implement me")
 }
 
 func (k Keeper) getNodesStore(ctx sdk.Context) prefix.Store {

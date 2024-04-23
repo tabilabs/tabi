@@ -13,14 +13,12 @@ const (
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
 
-	// RouterKey defines the module's message routing key
-	RouterKey = ModuleName
-
 	// KeyNextMTSequence is the key used to store the next CaptainNode sequence in the keeper
 	KeyNextNodeSequence = "nextNodeSequence"
 )
 
 var (
+	ParamsKey                          = []byte{0x00}
 	NodeKey                            = []byte{0x01}
 	NodeByOwnerKey                     = []byte{0x02}
 	DivisionKey                        = []byte{0x03}
@@ -62,6 +60,17 @@ func NodeByOwnerStoreKey(owner sdk.AccAddress, nodeID string) []byte {
 	copy(key[len(NodeByOwnerKey):], owner)
 	copy(key[len(NodeByOwnerKey)+len(owner):], Delimiter)
 	copy(key[len(NodeByOwnerKey)+len(owner)+len(Delimiter):], nodeID)
+	return key
+}
+
+// NodeByOwnerPrefixStoreKey returns the byte representation of the node by owner prefix key
+// Items are stored with the following key
+// 0x02<owner><delimiter>
+func NodeByOwnerPrefixStoreKey(owner sdk.AccAddress) []byte {
+	owner = address.MustLengthPrefix(owner)
+	key := make([]byte, len(NodeByOwnerKey)+len(owner))
+	copy(key, NodeByOwnerKey)
+	copy(key[len(NodeByOwnerKey):], owner)
 	return key
 }
 
