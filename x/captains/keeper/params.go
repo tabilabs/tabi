@@ -1,29 +1,11 @@
 package keeper
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-func (k Keeper) UpdateSaleLevel(ctx sdk.Context, saleLevel uint64) (sdk.Event, error) {
-	params := k.GetParams(ctx)
-	oldLevel := params.CurrentSaleLevel
-	if oldLevel > saleLevel {
-		return sdk.Event{}, types.ErrInvalidSaleLevel
-	}
-
-	params.CurrentSaleLevel = saleLevel
-	event := sdk.NewEvent(
-		types.EventTypeAddAuthorizedMembers,
-		sdk.NewAttribute(types.AttributeKeySaleLevelBefore, fmt.Sprintf("%d", oldLevel)),
-		sdk.NewAttribute(types.AttributeKeySaleLevelAfter, fmt.Sprintf("%d", saleLevel)),
-	)
-	return event, k.SetParams(ctx, params)
-}
-
-// GetParams sets the mint module parameters.
+// GetParams sets the captains module parameters.
 func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.ParamsKey)
@@ -35,7 +17,7 @@ func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 	return params
 }
 
-// SetParams sets the mint module parameters.
+// SetParams sets the captains module parameters.
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
 	if err := params.Validate(); err != nil {
 		return err
@@ -51,6 +33,24 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
 	return nil
 }
 
+// UpdateSaleLevel updates the sale level in params.
+func (k Keeper) UpdateSaleLevel(ctx sdk.Context, newSaleLevel uint64) (uint64, error) {
+	params := k.GetParams(ctx)
+	oldSaleLevel := params.CurrentSaleLevel
+	if oldSaleLevel > newSaleLevel {
+		return oldSaleLevel, types.ErrInvalidSaleLevel
+	}
+
+	params.CurrentSaleLevel = newSaleLevel
+	if err := k.SetParams(ctx, params); err != nil {
+		return oldSaleLevel, err
+	}
+
+	return oldSaleLevel, nil
+}
+
+// GetSaleLevel returns the current sale level.
 func (k Keeper) GetSaleLevel(ctx sdk.Context) uint64 {
+
 	return k.GetParams(ctx).CurrentSaleLevel
 }

@@ -4,34 +4,33 @@ import (
 	"testing"
 	"time"
 
-	evmtypes "github.com/tabilabs/tabi/x/evm/types"
-
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	"github.com/tabilabs/tabi/utils"
-
-	"github.com/cosmos/cosmos-sdk/baseapp"
-
-	"github.com/tabilabs/tabi/testutil"
-	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
-
-	"github.com/stretchr/testify/require"
-	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
-	utiltx "github.com/tabilabs/tabi/testutil/tx"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 
+	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	"github.com/stretchr/testify/suite"
+
 	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
+	"github.com/tabilabs/tabi/testutil"
+	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	"github.com/tabilabs/tabi/utils"
+
+	captainskeeper "github.com/tabilabs/tabi/x/captains/keeper"
 	"github.com/tabilabs/tabi/x/captains/types"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
+	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 )
 
 type KeeperTestSuite struct {
@@ -91,7 +90,7 @@ func (suite *KeeperTestSuite) SetupApp(checkTx bool, t require.TestingT) {
 
 	// setup query client
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
-	types.RegisterQueryServer(queryHelper, suite.app.CaptainNodeKeeper)
+	types.RegisterQueryServer(queryHelper, captainskeeper.NewQuerierImpl(&suite.app.CaptainNodeKeeper))
 	suite.queryClient = types.NewQueryClient(queryHelper)
 
 	params := types.DefaultParams()
@@ -133,7 +132,7 @@ func (suite *KeeperTestSuite) CommitAfter(t time.Duration) {
 	suite.Require().NoError(err)
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
 
-	types.RegisterQueryServer(queryHelper, suite.app.CaptainNodeKeeper)
+	types.RegisterQueryServer(queryHelper, captainskeeper.NewQuerierImpl(&suite.app.CaptainNodeKeeper))
 	suite.queryClient = types.NewQueryClient(queryHelper)
 
 	queryHelperEvm := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())

@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tabilabs/tabi/x/captains/types"
@@ -26,50 +24,34 @@ func (k Keeper) ComputingPowerBaseByNode(ctx sdk.Context, nodeID string) {
 }
 
 // CommitComputingPower commits the pending computing power.
-func (k Keeper) CommitComputingPower(
-	ctx sdk.Context,
-	claimableComputingPowers []types.ClaimableComputingPower,
-) []sdk.Event {
-	events := make([]sdk.Event, 0)
-	for _, claimableComputingPower := range claimableComputingPowers {
-		receiver := sdk.MustAccAddressFromBech32(claimableComputingPower.Owner)
-		before := k.GetComputingPowerClaimable(ctx, receiver)
-		k.incrExtractableComputingPower(ctx, receiver, claimableComputingPower.Amount)
-		after := k.GetComputingPowerClaimable(ctx, receiver)
-		events = append(
-			events,
-			sdk.NewEvent(
-				types.EventCommitComputingPower,
-				sdk.NewAttribute(types.AttributeKeyOwner, claimableComputingPower.Owner),
-				sdk.NewAttribute(types.AttributeKeyComputingPowerBefore, fmt.Sprintf("%d", before)),
-				sdk.NewAttribute(types.AttributeKeyComputingPowerAfter, fmt.Sprintf("%d", after)),
-			),
-		)
-	}
-
-	return nil
+func (k Keeper) CommitComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) (uint64, uint64, error) {
+	before := k.GetComputingPowerClaimable(ctx, owner)
+	after := before + amount
+	k.setComputingPowerClaimable(ctx, after, owner)
+	return before, after, nil
 }
 
-func (k Keeper) incrExtractableComputingPower(
-	ctx sdk.Context,
-	owner sdk.AccAddress,
-	amount uint64,
-) {
+// incrComputingPowerClaimable decrements the claimable computing power of an owner.
+func (k Keeper) incrComputingPowerClaimable(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
+	before := k.GetComputingPowerClaimable(ctx, owner)
+	after := before + amount
+	k.setComputingPowerClaimable(ctx, after, owner)
+}
+
+// decrComputingPowerClaimable decrements the claimable computing power of an owner.
+func (k Keeper) decrComputingPowerClaimable(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
+	before := k.GetComputingPowerClaimable(ctx, owner)
+	after := before - amount
+	k.setComputingPowerClaimable(ctx, after, owner)
+}
+
+// setComputingPowerClaimable sets the claimable computing power of an owner.
+func (k Keeper) setComputingPowerClaimable(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
-	result := k.GetComputingPowerClaimable(ctx, owner) + amount
-	store.Set(types.ComputingPowerClaimableStoreKey(owner), sdk.Uint64ToBigEndian(result))
+	store.Set(types.ComputingPowerClaimableStoreKey(owner), sdk.Uint64ToBigEndian(amount))
 }
 
-func (k Keeper) decrComputingPowerClaimable(
-	ctx sdk.Context,
-	owner sdk.AccAddress,
-	amount uint64,
-) {
-	store := ctx.KVStore(k.storeKey)
-	result := k.GetComputingPowerClaimable(ctx, owner) - amount
-	store.Set(types.ComputingPowerClaimableStoreKey(owner), sdk.Uint64ToBigEndian(result))
-}
-
+// GetComputingPowerClaimable returns the claimable computing power of an owner.
 func (k Keeper) GetComputingPowerClaimable(ctx sdk.Context, owner sdk.AccAddress) uint64 {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.ComputingPowerClaimableStoreKey(owner))

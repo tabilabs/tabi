@@ -13,80 +13,89 @@ import (
 
 const nodeIdPrefix = "node-%d"
 
-// CreateNode defines a method for create a new node
+// CreateNode defines a method for create a new node for owner.
 func (k Keeper) CreateNode(
 	ctx sdk.Context,
-	node types.Node,
-	receiver sdk.AccAddress,
-) error {
-	// Check Division exists
-	if !k.HasDivision(ctx, node.DivisionId) {
-		return errorsmod.Wrap(types.ErrDivisionNotExists, node.DivisionId)
+	divisionID string,
+	owner sdk.AccAddress,
+) (string, error) {
+	if k.isMaximumHoldingAmount(ctx, owner) {
+		return "", errorsmod.Wrap(types.ErrUserHoldingQuantityExceeded, owner.String())
 	}
 
-	// Check if the Division is sold out
-	if k.IsDivisionSoldOut(ctx, node.DivisionId) {
-		return errorsmod.Wrap(types.ErrDivisionSoldOut, node.DivisionId)
+	division, found := k.GetDivision(ctx, divisionID)
+	if !found {
+		return "", errorsmod.Wrap(types.ErrDivisionNotExists, divisionID)
+	}
+	if division.SoldCount == division.InitialSupply {
+		return "", errorsmod.Wrap(types.ErrDivisionSoldOut, divisionID)
 	}
 
-	// Check if the node already exists
-	// node.id is unique in the global scope
-	if k.HasNode(ctx, node.Id) {
-		return errorsmod.Wrap(types.ErrNodeExists, node.Id)
+	nodeID := k.GenerateNodeID(ctx)
+	if k.HasNode(ctx, nodeID) {
+		return "", errorsmod.Wrap(types.ErrNodeExists, nodeID)
 	}
 
-	// Check user-holding quantity
-	if k.isUserHoldingQuantityExceeded(ctx, receiver) {
-		return errorsmod.Wrap(types.ErrUserHoldingQuantityExceeded, receiver.String())
+	node := types.Node{
+		Id:             nodeID,
+		DivisionId:     divisionID,
+		Owner:          owner.String(),
+		ComputingPower: division.ComputingPowerLowerBound,
+	}
+	if err := k.setNode(ctx, node); err != nil {
+		return "", err
+	}
+	k.setNodeByOwner(ctx, nodeID, owner)
+
+	division.TotalCount++
+	division.SoldCount++
+	if err := k.setDivision(ctx, division); err != nil {
+		return "", err
 	}
 
-	k.setNode(ctx, node)
-	k.setNodeByOwner(ctx, node.Id, receiver)
-
-	return nil
+	return nodeID, nil
 }
 
+// UpdateNode defines a method for updating the computing power of the specified node
 func (k Keeper) UpdateNode(
 	ctx sdk.Context,
 	nodeID string,
-	computingPower uint64,
+	amount uint64,
 	owner sdk.AccAddress,
 ) error {
-	// Check if the node exists
-	if !k.HasNode(ctx, nodeID) {
+	node, found := k.GetNode(ctx, nodeID)
+	if !found {
 		return errorsmod.Wrap(types.ErrNodeNotExists, nodeID)
 	}
 
-	// Check if owner of the node is the sender
 	if err := k.AuthorizeNode(ctx, nodeID, owner); err != nil {
-		return errorsmod.Wrap(types.ErrUnauthorized, owner.String())
+		return err
 	}
 
-	// Check if the node has enough extractable computing power
-	if k.GetComputingPowerClaimable(ctx, owner) < computingPower {
-		return errorsmod.Wrap(types.ErrInsufficientExperience, nodeID)
+	claimable := k.GetComputingPowerClaimable(ctx, owner)
+	if claimable < amount {
+		return errorsmod.Wrap(types.ErrInsufficientComputingPower, nodeID)
 	}
 
-	// Update the node
-	node, _ := k.GetNode(ctx, nodeID)
-	currentDivision, _ := k.GetDivision(ctx, node.DivisionId)
-
-	node.ComputingPower += computingPower
-
-	// Check if the node has enough experience to be promoted to the next division
-	if node.ComputingPower > currentDivision.ComputingPowerUpperBound {
-		divisions := k.GetDivisions(ctx)
-		for _, division := range divisions {
-			// the node should be promoted to the next division
-			if node.ComputingPower <= division.ComputingPowerUpperBound && node.ComputingPower >= division.ComputingPowerLowerBound {
-				node.DivisionId = division.Id
-				break
-			}
-		}
+	after := node.ComputingPower + amount
+	currDivision, _ := k.GetDivision(ctx, node.DivisionId)
+	if after > currDivision.ComputingPowerUpperBound {
+		// check if we need to improve node division
+		nextDivision := k.decideDivision(ctx, after)
+		node.DivisionId = nextDivision.Id
+		k.incrDivisionTotalCount(ctx, nextDivision)
+		k.decrDivisionTotalCount(ctx, currDivision)
 	}
 
-	k.setNode(ctx, node)
-	k.decrComputingPowerClaimable(ctx, owner, computingPower)
+	// set node info
+	node.ComputingPower = after
+	if err := k.setNode(ctx, node); err != nil {
+		return err
+	}
+
+	// set claimable power
+	k.decrComputingPowerClaimable(ctx, amount, owner)
+
 	return nil
 }
 
@@ -164,22 +173,47 @@ func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []
 
 // GetNodeOwner returns the owner of the specified node
 func (k Keeper) GetNodeOwner(ctx sdk.Context, nodeID string) sdk.AccAddress {
-	panic("implement me")
+	node, found := k.GetNode(ctx, nodeID)
+	if !found {
+		return nil
+	}
+	owner, _ := sdk.AccAddressFromBech32(node.Owner)
+	return owner
 }
 
-// GetUserHoldingQuantity returns the amount of nodes owned by the specified owner
-func (k Keeper) GetUserHoldingQuantity(ctx sdk.Context, owner sdk.AccAddress) uint64 {
-	panic("implement me")
+// GetUserHoldingAmount returns the amount of nodes owned by the specified owner
+func (k Keeper) GetUserHoldingAmount(ctx sdk.Context, owner sdk.AccAddress) uint64 {
+	store := k.getNodeByOwnerPrefixStore(ctx, owner)
+	amount := uint64(0)
+	iterator := store.Iterator(nil, nil)
+	for ; iterator.Valid(); iterator.Next() {
+		amount++
+	}
+	return amount
 }
 
 // setNode defines a method for setting the node
-func (k Keeper) setNode(ctx sdk.Context, node types.Node) {
-	panic("implement me")
+func (k Keeper) setNode(ctx sdk.Context, node types.Node) error {
+	bz, err := k.cdc.Marshal(&node)
+	if err != nil {
+		return errorsmod.Wrap(err, "Marshal node failed")
+	}
+
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.NodeStoreKey(node.Id), bz)
+	return nil
 }
 
 // SetOwner defines a method for setting the owner of the specified node
 func (k Keeper) setNodeByOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddress) {
-	panic("implement me")
+	store := ctx.KVStore(k.storeKey)
+	key := types.NodeByOwnerStoreKey(owner, nodeID)
+	store.Set(key, types.PlaceHolder)
+}
+
+// isMaximumHoldingAmount checks if the user holding quantity exceeded
+func (k Keeper) isMaximumHoldingAmount(ctx sdk.Context, owner sdk.AccAddress) bool {
+	return k.GetParams(ctx).MaximumHoldingAmount == k.GetUserHoldingAmount(ctx, owner)
 }
 
 // getNodesStoreByOwner returns the store for the nodes owned by the specified owner
@@ -189,12 +223,8 @@ func (k Keeper) getNodeByOwnerPrefixStore(ctx sdk.Context, owner sdk.AccAddress)
 	return prefix.NewStore(store, key)
 }
 
-// isUserHoldingQuantityExceeded checks if the user holding quantity exceeded
-func (k Keeper) isUserHoldingQuantityExceeded(ctx sdk.Context, owner sdk.AccAddress) bool {
-	panic("implement me")
-}
-
-func (k Keeper) getNodesStore(ctx sdk.Context) prefix.Store {
+// getNodesPrefixStore returns the store for the nodes
+func (k Keeper) getNodesPrefixStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
 	return prefix.NewStore(store, types.NodeKey)
 }

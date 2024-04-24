@@ -6,10 +6,10 @@ import (
 )
 
 // SetAuthorizedMembers sets the list of authorized members
-func (k Keeper) SetAuthorizedMembers(ctx sdk.Context, members []string) ([]sdk.Event, error) {
+func (k Keeper) SetAuthorizedMembers(ctx sdk.Context, members []string) error {
 	params := k.GetParams(ctx)
-
 	events := make([]sdk.Event, 0)
+
 	for _, member := range members {
 		allowAdd := true
 		for _, authzMember := range params.AuthorizedMembers {
@@ -28,15 +28,18 @@ func (k Keeper) SetAuthorizedMembers(ctx sdk.Context, members []string) ([]sdk.E
 			)
 		}
 	}
+
 	if err := k.SetParams(ctx, params); err != nil {
-		return nil, err
+		return err
 	}
 
-	return events, nil
+	ctx.EventManager().EmitEvents(events)
+
+	return nil
 }
 
 // DeleteAuthorizedMembers deletes the list of authorized members
-func (k Keeper) DeleteAuthorizedMembers(ctx sdk.Context, members []string) ([]sdk.Event, error) {
+func (k Keeper) DeleteAuthorizedMembers(ctx sdk.Context, members []string) error {
 	params := k.GetParams(ctx)
 
 	events := make([]sdk.Event, 0)
@@ -58,14 +61,17 @@ func (k Keeper) DeleteAuthorizedMembers(ctx sdk.Context, members []string) ([]sd
 			)
 		}
 	}
+
 	if err := k.SetParams(ctx, params); err != nil {
-		return nil, err
+		return err
 	}
 
-	return events, nil
+	ctx.EventManager().EmitEvents(events)
+
+	return nil
 }
 
-// HasAuthorizedMember asserts whether a Callers is already registered
+// HasAuthorizedMember asserts whether an address is in authorized member lists.
 func (k Keeper) HasAuthorizedMember(ctx sdk.Context, member sdk.AccAddress) bool {
 	params := k.GetParams(ctx)
 
