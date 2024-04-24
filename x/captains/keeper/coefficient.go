@@ -15,10 +15,13 @@ func (k Keeper) CalculateTechProgressCoefficient(ctx sdk.Context) sdk.Dec {
 	return techProgressCoefficient
 }
 
+// GetHalvingEraCoefficient returns the tech progress coefficient
 func (k Keeper) GetHalvingEraCoefficient(ctx sdk.Context) sdk.Dec {
-	panic("implement me")
+	return k.GetParams(ctx).HalvingEraCoefficient
 }
 
-func (k Keeper) SetHalvingEraCoefficient(ctx sdk.Context, era uint64) {
-	panic("implement me")
+// GetCaptainsConstant returns the captains constant
+func (k Keeper) GetCaptainsConstant(ctx sdk.Context) sdk.Dec {
+	cc := k.GetParams(ctx).CaptainsConstant
+	return sdk.NewDec(int64(cc))
 }

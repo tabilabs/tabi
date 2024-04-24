@@ -12,28 +12,28 @@ const (
 
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
-
-	// KeyNextMTSequence is the key used to store the next CaptainNode sequence in the keeper
-	KeyNextNodeSequence = "nextNodeSequence"
 )
 
 var (
-	ParamsKey                          = []byte{0x00}
-	NodeKey                            = []byte{0x01}
-	NodeByOwnerKey                     = []byte{0x02}
-	DivisionKey                        = []byte{0x03}
-	DivisionByNode                     = []byte{0x04}
-	HistoricalEmissionSumOnEpochKey    = []byte{0x05}
-	HistoricalEmissionByNodeOnEpochKey = []byte{0x06}
-	HistoricalEmissionLastClaimedKey   = []byte{0x07}
-	ComputingPowerClaimableKey         = []byte{0x08}
-	ComputingPowerSumOnEpochKey        = []byte{0x09}
-	ComputingPowerByNodeOnEpochKey     = []byte{0x0A}
-	PledgeAmountSumOnEpochKey          = []byte{0x0B}
+	ParamsKey                            = []byte{0x00}
+	NodeKey                              = []byte{0x01}
+	NodeByOwnerKey                       = []byte{0x02}
+	DivisionKey                          = []byte{0x03}
+	DivisionByNode                       = []byte{0x04}
+	HistoricalEmissionSumOnEpochKey      = []byte{0x05}
+	NodeHistoricalEmissionOnEpochKey     = []byte{0x06}
+	NodeHistoricalEmissionOnLastClaimKey = []byte{0x07}
+	ComputingPowerClaimableKey           = []byte{0x08}
+	ComputingPowerSumOnEpochKey          = []byte{0x09}
+	NodeComputingPowerOnEpochKey         = []byte{0x0A}
+	PledgeAmountSumOnEpochKey            = []byte{0x0B}
 
 	ReportValidationSumOnEpochKey = []byte{0x0C}
 	ComputingPowerCalcCountKey    = []byte{0x0D}
 	RewardCalcCountKey            = []byte{0x0E}
+
+	NextNodeSequenceKey = []byte{0x0F}
+	EpochKey            = []byte{0x10}
 
 	Delimiter   = []byte{0x00}
 	PlaceHolder = []byte{0x01}
@@ -79,6 +79,7 @@ func NodeByOwnerPrefixStoreKey(owner sdk.AccAddress) []byte {
 // 0x03<division_id> -> <divisions_info_bz>
 func DivisionStoreKey(divisionID string) []byte {
 	key := make([]byte, len(DivisionKey)+len(divisionID))
+
 	copy(key, DivisionKey)
 	copy(key[len(DivisionKey):], divisionID)
 	return key
@@ -99,39 +100,41 @@ func DivisionByNodeStoreKey(divisionID, nodeID string) []byte {
 // HistoricalEmissionSumOnEpochStoreKey returns the byte representation of the historical emission sum on epoch key
 // Items are stored with the following key: values
 // 0x05<epoch_id> -> <emission>
-func HistoricalEmissionSumOnEpochStoreKey(epochID string) []byte {
-	key := make([]byte, len(HistoricalEmissionSumOnEpochKey)+len(epochID))
+func HistoricalEmissionSumOnEpochStoreKey(epochID uint64) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(HistoricalEmissionSumOnEpochKey)+len(epochBz))
 	copy(key, HistoricalEmissionSumOnEpochKey)
-	copy(key[len(HistoricalEmissionSumOnEpochKey):], epochID)
+	copy(key[len(HistoricalEmissionSumOnEpochKey):], epochBz)
 	return key
 }
 
-// HistoricalEmissionByNodeOnEpochStoreKey returns the byte representation of the historical emission by node on epoch key
+// NodeHistoricalEmissionOnEpochStoreKey returns the byte representation of the historical emission by node on epoch key
 // Items are stored with the following key: values
 // 0x06<epoch_id><delimiter><node_id> -> <emission>
-func HistoricalEmissionByNodeOnEpochStoreKey(epochID, nodeID string) []byte {
-	key := make([]byte, len(HistoricalEmissionByNodeOnEpochKey)+len(epochID)+len(Delimiter)+len(nodeID))
-	copy(key, HistoricalEmissionByNodeOnEpochKey)
-	copy(key[len(HistoricalEmissionByNodeOnEpochKey):], epochID)
-	copy(key[len(HistoricalEmissionByNodeOnEpochKey)+len(epochID):], Delimiter)
-	copy(key[len(HistoricalEmissionByNodeOnEpochKey)+len(epochID)+len(Delimiter):], nodeID)
+func NodeHistoricalEmissionOnEpochStoreKey(epochID uint64, nodeID string) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(NodeHistoricalEmissionOnEpochKey)+len(epochBz)+len(Delimiter)+len(nodeID))
+	copy(key, NodeHistoricalEmissionOnEpochKey)
+	copy(key[len(NodeHistoricalEmissionOnEpochKey):], epochBz)
+	copy(key[len(NodeHistoricalEmissionOnEpochKey)+len(epochBz):], Delimiter)
+	copy(key[len(NodeHistoricalEmissionOnEpochKey)+len(epochBz)+len(Delimiter):], nodeID)
 	return key
 }
 
-// HistoricalEmissionLastClaimedStoreKey returns the byte representation of the historical emission last claimed key
+// NodeHistoricalEmissionOnLastClaimStoreKey returns the byte representation of the historical emission last claimed key
 // Items are stored with the following key: values
 // 0x07<node_id> -> <emission>
-func HistoricalEmissionLastClaimedStoreKey(nodeID string) []byte {
-	key := make([]byte, len(HistoricalEmissionLastClaimedKey)+len(nodeID))
-	copy(key, HistoricalEmissionLastClaimedKey)
-	copy(key[len(HistoricalEmissionLastClaimedKey):], nodeID)
+func NodeHistoricalEmissionOnLastClaimStoreKey(nodeID string) []byte {
+	key := make([]byte, len(NodeHistoricalEmissionOnLastClaimKey)+len(nodeID))
+	copy(key, NodeHistoricalEmissionOnLastClaimKey)
+	copy(key[len(NodeHistoricalEmissionOnLastClaimKey):], nodeID)
 	return key
 }
 
-// ComputingPowerClaimableStoreKey returns the byte representation of the computing power claimable key
+// NodeClaimableComputingPowerStoreKey returns the byte representation of the computing power claimable key
 // Items are stored with the following key: values
 // 0x08<owner> -> <computing_power>
-func ComputingPowerClaimableStoreKey(owner sdk.AccAddress) []byte {
+func NodeClaimableComputingPowerStoreKey(owner sdk.AccAddress) []byte {
 	owner = address.MustLengthPrefix(owner)
 
 	key := make([]byte, len(ComputingPowerClaimableKey)+len(owner))
@@ -143,61 +146,67 @@ func ComputingPowerClaimableStoreKey(owner sdk.AccAddress) []byte {
 // ComputingPowerSumOnEpochStoreKey returns the byte representation of the computing power sum on epoch key
 // Items are stored with the following key: values
 // 0x09<epoch_id> -> <computing_power>
-func ComputingPowerSumOnEpochStoreKey(epochID string) []byte {
-	key := make([]byte, len(ComputingPowerSumOnEpochKey)+len(epochID))
+func ComputingPowerSumOnEpochStoreKey(epochID uint64) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(ComputingPowerSumOnEpochKey)+len(epochBz))
 	copy(key, ComputingPowerSumOnEpochKey)
-	copy(key[len(ComputingPowerSumOnEpochKey):], epochID)
+	copy(key[len(ComputingPowerSumOnEpochKey):], epochBz)
 	return key
 }
 
-// ComputingPowerByNodeOnEpochStoreKey returns the byte representation of the computing power by node on epoch key
+// NodeComputingPowerOnEpochStoreKey returns the byte representation of the computing power by node on epoch key
 // Items are stored with the following key: values
 // 0x0A<epoch_id><delimiter><node_id> -> <computing_power>
-func ComputingPowerByNodeOnEpochStoreKey(epochID, nodeID string) []byte {
-	key := make([]byte, len(ComputingPowerByNodeOnEpochKey)+len(epochID)+len(Delimiter)+len(nodeID))
-	copy(key, ComputingPowerByNodeOnEpochKey)
-	copy(key[len(ComputingPowerByNodeOnEpochKey):], epochID)
-	copy(key[len(ComputingPowerByNodeOnEpochKey)+len(epochID):], Delimiter)
-	copy(key[len(ComputingPowerByNodeOnEpochKey)+len(epochID)+len(Delimiter):], nodeID)
+func NodeComputingPowerOnEpochStoreKey(epochID uint64, nodeID string) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(NodeComputingPowerOnEpochKey)+len(epochBz)+len(Delimiter)+len(nodeID))
+	copy(key, NodeComputingPowerOnEpochKey)
+	copy(key[len(NodeComputingPowerOnEpochKey):], epochBz)
+	copy(key[len(NodeComputingPowerOnEpochKey)+len(epochBz):], Delimiter)
+	copy(key[len(NodeComputingPowerOnEpochKey)+len(epochBz)+len(Delimiter):], nodeID)
 	return key
 }
 
 // PledgeAmountSumOnEpochStoreKey returns the byte representation of the pledge amount sum on epoch key
 // Items are stored with the following key: values
 // 0x0B<epoch_id> -> <pledge_amount>
-func PledgeAmountSumOnEpochStoreKey(epochID string) []byte {
-	key := make([]byte, len(PledgeAmountSumOnEpochKey)+len(epochID))
+func PledgeAmountSumOnEpochStoreKey(epochID uint64) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(PledgeAmountSumOnEpochKey)+len(epochBz))
 	copy(key, PledgeAmountSumOnEpochKey)
-	copy(key[len(PledgeAmountSumOnEpochKey):], epochID)
+	copy(key[len(PledgeAmountSumOnEpochKey):], epochBz)
 	return key
 }
 
 // ReportValidationSumOnEpochStoreKey returns the byte representation of the report validation sum on epoch key
 // Items are stored with the following key: values
 // 0x0C<epoch_id> -> <report_validation>
-func ReportValidationSumOnEpochStoreKey(epochID string) []byte {
-	key := make([]byte, len(ReportValidationSumOnEpochKey)+len(epochID))
+func ReportValidationSumOnEpochStoreKey(epochID uint64) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(ReportValidationSumOnEpochKey)+len(epochBz))
 	copy(key, ReportValidationSumOnEpochKey)
-	copy(key[len(ReportValidationSumOnEpochKey):], epochID)
+	copy(key[len(ReportValidationSumOnEpochKey):], epochBz)
 	return key
 }
 
 // ComputingPowerCalcCountStoreKey returns the byte representation of the computing power calculation count key
 // Items are stored with the following key: values
 // 0x0D<epoch_id> -> <computing_power_calc_count>
-func ComputingPowerCalcCountStoreKey(epochID string) []byte {
-	key := make([]byte, len(ComputingPowerCalcCountKey)+len(epochID))
+func ComputingPowerCalcCountStoreKey(epochID uint64) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(ComputingPowerCalcCountKey)+len(epochBz))
 	copy(key, ComputingPowerCalcCountKey)
-	copy(key[len(ComputingPowerCalcCountKey):], epochID)
+	copy(key[len(ComputingPowerCalcCountKey):], epochBz)
 	return key
 }
 
 // RewardCalcCountStoreKey returns the byte representation of the reward calculation count key
 // Items are stored with the following key: values
 // 0x0E<epoch_id> -> <reward_calc_count>
-func RewardCalcCountStoreKey(epochID string) []byte {
-	key := make([]byte, len(RewardCalcCountKey)+len(epochID))
+func RewardCalcCountStoreKey(epochID uint64) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(RewardCalcCountKey)+len(epochBz))
 	copy(key, RewardCalcCountKey)
-	copy(key[len(RewardCalcCountKey):], epochID)
+	copy(key[len(RewardCalcCountKey):], epochBz)
 	return key
 }

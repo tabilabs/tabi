@@ -232,7 +232,7 @@ func (k Keeper) getNodesPrefixStore(ctx sdk.Context) prefix.Store {
 // GetNodeSequence gets the next Node sequence from the store.
 func (k Keeper) GetNodeSequence(ctx sdk.Context) uint64 {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get([]byte(types.KeyNextNodeSequence))
+	bz := store.Get(types.NextNodeSequenceKey)
 	if bz == nil {
 		return 1
 	}
@@ -243,5 +243,5 @@ func (k Keeper) GetNodeSequence(ctx sdk.Context) uint64 {
 func (k Keeper) SetNodeSequence(ctx sdk.Context, sequence uint64) {
 	store := ctx.KVStore(k.storeKey)
 	bz := sdk.Uint64ToBigEndian(sequence)
-	store.Set([]byte(types.KeyNextNodeSequence), bz)
+	store.Set(types.NextNodeSequenceKey, bz)
 }

@@ -19,7 +19,11 @@ message Params {
     // maximum_number_of_holdings defines the maximum number of captain nodes one account can hold.
     uint64 maximum_holding_amount = 5;
     // halving_era defines the halving era coefficient
-    uint64 halving_era_coefficient = 6;
+    string halving_era_coefficient = 6 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
     // current_sale_level defines the current level for sale.
     uint64 current_sale_level = 7;
     // authorized members list

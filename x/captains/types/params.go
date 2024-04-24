@@ -26,7 +26,7 @@ func DefaultParams() Params {
 		MaximumPowerOnPeriod:  24,
 		CaptainsConstant:      300000,
 		MaximumHoldingAmount:  5,
-		HalvingEraCoefficient: 0,
+		HalvingEraCoefficient: sdk.OneDec(),
 		CurrentSaleLevel:      1,
 		AuthorizedMembers:     nil,
 	}
@@ -39,7 +39,7 @@ func NewParams(
 	maximumPowerOnPeriod uint64,
 	captainsConstant uint64,
 	maximumHoldingAmount uint64,
-	halvingEraCoefficient uint64,
+	halvingEraCoefficient sdk.Dec,
 	currentSaleLevel uint64,
 	authorizedMembers []string,
 ) Params {
