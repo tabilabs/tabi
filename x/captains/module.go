@@ -1,4 +1,4 @@
-package captainnode
+package captains
 
 import (
 	"context"
