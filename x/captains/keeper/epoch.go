@@ -14,6 +14,10 @@ func (k Keeper) GetCurrentEpoch(ctx sdk.Context) uint64 {
 	return sdk.BigEndianToUint64(bz)
 }
 
+func (k Keeper) EnterNewEpoch(ctx sdk.Context) {
+	k.setEpoch(ctx)
+}
+
 // setEpoch sets the epoch id.
 func (k Keeper) setEpoch(ctx sdk.Context) {
 	store := ctx.KVStore(k.storeKey)
@@ -43,8 +47,18 @@ func (k Keeper) setBatchCount(ctx sdk.Context, epochID, batchID, count uint64) {
 	store.Set(key, bz)
 }
 
+func (k Keeper) DelBatchCount(ctx sdk.Context, epochID uint64) {
+	panic("implement me")
+}
+
 func (k Keeper) setEndEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.EndOnEpochStoreKey(epochID)
 	store.Set(key, []byte{0x01})
+}
+
+func (k Keeper) GetEndEpoch(ctx sdk.Context, epochID uint64) []byte {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.EndOnEpochStoreKey(epochID))
+	return bz
 }
