@@ -8,7 +8,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
@@ -30,7 +29,7 @@ func (m msgServer) UpdateParams(
 	msg *types.MsgUpdateParams,
 ) (*types.MsgUpdateParamsResponse, error) {
 	if m.k.authority.String() != msg.Authority {
-		return nil, sdkerrors.Wrapf(
+		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
 			"invalid authority; expected %s, got %s",
 			m.k.authority.String(),
@@ -109,14 +108,7 @@ func (m msgServer) CommitReport(
 		)
 	}
 
-	if len(msg.Report) == 0 {
-		return nil, errorsmod.Wrapf(
-			sdkerrors.ErrInvalidRequest,
-			"invalid report; empty",
-		)
-	}
-
-	if err := m.k.CommitReport(ctx, msg.Report); err != nil {
+	if err := m.k.CommitReport(ctx, msg.ReportType, msg.Report.GetValue()); err != nil {
 		return nil, err
 	}
 

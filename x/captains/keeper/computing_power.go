@@ -4,52 +4,47 @@ import (
 	"fmt"
 	"math"
 
-	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-// CalcNodeComputingPowerRatioOnEpoch returns the computing power ratio of a node as per its node info.
-func (k Keeper) CalcNodeComputingPowerRatioOnEpoch(
-	ctx sdk.Context,
-	epochID uint64,
-	nodeID string,
-	powerOnRatio sdk.Dec,
-) (sdk.Dec, error) {
-	nodePower, err := k.CalcNodeComputingPowerOnEpoch(ctx, epochID, nodeID, powerOnRatio)
-	if err != nil {
-		return sdk.ZeroDec(), err
-	}
-	sum := sdk.NewDec(int64(k.GetComputingPowerSumOnEpoch(ctx, epochID)))
-	if sum.Equal(sdk.ZeroDec()) {
-		return sdk.ZeroDec(), errorsmod.Wrap(types.ErrInvalidCalculation, "computing sum is zero")
-	}
-
-	return nodePower.Quo(sum), nil
-}
-
-// GetComputingPowerSumOnEpoch gets the sum of computing power of all nodes.
-func (k Keeper) GetComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) uint64 {
+func (k Keeper) GetComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
 	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
 	bz := store.Get(key)
-	return sdk.BigEndianToUint64(bz)
+	if bz == nil {
+		return sdk.ZeroDec()
+	}
+
+	sum, _ := sdk.NewDecFromStr(string(bz))
+	return sum
 }
 
-// incrComputingPowerSumOnEpoch increases the sum of computing power of all nodes.
+func (k Keeper) setComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
+	store.Set(key, []byte(amount.String()))
+}
+
+// setComputingPowerSumOnEpoch increases the sum of computing power of all nodes.
 // NOTE: call only after computing a node power so that by end of epoch we have the power sum of all nodes.
-func (k Keeper) incrComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, amount uint64) {
-	store := ctx.KVStore(k.storeKey)
-	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
-	bz := store.Get(key)
-	sum := sdk.BigEndianToUint64(bz)
-	sum += amount
-	store.Set(key, sdk.Uint64ToBigEndian(sum))
+func (k Keeper) incrComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
+	sum := k.GetComputingPowerSumOnEpoch(ctx, epochID)
+	sum = sum.Add(amount)
+	k.setComputingPowerSumOnEpoch(ctx, epochID, sum)
 }
 
-// CalcNodeComputingPowerOnEpoch returns the computing power of a node as per its node info.
-func (k Keeper) CalcNodeComputingPowerOnEpoch(
+// delComputingPowerSumOnEpoch deletes the sum of computing power of all nodes.
+func (k Keeper) delComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
+	store.Delete(key)
+
+}
+
+// calcNodeComputingPowerOnEpoch returns the computing power of a node as per its node info.
+func (k Keeper) calcNodeComputingPowerOnEpoch(
 	ctx sdk.Context,
 	epochID uint64,
 	nodeID string,
@@ -60,7 +55,7 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 	}
 
 	basePower := sdk.NewDec(int64(k.GetNodeBaseComputingPower(ctx, nodeID)))
-	pledgeRatio, err := k.CalcNodePledgeRatioOnEpoch(ctx, epochID, nodeID)
+	pledgeRatio, err := k.calcNodePledgeRatioOnEpoch(ctx, epochID, nodeID)
 	if err != nil {
 		return sdk.ZeroDec(), err
 
@@ -76,7 +71,11 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 		return sdk.ZeroDec(), err
 	}
 
-	return basePower.Mul(exponentiated).Mul(powerOnRatio), nil
+	power := basePower.Mul(exponentiated).Mul(powerOnRatio)
+	k.setNodeComputingPowerOnEpoch(ctx, epochID, nodeID, power)
+	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
+
+	return power, err
 }
 
 // setComputingPowerByNode returns the computing power of a node as per its node info.
@@ -84,6 +83,13 @@ func (k Keeper) setNodeComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, no
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeComputingPowerOnEpochStoreKey(epochID, nodeID)
 	store.Set(key, []byte(power.String()))
+}
+
+// delNodeComputingPowerOnEpoch deletes the computing power of a node as per its node info.
+func (k Keeper) delNodeComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.NodeComputingPowerOnEpochStoreKey(epochID, nodeID)
+	store.Delete(key)
 }
 
 // GetNodeComputingPowerOnEpoch returns the computing power of a node as per its node info.

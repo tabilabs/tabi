@@ -56,10 +56,11 @@ func (msg *MsgCreateCaptainNode) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewMsgCommitReport(authority, report string) *MsgCommitReport {
+func NewMsgCommitReport(authority string, report []byte) *MsgCommitReport {
+	// TODO: fixme
 	return &MsgCommitReport{
 		Authority: authority,
-		Report:    report,
+		Report:    nil,
 	}
 }
 

@@ -1,5 +1,0 @@
-package captains
-
-func BeginBlocker() {
-
-}
