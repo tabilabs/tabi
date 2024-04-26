@@ -21,33 +21,33 @@ import (
 // GetTxCmd returns the transaction commands for this module
 func GetTxCmd() *cobra.Command {
 	captionNodeTxCmd := &cobra.Command{
-		Use:                        "captain-node",
-		Short:                      "captain-node transactions subcommands",
-		Long:                       "Provides the most common captain-node logic",
+		Use:                        "captains",
+		Short:                      "captains transactions subcommands",
+		Long:                       "Provides the most common captains logic",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
 
 	captionNodeTxCmd.AddCommand(
-		NewMintNodeTxCmd(),
-		NewUpdateUserExperienceCmd(),
-		NewCommitReportCmd(),
-		NewWithdrawExperienceCmd(),
+		NewTxCmdCreateNode(),
+		NewTxCmdCommitReport(),
+		NewTxCmdAddAuthorizedMembers(),
+		NewTxCmdRemoveAuthorizedMembers(),
+		NewTxCmdUpdateSaleLevel(),
+		NewTxCmdCommitComputingPower(),
+		NewTxCmdClaimComputingPower(),
 	)
 
 	return captionNodeTxCmd
 }
 
-// NewMintNodeTxCmd returns a command to mint a new Node
-func NewMintNodeTxCmd() *cobra.Command {
+// NewTxCmdCreateNode returns a command to mint a new Node
+func NewTxCmdCreateNode() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "mint [division-id] [receiver] --from [sender]",
+		Use:   "create-node [division-id] [receiver] --from [sender]",
 		Args:  cobra.ExactArgs(2),
-		Short: "Mint a new Node and set the owner to the receiver",
-		Long: strings.TrimSpace(fmt.Sprintf(`
-			$ %s tx %s mint <division-id> <receiver> --from <sender> --chain-id <chain-id>`, version.AppName, types.ModuleName),
-		),
+		Short: "Create a new Node and set the owner to the receiver",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -83,25 +83,13 @@ func NewMintNodeTxCmd() *cobra.Command {
 	return cmd
 }
 
-func NewCommitReportCmd() *cobra.Command {
+// NewTxCmdCommitReport returns a command to commit a report
+// FIXME: we need a json rather than bytes input.
+func NewTxCmdCommitReport() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "commit-report [path/to/update_power_on_period.json] --from [sender]",
+		Use:   "commit-report [type] [report.json] --from [sender]",
 		Args:  cobra.ExactArgs(2),
-		Short: "update power on period for multiple nodes",
-		Long: strings.TrimSpace(fmt.Sprintf(`
-			$ %s tx %s commit-report ./update_power_on_period.json --from <sender> --chain-id <chain-id>
-Where update_power_on_period.json contains:
-
-[
-    {
-      "power_on_period": "6",
-      "node_id": "0x00000000000000001",
-    },
-	.....
-],
-
-`, version.AppName, types.ModuleName),
-		),
+		Short: "commit node info for an epoch",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -110,27 +98,12 @@ Where update_power_on_period.json contains:
 
 			var sender = clientCtx.GetFromAddress().String()
 
-			messages := args[0]
-			if !json.Valid([]byte(messages)) {
-				messagesContent, err := os.ReadFile(messages)
-				if err != nil {
-					return fmt.Errorf("invalid options: neither JSON input nor path to .json file were provided")
-				}
-
-				if !json.Valid(messagesContent) {
-					return fmt.Errorf("invalid options: .json file content is invalid JSON")
-				}
-
-				messages = string(messagesContent)
+			reportType, err := strconv.Atoi(args[0])
+			if err != nil {
+				return err
 			}
 
-			// FIXME: we need report!
-			//var captainNodePowerOnPeriods []*types.CaptainNodePowerOnPeriod
-			//if err := json.Unmarshal([]byte(messages), &captainNodePowerOnPeriods); err != nil {
-			//	return fmt.Errorf("failed to unmarshal JSON: %w", err)
-			//}
-
-			msg := types.NewMsgCommitReport(sender, []byte{})
+			msg := types.NewMsgCommitReport(sender, types.ReportType(reportType), args[1])
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -143,9 +116,97 @@ Where update_power_on_period.json contains:
 	return cmd
 }
 
-func NewUpdateUserExperienceCmd() *cobra.Command {
+// NewTxCmdAddAuthorizedMembers returns a command to add members to the authorized members list
+func NewTxCmdAddAuthorizedMembers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "reward-computing-power [path/to/update_user_experience.json] --from [sender]",
+		Use:   "add-authorized-members [member1,member2,member3] --from [sender]",
+		Args:  cobra.ExactArgs(2),
+		Short: "Add members to the authorized members list",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			var sender = clientCtx.GetFromAddress().String()
+			members := strings.Split(args[0], ",")
+			if len(members) == 0 {
+				panic("members cannot be empty")
+			}
+
+			msg := types.NewAddAuthorizedMembers(sender, members)
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+	return cmd
+}
+
+// NewTxCmdRemoveAuthorizedMembers returns a command to remove members from the authorized members list
+func NewTxCmdRemoveAuthorizedMembers() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "remove-authorized-members [member1,member2,member3] --from [sender]",
+		Args:  cobra.ExactArgs(2),
+		Short: "Remove members from the authorized members list",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			var sender = clientCtx.GetFromAddress().String()
+			members := strings.Split(args[0], ",")
+			if len(members) == 0 {
+				panic("members cannot be empty")
+			}
+
+			msg := types.NewMsgRemoveAuthorizedMembers(sender, members)
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+	return cmd
+}
+
+// NewTxCmdUpdateSaleLevel returns a command to update the sale level of a node
+func NewTxCmdUpdateSaleLevel() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "update-sale-level [level] --from [sender]",
+		Args:  cobra.ExactArgs(2),
+		Short: "Update the sale level of a node",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			var sender = clientCtx.GetFromAddress().String()
+
+			levelStr := strings.TrimSpace(args[1])
+			if len(levelStr) == 0 {
+				panic("level cannot be empty")
+			}
+			// convert levelStr to uint64
+			level, err := strconv.ParseUint(levelStr, 10, 64)
+			if err != nil {
+				panic(err)
+			}
+
+			msg := types.NewMsgUpdateSaleLevel(sender, level)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+	return cmd
+}
+
+// NewTxCmdCommitComputingPower returns a command to commit computing power
+func NewTxCmdCommitComputingPower() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "commit-computing-power [path/to/update_user_experience.json] --from [sender]",
 		Args:  cobra.ExactArgs(2),
 		Short: "Mint a new Node and set the owner to the receiver",
 		Long: strings.TrimSpace(fmt.Sprintf(`
@@ -203,9 +264,10 @@ Where update_power_on_period.json contains:
 	return cmd
 }
 
-func NewWithdrawExperienceCmd() *cobra.Command {
+// NewTxCmdClaimComputingPower returns a command to claim computing power
+func NewTxCmdClaimComputingPower() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw-computing-power [node-id] [computing-power-amount] --from [sender]",
+		Use:   "claim-computing-power [node-id] [computing-power-amount] --from [sender]",
 		Args:  cobra.ExactArgs(2),
 		Short: "Withdraw experience to a node",
 		Long: strings.TrimSpace(fmt.Sprintf(`

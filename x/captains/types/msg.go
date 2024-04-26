@@ -28,6 +28,7 @@ var (
 	_ sdk.Msg = &MsgClaimComputingPower{}
 )
 
+// NewMsgCreateCaptainNode creates a new MsgCreateCaptainNode instance
 func NewMsgCreateCaptainNode(authority, owner, divisionId string) *MsgCreateCaptainNode {
 	return &MsgCreateCaptainNode{
 		Authority:  authority,
@@ -157,8 +158,12 @@ func (msg *MsgCommitReport) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewAddAuthorizedMembers() *MsgAddAuthorizedMembers {
-	return &MsgAddAuthorizedMembers{}
+// NewAddAuthorizedMembers creates a new MsgAddAuthorizedMembers instance
+func NewAddAuthorizedMembers(authority string, members []string) *MsgAddAuthorizedMembers {
+	return &MsgAddAuthorizedMembers{
+		Authority: authority,
+		Members:   members,
+	}
 }
 
 // ValidateBasic Implements Msg.
@@ -180,13 +185,18 @@ func (msg *MsgAddAuthorizedMembers) ValidateBasic() error {
 	return nil
 }
 
+// GetSigners Implements Msg.
 func (msg *MsgAddAuthorizedMembers) GetSigners() []sdk.AccAddress {
 	addr, _ := sdk.AccAddressFromBech32(msg.Authority)
 	return []sdk.AccAddress{addr}
 }
 
-func NewMsgRemoveAuthorizedMembers() *MsgRemoveAuthorizedMembers {
-	return &MsgRemoveAuthorizedMembers{}
+// NewMsgRemoveAuthorizedMembers creates a new MsgRemoveAuthorizedMembers instance
+func NewMsgRemoveAuthorizedMembers(authority string, members []string) *MsgRemoveAuthorizedMembers {
+	return &MsgRemoveAuthorizedMembers{
+		Authority: authority,
+		Members:   members,
+	}
 }
 
 // ValidateBasic Implements Msg.
@@ -214,8 +224,12 @@ func (msg *MsgRemoveAuthorizedMembers) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{addr}
 }
 
-func NewMsgUpdateSaleLevel() *MsgUpdateSaleLevel {
-	return &MsgUpdateSaleLevel{}
+// NewMsgUpdateSaleLevel creates a new MsgUpdateSaleLevel instance
+func NewMsgUpdateSaleLevel(authority string, level uint64) *MsgUpdateSaleLevel {
+	return &MsgUpdateSaleLevel{
+		Authority: authority,
+		SaleLevel: level,
+	}
 }
 
 // ValidateBasic Implements Msg.

@@ -16,6 +16,7 @@ func NewGenesisState(
 	divisions []Division,
 	nodes []Node,
 	epochs []Epoch,
+	nodesEpochInfo []NodeEpochInfo,
 	powers []ClaimableComputingPower,
 ) *GenesisState {
 	return &GenesisState{
@@ -23,6 +24,7 @@ func NewGenesisState(
 		Divisions:                divisions,
 		Nodes:                    nodes,
 		Epochs:                   epochs,
+		NodesEpochInfo:           nodesEpochInfo,
 		ClaimableComputingPowers: powers,
 	}
 }
@@ -39,7 +41,7 @@ func (gs *GenesisState) Validate() error {
 
 // DefaultGenesisState gets raw genesis raw message for testing
 func DefaultGenesisState() *GenesisState {
-	return NewGenesisState(DefaultParams(), DefaultDivision(), nil, nil, nil)
+	return NewGenesisState(DefaultParams(), DefaultDivision(), nil, nil, nil, nil)
 }
 
 func DefaultDivision() []Division {
