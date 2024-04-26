@@ -35,104 +35,95 @@ func (k Keeper) CommitReport(ctx sdk.Context, reportType types.ReportType, repor
 
 // handleReportDigest processes a report digest
 func (k Keeper) handleReportDigest(ctx sdk.Context, report types.ReportDigest) error {
-	epoch := report.EpochId
+	epochId := report.EpochId
 
-	// TODO:
-	if epoch == 1 {
-		// the first report commit results epoch getting into 2 from 1.
-		// from now on its epoch 2
-		k.setEpoch(ctx) // 2
-	}
-
-	epochEmissionSum, err := k.calcEpochEmission(ctx, epoch, report.GlobalOnOperationRatio)
+	epochEmissionSum, err := k.calcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
 	if err != nil {
 		return err
 	}
 
-	// TODO: package this in a function
-	historicalEmission := sdk.ZeroDec()
-	if epoch > 1 {
-		historicalEmission, err = k.GetHistoricalEmissionSum(ctx, epoch-1)
-		if err != nil {
-			return err
-		}
-	}
-	historicalEmission.Add(epochEmissionSum)
-	k.setHistoricalEmissionSum(ctx, epoch, historicalEmission)
-
-	// save package digest
-	k.setDigest(ctx, epoch, &report)
+	k.incrHistoricalEmissionSum(ctx, epochId, epochEmissionSum)
+	k.setDigest(ctx, epochId, &report)
 
 	return nil
 }
 
 // handleReportBatch processes a report batch
 func (k Keeper) handleReportBatch(ctx sdk.Context, report types.ReportBatch) error {
-	epoch := report.Epoch
+	epochId := report.EpochId
 
 	for _, nodeId := range report.NodeIds {
 		owner := k.GetNodeOwner(ctx, nodeId)
 
-		pledgeRatio, err := k.calcNodePledgeRatioOnEpoch(ctx, epoch, nodeId)
+		pledgeRatio, err := k.calcNodePledgeRatioOnEpoch(ctx, epochId, nodeId)
 		if err != nil {
 			return err
 		}
 
-		power, err := k.calcNodeComputingPowerOnEpoch(ctx, epoch, nodeId, pledgeRatio)
+		power, err := k.calcNodeComputingPowerOnEpoch(ctx, epochId, nodeId, pledgeRatio)
 		if err != nil {
 			return err
 		}
 
 		// accumulate computing power sum
-		k.incrComputingPowerSumOnEpoch(ctx, epoch, power)
+		k.incrComputingPowerSumOnEpoch(ctx, epochId, power)
 
-		// sample pledge by owner
-		pledge, _ := k.GetOwnerPledge(ctx, owner, epoch)
-		if pledge.Equal(sdk.ZeroDec()) {
+		// sample owner pledge once for next epoch
+		pledge, found := k.GetOwnerPledge(ctx, owner, epochId+1)
+		if !found {
 			pledge, err = k.SampleOwnerPledge(ctx, owner)
 			if err != nil {
 				return err
 			}
-			k.setOwnerPledge(ctx, owner, epoch+1, pledge)
 
-			sumPledge, _ := k.GetPledgeSum(ctx, epoch)
-			sumPledge.Add(pledge)
-			k.setPledgeSum(ctx, epoch, sumPledge)
+			k.setOwnerPledge(ctx, owner, epochId+1, pledge)
+			k.incrPledgeSum(ctx, epochId+1, pledge)
 		}
 	}
 
-	k.setBatchCount(ctx, epoch, report.BatchId, report.NodeCount)
+	// mark we have handle this batch.
+	k.setReportBatch(ctx, epochId, report.BatchId, report.NodeCount)
 
 	return nil
 }
 
 // handleReportEnd processes a report end
 func (k Keeper) handleReportEnd(ctx sdk.Context, report types.ReportEnd) error {
-	epoch := report.Epoch
+	epochId := report.Epoch
 
 	// validate calculation finished.
-	// TODO: package this into func.
+	if err := k.validateReportCompleted(ctx, epochId); err != nil {
+		return err
+	}
+
+	// prune useless epoch data
+	k.delHistoricalEmissionSum(ctx, epochId-1)
+	k.delEpochEmission(ctx, epochId-1)
+	k.delComputingPowerSumOnEpoch(ctx, epochId-1)
+
+	// marks we are ready for the next epoch.
+	k.setEndEpoch(ctx, epochId)
+
+	return nil
+}
+
+// validateReportCompleted checks if the report is completed
+func (k Keeper) validateReportCompleted(ctx sdk.Context, epochId uint64) error {
 	nodeCount := uint64(0)
 	batchCount := uint64(0)
+
 	store := ctx.KVStore(k.storeKey)
-	prefixStore := prefix.NewStore(store, types.BatchCountOnEpochPrefixKey(epoch))
+	prefixStore := prefix.NewStore(store, types.ReportBatchOnEpochPrefixKey(epochId))
 	iterator := prefixStore.Iterator(nil, nil)
 	for ; iterator.Valid(); iterator.Next() {
 		batchCount++
 		nodeCount += sdk.BigEndianToUint64(iterator.Value())
 	}
 
-	digest := k.GetDigest(ctx, epoch)
+	digest := k.GetDigest(ctx, epochId)
 	if digest.TotalBatchCount != batchCount || digest.TotalNodeCount != nodeCount {
 		return errorsmod.Wrapf(types.ErrEpochUnfinished, "commit later")
 	}
-
-	// marks we can get into the next epoch.
-	k.setEndEpoch(ctx, epoch+1)
-
-	k.delHistoricalEmissionSum(ctx, epoch-1)
-	k.delEpochEmission(ctx, epoch)
-	k.delComputingPowerSumOnEpoch(ctx, epoch)
 
 	return nil
 }

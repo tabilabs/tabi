@@ -10,10 +10,11 @@ import (
 // GetCurrentEpoch returns the current epoch.
 func (k Keeper) GetCurrentEpoch(ctx sdk.Context) uint64 {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.EpochKey)
+	bz := store.Get(types.CurrEpochKey)
 	return sdk.BigEndianToUint64(bz)
 }
 
+// EnterNewEpoch enters a new epoch.
 func (k Keeper) EnterNewEpoch(ctx sdk.Context) {
 	k.setEpoch(ctx)
 }
@@ -22,9 +23,10 @@ func (k Keeper) EnterNewEpoch(ctx sdk.Context) {
 func (k Keeper) setEpoch(ctx sdk.Context) {
 	store := ctx.KVStore(k.storeKey)
 	bz := sdk.Uint64ToBigEndian(k.GetCurrentEpoch(ctx) + 1)
-	store.Set(types.EpochKey, bz)
+	store.Set(types.CurrEpochKey, bz)
 }
 
+// GetDigest returns the digest.
 func (k Keeper) GetDigest(ctx sdk.Context, epochID uint64) types.ReportDigest {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.DigestOnEpochStoreKey(epochID))
@@ -33,6 +35,7 @@ func (k Keeper) GetDigest(ctx sdk.Context, epochID uint64) types.ReportDigest {
 	return digest
 }
 
+// setDigest sets the digest.
 func (k Keeper) setDigest(ctx sdk.Context, epochID uint64, digest *types.ReportDigest) {
 	store := ctx.KVStore(k.storeKey)
 	bz, _ := k.cdc.Marshal(digest)
@@ -40,25 +43,39 @@ func (k Keeper) setDigest(ctx sdk.Context, epochID uint64, digest *types.ReportD
 	store.Set(key, bz)
 }
 
-func (k Keeper) setBatchCount(ctx sdk.Context, epochID, batchID, count uint64) {
+// setReportBatch sets the batch count.
+func (k Keeper) setReportBatch(ctx sdk.Context, epochID, batchID, count uint64) {
 	store := ctx.KVStore(k.storeKey)
 	bz := sdk.Uint64ToBigEndian(count)
-	key := types.BatchCountOnEpochStoreKey(epochID, batchID)
+	key := types.ReportBatchOnEpochStoreKey(epochID, batchID)
 	store.Set(key, bz)
 }
 
-func (k Keeper) DelBatchCount(ctx sdk.Context, epochID uint64) {
-	panic("implement me")
+// DelReportBatches deletes the batch count.
+func (k Keeper) DelReportBatches(ctx sdk.Context, epochID uint64) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.ReportBatchOnEpochPrefixKey(epochID))
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		store.Delete(iterator.Key())
+	}
 }
 
+// setEndEpoch sets the end epoch.
 func (k Keeper) setEndEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.EndOnEpochStoreKey(epochID)
-	store.Set(key, []byte{0x01})
+	store.Set(key, types.PlaceHolder)
 }
 
-func (k Keeper) GetEndEpoch(ctx sdk.Context, epochID uint64) []byte {
+// HasEndEpoch checks if the end epoch exists.
+func (k Keeper) HasEndEpoch(ctx sdk.Context, epochID uint64) bool {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.EndOnEpochStoreKey(epochID))
-	return bz
+	return store.Has(types.EndOnEpochStoreKey(epochID))
+}
+
+// DelEndEpoch deletes the end epoch.
+func (k Keeper) DelEndEpoch(ctx sdk.Context, epochID uint64) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.EndOnEpochStoreKey(epochID))
 }

@@ -1,23 +1,22 @@
 package captains
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/x/captains/keeper"
 	abci "github.com/tendermint/tendermint/abci/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/tabilabs/tabi/x/captains/keeper"
 )
 
+// BeginBlocker runs at the start of each block
 func BeginBlocker(ctx sdk.Context, _ abci.RequestBeginBlock, k keeper.Keeper) {
 	epoch := k.GetCurrentEpoch(ctx)
-	if epoch == 1 {
-		return
+
+	if k.HasEndEpoch(ctx, epoch) {
+		k.DelEndEpoch(ctx, epoch)
+		k.DelReportBatches(ctx, epoch)
+
+		// Let's enter new epoch!
+		k.EnterNewEpoch(ctx)
 	}
-
-	if len(k.GetEndEpoch(ctx, epoch)) == 0 {
-		return
-	}
-
-	k.DelBatchCount(ctx, epoch)
-
-	// Let's go into new epoch!
-	k.EnterNewEpoch(ctx)
 }
