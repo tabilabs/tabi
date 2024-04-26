@@ -28,7 +28,7 @@ func (k Keeper) CommitReport(ctx sdk.Context, reportType types.ReportType, repor
 		if err := k.cdc.Unmarshal(report, &end); err != nil {
 			return err
 		}
-		k.handleReportEnd(ctx, end)
+		return k.handleReportEnd(ctx, end)
 	}
 	return errorsmod.Wrapf(types.ErrInvalidReportType, "report type: %s", reportType)
 }
@@ -37,10 +37,11 @@ func (k Keeper) CommitReport(ctx sdk.Context, reportType types.ReportType, repor
 func (k Keeper) handleReportDigest(ctx sdk.Context, report types.ReportDigest) error {
 	epoch := report.EpochId
 
+	// TODO:
 	if epoch == 1 {
 		// the first report commit results epoch getting into 2 from 1.
 		// from now on its epoch 2
-		k.setEpoch(ctx)
+		k.setEpoch(ctx) // 2
 	}
 
 	epochEmissionSum, err := k.calcEpochEmission(ctx, epoch, report.GlobalOnOperationRatio)
