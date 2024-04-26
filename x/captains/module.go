@@ -1,4 +1,4 @@
-package captainnode
+package captains
 
 import (
 	"context"
@@ -149,8 +149,8 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 }
 
 // BeginBlock performs a no-op.
-func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
-
+func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
+	BeginBlocker(ctx, req, am.keeper)
 }
 
 // EndBlock returns the end blocker for the mint module. It returns no validator

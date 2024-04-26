@@ -8,7 +8,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
@@ -30,7 +29,7 @@ func (m msgServer) UpdateParams(
 	msg *types.MsgUpdateParams,
 ) (*types.MsgUpdateParamsResponse, error) {
 	if m.k.authority.String() != msg.Authority {
-		return nil, sdkerrors.Wrapf(
+		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
 			"invalid authority; expected %s, got %s",
 			m.k.authority.String(),
@@ -51,35 +50,33 @@ func (m msgServer) CreateCaptainNode(
 	msg *types.MsgCreateCaptainNode,
 ) (*types.MsgCreateCaptainNodeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	sender, err := sdk.AccAddressFromBech32(msg.Authority)
+
+	authority, err := sdk.AccAddressFromBech32(msg.Authority)
 	if err != nil {
 		return nil, err
 	}
 
-	receiver, err := sdk.AccAddressFromBech32(msg.DivisionId)
+	owner, err := sdk.AccAddressFromBech32(msg.Owner)
 	if err != nil {
 		return nil, err
 	}
 
-	// check if msg.Sender not in allow list
-	if !m.k.HasAuthorizedMember(ctx, sender) {
+	if !m.k.HasAuthorizedMember(ctx, authority) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
-			"invalid sender; not in allow list",
+			"invalid sender; not in authorized members list",
 		)
 	}
 
-	// generate node id
-	nodeId := m.k.GenerateNodeID(ctx)
-	node := types.NewNode(nodeId, msg.DivisionId, msg.Owner)
-	if err := m.k.CreateNode(ctx, node, receiver); err != nil {
+	nodeID, err := m.k.CreateNode(ctx, msg.DivisionId, owner)
+	if err != nil {
 		return nil, err
 	}
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeCreateNode,
-			sdk.NewAttribute(types.AttributeKeyNodeID, nodeId),
+			sdk.NewAttribute(types.AttributeKeyNodeID, nodeID),
 			sdk.NewAttribute(types.AttributeKeyDivisionID, msg.DivisionId),
 			sdk.NewAttribute(types.AttributeKeyReceiver, msg.Owner),
 		),
@@ -93,163 +90,159 @@ func (m msgServer) CreateCaptainNode(
 	return &types.MsgCreateCaptainNodeResponse{}, nil
 }
 
+// CommitReport implement the interface of types.MsgServer
 func (m msgServer) CommitReport(
 	goCtx context.Context,
 	msg *types.MsgCommitReport,
 ) (*types.MsgCommitReportResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	sender, err := sdk.AccAddressFromBech32(msg.Authority)
+	authority, err := sdk.AccAddressFromBech32(msg.Authority)
 	if err != nil {
 		return nil, err
 	}
 
-	// check if msg.Sender not in allow list
-	if !m.k.HasAuthorizedMember(ctx, sender) {
+	if !m.k.HasAuthorizedMember(ctx, authority) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
-			"invalid sender; not in allow list",
+			"invalid sender; not in authorized members list",
 		)
 	}
 
-	if len(msg.Authority) == 0 {
-		return nil, errorsmod.Wrapf(
-			sdkerrors.ErrInvalidRequest,
-			"invalid period; empty",
-		)
+	if err := m.k.CommitReport(ctx, msg.ReportType, msg.Report.GetValue()); err != nil {
+		return nil, err
 	}
 
-	// FIXME: reporting stage
-	// events := m.k.UpdateAllNodesPowerOnPeriod(ctx, msg.CaptainNodePowerOnPeriods)
-	events := make([]sdk.Event, 0)
-
-	resultEvents := sdk.Events{sdk.NewEvent(
+	ctx.EventManager().EmitEvent(sdk.NewEvent(
 		sdk.EventTypeMessage,
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
 		sdk.NewAttribute(sdk.AttributeKeySender, msg.Authority),
-	)}
-	resultEvents = append(resultEvents, events...)
-	ctx.EventManager().EmitEvents(resultEvents)
+	))
+
 	return &types.MsgCommitReportResponse{}, nil
 }
 
+// AddAuthorizedMembers implement the interface of types.MsgServer
 func (m msgServer) AddAuthorizedMembers(
 	goCtx context.Context,
 	msg *types.MsgAddAuthorizedMembers,
 ) (*types.MsgAddAuthorizedMembersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	sender, err := sdk.AccAddressFromBech32(msg.Authority)
+
+	authority, err := sdk.AccAddressFromBech32(msg.Authority)
 	if err != nil {
 		return nil, err
 	}
 
-	// check if msg.Sender not in allow list
-	if !m.k.HasAuthorizedMember(ctx, sender) {
+	if !m.k.HasAuthorizedMember(ctx, authority) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
-			"invalid sender; not in allow list",
+			"invalid sender; not in authorized members list",
 		)
 	}
 
-	events, err := m.k.SetAuthorizedMembers(ctx, msg.Members)
-	if err != nil {
+	if err := m.k.SetAuthorizedMembers(ctx, msg.Members); err != nil {
 		return nil, err
 	}
 
-	resultEvents := sdk.Events{sdk.NewEvent(
+	ctx.EventManager().EmitEvent(sdk.NewEvent(
 		sdk.EventTypeMessage,
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
 		sdk.NewAttribute(sdk.AttributeKeySender, msg.Authority),
-	)}
-	resultEvents = append(resultEvents, events...)
-	ctx.EventManager().EmitEvents(resultEvents)
+	))
 
 	return &types.MsgAddAuthorizedMembersResponse{}, nil
 }
 
+// RemoveAuthorizedMembers implement the interface of types.MsgServer
 func (m msgServer) RemoveAuthorizedMembers(
 	goCtx context.Context,
 	msg *types.MsgRemoveAuthorizedMembers,
 ) (*types.MsgRemoveAuthorizedMembersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	sender, err := sdk.AccAddressFromBech32(msg.Authority)
+	authority, err := sdk.AccAddressFromBech32(msg.Authority)
 	if err != nil {
 		return nil, err
 	}
 
-	// check if msg.Sender not in allow list
-	if !m.k.HasAuthorizedMember(ctx, sender) {
+	if !m.k.HasAuthorizedMember(ctx, authority) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
-			"invalid sender; not in allow list",
+			"invalid sender; not in authorized members list",
 		)
 	}
 
-	events, err := m.k.DeleteAuthorizedMembers(ctx, msg.Members)
-	if err != nil {
+	if err := m.k.DeleteAuthorizedMembers(ctx, msg.Members); err != nil {
 		return nil, err
 	}
 
-	resultEvents := sdk.Events{sdk.NewEvent(
+	ctx.EventManager().EmitEvent(sdk.NewEvent(
 		sdk.EventTypeMessage,
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
 		sdk.NewAttribute(sdk.AttributeKeySender, msg.Authority),
-	)}
-	resultEvents = append(resultEvents, events...)
-	ctx.EventManager().EmitEvents(resultEvents)
+	))
 
 	return &types.MsgRemoveAuthorizedMembersResponse{}, nil
 }
 
+// UpdateSaleLevel implement the interface of types.MsgServer
 func (m msgServer) UpdateSaleLevel(
 	goCtx context.Context,
 	msg *types.MsgUpdateSaleLevel,
 ) (*types.MsgUpdateSaleLevelResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	sender, err := sdk.AccAddressFromBech32(msg.Authority)
+
+	authority, err := sdk.AccAddressFromBech32(msg.Authority)
 	if err != nil {
 		return nil, err
 	}
 
-	// check if msg.Sender not in allow list
-	if !m.k.HasAuthorizedMember(ctx, sender) {
+	if !m.k.HasAuthorizedMember(ctx, authority) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
-			"invalid sender; not in allow list",
+			"invalid sender; not in authorized members list",
 		)
 	}
 
-	event, err := m.k.UpdateSaleLevel(ctx, msg.SaleLevel)
+	before, err := m.k.UpdateSaleLevel(ctx, msg.SaleLevel)
 	if err != nil {
 		return nil, err
 	}
-	resultEvents := sdk.Events{sdk.NewEvent(
-		sdk.EventTypeMessage,
-		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-		sdk.NewAttribute(sdk.AttributeKeySender, msg.Authority),
-	)}
-	resultEvents = append(resultEvents, event)
-	ctx.EventManager().EmitEvents(resultEvents)
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeUpdateSaleLevel,
+			sdk.NewAttribute(types.AttributeKeySaleLevelBefore, fmt.Sprintf("%d", before)),
+			sdk.NewAttribute(types.AttributeKeySaleLevelAfter, fmt.Sprintf("%d", msg.SaleLevel)),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Authority),
+		),
+	})
 
 	return &types.MsgUpdateSaleLevelResponse{}, nil
 }
 
+// CommitComputingPower implement the interface of types.MsgServer
 func (m msgServer) CommitComputingPower(
 	goCtx context.Context,
 	msg *types.MsgCommitComputingPower,
 ) (*types.MsgCommitComputingPowerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	sender, err := sdk.AccAddressFromBech32(msg.Authority)
+
+	authority, err := sdk.AccAddressFromBech32(msg.Authority)
 	if err != nil {
 		return nil, err
 	}
 
-	// check if msg.Sender not in allow list
-	if !m.k.HasAuthorizedMember(ctx, sender) {
+	if !m.k.HasAuthorizedMember(ctx, authority) {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrUnauthorized,
-			"invalid sender; not in allow list",
+			"invalid sender; not in authorized members list",
 		)
 	}
+
 	if len(msg.ComputingPowerRewards) == 0 {
 		return nil, errorsmod.Wrapf(
 			sdkerrors.ErrInvalidRequest,
@@ -257,24 +250,39 @@ func (m msgServer) CommitComputingPower(
 		)
 	}
 
-	// TODO: rename method.
-	events := m.k.CommitComputingPower(ctx, msg.ComputingPowerRewards)
+	events := make([]sdk.Event, 0)
+	for _, cpr := range msg.ComputingPowerRewards {
+		owner, err := sdk.AccAddressFromBech32(cpr.Owner)
+		if err != nil {
+			return nil, err
+		}
+		before, after, err := m.k.CommitComputingPower(ctx, cpr.Amount, owner)
 
-	resultEvents := sdk.Events{sdk.NewEvent(
+		events = append(events, sdk.NewEvent(
+			types.EventCommitComputingPower,
+			sdk.NewAttribute(types.AttributeKeyOwner, cpr.Owner),
+			sdk.NewAttribute(types.AttributeKeyComputingPowerBefore, fmt.Sprintf("%d", before)),
+			sdk.NewAttribute(types.AttributeKeyComputingPowerAfter, fmt.Sprintf("%d", after)),
+		))
+	}
+
+	events = append(events, sdk.NewEvent(
 		sdk.EventTypeMessage,
 		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
 		sdk.NewAttribute(sdk.AttributeKeySender, msg.Authority),
-	)}
-	resultEvents = append(resultEvents, events...)
-	ctx.EventManager().EmitEvents(resultEvents)
+	))
+	ctx.EventManager().EmitEvents(events)
+
 	return &types.MsgCommitComputingPowerResponse{}, nil
 }
 
+// ClaimComputingPower implement the interface of types.MsgServer
 func (m msgServer) ClaimComputingPower(
 	goCtx context.Context,
 	msg *types.MsgClaimComputingPower,
 ) (*types.MsgClaimComputingPowerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
 	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		return nil, err

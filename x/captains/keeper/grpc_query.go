@@ -90,8 +90,7 @@ func (q Querier) Nodes(
 			return nil, err
 		}
 	default:
-		// return all nodes
-		nodeStore := q.getNodesStore(ctx)
+		nodeStore := q.getNodesPrefixStore(ctx)
 		if pageRes, err = query.Paginate(nodeStore, request.Pagination, func(_ []byte, value []byte) error {
 			var node types.Node
 			if err := q.cdc.Unmarshal(value, &node); err != nil {
@@ -170,8 +169,12 @@ func (q Querier) Supply(
 		return nil, sdkerrors.ErrInvalidRequest.Wrap("empty request")
 	}
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	supply := q.GetDivisionSoldCount(ctx, request.DivisionId)
-	return &types.QuerySupplyResponse{Amount: supply}, nil
+	division, found := q.GetDivision(ctx, request.DivisionId)
+	if !found {
+		return nil, types.ErrDivisionNotExists.Wrapf("division not found: %s", request.DivisionId)
+	}
+
+	return &types.QuerySupplyResponse{Amount: division.SoldCount}, nil
 }
 
 // SaleLevel queries the current sale level

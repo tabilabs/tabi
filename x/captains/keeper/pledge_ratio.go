@@ -1,65 +1,120 @@
 package keeper
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tabilabs/tabi/x/captains/types"
+)
 
-func PledgeRatioGlobal(ctx sdk.Context, epochID string) sdk.Dec {
-	panic("implement me")
+// calcGlobalPledgeRatio calculates the pledge rate of the global on the epoch t.
+func (k Keeper) calcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) (sdk.Dec, error) {
+	if epochID == 1 {
+		return sdk.NewDecWithPrec(3, 1), nil
+	}
+
+	sum, err := k.GetHistoricalEmissionSum(ctx, epochID-1)
+	if err != nil {
+		return sdk.ZeroDec(), err
+	}
+
+	pledgeSum, err := k.GetPledgeSum(ctx, epochID)
+	if err != nil {
+		return sdk.ZeroDec(), err
+	}
+	k.delPledgeSum(ctx, epochID)
+
+	return pledgeSum.Quo(sum), nil
 }
 
-func PledgeRatioByNode(ctx sdk.Context, nodeID string, epochID string) {
-	panic("implement me")
+// calcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t.
+// node_pledge_ratio(t) = owner_pledge(t) / owner_historical_emission_sum(t-1)
+func (k Keeper) calcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) (sdk.Dec, error) {
+	if epochID == 0 {
+		return sdk.OneDec(), nil
+	}
+
+	owner := k.GetNodeOwner(ctx, nodeID)
+	ownerPledge, err := k.GetOwnerPledge(ctx, owner, epochID)
+	if err != nil {
+		return sdk.ZeroDec(), err
+	}
+	if epochID > 1 {
+		k.delOwnerPledge(ctx, owner, epochID-1)
+	}
+
+	ownerHistoricalEmissionSum := k.calcOwnerHistoricalEmissionSum(ctx, epochID-1, owner)
+
+	nodePledgeRatio := ownerPledge.Quo(ownerHistoricalEmissionSum)
+	if nodePledgeRatio.GTE(sdk.OneDec()) {
+		nodePledgeRatio = sdk.OneDec()
+	}
+
+	return nodePledgeRatio, nil
 }
 
-func PledgeRatioByOwner(ctx sdk.Context, owner sdk.AccAddress, epochID string) {
-	panic("implement me")
-}
-
-// PledgeSum returns the total pledge amount of captains' owners on the epoch end.
-func PledgeSum(ctx sdk.Context, epochID string) sdk.Dec {
-	panic("implement me")
-}
-
-func PledgeByOwner(ctx sdk.Context, owner sdk.AccAddress, epochID string) sdk.Dec {
-	panic("implement me")
-}
-
-// TODO: legacy functions
-
-// CalculatePledgeRateForXN calculates the pledge rate of the owner
-// pledgeRate = pledgeCoin / mintCoin
-func (k Keeper) CalculatePledgeRateForXN(ctx sdk.Context, owner sdk.AccAddress) sdk.Dec {
-	pledgeCoin := k.calculatePledgeTotalCountFromForXn(ctx, owner)
-	mintCoin := k.calculateMintTotalCountFromXN(ctx, owner)
-	return sdk.NewDecFromInt(pledgeCoin.Amount).Quo(sdk.NewDecFromInt(mintCoin.Amount))
-}
-
-// calculatePledgeTotalCountFromForXn calculates the total pledge amount of the owner
-func (k Keeper) calculatePledgeTotalCountFromForXn(ctx sdk.Context, owner sdk.AccAddress) sdk.Coin {
+// SampleOwnerPledge sample pledge amount of the owner on the epoch.
+func (k Keeper) SampleOwnerPledge(ctx sdk.Context, owner sdk.AccAddress) (sdk.Dec, error) {
 	stakingParams := k.stakingKeeper.GetParams(ctx)
-
-	// WARN: Can it be delegated to a candidate validator?
 	maxRetrieve := stakingParams.GetMaxValidators()
+
+	// FIXME: it seems that we don't have a good way to get owner delegations at the end of one epoch.
 	delegations := k.stakingKeeper.GetDelegatorDelegations(ctx, owner, uint16(maxRetrieve))
-	totolBalance := sdk.NewCoin(k.stakingKeeper.BondDenom(ctx), sdk.ZeroInt())
+	totalAmount := sdk.ZeroDec()
+
 	for _, delegation := range delegations {
 		val, found := k.stakingKeeper.GetValidator(ctx, delegation.GetValidatorAddr())
 		if !found {
-			//todo
 			continue
 		}
-		delegationBalance := sdk.NewCoin(
-			k.stakingKeeper.BondDenom(ctx),
-			val.TokensFromShares(delegation.Shares).TruncateInt(),
-		)
-		totolBalance = totolBalance.Add(delegationBalance)
+		totalAmount = totalAmount.Add(val.TokensFromShares(delegation.GetShares()))
 	}
-	return totolBalance
+
+	return totalAmount, nil
 }
 
-// calculateMintTotalCountFromXN calculates the total mint amount of the owner
-// WARN: This function is not implemented yet
-// WARN: mintAmount can be zero
-func (k Keeper) calculateMintTotalCountFromXN(ctx sdk.Context, owner sdk.AccAddress) sdk.Coin {
-	// todo
-	return sdk.NewCoin(k.stakingKeeper.BondDenom(ctx), sdk.ZeroInt())
+// GetOwnerPledge returns the sampled pledge amount of the owner on the epoch.
+func (k Keeper) GetOwnerPledge(ctx sdk.Context, owner sdk.AccAddress, epochID uint64) (sdk.Dec, error) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.OwnerPledgeOnEpochStoreKey(owner, epochID)
+	bz := store.Get(key)
+	return sdk.NewDecFromStr(string(bz))
+}
+
+// setOwnerPledge sets the sampled pledge amount of the owner on the epoch.
+func (k Keeper) setOwnerPledge(ctx sdk.Context, owner sdk.AccAddress, epochID uint64, pledge sdk.Dec) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.OwnerPledgeOnEpochStoreKey(owner, epochID)
+	store.Set(key, []byte(pledge.String()))
+}
+
+// delOwnerPledge deletes the sampled pledge amount of the owner on the epoch.
+func (k Keeper) delOwnerPledge(ctx sdk.Context, owner sdk.AccAddress, epochID uint64) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.OwnerPledgeOnEpochStoreKey(owner, epochID)
+	store.Delete(key)
+}
+
+// GetPledgeSum returns the total pledge amount of captains' owners on the epoch end.
+func (k Keeper) GetPledgeSum(ctx sdk.Context, epochID uint64) (sdk.Dec, error) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.PledgeSumOnEpochStoreKey(epochID)
+	bz := store.Get(key)
+	res, err := sdk.NewDecFromStr(string(bz))
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}
+
+// setPledgeSum sets the total pledge amount of captains' owners on the epoch end.
+func (k Keeper) setPledgeSum(ctx sdk.Context, epochID uint64, sum sdk.Dec) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.PledgeSumOnEpochStoreKey(epochID)
+	store.Set(key, []byte(sum.String()))
+}
+
+// delPledgeSum deletes the total pledge amount of captains' owners on the epoch end.
+func (k Keeper) delPledgeSum(ctx sdk.Context, epochID uint64) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.PledgeSumOnEpochStoreKey(epochID)
+	store.Delete(key)
 }

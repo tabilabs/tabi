@@ -130,7 +130,7 @@ Where update_power_on_period.json contains:
 			//	return fmt.Errorf("failed to unmarshal JSON: %w", err)
 			//}
 
-			msg := types.NewMsgCommitReport(sender, "")
+			msg := types.NewMsgCommitReport(sender, []byte{})
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

@@ -19,7 +19,11 @@ message Params {
     // maximum_number_of_holdings defines the maximum number of captain nodes one account can hold.
     uint64 maximum_holding_amount = 5;
     // halving_era defines the halving era coefficient
-    uint64 halving_era_coefficient = 6;
+    string halving_era_coefficient = 6 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
     // current_sale_level defines the current level for sale.
     uint64 current_sale_level = 7;
     // authorized members list
@@ -49,7 +53,6 @@ message Node {
     string division_id = 2;
     string owner = 3;
     uint64 computing_power = 4;
-    repeated NodeInfoOnEpoch extras = 5 [(gogoproto.nullable) = false];
 }
 
 // EpochInfo defines the epoch information
@@ -71,11 +74,12 @@ message EpochState {
     uint64 reward_calculation_count = 4;
 }
 
-// NodeInfoOnEpoch defines the node information on the epoch
-message NodeInfoOnEpoch {
-    uint64 epoch_id = 1;
-    uint64 historical_emission = 2;
-    uint64 computing_power = 3;
+// NodeEpochInfo defines the node info on epoch
+message NodeEpochInfo {
+    string id = 1;
+    uint64 epoch_id = 2;
+    uint64 historical_emission = 3;
+    uint64 computing_power = 4;
 }
 
 // ClaimableComputingPower defines claimable reward of computing power to the owner.

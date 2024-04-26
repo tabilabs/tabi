@@ -12,5 +12,6 @@ message GenesisState {
   repeated Division divisions = 2 [(gogoproto.nullable) = false];
   repeated Node  nodes = 3 [(gogoproto.nullable) = false];
   repeated Epoch epochs = 4 [(gogoproto.nullable) = false];
-  repeated ClaimableComputingPower claimable_computing_powers = 5 [(gogoproto.nullable) = false];
+  repeated NodeEpochInfo nodes_epoch_info = 5 [(gogoproto.nullable) = false];
+  repeated ClaimableComputingPower claimable_computing_powers = 6 [(gogoproto.nullable) = false];
 }
