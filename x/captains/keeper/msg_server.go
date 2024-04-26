@@ -108,7 +108,12 @@ func (m msgServer) CommitReport(
 		)
 	}
 
-	if err := m.k.CommitReport(ctx, msg.ReportType, msg.Report.GetValue()); err != nil {
+	report, err := m.k.validateReport(ctx, msg.ReportType, msg.Report.GetValue())
+	if err != nil {
+		return &types.MsgCommitReportResponse{}, nil
+	}
+
+	if err := m.k.CommitReport(ctx, report); err != nil {
 		return nil, err
 	}
 

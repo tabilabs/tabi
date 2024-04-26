@@ -27,12 +27,16 @@ func (k Keeper) setEpoch(ctx sdk.Context) {
 }
 
 // GetDigest returns the digest.
-func (k Keeper) GetDigest(ctx sdk.Context, epochID uint64) types.ReportDigest {
+func (k Keeper) GetDigest(ctx sdk.Context, epochID uint64) (*types.ReportDigest, bool) {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.DigestOnEpochStoreKey(epochID))
+	if len(bz) == 0 {
+		return nil, false
+	}
+
 	var digest types.ReportDigest
 	k.cdc.Unmarshal(bz, &digest)
-	return digest
+	return &digest, true
 }
 
 // setDigest sets the digest.

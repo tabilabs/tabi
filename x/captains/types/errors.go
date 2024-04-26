@@ -16,6 +16,5 @@ var (
 	ErrInsufficientComputingPower  = errorsmod.Register(ModuleName, 10, "insufficient experience")
 	ErrInvalidSaleLevel            = errorsmod.Register(ModuleName, 11, "new sale level must be greater than the current sale level")
 	ErrInvalidCalculation          = errorsmod.Register(ModuleName, 12, "invalid calculation")
-	ErrInvalidReportType           = errorsmod.Register(ModuleName, 13, "invalid report type")
-	ErrEpochUnfinished             = errorsmod.Register(ModuleName, 14, "epoch unfinished")
+	ErrInvalidReport               = errorsmod.Register(ModuleName, 13, "invalid report")
 )
