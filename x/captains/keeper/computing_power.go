@@ -139,3 +139,25 @@ func (k Keeper) GetComputingPowerClaimable(ctx sdk.Context, owner sdk.AccAddress
 	}
 	return sdk.BigEndianToUint64(bz)
 }
+
+// GetComputingPowersClaimable returns all claimable computing powers.
+func (k Keeper) GetComputingPowersClaimable(ctx sdk.Context) []types.ClaimableComputingPower {
+	var claimableComputingPowers []types.ClaimableComputingPower
+
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.ComputingPowerClaimableKey)
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		amount := sdk.BigEndianToUint64(iterator.Value())
+		owner := string(iterator.Key())
+
+		power := types.ClaimableComputingPower{
+			Amount: amount,
+			Owner:  owner,
+		}
+		claimableComputingPowers = append(claimableComputingPowers, power)
+	}
+
+	return claimableComputingPowers
+}

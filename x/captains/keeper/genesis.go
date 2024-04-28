@@ -22,13 +22,20 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 			panic(fmt.Errorf("failed to save division: %s", err.Error()))
 		}
 	}
+
+	// TODO: fix me
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper.
 func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
-	// todo: Entry
 	return &types.GenesisState{
-		Params:    k.GetParams(ctx),
-		Divisions: k.GetDivisions(ctx),
+		Params:                   k.GetParams(ctx),
+		Divisions:                k.GetDivisions(ctx),
+		Nodes:                    k.GetNodes(ctx),
+		Epochs:                   nil,
+		NodesEpochInfo:           nil,
+		ClaimableComputingPowers: k.GetComputingPowersClaimable(ctx),
 	}
+
+	// TODO: fix me
 }
