@@ -19,11 +19,6 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 		return
 	}
 
-	// todo
-	// 1. get seedTabi token supply
-	// 2. get tabi token supply
-	// 3. update minter
-
 	// Calculate block mint amount
 	params := k.GetParams(ctx)
 	logger.Info(
@@ -42,11 +37,6 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	if err := k.MintCoins(ctx, mintedCoins); err != nil {
 		panic(err)
 	}
-
-	// send the minted coins to the fee collector account
-	//if err := k.AddCollectedFees(ctx, mintedCoins); err != nil {
-	//	panic(err)
-	//}
 
 	// Allocate minted coins according to allocation proportions (staking, usage
 	if err := k.AllocateExponentialInflation(ctx, mintedCoin, params); err != nil {
