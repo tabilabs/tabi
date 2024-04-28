@@ -184,14 +184,23 @@ func ComputingPowerSumOnEpochStoreKey(epochID uint64) []byte {
 
 // NodeComputingPowerOnEpochStoreKey returns the byte representation of the computing power by node on epoch key
 // Items are stored with the following key: values
-// <prefix_key><epoch_id><delimiter><node_id> -> <computing_power>
+// <prefix_key><node_id><delimiter><epoch_id> -> <computing_power>
 func NodeComputingPowerOnEpochStoreKey(epochID uint64, nodeID string) []byte {
 	epochBz := sdk.Uint64ToBigEndian(epochID)
-	key := make([]byte, len(NodeComputingPowerOnEpochKey)+len(epochBz)+len(Delimiter)+len(nodeID))
+	key := make([]byte, len(NodeComputingPowerOnEpochKey)+len(nodeID)+len(Delimiter)+len(epochBz))
 	copy(key, NodeComputingPowerOnEpochKey)
-	copy(key[len(NodeComputingPowerOnEpochKey):], epochBz)
-	copy(key[len(NodeComputingPowerOnEpochKey)+len(epochBz):], Delimiter)
-	copy(key[len(NodeComputingPowerOnEpochKey)+len(epochBz)+len(Delimiter):], nodeID)
+	copy(key[len(NodeComputingPowerOnEpochKey):], nodeID)
+	copy(key[len(NodeComputingPowerOnEpochKey)+len(nodeID):], Delimiter)
+	copy(key[len(NodeComputingPowerOnEpochKey)+len(nodeID)+len(Delimiter):], epochBz)
+	return key
+}
+
+// NodeComputingPowerOnEpochStorePrefixKey returns the prefix key.
+func NodeComputingPowerOnEpochStorePrefixKey(nodeID string) []byte {
+	key := make([]byte, len(NodeComputingPowerOnEpochKey)+len(nodeID)+len(Delimiter))
+	copy(key, NodeComputingPowerOnEpochKey)
+	copy(key[len(NodeComputingPowerOnEpochKey):], nodeID)
+	copy(key[len(NodeComputingPowerOnEpochKey)+len(nodeID):], Delimiter)
 	return key
 }
 
