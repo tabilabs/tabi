@@ -2,6 +2,7 @@ package types
 
 import (
 	errorsmod "cosmossdk.io/errors"
+	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -27,6 +28,7 @@ var (
 	_ sdk.Msg = &MsgClaimComputingPower{}
 )
 
+// NewMsgCreateCaptainNode creates a new MsgCreateCaptainNode instance
 func NewMsgCreateCaptainNode(authority, owner, divisionId string) *MsgCreateCaptainNode {
 	return &MsgCreateCaptainNode{
 		Authority:  authority,
@@ -56,24 +58,97 @@ func (msg *MsgCreateCaptainNode) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewMsgCommitReport(authority string, report []byte) *MsgCommitReport {
-	// TODO: fixme
-	return &MsgCommitReport{
-		Authority: authority,
-		Report:    nil,
+// NewMsgCommitReport creates a new MsgCommitReport instance
+func NewMsgCommitReport(authority string, reportType ReportType, report any) *MsgCommitReport {
+	res := MsgCommitReport{
+		Authority:  authority,
+		ReportType: reportType,
+		Report:     nil,
 	}
+
+	switch v := report.(type) {
+	case *ReportDigest:
+		anyv, _ := types.NewAnyWithValue(v)
+		res.Report = anyv
+	case *ReportBatch:
+		anyv, _ := types.NewAnyWithValue(v)
+		res.Report = anyv
+	case *ReportEnd:
+		anyv, _ := types.NewAnyWithValue(v)
+		res.Report = anyv
+	}
+
+	return &res
 }
 
 // ValidateBasic Implements Msg.
 func (msg *MsgCommitReport) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
-
 	}
 
-	// FIXME: fix here after designing the report structure
-	panic("implement full validation!")
+	if msg.Report == nil {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "report cannot be nil")
+	}
 
+	if msg.ReportType > ReportType_REPORT_TYPE_END || msg.ReportType == ReportType_REPORT_TYPE_DIGEST {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "invalid report type")
+	}
+
+	bz := msg.Report.GetValue()
+
+	switch msg.ReportType {
+	case ReportType_REPORT_TYPE_DIGEST:
+		var digest ReportDigest
+		err := digest.Unmarshal(bz)
+		if err != nil {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+		}
+		if digest.EpochId == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "epoch id is zero")
+		}
+		if digest.TotalBatchCount == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "total batch is zero")
+		}
+		if digest.TotalNodeCount == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "total node is zero")
+		}
+		if digest.MaximumNodeCountPerBatch == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "max node per batch id is zero")
+		}
+		if digest.GlobalOnOperationRatio.IsZero() {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "operation ratio is zero")
+		}
+
+	case ReportType_REPORT_TYPE_BATCH:
+		var batch ReportBatch
+		err := batch.Unmarshal(bz)
+		if err != nil {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+		}
+		if batch.EpochId == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "epoch id is zero")
+		}
+		if batch.BatchId == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "batch id is zero")
+		}
+		if batch.NodeCount == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node count is zero")
+		}
+		if uint64(len(batch.NodeIds)) != batch.NodeCount {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node count node ids length unmatched")
+		}
+
+	case ReportType_REPORT_TYPE_END:
+		var end ReportEnd
+		err := end.Unmarshal(bz)
+		if err != nil {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+		}
+		if end.Epoch == 0 {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "epoch id is zero")
+		}
+	}
 	return nil
 }
 
@@ -83,8 +158,12 @@ func (msg *MsgCommitReport) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{fromAddress}
 }
 
-func NewAddAuthorizedMembers() *MsgAddAuthorizedMembers {
-	return &MsgAddAuthorizedMembers{}
+// NewAddAuthorizedMembers creates a new MsgAddAuthorizedMembers instance
+func NewAddAuthorizedMembers(authority string, members []string) *MsgAddAuthorizedMembers {
+	return &MsgAddAuthorizedMembers{
+		Authority: authority,
+		Members:   members,
+	}
 }
 
 // ValidateBasic Implements Msg.
@@ -106,13 +185,18 @@ func (msg *MsgAddAuthorizedMembers) ValidateBasic() error {
 	return nil
 }
 
+// GetSigners Implements Msg.
 func (msg *MsgAddAuthorizedMembers) GetSigners() []sdk.AccAddress {
 	addr, _ := sdk.AccAddressFromBech32(msg.Authority)
 	return []sdk.AccAddress{addr}
 }
 
-func NewMsgRemoveAuthorizedMembers() *MsgRemoveAuthorizedMembers {
-	return &MsgRemoveAuthorizedMembers{}
+// NewMsgRemoveAuthorizedMembers creates a new MsgRemoveAuthorizedMembers instance
+func NewMsgRemoveAuthorizedMembers(authority string, members []string) *MsgRemoveAuthorizedMembers {
+	return &MsgRemoveAuthorizedMembers{
+		Authority: authority,
+		Members:   members,
+	}
 }
 
 // ValidateBasic Implements Msg.
@@ -140,8 +224,12 @@ func (msg *MsgRemoveAuthorizedMembers) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{addr}
 }
 
-func NewMsgUpdateSaleLevel() *MsgUpdateSaleLevel {
-	return &MsgUpdateSaleLevel{}
+// NewMsgUpdateSaleLevel creates a new MsgUpdateSaleLevel instance
+func NewMsgUpdateSaleLevel(authority string, level uint64) *MsgUpdateSaleLevel {
+	return &MsgUpdateSaleLevel{
+		Authority: authority,
+		SaleLevel: level,
+	}
 }
 
 // ValidateBasic Implements Msg.

@@ -1,6 +1,8 @@
 package types
 
-import "math"
+import (
+	"math"
+)
 
 const (
 	LevelOne = iota + 1
@@ -13,16 +15,18 @@ const (
 // NewGenesisState constructs a GenesisState
 func NewGenesisState(
 	params Params,
+	epochState EpochState,
 	divisions []Division,
 	nodes []Node,
-	epochs []Epoch,
+	nodesExtraInfo []NodeExtraInfo,
 	powers []ClaimableComputingPower,
 ) *GenesisState {
 	return &GenesisState{
 		Params:                   params,
+		EpochState:               epochState,
 		Divisions:                divisions,
 		Nodes:                    nodes,
-		Epochs:                   epochs,
+		NodesExtraInfo:           nodesExtraInfo,
 		ClaimableComputingPowers: powers,
 	}
 }
@@ -39,7 +43,24 @@ func (gs *GenesisState) Validate() error {
 
 // DefaultGenesisState gets raw genesis raw message for testing
 func DefaultGenesisState() *GenesisState {
-	return NewGenesisState(DefaultParams(), DefaultDivision(), nil, nil, nil)
+	return NewGenesisState(
+		DefaultParams(),
+		DefaultEpochState(),
+		DefaultDivision(),
+		nil,
+		nil,
+		nil)
+}
+
+func DefaultEpochState() EpochState {
+	return EpochState{
+		CurrEpoch: 1,
+		IsEnd:     false,
+		Digest:    nil,
+		Batches:   nil,
+		Current:   EpochBase{},
+		Previous:  EpochBase{},
+	}
 }
 
 func DefaultDivision() []Division {

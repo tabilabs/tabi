@@ -3,6 +3,7 @@ package tabi.captains.v1;
 
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "tabi/captains/v1/report.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/captains/types";
 
@@ -56,30 +57,68 @@ message Node {
 }
 
 // EpochInfo defines the epoch information
-message Epoch {
-    uint64 epoch_id = 1;
-    uint64 start_height = 2;
-    uint64 end_height = 3;
-    uint64 historical_emission_sum = 4;
-    uint64 computing_power_sum = 5;
-    uint64 pledge_amount_sum = 6;
-    EpochState epoch_state = 7 [(gogoproto.nullable) = false];
+message EpochBase {
+    string emission_sum = 1[
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    string historical_emission_sum = 2[
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    string  computing_power_sum = 3[
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    string pledge_amount_sum = 4[
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+// BatchBase defines the batch base
+message BatchBase {
+    uint64 id = 1;
+    uint64 count = 2;
 }
 
 // EpochState defines the epoch state
 message EpochState {
-    uint64 completed = 1;
-    uint64 report_validation_count = 2;
-    uint64 computing_power_calculation_count = 3;
-    uint64 reward_calculation_count = 4;
+    uint64 curr_epoch = 1;
+    bool is_end = 2;
+    ReportDigest digest = 3;
+    repeated BatchBase batches = 4 [(gogoproto.nullable) = false];
+    EpochBase current = 5 [(gogoproto.nullable) = false];
+    EpochBase previous = 6 [(gogoproto.nullable) = false];
+}
+
+message NodeExtraInfo {
+    string id = 1;
+    string last_claim_historical_emission = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    repeated NodeEpochInfo epochs = 3 [(gogoproto.nullable) = false];
 }
 
 // NodeEpochInfo defines the node info on epoch
 message NodeEpochInfo {
-    string id = 1;
-    uint64 epoch_id = 2;
-    uint64 historical_emission = 3;
-    uint64 computing_power = 4;
+    uint64 epoch_id = 1;
+    string historical_emission = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    string computing_power = 3 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
 }
 
 // ClaimableComputingPower defines claimable reward of computing power to the owner.

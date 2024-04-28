@@ -68,6 +68,13 @@ func (k Keeper) GetHistoricalEmissionSum(ctx sdk.Context, epochID uint64) (sdk.D
 	return res, nil
 }
 
+// incrHistoricalEmissionSum accumulate the historical emission sum at the end of a epoch.
+func (k Keeper) incrHistoricalEmissionSum(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
+	historicalEmission, _ := k.GetHistoricalEmissionSum(ctx, epochID-1)
+	historicalEmission.Add(amount)
+	k.setHistoricalEmissionSum(ctx, epochID, historicalEmission)
+}
+
 // setHistoricalEmissionSum sets the historical emission sum for an epoch.
 func (k Keeper) setHistoricalEmissionSum(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
@@ -107,12 +114,7 @@ func (k Keeper) calNodeHistoricalEmissionOnEpoch(
 		return historyEmission
 	}
 
-	prevHistoryEmission := sdk.ZeroDec()
-	if epochID >= 2 {
-		// avoid overflow when epochID is 0, but we shouldn't be worried about a max uint64.
-		prevHistoryEmission = k.GetNodeHistoricalEmissionOnEpoch(ctx, epochID-1, nodeID)
-	}
-
+	prevHistoryEmission := k.GetNodeHistoricalEmissionOnEpoch(ctx, epochID-1, nodeID)
 	emission, _ := k.GetEpochEmission(ctx, epochID)
 	emission.Add(prevHistoryEmission)
 

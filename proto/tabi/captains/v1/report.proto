@@ -33,7 +33,7 @@ message ReportDigest {
 // ReportBatch marks the a batch of nodes.
 message ReportBatch {
   // epoch_id is the epoch id of the report
-  uint64 epoch = 1;
+  uint64 epoch_id = 1;
   // batch_id is the batch id of the report
   uint64 batch_id = 2;
   // node_count is the number of nodes in the batch

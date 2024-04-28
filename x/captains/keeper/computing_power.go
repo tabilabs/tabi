@@ -48,30 +48,19 @@ func (k Keeper) calcNodeComputingPowerOnEpoch(
 	ctx sdk.Context,
 	epochID uint64,
 	nodeID string,
-	powerOnRatio sdk.Dec,
+	pledgeRatio sdk.Dec,
 ) (sdk.Dec, error) {
-	if powerOnRatio.Equal(sdk.ZeroDec()) {
-		powerOnRatio = sdk.OneDec()
-	}
-
 	basePower := sdk.NewDec(int64(k.GetNodeBaseComputingPower(ctx, nodeID)))
-	pledgeRatio, err := k.calcNodePledgeRatioOnEpoch(ctx, epochID, nodeID)
-	if err != nil {
-		return sdk.ZeroDec(), err
-
-	}
 
 	// exponent = pledge_ratio / 0.5
-	exponentiation, err := pledgeRatio.Mul(sdk.NewDec(2)).Float64()
-	if err != nil {
-		return sdk.ZeroDec(), err
-	}
+	exponentiation, _ := pledgeRatio.Mul(sdk.NewDec(2)).Float64()
+
 	exponentiated, err := sdk.NewDecFromStr(fmt.Sprintf("%f", math.Exp(exponentiation)))
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}
 
-	power := basePower.Mul(exponentiated).Mul(powerOnRatio)
+	power := basePower.Mul(exponentiated)
 	k.setNodeComputingPowerOnEpoch(ctx, epochID, nodeID, power)
 	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
 
@@ -149,4 +138,26 @@ func (k Keeper) GetComputingPowerClaimable(ctx sdk.Context, owner sdk.AccAddress
 		return 0
 	}
 	return sdk.BigEndianToUint64(bz)
+}
+
+// GetComputingPowersClaimable returns all claimable computing powers.
+func (k Keeper) GetComputingPowersClaimable(ctx sdk.Context) []types.ClaimableComputingPower {
+	var claimableComputingPowers []types.ClaimableComputingPower
+
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.ComputingPowerClaimableKey)
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		amount := sdk.BigEndianToUint64(iterator.Value())
+		owner := string(iterator.Key())
+
+		power := types.ClaimableComputingPower{
+			Amount: amount,
+			Owner:  owner,
+		}
+		claimableComputingPowers = append(claimableComputingPowers, power)
+	}
+
+	return claimableComputingPowers
 }
