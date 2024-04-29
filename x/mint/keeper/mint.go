@@ -4,6 +4,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	tabitypes "github.com/tabilabs/tabi/types"
 	"github.com/tabilabs/tabi/x/mint/types"
 )
 
@@ -105,8 +106,8 @@ func (k Keeper) GetProportions(
 
 // GetTokenSupply returns the total supply of the token
 func (k Keeper) GetTokenSupply(ctx sdk.Context) sdkmath.Int {
-	tabiCoin := k.bankKeeper.GetSupply(ctx, "")
-	sdTabiCoin := k.bankKeeper.GetSupply(ctx, "")
+	tabiCoin := k.bankKeeper.GetSupply(ctx, tabitypes.AttoTabi)
+	sdTabiCoin := k.bankKeeper.GetSupply(ctx, tabitypes.AttoVeTabi)
 	tabiCoin = tabiCoin.Add(sdTabiCoin)
 	return tabiCoin.Amount
 }
