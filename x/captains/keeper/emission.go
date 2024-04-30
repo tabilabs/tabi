@@ -30,13 +30,9 @@ func (k Keeper) GetEpochEmission(ctx sdk.Context, epochID uint64) (sdk.Dec, bool
 // calcEpochEmission returns the total emission reward for an epoch.
 func (k Keeper) calcEpochEmission(ctx sdk.Context, epochID uint64, globalOperationRatio sdk.Dec) (sdk.Dec, error) {
 	base := k.GetBaseEpochEmission(ctx)
-
-	pledgeRatio, err := k.calcGlobalPledgeRatio(ctx, epochID)
-	if err != nil {
-		return sdk.ZeroDec(), err
-	}
-
+	pledgeRatio := k.calcGlobalPledgeRatio(ctx, epochID)
 	sum := base.Mul(pledgeRatio).Mul(globalOperationRatio)
+
 	k.setEpochEmission(ctx, epochID, sum)
 
 	return sum, nil
@@ -56,37 +52,30 @@ func (k Keeper) delEpochEmission(ctx sdk.Context, epochID uint64) {
 	store.Delete(key)
 }
 
-// GetHistoricalEmissionSum returns the historical emission sum at the end of a epoch.
-func (k Keeper) GetHistoricalEmissionSum(ctx sdk.Context, epochID uint64) (sdk.Dec, error) {
+// GetEmissionClaimedSum returns the emission claimed sum.
+func (k Keeper) GetEmissionClaimedSum(ctx sdk.Context) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
-	key := types.HistoricalEmissionSumOnEpochStoreKey(epochID)
+	key := types.EmissionClaimedSumKey
 	bz := store.Get(key)
-	res, err := sdk.NewDecFromStr(string(bz))
-	if err != nil {
-		return sdk.ZeroDec(), err
+	if len(bz) == 0 {
+		return sdk.ZeroDec()
 	}
-	return res, nil
+	res, _ := sdk.NewDecFromStr(string(bz))
+	return res
 }
 
-// incrHistoricalEmissionSum accumulate the historical emission sum at the end of a epoch.
-func (k Keeper) incrHistoricalEmissionSum(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
-	historicalEmission, _ := k.GetHistoricalEmissionSum(ctx, epochID-1)
-	historicalEmission.Add(amount)
-	k.setHistoricalEmissionSum(ctx, epochID, historicalEmission)
-}
-
-// setHistoricalEmissionSum sets the historical emission sum for an epoch.
-func (k Keeper) setHistoricalEmissionSum(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
+// setEmissionClaimedSum sets the emission claimed sum.
+func (k Keeper) setEmissionClaimedSum(ctx sdk.Context, amount sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.HistoricalEmissionSumOnEpochStoreKey(epochID)
+	key := types.EmissionClaimedSumKey
 	store.Set(key, []byte(amount.String()))
 }
 
-// delHistoricalEmissionSum deletes the historical emission sum for an epoch.
-func (k Keeper) delHistoricalEmissionSum(ctx sdk.Context, epochID uint64) {
-	store := ctx.KVStore(k.storeKey)
-	key := types.HistoricalEmissionSumOnEpochStoreKey(epochID)
-	store.Delete(key)
+// incrEmissionClaimedSum increases the emission claimed sum by amount.
+func (k Keeper) incrEmissionClaimedSum(ctx sdk.Context, amount sdk.Dec) {
+	emission := k.GetEmissionClaimedSum(ctx)
+	emission.Add(amount)
+	k.setEmissionClaimedSum(ctx, emission)
 }
 
 // calcOwnerHistoricalEmissionSum returns the historical emission sum for an owner at the end of an epoch.
@@ -125,9 +114,13 @@ func (k Keeper) calNodeHistoricalEmissionOnEpoch(
 	return emission
 }
 
+// CalAndGetNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
+func (k Keeper) CalAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
+	return k.calNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID)
+}
+
 // GetNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
 func (k Keeper) GetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
-	// TODO: add epoch safe check here in case we call at epoch(t) for epoch(t-1) data.
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeHistoricalEmissionOnEpochStoreKey(epochID, nodeID)
 	bz := store.Get(key)
@@ -150,9 +143,6 @@ func (k Keeper) delNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64
 }
 
 // GetNodeHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
-// That says, if the user claims on epoch(T+1), the user will get rewards accrued at the end of epoch(T).
-// The next time the user claims, let's say on epoch(T+k+1), we can easily calc the rewards by subtracting
-// node_historical_emission_on_last_claim from node_historical_emission(T+k)
 func (k Keeper) GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeHistoricalEmissionOnLastClaimStoreKey(nodeID)
@@ -165,11 +155,12 @@ func (k Keeper) GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID str
 // NOTE: call this function after the user claims the rewards.
 func (k Keeper) UpdateNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) error {
 	epoch := k.GetCurrentEpoch(ctx)
-	// NOTE: if we are in epoch(t), we are calculating the rewards for epoch(t-1) so we
-	// can only get historical emssion by the end of epoch(t-2).
-	amount := k.GetNodeHistoricalEmissionOnEpoch(ctx, epoch-2, nodeID)
 
+	amount := k.GetNodeHistoricalEmissionOnEpoch(ctx, epoch-1, nodeID)
 	k.setNodeHistoricalEmissionOnLastClaim(ctx, nodeID, amount)
+
+	k.incrEmissionClaimedSum(ctx, amount)
+
 	return nil
 }
 
