@@ -114,15 +114,13 @@ func (k Keeper) DelEndEpoch(ctx sdk.Context, epochID uint64) {
 // GetEpochBase returns the base information of an epoch.
 func (k Keeper) GetEpochBase(ctx sdk.Context, epochID uint64) types.EpochBase {
 	emission, _ := k.GetEpochEmission(ctx, epochID)
-	historicalEmission, _ := k.GetHistoricalEmissionSum(ctx, epochID)
 	computingPower := k.GetComputingPowerSumOnEpoch(ctx, epochID)
-	pledgeAmount, _ := k.GetPledgeSum(ctx, epochID)
+	pledgeAmount := k.GetPledgeSum(ctx, epochID)
 
 	return types.EpochBase{
-		EmissionSum:           emission,
-		HistoricalEmissionSum: historicalEmission,
-		ComputingPowerSum:     computingPower,
-		PledgeAmountSum:       pledgeAmount,
+		EmissionSum:       emission,
+		ComputingPowerSum: computingPower,
+		PledgeAmountSum:   pledgeAmount,
 	}
 }
 
@@ -134,14 +132,16 @@ func (k Keeper) GetEpochsState(ctx sdk.Context) types.EpochState {
 	digest, _ := k.GetDigest(ctx, epochId)
 	curr := k.GetEpochBase(ctx, epochId)
 	prev := k.GetEpochBase(ctx, epochId-1)
+	emissionSum := k.GetEmissionClaimedSum(ctx)
 
 	return types.EpochState{
-		CurrEpoch: epochId,
-		IsEnd:     isEnd,
-		Digest:    digest,
-		Batches:   batches,
-		Current:   curr,
-		Previous:  prev,
+		CurrEpoch:          epochId,
+		IsEnd:              isEnd,
+		Digest:             digest,
+		Batches:            batches,
+		Current:            curr,
+		Previous:           prev,
+		EmissionClaimedSum: emissionSum,
 	}
 }
 
@@ -151,9 +151,6 @@ func (k Keeper) setEpochBase(ctx sdk.Context, epochID uint64, base types.EpochBa
 		return
 	}
 
-	if !base.HistoricalEmissionSum.IsZero() {
-		k.setHistoricalEmissionSum(ctx, epochID, base.HistoricalEmissionSum)
-	}
 	if !base.ComputingPowerSum.IsZero() {
 		k.setComputingPowerSumOnEpoch(ctx, epochID, base.ComputingPowerSum)
 	}

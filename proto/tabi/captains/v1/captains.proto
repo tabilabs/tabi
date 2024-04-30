@@ -63,17 +63,12 @@ message EpochBase {
         (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
         (gogoproto.nullable)   = false
     ];
-    string historical_emission_sum = 2[
+    string  computing_power_sum = 2[
         (cosmos_proto.scalar)  = "cosmos.Dec",
         (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
         (gogoproto.nullable)   = false
     ];
-    string  computing_power_sum = 3[
-        (cosmos_proto.scalar)  = "cosmos.Dec",
-        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-        (gogoproto.nullable)   = false
-    ];
-    string pledge_amount_sum = 4[
+    string pledge_amount_sum = 3[
         (cosmos_proto.scalar)  = "cosmos.Dec",
         (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
         (gogoproto.nullable)   = false
@@ -94,6 +89,11 @@ message EpochState {
     repeated BatchBase batches = 4 [(gogoproto.nullable) = false];
     EpochBase current = 5 [(gogoproto.nullable) = false];
     EpochBase previous = 6 [(gogoproto.nullable) = false];
+    string emission_claimed_sum = 7[
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
 }
 
 message NodeExtraInfo {

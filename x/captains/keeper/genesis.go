@@ -47,6 +47,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 	}
 	k.setEpochBase(ctx, currEpochID, data.EpochState.Current)
 	k.setEpochBase(ctx, currEpochID-1, data.EpochState.Previous)
+	k.setEmissionClaimedSum(ctx, data.EpochState.EmissionClaimedSum)
 
 	// set computing power
 	for _, power := range data.ClaimableComputingPowers {

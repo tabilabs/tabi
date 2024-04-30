@@ -5,22 +5,32 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
+var (
+	globalPledgeRatioUpperBound = sdk.OneDec()
+	globalPledgeRatioLowerBound = sdk.NewDecWithPrec(3, 1)
+)
+
 // calcGlobalPledgeRatio calculates the pledge rate of the global on the epoch t.
-func (k Keeper) calcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) (sdk.Dec, error) {
-	if epochID == 1 {
-		return sdk.NewDecWithPrec(3, 1), nil
+func (k Keeper) calcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
+	sum := k.GetEmissionClaimedSum(ctx)
+	if sum.IsZero() {
+		return sdk.OneDec()
 	}
 
-	sum, err := k.GetHistoricalEmissionSum(ctx, epochID-1)
-	if err != nil {
-		return sdk.ZeroDec(), err
+	pledgeSum := k.GetPledgeSum(ctx, epochID)
+	ratio := pledgeSum.Quo(sum)
+	// no more than 1.0
+	if ratio.GT(globalPledgeRatioUpperBound) {
+		ratio = globalPledgeRatioUpperBound
+	}
+	// no less than 0.3
+	if ratio.LT(globalPledgeRatioLowerBound) {
+		ratio = globalPledgeRatioLowerBound
 	}
 
-	pledgeSum, _ := k.GetPledgeSum(ctx, epochID)
 	k.delPledgeSum(ctx, epochID)
 
-	// TODO: verify whether the result exceeds one?
-	return pledgeSum.Quo(sum), nil
+	return ratio
 }
 
 // calcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t.
@@ -91,21 +101,20 @@ func (k Keeper) delOwnerPledge(ctx sdk.Context, owner sdk.AccAddress, epochID ui
 }
 
 // GetPledgeSum returns the total pledge amount of captains' owners on the epoch end.
-func (k Keeper) GetPledgeSum(ctx sdk.Context, epochID uint64) (sdk.Dec, bool) {
+func (k Keeper) GetPledgeSum(ctx sdk.Context, epochID uint64) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
 	key := types.PledgeSumOnEpochStoreKey(epochID)
 	bz := store.Get(key)
 	if bz == nil {
-		return sdk.ZeroDec(), false
+		return sdk.ZeroDec()
 	}
-
 	res, _ := sdk.NewDecFromStr(string(bz))
-	return res, true
+	return res
 }
 
 // incrPledgeSum increments the total pledge amount of captains' owners on the epoch end.
 func (k Keeper) incrPledgeSum(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
-	sum, _ := k.GetPledgeSum(ctx, epochID)
+	sum := k.GetPledgeSum(ctx, epochID)
 	sum = sum.Add(amount)
 	k.setPledgeSum(ctx, epochID, sum)
 }

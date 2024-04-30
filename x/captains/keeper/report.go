@@ -24,12 +24,11 @@ func (k Keeper) CommitReport(ctx sdk.Context, report any) error {
 func (k Keeper) handleReportDigest(ctx sdk.Context, report *types.ReportDigest) error {
 	epochId := report.EpochId
 
-	epochEmissionSum, err := k.calcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
+	_, err := k.calcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
 	if err != nil {
 		return err
 	}
 
-	k.incrHistoricalEmissionSum(ctx, epochId, epochEmissionSum)
 	k.setDigest(ctx, epochId, report)
 
 	return nil
@@ -85,7 +84,6 @@ func (k Keeper) handleReportEnd(ctx sdk.Context, report *types.ReportEnd) error 
 	}
 
 	// prune useless epoch data
-	k.delHistoricalEmissionSum(ctx, epochId-1)
 	k.delEpochEmission(ctx, epochId-1)
 	k.delComputingPowerSumOnEpoch(ctx, epochId-1)
 
