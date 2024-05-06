@@ -71,6 +71,5 @@ type CaptainsKeeper interface {
 }
 
 type MintKeeper interface {
-	GetDailyIssuance(ctx sdk.Context) sdk.Dec
 	GetMinter(ctx sdk.Context) minttypes.Minter
 }

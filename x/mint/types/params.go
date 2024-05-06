@@ -1,7 +1,6 @@
 package types
 
 import (
-	"errors"
 	fmt "fmt"
 	"strings"
 
@@ -29,12 +28,8 @@ var (
 )
 
 var (
-	DefaultMintDenom             = evm.DefaultEVMDenom
-	DefaultInflation             = sdk.NewDecWithPrec(20, 2) //20%
-	DefaultInflationDistribution = InflationDistribution{
-		StakingRewards: sdk.NewDecWithPrec(2500000000, 10), // 25%
-		ClaimsRewards:  sdk.NewDecWithPrec(7500000000, 10), // 75%
-	}
+	DefaultMintDenom = evm.DefaultEVMDenom
+	DefaultInflation = sdk.NewDecWithPrec(20, 2) //20%
 )
 
 // ParamTable for mint module
@@ -45,21 +40,18 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(
 	mintDenom string,
 	inflation sdk.Dec,
-	inflationDistribution InflationDistribution,
 ) Params {
 	return Params{
-		MintDenom:             mintDenom,
-		Inflation:             inflation,
-		InflationDistribution: inflationDistribution,
+		MintDenom: mintDenom,
+		Inflation: inflation,
 	}
 }
 
 // DefaultParams returns default minting module parameters
 func DefaultParams() Params {
 	return Params{
-		Inflation:             DefaultInflation,
-		MintDenom:             DefaultMintDenom,
-		InflationDistribution: DefaultInflationDistribution,
+		Inflation: DefaultInflation,
+		MintDenom: DefaultMintDenom,
 	}
 }
 
@@ -74,7 +66,6 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyInflation, &p.Inflation, validateInflation),
 		paramtypes.NewParamSetPair(KeyMintDenom, &p.MintDenom, validateMintDenom),
-		paramtypes.NewParamSetPair(KeyInflationDistribution, &p.InflationDistribution, validateInflationDistribution),
 	}
 }
 
@@ -90,9 +81,6 @@ func (p Params) Validate() error {
 		return err
 	}
 	if err := validateMintDenom(p.MintDenom); err != nil {
-		return err
-	}
-	if err := validateInflationDistribution(p.InflationDistribution); err != nil {
 		return err
 	}
 
@@ -131,21 +119,4 @@ func validateMintDenom(i interface{}) error {
 	}
 
 	return sdk.ValidateDenom(v)
-}
-
-func validateInflationDistribution(i interface{}) error {
-	v, ok := i.(InflationDistribution)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
-	if v.StakingRewards.IsNegative() {
-		return errors.New("staking distribution ratio must not be negative")
-	}
-
-	if v.ClaimsRewards.IsNegative() {
-		return errors.New("claims distribution ratio must not be negative")
-	}
-
-	return nil
 }
