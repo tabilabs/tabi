@@ -9,6 +9,9 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
+// ComputingPowerSumOnEpoch functions
+
+// GetComputingPowerSumOnEpoch returns the sum of computing power of all nodes.
 func (k Keeper) GetComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
 	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
@@ -21,13 +24,14 @@ func (k Keeper) GetComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) sdk
 	return sum
 }
 
+// setComputingPowerSumOnEpoch sets the sum of computing power of all nodes.
 func (k Keeper) setComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
 	store.Set(key, []byte(amount.String()))
 }
 
-// setComputingPowerSumOnEpoch increases the sum of computing power of all nodes.
+// incrComputingPowerSumOnEpoch increases the sum of computing power of all nodes.
 // NOTE: call only after computing a node power so that by end of epoch we have the power sum of all nodes.
 func (k Keeper) incrComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
 	sum := k.GetComputingPowerSumOnEpoch(ctx, epochID)
@@ -43,8 +47,10 @@ func (k Keeper) delComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) {
 
 }
 
-// calcNodeComputingPowerOnEpoch returns the computing power of a node as per its node info.
-func (k Keeper) calcNodeComputingPowerOnEpoch(
+// NodeComputingPowerOnEpoch functions
+
+// CalcNodeComputingPowerOnEpoch returns the computing power of a node as per its node info.
+func (k Keeper) CalcNodeComputingPowerOnEpoch(
 	ctx sdk.Context,
 	epochID uint64,
 	nodeID string,
@@ -55,10 +61,12 @@ func (k Keeper) calcNodeComputingPowerOnEpoch(
 	// exponent = pledge_ratio / 0.5
 	exponentiation, _ := pledgeRatio.Mul(sdk.NewDec(2)).Float64()
 
+	// decimal precision is 6
 	exponentiated, err := sdk.NewDecFromStr(fmt.Sprintf("%f", math.Exp(exponentiation)))
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}
+	fmt.Println("exponentiated", exponentiated)
 
 	power := basePower.Mul(exponentiated)
 	k.setNodeComputingPowerOnEpoch(ctx, epochID, nodeID, power)
@@ -82,11 +90,16 @@ func (k Keeper) delNodeComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, no
 }
 
 // GetNodeComputingPowerOnEpoch returns the computing power of a node as per its node info.
-func (k Keeper) GetNodeComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) (sdk.Dec, error) {
+func (k Keeper) GetNodeComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeComputingPowerOnEpochStoreKey(epochID, nodeID)
 	bz := store.Get(key)
-	return sdk.NewDecFromStr(string(bz))
+	if bz == nil {
+		return sdk.ZeroDec()
+	}
+
+	power, _ := sdk.NewDecFromStr(string(bz))
+	return power
 }
 
 // GetNodeBaseComputingPower returns the base computing power of a node as per its node info.
@@ -101,6 +114,8 @@ func (k Keeper) GetNodeBaseComputingPower(ctx sdk.Context, nodeID string) uint64
 	k.cdc.MustUnmarshal(bz, &node)
 	return node.ComputingPower
 }
+
+// ComputingPowerClaimable functions
 
 // CommitComputingPower commits the pending computing power.
 func (k Keeper) CommitComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) (uint64, uint64, error) {

@@ -7,18 +7,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// captions message types
-const (
-	TypeMsgCreateCaptainNode      = "create_captain_node"
-	TypeMsgCommitReport           = "commit_report"
-	TypeMsgAddAuthorizedMember    = "add_authorized_member"
-	TypeMsgRemoveAuthorizedMember = "remove_authorized_member"
-	TypeMsgUpdateSaleLevel        = "update_sale_level"
-	TypeMsgCommitComputingPower   = "commit_computing_power"
-	TypeMsgClaimComputingPower    = "claim_computing_power"
-)
-
 var (
+	_ sdk.Msg = &MsgUpdateParams{}
 	_ sdk.Msg = &MsgCreateCaptainNode{}
 	_ sdk.Msg = &MsgCommitReport{}
 	_ sdk.Msg = &MsgAddAuthorizedMembers{}
@@ -27,6 +17,61 @@ var (
 	_ sdk.Msg = &MsgCommitComputingPower{}
 	_ sdk.Msg = &MsgClaimComputingPower{}
 )
+
+// NewMsgUpdateParams creates a new MsgUpdateParams instance
+func NewMsgUpdateParams(authority string, params Params) *MsgUpdateParams {
+	return &MsgUpdateParams{
+		Authority: authority,
+		Params:    params,
+	}
+}
+
+func (msg *MsgUpdateParams) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
+		return errorsmod.Wrap(err, "invalid authority address")
+	}
+
+	if msg.Params.CaptainsTotalCount == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains total count cannot be zero")
+	}
+
+	if msg.Params.MaximumHoldingAmount == 0 || msg.Params.MinimumPowerOnPeriod == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains share cannot be zero")
+	}
+
+	if msg.Params.MinimumPowerOnPeriod > msg.Params.MaximumPowerOnPeriod {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "minimum power on period cannot be greater than maximum power on period")
+	}
+
+	if msg.Params.HalvingEraCoefficient.IsZero() {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "max node per batch cannot be zero")
+	}
+
+	if msg.Params.CaptainsConstant == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains constant cannot be zero")
+	}
+
+	if msg.Params.MaximumHoldingAmount == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains share cannot be zero")
+	}
+
+	if len(msg.Params.AuthorizedMembers) == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "authorized members cannot be empty")
+	}
+
+	for _, member := range msg.Params.AuthorizedMembers {
+		if _, err := sdk.AccAddressFromBech32(member); err != nil {
+			return errorsmod.Wrap(err, "invalid member address")
+		}
+	}
+
+	return nil
+}
+
+func (msg *MsgUpdateParams) GetSigners() []sdk.AccAddress {
+	fromAddress, _ := sdk.AccAddressFromBech32(msg.Authority)
+	return []sdk.AccAddress{fromAddress}
+}
 
 // NewMsgCreateCaptainNode creates a new MsgCreateCaptainNode instance
 func NewMsgCreateCaptainNode(authority, owner, divisionId string) *MsgCreateCaptainNode {

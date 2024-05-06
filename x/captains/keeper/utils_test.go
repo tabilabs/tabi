@@ -1,53 +1,57 @@
-package keeper
+package keeper_test
 
 import (
-	"testing"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-func TestCalculatePowerOnPeriod(t *testing.T) {
-	testCases := []struct {
-		proportion           uint64
-		maximumPowerOnPeriod uint64
-		expected             sdk.Dec
-		shouldPanic          bool
-	}{
-		{
-			proportion:           0,
-			maximumPowerOnPeriod: 24,
-			expected:             sdk.ZeroDec(),
+func (suite *CaptainsTestSuite) utilsAddAuthorizedMember(member string) {
+	suite.msgServer.AddAuthorizedMembers(
+		suite.ctx,
+		&types.MsgAddAuthorizedMembers{
+			Authority: accounts[0].String(),
+			Members:   []string{member},
+		})
+}
+
+func (suite *CaptainsTestSuite) utilsCreateCaptainNode(owner string, divisionLevel uint64) string {
+	divisions := suite.utilsGetDivisions()
+	resp, _ := suite.msgServer.CreateCaptainNode(
+		suite.ctx,
+		&types.MsgCreateCaptainNode{
+			Authority:  accounts[0].String(),
+			Owner:      owner,
+			DivisionId: divisions[divisionLevel],
 		},
-		{
-			proportion:           24,
-			maximumPowerOnPeriod: 24,
-			expected:             sdk.OneDec(),
-		},
-		{
-			proportion:           25,
-			maximumPowerOnPeriod: 24,
-			expected:             sdk.NewDec(1),
-		},
-		{
-			proportion:           1,
-			maximumPowerOnPeriod: 24,
-			expected:             sdk.NewDecWithPrec(41666666666666667, 18),
-		},
+	)
+	return resp.NodeId
+}
+
+func (suite *CaptainsTestSuite) utilsGetDivisions() map[uint64]string {
+	resp, err := suite.queryClient.Divisions(suite.ctx, &types.QueryDivisionsRequest{})
+	suite.NoError(err)
+
+	divisionMap := make(map[uint64]string)
+	for _, division := range resp.Divisions {
+		divisionMap[division.Level] = division.Id
 	}
 
-	for _, tc := range testCases {
-		if tc.shouldPanic {
-			defer func() {
-				if r := recover(); r == nil {
-					t.Errorf("The code did not panic")
-				}
-			}()
-			calculatePowerOnPeriod(tc.proportion, tc.maximumPowerOnPeriod)
-		} else {
-			result := calculatePowerOnPeriod(tc.proportion, tc.maximumPowerOnPeriod)
-			if !result.Equal(tc.expected) {
-				t.Errorf("expected: %s, got: %s", tc.expected, result)
-			}
-		}
-	}
+	return divisionMap
+}
+
+func (suite *CaptainsTestSuite) utilsCommitPower(owner string, amount uint64) {
+	_, err := suite.msgServer.CommitComputingPower(suite.ctx, &types.MsgCommitComputingPower{
+		Authority: accounts[0].String(),
+		ComputingPowerRewards: []types.ClaimableComputingPower{
+			{amount, owner},
+		},
+	})
+	suite.NoError(err)
+}
+
+func (suite *CaptainsTestSuite) utilsUpdateLevel(level uint64) {
+	_, err := suite.msgServer.UpdateSaleLevel(suite.ctx, &types.MsgUpdateSaleLevel{
+		Authority: accounts[0].String(),
+		SaleLevel: level,
+	})
+	suite.NoError(err)
 }

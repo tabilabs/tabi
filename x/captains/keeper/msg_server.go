@@ -87,7 +87,9 @@ func (m msgServer) CreateCaptainNode(
 		),
 	})
 
-	return &types.MsgCreateCaptainNodeResponse{}, nil
+	return &types.MsgCreateCaptainNodeResponse{
+		NodeId: nodeID,
+	}, nil
 }
 
 // CommitReport implement the interface of types.MsgServer

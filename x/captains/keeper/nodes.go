@@ -81,7 +81,7 @@ func (k Keeper) UpdateNode(
 	currDivision, _ := k.GetDivision(ctx, node.DivisionId)
 	if after > currDivision.ComputingPowerUpperBound {
 		// check if we need to improve node division
-		nextDivision := k.decideDivision(ctx, after)
+		nextDivision := k.DecideDivision(ctx, after)
 		node.DivisionId = nextDivision.Id
 		k.incrDivisionTotalCount(ctx, nextDivision)
 		k.decrDivisionTotalCount(ctx, currDivision)
@@ -165,7 +165,7 @@ func (k Keeper) GetNodeEpochsInfo(ctx sdk.Context, nodeID string) []types.NodeEp
 	for ; iter.Valid(); iter.Next() {
 		epochId := sdk.BigEndianToUint64(iter.Key())
 		emission := k.GetNodeHistoricalEmissionOnEpoch(ctx, epochId, nodeID)
-		power, _ := k.GetNodeComputingPowerOnEpoch(ctx, epochId, nodeID)
+		power := k.GetNodeComputingPowerOnEpoch(ctx, epochId, nodeID)
 		info := types.NodeEpochInfo{
 			EpochId:            epochId,
 			HistoricalEmission: emission,

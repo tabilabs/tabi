@@ -109,7 +109,7 @@ import (
 
 	// tabi modules
 
-	captainnodekeeper "github.com/tabilabs/tabi/x/captains/keeper"
+	captainskeeper "github.com/tabilabs/tabi/x/captains/keeper"
 	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
 	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
@@ -196,8 +196,8 @@ type Tabi struct {
 	FeeMarketKeeper feemarketkeeper.Keeper
 
 	// Tabi keepers
-	Claimskeeper      claimskeeper.Keeper
-	CaptainNodeKeeper captainnodekeeper.Keeper
+	ClaimsKeeper   claimskeeper.Keeper
+	CaptainsKeeper captainskeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -390,21 +390,21 @@ func NewTabi(
 
 	// Tabi module keepers
 
-	app.CaptainNodeKeeper = captainnodekeeper.NewKeeper(
+	app.CaptainsKeeper = captainskeeper.NewKeeper(
 		appCodec,
 		keys[captainnodetypes.StoreKey],
 		app.GetSubspace(captainnodetypes.ModuleName),
 		authtypes.NewModuleAddress(govtypes.ModuleName),
 	)
 
-	app.Claimskeeper = claimskeeper.NewKeeper(
+	app.ClaimsKeeper = claimskeeper.NewKeeper(
 		appCodec,
 		authtypes.NewModuleAddress(govtypes.ModuleName),
 		keys[claimstypes.StoreKey],
 		app.GetSubspace(claimstypes.ModuleName),
 		app.AccountKeeper,
 		app.BankKeeper,
-		app.CaptainNodeKeeper,
+		app.CaptainsKeeper,
 	)
 
 	// Create IBC Keeper

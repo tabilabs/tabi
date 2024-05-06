@@ -47,7 +47,7 @@ func (k Keeper) handleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 			return err
 		}
 
-		power, err := k.calcNodeComputingPowerOnEpoch(ctx, epochId, nodeId, pledgeRatio)
+		power, err := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, nodeId, pledgeRatio)
 		if err != nil {
 			return err
 		}
