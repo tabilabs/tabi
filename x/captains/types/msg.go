@@ -26,6 +26,7 @@ var (
 	_ sdk.Msg = &MsgUpdateSaleLevel{}
 	_ sdk.Msg = &MsgCommitComputingPower{}
 	_ sdk.Msg = &MsgClaimComputingPower{}
+	_ sdk.Msg = &MsgUpdateParams{}
 )
 
 // NewMsgCreateCaptainNode creates a new MsgCreateCaptainNode instance
@@ -316,4 +317,18 @@ func (msg *MsgClaimComputingPower) ValidateBasic() error {
 func (msg *MsgClaimComputingPower) GetSigners() []sdk.AccAddress {
 	fromAddress, _ := sdk.AccAddressFromBech32(msg.Sender)
 	return []sdk.AccAddress{fromAddress}
+}
+
+// ValidateBasic executes sanity validation on the provided data
+func (m *MsgUpdateParams) ValidateBasic() error {
+	if _, err := sdk.AccAddressFromBech32(m.Authority); err != nil {
+		return sdkerrors.Wrap(err, "invalid authority address")
+	}
+	return m.Params.Validate()
+}
+
+// GetSigners returns the expected signers for a MsgUpdateParams message
+func (m *MsgUpdateParams) GetSigners() []sdk.AccAddress {
+	addr, _ := sdk.AccAddressFromBech32(m.Authority)
+	return []sdk.AccAddress{addr}
 }
