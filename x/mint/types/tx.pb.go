@@ -33,7 +33,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
 //
-// Since: cosmos-sdk 0.47
+// Since: cosmos-sdk 0.46
 type MsgUpdateParams struct {
 	// authority is the address that controls the module (defaults to x/gov unless
 	// overwritten).
@@ -80,7 +80,7 @@ var xxx_messageInfo_MsgUpdateParams proto.InternalMessageInfo
 // MsgUpdateParamsResponse defines the response structure for executing a
 // MsgUpdateParams message.
 //
-// Since: cosmos-sdk 0.47
+// Since: cosmos-sdk 0.46
 type MsgUpdateParamsResponse struct {
 }
 
@@ -161,10 +161,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// UpdateParams defines a governance operation for updating the x/coinswap
+	// UpdateParams defines a governance operation for updating the x/mint
 	// module parameters. The authority is defined in the keeper.
 	//
-	// Since: cosmos-sdk 0.47
+	// Since: cosmos-sdk 0.46
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
 }
 
@@ -187,10 +187,10 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// UpdateParams defines a governance operation for updating the x/coinswap
+	// UpdateParams defines a governance operation for updating the x/mint
 	// module parameters. The authority is defined in the keeper.
 	//
-	// Since: cosmos-sdk 0.47
+	// Since: cosmos-sdk 0.46
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
 }
 

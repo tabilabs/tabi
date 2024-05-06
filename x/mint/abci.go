@@ -38,8 +38,8 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 		panic(err)
 	}
 
-	// Allocate minted coins according to allocation proportions (staking, usage
-	if err := k.AllocateExponentialInflation(ctx, mintedCoin, params); err != nil {
+	// send the minted coins to the fee collector account
+	if err := k.AddCollectedFees(ctx, mintedCoins); err != nil {
 		panic(err)
 	}
 

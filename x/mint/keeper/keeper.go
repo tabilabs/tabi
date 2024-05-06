@@ -23,8 +23,7 @@ type Keeper struct {
 	bankKeeper    types.BankKeeper
 	distrKeeper   types.DistrKeeper
 
-	feeCollectorName    string
-	claimsCollectorName string
+	feeCollectorName string
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this should be the x/gov module account.
 	authority sdk.AccAddress
@@ -33,7 +32,7 @@ type Keeper struct {
 // NewKeeper returns a mint keeper
 func NewKeeper(cdc codec.Codec, authority sdk.AccAddress, key storetypes.StoreKey,
 	paramSpace paramtypes.Subspace, ak types.AccountKeeper, bk types.BankKeeper, dk types.DistrKeeper,
-	feeCollectorName, claimsCollectorName string) Keeper {
+	feeCollectorName string) Keeper {
 
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -41,15 +40,14 @@ func NewKeeper(cdc codec.Codec, authority sdk.AccAddress, key storetypes.StoreKe
 	}
 
 	keeper := Keeper{
-		storeKey:            key,
-		cdc:                 cdc,
-		paramSpace:          paramSpace.WithKeyTable(types.ParamKeyTable()),
-		accountKeeper:       ak,
-		bankKeeper:          bk,
-		distrKeeper:         dk,
-		feeCollectorName:    feeCollectorName,
-		claimsCollectorName: claimsCollectorName,
-		authority:           authority,
+		storeKey:         key,
+		cdc:              cdc,
+		paramSpace:       paramSpace.WithKeyTable(types.ParamKeyTable()),
+		accountKeeper:    ak,
+		bankKeeper:       bk,
+		distrKeeper:      dk,
+		feeCollectorName: feeCollectorName,
+		authority:        authority,
 	}
 	return keeper
 }
