@@ -10,7 +10,6 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -26,76 +25,103 @@ import (
 	"github.com/tabilabs/tabi/testutil"
 	utiltx "github.com/tabilabs/tabi/testutil/tx"
 	"github.com/tabilabs/tabi/utils"
-
 	captainskeeper "github.com/tabilabs/tabi/x/captains/keeper"
 	"github.com/tabilabs/tabi/x/captains/types"
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 )
 
-type KeeperTestSuite struct {
+var (
+	accounts = []sdk.AccAddress{
+		sdk.AccAddress(utiltx.GenerateAddress().Bytes()), // default member
+		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+	}
+)
+
+type CaptainsTestSuite struct {
 	suite.Suite
 
-	ctx            sdk.Context
-	app            *app.Tabi
+	app         *app.Tabi
+	ctx         sdk.Context
+	denom       string
+	address     common.Address
+	consAddress sdk.ConsAddress
+
+	keeper         *captainskeeper.Keeper
+	msgServer      types.MsgServer
 	queryClient    types.QueryClient
 	queryClientEvm evmtypes.QueryClient
-	address        common.Address
-	consAddress    sdk.ConsAddress
 
-	// for generate test tx
-	clientCtx client.Context
+	signer    keyring.Signer
 	ethSigner ethtypes.Signer
 	validator stakingtypes.Validator
 
 	appCodec codec.Codec
-	signer   keyring.Signer
-	denom    string
 }
 
-var s *KeeperTestSuite
+var s *CaptainsTestSuite
 
-func TestKeeperTestSuite(t *testing.T) {
-	s = new(KeeperTestSuite)
+func TestCaptainsTestSuite(t *testing.T) {
+	s = new(CaptainsTestSuite)
 	suite.Run(t, s)
 	// Run Ginkgo integration tests
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Keeper Suite")
 }
 
-func (suite *KeeperTestSuite) SetupTest(t *testing.T) {
-	suite.SetupApp(false, suite.T())
+// SetupTest runs before each test in the suite.
+func (suite *CaptainsTestSuite) SetupTest() {
+	suite.execSetupTest(false, suite.T())
 }
 
-func (suite *KeeperTestSuite) SetupApp(checkTx bool, t require.TestingT) {
+// SetupSubTest runs before each subtest in the test.
+func (suite *CaptainsTestSuite) SetupSubTest() {
+}
+
+func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) {
+	// setup fee denom
+	suite.denom = utils.BaseDenom
+
 	// account key
 	priv, err := ethsecp256k1.GenerateKey()
 	require.NoError(t, err)
 	suite.address = common.BytesToAddress(priv.PubKey().Address().Bytes())
 	suite.signer = utiltx.NewSigner(priv)
 
-	suite.denom = utils.BaseDenom
-
 	// consensus key
 	privCons, err := ethsecp256k1.GenerateKey()
 	require.NoError(t, err)
 	consAddress := sdk.ConsAddress(privCons.PubKey().Address())
 
-	suite.app = app.Setup(false, feemarkettypes.DefaultGenesisState())
+	// setup new app
+	suite.app = app.Setup(checkTx, feemarkettypes.DefaultGenesisState())
 	header := testutil.NewHeader(
-		1, time.Now().UTC(), "tabi_9789-1", consAddress, nil, nil,
+		1, time.Now().UTC(), "tabi_9788-1", consAddress, nil, nil,
 	)
+	suite.ctx = suite.app.BaseApp.NewContext(checkTx, header)
 
-	suite.ctx = suite.app.BaseApp.NewContext(false, header)
+	// setup keeper & msg server
+	suite.keeper = &suite.app.CaptainsKeeper
+	suite.msgServer = captainskeeper.NewMsgServerImpl(suite.app.CaptainsKeeper)
 
 	// setup query client
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
-	types.RegisterQueryServer(queryHelper, captainskeeper.NewQuerierImpl(&suite.app.CaptainNodeKeeper))
+	types.RegisterQueryServer(queryHelper, captainskeeper.NewQuerierImpl(&suite.app.CaptainsKeeper))
 	suite.queryClient = types.NewQueryClient(queryHelper)
 
-	params := types.DefaultParams()
-	err = suite.app.CaptainNodeKeeper.SetParams(suite.ctx, params)
+	queryHelperEvm := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
+	evmtypes.RegisterQueryServer(queryHelperEvm, suite.app.EvmKeeper)
+	suite.queryClientEvm = evmtypes.NewQueryClient(queryHelperEvm)
 
+	// setup module params & default authorized member
+	params := types.DefaultParams()
+	params.AuthorizedMembers = []string{
+		accounts[0].String(),
+	}
+	err = suite.app.CaptainsKeeper.SetParams(suite.ctx, params)
+
+	// setup staking
 	stakingParams := suite.app.StakingKeeper.GetParams(suite.ctx)
 	stakingParams.BondDenom = suite.denom
 	suite.app.StakingKeeper.SetParams(suite.ctx, stakingParams)
@@ -105,7 +131,7 @@ func (suite *KeeperTestSuite) SetupApp(checkTx bool, t require.TestingT) {
 	err = suite.app.EvmKeeper.SetParams(suite.ctx, evmParams)
 	require.NoError(t, err)
 
-	// Set Validator
+	// setup validators
 	valAddr := sdk.ValAddress(suite.address.Bytes())
 	validator, err := stakingtypes.NewValidator(valAddr, privCons.PubKey(), stakingtypes.Description{})
 	require.NoError(t, err)
@@ -121,18 +147,18 @@ func (suite *KeeperTestSuite) SetupApp(checkTx bool, t require.TestingT) {
 }
 
 // Commit commits and starts a new block with an updated context.
-func (suite *KeeperTestSuite) Commit() {
+func (suite *CaptainsTestSuite) Commit() {
 	suite.CommitAfter(time.Second * 0)
 }
 
 // Commit commits a block at a given time.
-func (suite *KeeperTestSuite) CommitAfter(t time.Duration) {
+func (suite *CaptainsTestSuite) CommitAfter(t time.Duration) {
 	var err error
 	suite.ctx, err = testutil.Commit(suite.ctx, suite.app, t, nil)
 	suite.Require().NoError(err)
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
 
-	types.RegisterQueryServer(queryHelper, captainskeeper.NewQuerierImpl(&suite.app.CaptainNodeKeeper))
+	types.RegisterQueryServer(queryHelper, captainskeeper.NewQuerierImpl(&suite.app.CaptainsKeeper))
 	suite.queryClient = types.NewQueryClient(queryHelper)
 
 	queryHelperEvm := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())

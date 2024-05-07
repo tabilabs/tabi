@@ -1,4 +1,4 @@
-package keeper_test
+package types_test
 
 //func TestKv(t *testing.T) {
 //	mem := dbadapter.Store{DB: dbm.NewMemDB()}

@@ -62,7 +62,9 @@ message MsgCreateCaptainNode {
 }
 
 // MsgCreateCaptainNodeResponse defines the Msg/CreateCaptainNode response type.
-message MsgCreateCaptainNodeResponse{}
+message MsgCreateCaptainNodeResponse{
+  string node_id = 1;
+}
 
 // MsgCommitReport is the Msg/CommitReport request type.
 message MsgCommitReport {

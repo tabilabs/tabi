@@ -10,8 +10,8 @@ var (
 	globalPledgeRatioLowerBound = sdk.NewDecWithPrec(3, 1)
 )
 
-// calcGlobalPledgeRatio calculates the pledge rate of the global on the epoch t.
-func (k Keeper) calcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
+// CalcGlobalPledgeRatio calculates the pledge rate of the global on the epoch t.
+func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 	sum := k.GetEmissionClaimedSum(ctx)
 	if sum.IsZero() {
 		return sdk.OneDec()
@@ -33,8 +33,8 @@ func (k Keeper) calcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 	return ratio
 }
 
-// calcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t.
-func (k Keeper) calcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) (sdk.Dec, error) {
+// CalcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t.
+func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) (sdk.Dec, error) {
 	if epochID == 1 {
 		return sdk.OneDec(), nil
 	}

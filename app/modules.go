@@ -164,8 +164,8 @@ func appModules(
 		evm.NewAppModule(app.EvmKeeper, app.AccountKeeper, app.GetSubspace(evmtypes.ModuleName)),
 		feemarket.NewAppModule(app.FeeMarketKeeper, app.GetSubspace(feemarkettypes.ModuleName)),
 		// Tabi app modules
-		claims.NewAppModule(appCodec, app.Claimskeeper),
-		captainnode.NewAppModule(appCodec, app.CaptainNodeKeeper),
+		claims.NewAppModule(appCodec, app.ClaimsKeeper),
+		captainnode.NewAppModule(appCodec, app.CaptainsKeeper),
 	}
 }
 

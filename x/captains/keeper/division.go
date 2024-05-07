@@ -57,8 +57,8 @@ func (k Keeper) HasDivision(ctx sdk.Context, divisionID string) bool {
 	return store.Has(types.DivisionStoreKey(divisionID))
 }
 
-// decideDivision decides the division of the node as per power.
-func (k Keeper) decideDivision(ctx sdk.Context, power uint64) types.Division {
+// DecideDivision decides the division of the node as per power.
+func (k Keeper) DecideDivision(ctx sdk.Context, power uint64) types.Division {
 	store := ctx.KVStore(k.storeKey)
 	iterator := sdk.KVStorePrefixIterator(store, types.DivisionKey)
 	defer iterator.Close()
@@ -72,11 +72,13 @@ func (k Keeper) decideDivision(ctx sdk.Context, power uint64) types.Division {
 	return types.Division{}
 }
 
+// incrDivisionTotalCount increments the sold count of the division
 func (k Keeper) incrDivisionTotalCount(ctx sdk.Context, division types.Division) {
 	division.TotalCount++
 	k.setDivision(ctx, division)
 }
 
+// decrDivisionTotalCount decrements the sold count of the division
 func (k Keeper) decrDivisionTotalCount(ctx sdk.Context, division types.Division) {
 	division.TotalCount--
 	k.setDivision(ctx, division)

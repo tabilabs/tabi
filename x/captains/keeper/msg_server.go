@@ -87,7 +87,9 @@ func (m msgServer) CreateCaptainNode(
 		),
 	})
 
-	return &types.MsgCreateCaptainNodeResponse{}, nil
+	return &types.MsgCreateCaptainNodeResponse{
+		NodeId: nodeID,
+	}, nil
 }
 
 // CommitReport implement the interface of types.MsgServer
@@ -108,9 +110,9 @@ func (m msgServer) CommitReport(
 		)
 	}
 
-	report, err := m.k.validateReport(ctx, msg.ReportType, msg.Report.GetValue())
+	report, err := m.k.ValidateReport(ctx, msg.ReportType, msg.Report)
 	if err != nil {
-		return &types.MsgCommitReportResponse{}, nil
+		return &types.MsgCommitReportResponse{}, err
 	}
 
 	if err := m.k.CommitReport(ctx, report); err != nil {
