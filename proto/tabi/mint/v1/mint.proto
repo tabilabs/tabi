@@ -4,9 +4,7 @@ package tabi.mint.v1;
 import "gogoproto/gogo.proto";
 import "google/protobuf/timestamp.proto";
 
-
 option go_package = "github.com/tabilabs/tabi/x/mint/types";
-
 
 // Minter represents the minting state
 message Minter {
@@ -24,18 +22,4 @@ message Params {
   string mint_denom = 1;
   // inflation rate
   string inflation = 2 [ (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false ];
-
-  // inflation_distribution of the minted denom
-  InflationDistribution inflation_distribution = 3 [(gogoproto.nullable) = false];
-}
-
-message InflationDistribution {
-  // staking_rewards defines the proportion of the minted minted_denom that is
-  // to be allocated as staking rewards
-  string staking_rewards = 1
-  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
-  // usage_incentives defines the proportion of the minted minted_denom that is
-  // to be allocated to the incentives module address
-  string claims_rewards = 2
-  [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
 }

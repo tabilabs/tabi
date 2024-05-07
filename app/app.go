@@ -337,7 +337,6 @@ func NewTabi(
 		app.BankKeeper,
 		app.DistrKeeper,
 		authtypes.FeeCollectorName,
-		claimstypes.ClaimsCollectorName,
 	)
 
 	app.SlashingKeeper = slashingkeeper.NewKeeper(

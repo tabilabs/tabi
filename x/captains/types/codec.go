@@ -15,6 +15,7 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		&MsgUpdateSaleLevel{},
 		&MsgCommitComputingPower{},
 		&MsgClaimComputingPower{},
+		&MsgUpdateParams{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
