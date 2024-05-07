@@ -38,15 +38,15 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 	}
 	// set epoch state
 	currEpochID := data.EpochState.CurrEpoch
-	k.setEpoch(ctx, currEpochID)
+	k.SetEpoch(ctx, currEpochID)
 	if data.EpochState.IsEnd {
-		k.setEndEpoch(ctx, currEpochID)
+		k.SetEndEpoch(ctx, currEpochID)
 	}
 	if data.EpochState.Digest != nil {
-		k.setDigest(ctx, currEpochID, data.EpochState.Digest)
+		k.SetDigest(ctx, currEpochID, data.EpochState.Digest)
 	}
-	k.setEpochBase(ctx, currEpochID, data.EpochState.Current)
-	k.setEpochBase(ctx, currEpochID-1, data.EpochState.Previous)
+	k.SetEpochBase(ctx, currEpochID, data.EpochState.Current)
+	k.SetEpochBase(ctx, currEpochID-1, data.EpochState.Previous)
 	k.setEmissionClaimedSum(ctx, data.EpochState.EmissionClaimedSum)
 
 	// set computing power

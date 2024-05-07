@@ -393,6 +393,7 @@ func NewTabi(
 		appCodec,
 		keys[captainnodetypes.StoreKey],
 		app.GetSubspace(captainnodetypes.ModuleName),
+		&stakingKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName),
 	)
 

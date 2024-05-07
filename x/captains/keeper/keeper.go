@@ -27,13 +27,15 @@ func NewKeeper(
 	cdc codec.Codec,
 	storeKey storetypes.StoreKey,
 	paramSpace paramtypes.Subspace,
+	stakingKeeper types.StakingKeeper,
 	authority sdk.AccAddress,
 ) Keeper {
 	return Keeper{
-		cdc:        cdc,
-		storeKey:   storeKey,
-		paramSpace: paramSpace,
-		authority:  authority,
+		cdc:           cdc,
+		storeKey:      storeKey,
+		paramSpace:    paramSpace,
+		stakingKeeper: stakingKeeper,
+		authority:     authority,
 	}
 }
 

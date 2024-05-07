@@ -66,7 +66,6 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}
-	fmt.Println("exponentiated", exponentiated)
 
 	power := basePower.Mul(exponentiated)
 	k.setNodeComputingPowerOnEpoch(ctx, epochID, nodeID, power)

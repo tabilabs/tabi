@@ -26,6 +26,14 @@ func (suite *CaptainsTestSuite) utilsCreateCaptainNode(owner string, divisionLev
 	return resp.NodeId
 }
 
+func (suite *CaptainsTestSuite) utilsBatchCreateCaptainNode(owner string, divisionLevel, amount uint64) []string {
+	nodeIds := make([]string, amount)
+	for i := uint64(0); i < amount; i++ {
+		nodeIds[i] = suite.utilsCreateCaptainNode(owner, divisionLevel)
+	}
+	return nodeIds
+}
+
 func (suite *CaptainsTestSuite) utilsGetDivisions() map[uint64]string {
 	resp, err := suite.queryClient.Divisions(suite.ctx, &types.QueryDivisionsRequest{})
 	suite.NoError(err)

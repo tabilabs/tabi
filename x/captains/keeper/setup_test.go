@@ -97,7 +97,7 @@ func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) 
 	// setup new app
 	suite.app = app.Setup(checkTx, feemarkettypes.DefaultGenesisState())
 	header := testutil.NewHeader(
-		1, time.Now().UTC(), "tabi_9789-1", consAddress, nil, nil,
+		1, time.Now().UTC(), "tabi_9788-1", consAddress, nil, nil,
 	)
 	suite.ctx = suite.app.BaseApp.NewContext(checkTx, header)
 

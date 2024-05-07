@@ -21,8 +21,8 @@ func (k Keeper) EnterNewEpoch(ctx sdk.Context) {
 	store.Set(types.CurrEpochKey, bz)
 }
 
-// setEpoch sets the epoch id.
-func (k Keeper) setEpoch(ctx sdk.Context, epochID uint64) {
+// SetEpoch sets the epoch id.
+func (k Keeper) SetEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	bz := sdk.Uint64ToBigEndian(epochID)
 	store.Set(types.CurrEpochKey, bz)
@@ -41,8 +41,8 @@ func (k Keeper) GetDigest(ctx sdk.Context, epochID uint64) (*types.ReportDigest,
 	return &digest, true
 }
 
-// setDigest sets the digest.
-func (k Keeper) setDigest(ctx sdk.Context, epochID uint64, digest *types.ReportDigest) {
+// SetDigest sets the digest.
+func (k Keeper) SetDigest(ctx sdk.Context, epochID uint64, digest *types.ReportDigest) {
 	store := ctx.KVStore(k.storeKey)
 	bz, _ := k.cdc.Marshal(digest)
 	key := types.DigestOnEpochStoreKey(epochID)
@@ -55,8 +55,8 @@ func (k Keeper) DelDigest(ctx sdk.Context, epochID uint64) {
 	store.Delete(types.DigestOnEpochStoreKey(epochID))
 }
 
-// setReportBatch sets the batch count.
-func (k Keeper) setReportBatch(ctx sdk.Context, epochID, batchID, count uint64) {
+// SetReportBatch sets the batch count.
+func (k Keeper) SetReportBatch(ctx sdk.Context, epochID, batchID, count uint64) {
 	store := ctx.KVStore(k.storeKey)
 	bz := sdk.Uint64ToBigEndian(count)
 	key := types.ReportBatchOnEpochStoreKey(epochID, batchID)
@@ -92,8 +92,8 @@ func (k Keeper) DelReportBatches(ctx sdk.Context, epochID uint64) {
 	}
 }
 
-// setEndEpoch sets the end epoch.
-func (k Keeper) setEndEpoch(ctx sdk.Context, epochID uint64) {
+// SetEndEpoch sets the end epoch.
+func (k Keeper) SetEndEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.EndOnEpochStoreKey(epochID)
 	store.Set(key, types.PlaceHolder)
@@ -145,8 +145,8 @@ func (k Keeper) GetEpochsState(ctx sdk.Context) types.EpochState {
 	}
 }
 
-// setEpochBase sets epoch base info.
-func (k Keeper) setEpochBase(ctx sdk.Context, epochID uint64, base types.EpochBase) {
+// SetEpochBase sets epoch base info.
+func (k Keeper) SetEpochBase(ctx sdk.Context, epochID uint64, base types.EpochBase) {
 	if epochID < 1 {
 		return
 	}

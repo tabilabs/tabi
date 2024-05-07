@@ -30,7 +30,7 @@ func (k Keeper) GetEpochEmission(ctx sdk.Context, epochID uint64) (sdk.Dec, bool
 // calcEpochEmission returns the total emission reward for an epoch.
 func (k Keeper) calcEpochEmission(ctx sdk.Context, epochID uint64, globalOperationRatio sdk.Dec) (sdk.Dec, error) {
 	base := k.GetBaseEpochEmission(ctx)
-	pledgeRatio := k.calcGlobalPledgeRatio(ctx, epochID)
+	pledgeRatio := k.CalcGlobalPledgeRatio(ctx, epochID)
 	sum := base.Mul(pledgeRatio).Mul(globalOperationRatio)
 
 	k.setEpochEmission(ctx, epochID, sum)
