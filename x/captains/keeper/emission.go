@@ -97,21 +97,27 @@ func (k Keeper) calNodeHistoricalEmissionOnEpoch(
 	epochID uint64,
 	nodeID string,
 ) sdk.Dec {
+	if epochID == 0 {
+		return sdk.ZeroDec()
+	}
+
 	historyEmission := k.GetNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID)
-	// emission already exists
 	if !historyEmission.Equal(sdk.ZeroDec()) {
 		return historyEmission
 	}
 
 	prevHistoryEmission := k.GetNodeHistoricalEmissionOnEpoch(ctx, epochID-1, nodeID)
 	emission, _ := k.GetEpochEmission(ctx, epochID)
-	emission.Add(prevHistoryEmission)
+	power := k.GetNodeComputingPowerOnEpoch(ctx, epochID, nodeID)
+	powerSum := k.GetComputingPowerSumOnEpoch(ctx, epochID)
 
-	// set and del
+	res := emission.Mul(power).Quo(powerSum).Add(prevHistoryEmission)
+
 	k.setNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID, emission)
 	k.delNodeHistoricalEmissionOnEpoch(ctx, epochID-1, nodeID)
+	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
 
-	return emission
+	return res
 }
 
 // CalAndGetNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
@@ -152,7 +158,7 @@ func (k Keeper) GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID str
 }
 
 // UpdateNodeHistoricalEmissionOnLastClaim updates node_historical_emission_on_last_claim after the user claim.
-// NOTE: call this function after the user claims the rewards.
+// NOTE: call this function only after claiming the rewards.
 func (k Keeper) UpdateNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) error {
 	epoch := k.GetCurrentEpoch(ctx)
 
@@ -169,4 +175,14 @@ func (k Keeper) setNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID str
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeHistoricalEmissionOnLastClaimStoreKey(nodeID)
 	store.Set(key, []byte(amount.String()))
+}
+
+// GetOwnerHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
+func (k Keeper) GetOwnerHistoricalEmissionOnLastClaim(ctx sdk.Context, owner sdk.AccAddress) sdk.Dec {
+	nodes := k.GetNodes(ctx)
+	total := sdk.ZeroDec()
+	for _, node := range nodes {
+		total = total.Add(k.GetNodeHistoricalEmissionOnLastClaim(ctx, node.Id))
+	}
+	return total
 }

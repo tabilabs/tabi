@@ -42,8 +42,10 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 	epochId := report.EpochId
 
 	for _, nodeId := range report.NodeIds {
-
 		owner := k.GetNodeOwner(ctx, nodeId)
+
+		// try to calculate historical emission
+		k.calNodeHistoricalEmissionOnEpoch(ctx, epochId-1, nodeId)
 
 		pledgeRatio, err := k.CalcNodePledgeRatioOnEpoch(ctx, epochId, nodeId)
 		if err != nil {
