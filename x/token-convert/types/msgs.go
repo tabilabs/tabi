@@ -3,6 +3,7 @@ package types
 import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 )
 
 // token-convert module message types
@@ -38,7 +39,7 @@ func (m *MsgConvertTabi) ValidateBasic() error {
 		return errorsmod.Wrapf(ErrInvalidCoin, "invalid coin amount: %s", m.Coin.Amount)
 	}
 
-	if m.Coin.Denom != MinDenomTabi {
+	if m.Coin.Denom != tabitypes.AttoTabi {
 		return errorsmod.Wrapf(ErrInvalidCoin, "invalid coin denom: %s", m.Coin.Denom)
 	}
 
@@ -71,7 +72,7 @@ func (m *MsgConvertVetabi) ValidateBasic() error {
 		return errorsmod.Wrapf(ErrInvalidCoin, "invalid coin amount: %s", m.Coin.Amount)
 	}
 
-	if m.Coin.Denom != MinDenomVetabi {
+	if m.Coin.Denom != tabitypes.AttoVeTabi {
 		return errorsmod.Wrapf(ErrInvalidCoin, "invalid coin denom: %s", m.Coin.Denom)
 	}
 

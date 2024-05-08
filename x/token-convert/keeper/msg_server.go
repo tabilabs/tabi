@@ -5,6 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
+	tabitypes "github.com/tabilabs/tabi/types"
 	"github.com/tabilabs/tabi/x/token-convert/types"
 )
 
@@ -29,10 +31,11 @@ func (m msgServer) ConvertTabi(goCtx context.Context, msg *types.MsgConvertTabi)
 	}
 
 	// check if the sender has enough coins
-	balance := m.bankKeeper.GetBalance(ctx, sender, types.MinDenomTabi)
+	balance := m.bankKeeper.GetBalance(ctx, sender, tabitypes.AttoTabi)
 	_, hasNeg := sdk.Coins{balance}.SafeSub(msg.Coin)
 	if hasNeg {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, types.MinDenomTabi)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds,
+			"insufficient balance: %s%s", balance, tabitypes.AttoTabi)
 	}
 
 	// execute conversion
@@ -62,10 +65,11 @@ func (m msgServer) ConvertVetabi(goCtx context.Context, msg *types.MsgConvertVet
 	}
 
 	// check balances
-	balance := m.bankKeeper.GetBalance(ctx, sender, types.MinDenomTabi)
+	balance := m.bankKeeper.GetBalance(ctx, sender, tabitypes.AttoVeTabi)
 	_, hasNeg := sdk.Coins{balance}.SafeSub(msg.Coin)
 	if hasNeg {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, types.MinDenomVetabi)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds,
+			"insufficient balance: %s", balance.String())
 	}
 
 	// get strategy
@@ -109,7 +113,8 @@ func (m msgServer) WithdrawTabi(goCtx context.Context, msg *types.MsgWithdrawTab
 	}
 
 	if voucher.Owner != msg.Sender {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidVoucherOwner, "voucher %d is not owned by %s", msg.VoucherId, msg.Sender)
+		return nil, sdkerrors.Wrapf(types.ErrInvalidVoucherOwner,
+			"voucher %d is not owned by %s", msg.VoucherId, msg.Sender)
 	}
 
 	// execute withdrawal
@@ -152,15 +157,17 @@ func (m msgServer) CancelConvert(goCtx context.Context, msg *types.MsgCancelConv
 	}
 
 	if voucher.Owner != msg.Sender {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidVoucherOwner, "voucher %d is not owned by %s", msg.VoucherId, msg.Sender)
+		return nil, sdkerrors.Wrapf(types.ErrInvalidVoucherOwner,
+			"voucher %d is not owned by %s", msg.VoucherId, msg.Sender)
 	}
 
 	moduleAcc := m.authKeeper.GetModuleAddress(types.ModuleName)
-	balance := m.bankKeeper.GetBalance(ctx, moduleAcc, types.MinDenomVetabi)
+	balance := m.bankKeeper.GetBalance(ctx, moduleAcc, tabitypes.AttoVeTabi)
 	_, hasNeg := sdk.Coins{balance}.SafeSub(voucher.Amount)
 	if hasNeg {
 		// WARN: this error shall never happen
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds, "insufficient balance: %s%s", balance, types.MinDenomVetabi)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInsufficientFunds,
+			"insufficient balance: %s%s", balance, tabitypes.AttoVeTabi)
 	}
 
 	err = m.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sender, sdk.NewCoins(voucher.Amount))

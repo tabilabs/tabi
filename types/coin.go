@@ -60,3 +60,7 @@ func NewTabiDecCoin(amount sdkmath.Int) sdk.DecCoin {
 func NewTabiCoinInt64(amount int64) sdk.Coin {
 	return sdk.NewInt64Coin(AttoTabi, amount)
 }
+
+// NewVeTabiCoinInt64 is a utility function that returns an "avetabi" coin with the given sdkmath.Int amount.
+// The function will panic if the provided amount is negative.
+func NewVeTabiCoinInt64(amount int64) sdk.Coin { return sdk.NewInt64Coin(AttoVeTabi, amount) }

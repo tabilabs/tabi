@@ -2,6 +2,7 @@ package keeper
 
 import (
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tabilabs/tabi/x/token-convert/types"
 )
 

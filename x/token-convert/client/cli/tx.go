@@ -2,6 +2,7 @@ package cli
 
 import (
 	"github.com/spf13/cobra"
+	tabitypes "github.com/tabilabs/tabi/types"
 
 	errorsmod "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -49,7 +50,7 @@ func NewTxCmdConvertTabi() *cobra.Command {
 				return err
 			}
 
-			if coin.Denom != types.MinDenomTabi {
+			if coin.Denom != tabitypes.AttoTabi {
 				return errorsmod.Wrapf(types.ErrInvalidCoin, "invalid coin denom: %s", coin.Denom)
 			}
 
@@ -81,7 +82,7 @@ func NewTxCmdConvertVetabi() *cobra.Command {
 				return err
 			}
 
-			if coin.Denom != types.MinDenomVetabi {
+			if coin.Denom != tabitypes.AttoVeTabi {
 				return errorsmod.Wrapf(types.ErrInvalidCoin, "invalid coin denom: %s", coin.Denom)
 			}
 
