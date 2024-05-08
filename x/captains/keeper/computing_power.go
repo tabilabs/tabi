@@ -58,8 +58,8 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 ) (sdk.Dec, error) {
 	basePower := sdk.NewDec(int64(k.GetNodeBaseComputingPower(ctx, nodeID)))
 
-	// exponent = pledge_ratio / 0.5
-	exponentiation, _ := pledgeRatio.Mul(sdk.NewDec(2)).Float64()
+	// exponent = pledge_ratio * 20 / 3
+	exponentiation, _ := pledgeRatio.Mul(sdk.NewDec(20)).Quo(sdk.NewDec(3)).Float64()
 
 	// decimal precision is 6
 	exponentiated, err := sdk.NewDecFromStr(fmt.Sprintf("%f", math.Exp(exponentiation)))
