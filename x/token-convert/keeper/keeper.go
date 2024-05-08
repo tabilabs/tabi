@@ -8,6 +8,7 @@ import (
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	tabitypes "github.com/tabilabs/tabi/types"
 	"github.com/tabilabs/tabi/x/token-convert/types"
 )
 
@@ -20,12 +21,18 @@ type Keeper struct {
 	instantStrategy string // TODO: make this a module param
 }
 
-func NewKeeper(cdc codec.BinaryCodec, key *storetypes.StoreKey, ak types.AccountKeeper, bk types.BankKeeper) Keeper {
+func NewKeeper(cdc codec.BinaryCodec,
+	key storetypes.StoreKey,
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	instant string,
+) Keeper {
 	return Keeper{
-		storeKey:   *key,
-		cdc:        cdc,
-		authKeeper: ak,
-		bankKeeper: bk,
+		storeKey:        key,
+		cdc:             cdc,
+		authKeeper:      ak,
+		bankKeeper:      bk,
+		instantStrategy: instant,
 	}
 }
 
@@ -42,7 +49,7 @@ func (k Keeper) ConvertTabi(ctx sdk.Context, sender sdk.AccAddress, coin sdk.Coi
 	}
 
 	// mint vetabi to the module
-	mintCoin := sdk.NewCoin(types.MinDenomVetabi, coin.Amount)
+	mintCoin := sdk.NewCoin(tabitypes.AttoVeTabi, coin.Amount)
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintCoin)); err != nil {
 		return err
 	}
@@ -78,7 +85,7 @@ func (k Keeper) LockVetabiAndCreateVoucher(ctx sdk.Context, sender sdk.AccAddres
 func (k Keeper) InstantWithdrawVetabi(ctx sdk.Context, sender sdk.AccAddress, coin sdk.Coin) error {
 	strategy, found := k.GetStrategy(ctx, k.instantStrategy)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrInvalidStrategy, "strategy-instant not found")
+		return sdkerrors.Wrapf(types.ErrInvalidStrategy, "instant strategy not found")
 	}
 
 	// send vetabi to the module
@@ -92,7 +99,7 @@ func (k Keeper) InstantWithdrawVetabi(ctx sdk.Context, sender sdk.AccAddress, co
 	}
 
 	mintAmt := sdk.NewDecFromInt(coin.Amount).Mul(strategy.ConversionRate).RoundInt()
-	mintCoin := sdk.NewCoin(types.MinDenomTabi, mintAmt)
+	mintCoin := sdk.NewCoin(tabitypes.AttoTabi, mintAmt)
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintCoin)); err != nil {
 		return err
 	}
@@ -139,7 +146,7 @@ func (k Keeper) WithdrawTabi(ctx sdk.Context, sender sdk.AccAddress, voucher typ
 
 	// check if there is any returnable vetabi
 	if !returnableVetabi.IsPositive() {
-		return withdrawableTabi, sdk.Coin{}, nil
+		return withdrawableTabi, returnableVetabi, nil
 	}
 
 	// 3. send returnable vetabi to the owner
@@ -159,18 +166,21 @@ func (k Keeper) calVoucher(ctx sdk.Context, voucher types.Voucher, strategy type
 	createdTime := voucher.CreatedTime
 	currentTime := ctx.BlockTime().Unix()
 	releaseRatio := sdk.NewDec(currentTime - createdTime).Quo(sdk.NewDec(strategy.Period))
+	if releaseRatio.GT(sdk.OneDec()) {
+		releaseRatio = sdk.OneDec()
+	}
 
-	// burnable_vetabi_amt = locked_vatabi_amt * release_ratio
-	// returnable_vetabi_amt = locked_vetabi_amt * (1 - release_ratio)
-	// withdrawable_tabi_amt = burnable_vetabi_amt * conversion_rate
-	lockedVetabiAmt := voucher.Amount.Amount
-	burnableVetabiAmt := sdk.NewDecFromInt(lockedVetabiAmt).Mul(releaseRatio).RoundInt()
-	returnableVetabiAmt := lockedVetabiAmt.Sub(burnableVetabiAmt)
-	withdrawableTabiAmt := sdk.NewDecFromInt(burnableVetabiAmt).Mul(strategy.ConversionRate).RoundInt()
+	// burnable_vetabi_amt = round(locked_vetabi_amt * release_ratio)
+	// returnable_vetabi_amt = locked_vetabi_amt - burnable_vetabi_amt
+	// withdrawable_tabi_amt = truncate(burnable_vetabi_amt * conversion_rate)
+	lockedVetabiAmt := sdk.NewDecFromInt(voucher.Amount.Amount)
+	burnableVetabiAmt := lockedVetabiAmt.Mul(releaseRatio).RoundInt()
+	returnableVetabiAmt := lockedVetabiAmt.Sub(sdk.NewDecFromInt(burnableVetabiAmt)).RoundInt()
+	withdrawableTabiAmt := sdk.NewDecFromInt(burnableVetabiAmt).Mul(strategy.ConversionRate).TruncateInt()
 
-	withdrawableTabi := sdk.NewCoin(types.MinDenomTabi, withdrawableTabiAmt)
-	burnableVetabi := sdk.NewCoin(types.MinDenomVetabi, burnableVetabiAmt)
-	returnableVetabi := sdk.NewCoin(types.MinDenomVetabi, returnableVetabiAmt)
+	withdrawableTabi := sdk.NewCoin(tabitypes.AttoTabi, withdrawableTabiAmt)
+	burnableVetabi := sdk.NewCoin(tabitypes.AttoVeTabi, burnableVetabiAmt)
+	returnableVetabi := sdk.NewCoin(tabitypes.AttoVeTabi, returnableVetabiAmt)
 
 	return withdrawableTabi, burnableVetabi, returnableVetabi
 }

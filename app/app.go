@@ -23,11 +23,10 @@ import (
 	"path/filepath"
 	"sort"
 
-	ibctransferkeeper "github.com/cosmos/ibc-go/v6/modules/apps/transfer/keeper"
-
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
+	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
 
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -86,9 +85,9 @@ import (
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
+	// ibc
 	"github.com/cosmos/ibc-go/v6/modules/apps/transfer"
-	ibctestingtypes "github.com/cosmos/ibc-go/v6/testing/types"
-
+	ibctransferkeeper "github.com/cosmos/ibc-go/v6/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v6/modules/apps/transfer/types"
 	ibcclient "github.com/cosmos/ibc-go/v6/modules/core/02-client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
@@ -96,30 +95,31 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
 	ibctesting "github.com/cosmos/ibc-go/v6/testing"
+	ibctestingtypes "github.com/cosmos/ibc-go/v6/testing/types"
 
+	// tabi app
+	"github.com/tabilabs/tabi/app/ante"
 	ethante "github.com/tabilabs/tabi/app/ante/evm"
 	"github.com/tabilabs/tabi/encoding"
 	"github.com/tabilabs/tabi/ethereum/eip712"
 	srvflags "github.com/tabilabs/tabi/server/flags"
 	tabitypes "github.com/tabilabs/tabi/types"
-	evmkeeper "github.com/tabilabs/tabi/x/evm/keeper"
-	evmtypes "github.com/tabilabs/tabi/x/evm/types"
-	feemarketkeeper "github.com/tabilabs/tabi/x/feemarket/keeper"
-	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 
 	// tabi modules
-
 	captainskeeper "github.com/tabilabs/tabi/x/captains/keeper"
 	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
 	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
+	evmkeeper "github.com/tabilabs/tabi/x/evm/keeper"
+	evmtypes "github.com/tabilabs/tabi/x/evm/types"
+	feemarketkeeper "github.com/tabilabs/tabi/x/feemarket/keeper"
+	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 	mintkeeper "github.com/tabilabs/tabi/x/mint/keeper"
 	minttypes "github.com/tabilabs/tabi/x/mint/types"
+	tokenconvertkeeper "github.com/tabilabs/tabi/x/token-convert/keeper"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/tabilabs/tabi/client/docs/statik"
-
-	"github.com/tabilabs/tabi/app/ante"
 
 	// Force-load the tracer engines to trigger registration due to Go-Ethereum v1.10.15 changes
 	_ "github.com/ethereum/go-ethereum/eth/tracers/js"
@@ -196,8 +196,9 @@ type Tabi struct {
 	FeeMarketKeeper feemarketkeeper.Keeper
 
 	// Tabi keepers
-	ClaimsKeeper   claimskeeper.Keeper
-	CaptainsKeeper captainskeeper.Keeper
+	ClaimsKeeper       claimskeeper.Keeper
+	CaptainsKeeper     captainskeeper.Keeper
+	TokenConvertKeeper tokenconvertkeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -256,6 +257,7 @@ func NewTabi(
 		// tabi keys
 		claimstypes.StoreKey,
 		captainnodetypes.StoreKey,
+		tokenconverttypes.StoreKey,
 	)
 
 	// Add the EVM transient store key
@@ -405,6 +407,14 @@ func NewTabi(
 		app.AccountKeeper,
 		app.BankKeeper,
 		app.CaptainsKeeper,
+	)
+
+	app.TokenConvertKeeper = tokenconvertkeeper.NewKeeper(
+		appCodec,
+		keys[tokenconverttypes.StoreKey],
+		app.AccountKeeper,
+		app.BankKeeper,
+		tokenconverttypes.StrategyInstant,
 	)
 
 	// Create IBC Keeper

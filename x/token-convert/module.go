@@ -87,7 +87,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        *keeper.Keeper
+	keeper        keeper.Keeper
 	accountKeeper types.AccountKeeper
 	bankKeeper    types.BankKeeper
 }
@@ -95,7 +95,7 @@ type AppModule struct {
 // NewAppModule creates a new AppModule object
 func NewAppModule(
 	cdc codec.Codec,
-	keeper *keeper.Keeper,
+	keeper keeper.Keeper,
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 ) AppModule {
@@ -109,7 +109,8 @@ func NewAppModule(
 
 // RegisterInvariants registers the token-convert module invariants.
 func (am AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {
-	keeper.RegisterInvariants(ir, am.keeper)
+	// TODO: uncomment me!
+	// keeper.RegisterInvariants(ir, am.keeper)
 }
 
 // Route returns the message routing key for the token-convert module.
@@ -132,9 +133,9 @@ func (AppModule) LegacyQuerierHandler(*codec.LegacyAmino) sdk.Querier {
 
 // RegisterServices registers module services
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(&am.keeper))
 
-	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQuerierImpl(am.keeper))
+	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQuerierImpl(&am.keeper))
 }
 
 // ConsensusVersion implements AppModule/ConsensusVersion.

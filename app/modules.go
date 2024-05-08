@@ -43,18 +43,19 @@ import (
 	ibc "github.com/cosmos/ibc-go/v6/modules/core"
 	ibcclientclient "github.com/cosmos/ibc-go/v6/modules/core/02-client/client"
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
-	captainnode "github.com/tabilabs/tabi/x/captains"
+	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
 
-	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
+	captainnode "github.com/tabilabs/tabi/x/captains"
+	captainstypes "github.com/tabilabs/tabi/x/captains/types"
 	"github.com/tabilabs/tabi/x/claims"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 	"github.com/tabilabs/tabi/x/evm"
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	"github.com/tabilabs/tabi/x/feemarket"
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
-
 	"github.com/tabilabs/tabi/x/mint"
 	minttypes "github.com/tabilabs/tabi/x/mint/types"
+	tokenconvert "github.com/tabilabs/tabi/x/token-convert"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -109,6 +110,7 @@ var (
 		// tabi modules
 		claims.AppModuleBasic{},
 		captainnode.AppModule{},
+		tokenconvert.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -122,6 +124,7 @@ var (
 		ibctransfertypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 		evmtypes.ModuleName:             {authtypes.Minter, authtypes.Burner}, // used for secure addition and subtraction of balance using module account
 		claimstypes.ClaimsCollectorName: nil,
+		tokenconverttypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 	}
 
 	// module accounts that are allowed to receive tokens
@@ -166,6 +169,7 @@ func appModules(
 		// Tabi app modules
 		claims.NewAppModule(appCodec, app.ClaimsKeeper),
 		captainnode.NewAppModule(appCodec, app.CaptainsKeeper),
+		tokenconvert.NewAppModule(appCodec, app.TokenConvertKeeper, app.AccountKeeper, app.BankKeeper),
 	}
 }
 
@@ -203,9 +207,10 @@ func orderBeginBlockers() []string {
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 
-		//self module
+		// tabi module
 		claimstypes.ModuleName,
-		captainnodetypes.ModuleName,
+		captainstypes.ModuleName,
+		tokenconverttypes.ModuleName,
 	}
 }
 
@@ -240,9 +245,10 @@ func orderEndBlockers() []string {
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 
-		//self module
+		// tabi module
 		claimstypes.ModuleName,
-		captainnodetypes.ModuleName,
+		captainstypes.ModuleName,
+		tokenconverttypes.ModuleName,
 	}
 }
 
@@ -278,9 +284,10 @@ func orderInitBlockers() []string {
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 
-		//self module
+		//tabi module
 		claimstypes.ModuleName,
-		captainnodetypes.ModuleName,
+		captainstypes.ModuleName,
+		tokenconverttypes.ModuleName,
 
 		// NOTE: crisis module must go at the end to check for invariants on each module
 		crisistypes.ModuleName,

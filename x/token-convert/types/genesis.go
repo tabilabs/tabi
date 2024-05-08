@@ -5,18 +5,46 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+const (
+	StrategyInstant = "instant"
+	Strategy90Days  = "90days"
+	Strategy180Days = "180days"
+)
+
 // NewGenesisState create a module's genesis state.
 func NewGenesisState(nextSeq uint64, strategies []Strategy, vouchers []Voucher) *GenesisState {
 	return &GenesisState{
 		VoucherSequence: nextSeq,
-		Strategies:      nil,
-		Vouchers:        nil,
+		Strategies:      strategies,
+		Vouchers:        vouchers,
 	}
 }
 
 // DefaultGenesisState returns a default genesis state
 func DefaultGenesisState() *GenesisState {
-	return NewGenesisState(1, nil, nil)
+	return NewGenesisState(1, defaultStrategies(), []Voucher{})
+}
+
+// defaultStrategies returns a list of default strategies
+func defaultStrategies() []Strategy {
+	return []Strategy{
+		{
+			Name:           StrategyInstant,
+			Period:         0,
+			ConversionRate: sdk.NewDecWithPrec(25, 2),
+		},
+		{
+			Name:           Strategy90Days,
+			Period:         90 * 24 * 60 * 60,
+			ConversionRate: sdk.NewDecWithPrec(5, 1),
+		},
+		{
+			Name:           Strategy180Days,
+			Period:         180 * 24 * 60 * 60,
+			ConversionRate: sdk.NewDec(1),
+		},
+	}
+
 }
 
 // ValidateGenesis performs basic validation of genesis data returning an
