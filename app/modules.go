@@ -43,7 +43,6 @@ import (
 	ibc "github.com/cosmos/ibc-go/v6/modules/core"
 	ibcclientclient "github.com/cosmos/ibc-go/v6/modules/core/02-client/client"
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
-	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
 
 	captainnode "github.com/tabilabs/tabi/x/captains"
 	captainstypes "github.com/tabilabs/tabi/x/captains/types"
@@ -56,6 +55,7 @@ import (
 	"github.com/tabilabs/tabi/x/mint"
 	minttypes "github.com/tabilabs/tabi/x/mint/types"
 	tokenconvert "github.com/tabilabs/tabi/x/token-convert"
+	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals

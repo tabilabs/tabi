@@ -26,7 +26,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
-	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
 
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -117,7 +116,8 @@ import (
 	mintkeeper "github.com/tabilabs/tabi/x/mint/keeper"
 	minttypes "github.com/tabilabs/tabi/x/mint/types"
 	tokenconvertkeeper "github.com/tabilabs/tabi/x/token-convert/keeper"
-
+	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
+	
 	// unnamed import of statik for swagger UI support
 	_ "github.com/tabilabs/tabi/client/docs/statik"
 
@@ -447,7 +447,7 @@ func NewTabi(
 
 	app.GovKeeper = *govKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
-		// register the governance hooks
+			// register the governance hooks
 		),
 	)
 	// Tabi Keeper
