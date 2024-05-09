@@ -13,6 +13,7 @@ func (suite *CaptainsTestSuite) TestComputingPower() {
 		epoch1,
 		node1,
 		sdk.NewDecWithPrec(1, 0),
+		sdk.NewDecWithPrec(1, 0),
 	)
 	suite.Require().NoError(err)
 	suite.Require().Equal(sdk.NewDecWithPrec(1571543988, 3), power1)
@@ -24,6 +25,7 @@ func (suite *CaptainsTestSuite) TestComputingPower() {
 		suite.ctx,
 		epoch2,
 		node1,
+		sdk.NewDecWithPrec(1, 0),
 		sdk.NewDecWithPrec(5, 1),
 	)
 	suite.Require().NoError(err)

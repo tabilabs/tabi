@@ -35,10 +35,6 @@ func (msg *MsgUpdateParams) ValidateBasic() error {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains total count cannot be zero")
 	}
 
-	if msg.Params.MaximumHoldingAmount == 0 || msg.Params.MinimumPowerOnPeriod == 0 {
-		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains share cannot be zero")
-	}
-
 	if msg.Params.MinimumPowerOnPeriod > msg.Params.MaximumPowerOnPeriod {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "minimum power on period cannot be greater than maximum power on period")
 	}
@@ -49,10 +45,6 @@ func (msg *MsgUpdateParams) ValidateBasic() error {
 
 	if msg.Params.CaptainsConstant == 0 {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains constant cannot be zero")
-	}
-
-	if msg.Params.MaximumHoldingAmount == 0 {
-		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains share cannot be zero")
 	}
 
 	if len(msg.Params.AuthorizedMembers) == 0 {
@@ -180,7 +172,7 @@ func (msg *MsgCommitReport) ValidateBasic() error {
 		if batch.NodeCount == 0 {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node count is zero")
 		}
-		if uint64(len(batch.NodeIds)) != batch.NodeCount {
+		if uint64(len(batch.Nodes)) != batch.NodeCount {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node count node ids length unmatched")
 		}
 

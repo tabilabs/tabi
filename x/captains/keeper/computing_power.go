@@ -54,6 +54,7 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 	ctx sdk.Context,
 	epochID uint64,
 	nodeID string,
+	powerOnRatio sdk.Dec,
 	pledgeRatio sdk.Dec,
 ) (sdk.Dec, error) {
 	basePower := sdk.NewDec(int64(k.GetNodeBaseComputingPower(ctx, nodeID)))
@@ -67,7 +68,7 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 		return sdk.ZeroDec(), err
 	}
 
-	power := basePower.Mul(exponentiated)
+	power := basePower.Mul(exponentiated).Mul(powerOnRatio)
 	k.setNodeComputingPowerOnEpoch(ctx, epochID, nodeID, power)
 	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
 

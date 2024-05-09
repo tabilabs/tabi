@@ -25,7 +25,6 @@ func DefaultParams() Params {
 		MinimumPowerOnPeriod:  6,
 		MaximumPowerOnPeriod:  24,
 		CaptainsConstant:      300000,
-		MaximumHoldingAmount:  5,
 		HalvingEraCoefficient: sdk.OneDec(),
 		CurrentSaleLevel:      1,
 		AuthorizedMembers:     nil,
@@ -38,7 +37,6 @@ func NewParams(
 	minimumPowerOnPeriod uint64,
 	maximumPowerOnPeriod uint64,
 	captainsConstant uint64,
-	maximumHoldingAmount uint64,
 	halvingEraCoefficient sdk.Dec,
 	currentSaleLevel uint64,
 	authorizedMembers []string,
@@ -48,7 +46,6 @@ func NewParams(
 		MinimumPowerOnPeriod:  minimumPowerOnPeriod,
 		MaximumPowerOnPeriod:  maximumPowerOnPeriod,
 		CaptainsConstant:      captainsConstant,
-		MaximumHoldingAmount:  maximumHoldingAmount,
 		HalvingEraCoefficient: halvingEraCoefficient,
 		CurrentSaleLevel:      currentSaleLevel,
 		AuthorizedMembers:     authorizedMembers,
@@ -84,10 +81,6 @@ func (p *Params) Validate() error {
 	}
 	if p.CurrentSaleLevel <= 0 || p.CurrentSaleLevel > 5 {
 		return fmt.Errorf("current sale level should be non-negative and less than or equal to 7")
-	}
-
-	if p.MaximumHoldingAmount <= 0 || p.MaximumHoldingAmount > p.CaptainsTotalCount {
-		return fmt.Errorf("maximum number of holdings should be positive and less than or equal to total count of captains")
 	}
 
 	for _, memeber := range p.AuthorizedMembers {

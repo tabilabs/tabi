@@ -41,18 +41,18 @@ func (k Keeper) HandleReportDigest(ctx sdk.Context, report *types.ReportDigest) 
 func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) error {
 	epochId := report.EpochId
 
-	for _, nodeId := range report.NodeIds {
-		owner := k.GetNodeOwner(ctx, nodeId)
+	for _, node := range report.Nodes {
+		owner := k.GetNodeOwner(ctx, node.NodeId)
 
 		// try to calculate historical emission
-		k.calNodeHistoricalEmissionOnEpoch(ctx, epochId-1, nodeId)
+		k.calNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
 
-		pledgeRatio, err := k.CalcNodePledgeRatioOnEpoch(ctx, epochId, nodeId)
+		pledgeRatio, err := k.CalcNodePledgeRatioOnEpoch(ctx, epochId, node.NodeId)
 		if err != nil {
 			return err
 		}
 
-		power, err := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, nodeId, pledgeRatio)
+		power, err := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio, pledgeRatio)
 		if err != nil {
 			return err
 		}
@@ -189,9 +189,9 @@ func (k Keeper) ValidateReportBatch(ctx sdk.Context, report *types.ReportBatch) 
 		return errorsmod.Wrapf(types.ErrInvalidReport, "node count exceeded")
 	}
 
-	for _, nodeId := range report.NodeIds {
-		if !k.HasNode(ctx, nodeId) {
-			return errorsmod.Wrapf(types.ErrNodeNotExists, "node-%s not exists", nodeId)
+	for _, node := range report.Nodes {
+		if !k.HasNode(ctx, node.NodeId) {
+			return errorsmod.Wrapf(types.ErrNodeNotExists, "node-%s not exists", node.NodeId)
 		}
 	}
 

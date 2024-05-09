@@ -17,18 +17,16 @@ message Params {
     uint64 maximum_power_on_period = 3;
     // captains_constant is a fixed constant for reward calculation
     uint64 captains_constant = 4;
-    // maximum_number_of_holdings defines the maximum number of captain nodes one account can hold.
-    uint64 maximum_holding_amount = 5;
     // halving_era defines the halving era coefficient
-    string halving_era_coefficient = 6 [
+    string halving_era_coefficient = 5 [
         (cosmos_proto.scalar)  = "cosmos.Dec",
         (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
         (gogoproto.nullable)   = false
     ];
     // current_sale_level defines the current level for sale.
-    uint64 current_sale_level = 7;
+    uint64 current_sale_level = 6;
     // authorized members list
-    repeated string authorized_members = 8;
+    repeated string authorized_members = 7;
 }
 
 // Division defines the division a node belongs to.

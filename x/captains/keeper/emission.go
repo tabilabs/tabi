@@ -179,7 +179,7 @@ func (k Keeper) setNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID str
 
 // GetOwnerHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
 func (k Keeper) GetOwnerHistoricalEmissionOnLastClaim(ctx sdk.Context, owner sdk.AccAddress) sdk.Dec {
-	nodes := k.GetNodes(ctx)
+	nodes := k.GetNodesByOwner(ctx, owner)
 	total := sdk.ZeroDec()
 	for _, node := range nodes {
 		total = total.Add(k.GetNodeHistoricalEmissionOnLastClaim(ctx, node.Id))
