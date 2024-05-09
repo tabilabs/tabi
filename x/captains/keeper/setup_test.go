@@ -18,13 +18,10 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/ethereum/go-ethereum/common"
-	ethtypes "github.com/ethereum/go-ethereum/core/types"
-
 	"github.com/tabilabs/tabi/app"
 	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
 	"github.com/tabilabs/tabi/testutil"
 	utiltx "github.com/tabilabs/tabi/testutil/tx"
-	"github.com/tabilabs/tabi/utils"
 	captainskeeper "github.com/tabilabs/tabi/x/captains/keeper"
 	"github.com/tabilabs/tabi/x/captains/types"
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
@@ -53,9 +50,7 @@ type CaptainsTestSuite struct {
 	queryClient    types.QueryClient
 	queryClientEvm evmtypes.QueryClient
 
-	signer    keyring.Signer
-	ethSigner ethtypes.Signer
-	validator stakingtypes.Validator
+	signer keyring.Signer
 
 	appCodec codec.Codec
 }
@@ -80,9 +75,6 @@ func (suite *CaptainsTestSuite) SetupSubTest() {
 }
 
 func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) {
-	// setup fee denom
-	suite.denom = utils.BaseDenom
-
 	// account key
 	priv, err := ethsecp256k1.GenerateKey()
 	require.NoError(t, err)
@@ -110,26 +102,12 @@ func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) 
 	types.RegisterQueryServer(queryHelper, captainskeeper.NewQuerierImpl(&suite.app.CaptainsKeeper))
 	suite.queryClient = types.NewQueryClient(queryHelper)
 
-	queryHelperEvm := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
-	evmtypes.RegisterQueryServer(queryHelperEvm, suite.app.EvmKeeper)
-	suite.queryClientEvm = evmtypes.NewQueryClient(queryHelperEvm)
-
 	// setup module params & default authorized member
 	params := types.DefaultParams()
 	params.AuthorizedMembers = []string{
 		accounts[0].String(),
 	}
 	err = suite.app.CaptainsKeeper.SetParams(suite.ctx, params)
-
-	// setup staking
-	stakingParams := suite.app.StakingKeeper.GetParams(suite.ctx)
-	stakingParams.BondDenom = suite.denom
-	suite.app.StakingKeeper.SetParams(suite.ctx, stakingParams)
-
-	evmParams := suite.app.EvmKeeper.GetParams(suite.ctx)
-	evmParams.EvmDenom = suite.denom
-	err = suite.app.EvmKeeper.SetParams(suite.ctx, evmParams)
-	require.NoError(t, err)
 
 	// setup validators
 	valAddr := sdk.ValAddress(suite.address.Bytes())
@@ -140,10 +118,6 @@ func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) 
 	require.NoError(t, err)
 	err = suite.app.StakingKeeper.SetValidatorByConsAddr(suite.ctx, validator)
 	require.NoError(t, err)
-	validators := s.app.StakingKeeper.GetValidators(s.ctx, 1)
-	suite.validator = validators[0]
-
-	suite.ethSigner = ethtypes.LatestSignerForChainID(s.app.EvmKeeper.ChainID())
 }
 
 // Commit commits and starts a new block with an updated context.
@@ -160,8 +134,4 @@ func (suite *CaptainsTestSuite) CommitAfter(t time.Duration) {
 
 	types.RegisterQueryServer(queryHelper, captainskeeper.NewQuerierImpl(&suite.app.CaptainsKeeper))
 	suite.queryClient = types.NewQueryClient(queryHelper)
-
-	queryHelperEvm := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
-	evmtypes.RegisterQueryServer(queryHelperEvm, suite.app.EvmKeeper)
-	suite.queryClientEvm = evmtypes.NewQueryClient(queryHelperEvm)
 }

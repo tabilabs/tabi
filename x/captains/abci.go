@@ -18,5 +18,7 @@ func BeginBlocker(ctx sdk.Context, _ abci.RequestBeginBlock, k keeper.Keeper) {
 		k.DelReportBatches(ctx, epoch)
 		// Let's enter new epoch!
 		k.EnterNewEpoch(ctx)
+
+		// TODO: add log
 	}
 }

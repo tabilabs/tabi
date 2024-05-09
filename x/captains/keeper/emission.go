@@ -28,14 +28,14 @@ func (k Keeper) GetEpochEmission(ctx sdk.Context, epochID uint64) (sdk.Dec, bool
 }
 
 // calcEpochEmission returns the total emission reward for an epoch.
-func (k Keeper) calcEpochEmission(ctx sdk.Context, epochID uint64, globalOperationRatio sdk.Dec) (sdk.Dec, error) {
+func (k Keeper) calcEpochEmission(ctx sdk.Context, epochID uint64, globalOperationRatio sdk.Dec) sdk.Dec {
 	base := k.GetBaseEpochEmission(ctx)
 	pledgeRatio := k.CalcGlobalPledgeRatio(ctx, epochID)
 	sum := base.Mul(pledgeRatio).Mul(globalOperationRatio)
 
 	k.setEpochEmission(ctx, epochID, sum)
 
-	return sum, nil
+	return sum
 }
 
 // setEpochEmission sets the emission sum for an epoch.
@@ -113,7 +113,7 @@ func (k Keeper) calNodeHistoricalEmissionOnEpoch(
 
 	res := emission.Mul(power).Quo(powerSum).Add(prevHistoryEmission)
 
-	k.setNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID, emission)
+	k.setNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID, res)
 	k.delNodeHistoricalEmissionOnEpoch(ctx, epochID-1, nodeID)
 	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
 

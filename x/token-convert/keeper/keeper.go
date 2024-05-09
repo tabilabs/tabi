@@ -64,6 +64,13 @@ func (k Keeper) ConvertTabi(ctx sdk.Context, sender sdk.AccAddress, coin sdk.Coi
 
 // LockVetabiAndCreateVoucher locks vetabi and creates a voucher for future withdraw.
 func (k Keeper) LockVetabiAndCreateVoucher(ctx sdk.Context, sender sdk.AccAddress, strategy types.Strategy, coin sdk.Coin) (string, string, error) {
+	// TODO: use module params
+	//
+	// TODO: use switch statement
+	// switch xxx {
+	//   case instantStrategy: ...
+	//   default: ...
+	// }
 	if strategy.Name == k.instantStrategy {
 		err := k.InstantWithdrawVetabi(ctx, sender, coin)
 		return "", "", err
@@ -98,7 +105,8 @@ func (k Keeper) InstantWithdrawVetabi(ctx sdk.Context, sender sdk.AccAddress, co
 		return err
 	}
 
-	mintAmt := sdk.NewDecFromInt(coin.Amount).Mul(strategy.ConversionRate).RoundInt()
+	// TODO: round or truncate?
+	mintAmt := sdk.NewDecFromInt(coin.Amount).Mul(strategy.ConversionRate).TruncateInt()
 	mintCoin := sdk.NewCoin(tabitypes.AttoTabi, mintAmt)
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintCoin)); err != nil {
 		return err

@@ -84,14 +84,14 @@ message EpochState {
     uint64 curr_epoch = 1;
     bool is_end = 2;
     ReportDigest digest = 3;
-    repeated BatchBase batches = 4 [(gogoproto.nullable) = false];
-    EpochBase current = 5 [(gogoproto.nullable) = false];
-    EpochBase previous = 6 [(gogoproto.nullable) = false];
-    string emission_claimed_sum = 7[
+    EpochBase current = 4 [(gogoproto.nullable) = false];
+    EpochBase previous = 5 [(gogoproto.nullable) = false];
+    string emission_claimed_sum = 6[
         (cosmos_proto.scalar)  = "cosmos.Dec",
         (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
         (gogoproto.nullable)   = false
     ];
+    repeated BatchBase batches = 7 [(gogoproto.nullable) = false];
 }
 
 message NodeExtraInfo {

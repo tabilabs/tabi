@@ -43,8 +43,8 @@ func (k Keeper) CreateNode(
 	}
 	k.setNodeByOwner(ctx, nodeID, owner)
 
-	division.TotalCount++
-	division.SoldCount++
+	division.TotalCount += 1
+	division.SoldCount += 1
 	if err := k.setDivision(ctx, division); err != nil {
 		return "", err
 	}

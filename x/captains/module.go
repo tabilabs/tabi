@@ -23,20 +23,20 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-// AppModuleBasic defines the basic application module used by the mint module.
+// AppModuleBasic defines the basic application module used by the captains module.
 type AppModuleBasic struct {
 	cdc codec.Codec
 }
 
-// Name returns the mint module's name.
+// Name returns the captains module's name.
 func (AppModuleBasic) Name() string { return types.ModuleName }
 
-// RegisterLegacyAminoCodec registers the mint module's types on the LegacyAmino codec.
+// RegisterLegacyAminoCodec registers the captains module's types on the LegacyAmino codec.
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 
 }
 
-// DefaultGenesis returns default genesis state as raw bytes for the mint
+// DefaultGenesis returns default genesis state as raw bytes for the captains
 // module.
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 	return cdc.MustMarshalJSON(types.DefaultGenesisState())
