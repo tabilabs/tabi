@@ -109,6 +109,31 @@ func (q Querier) Nodes(
 	}, nil
 }
 
+// NodeLastEpochInfo queries the last epoch info of a node
+func (q Querier) NodeLastEpochInfo(
+	goCtx context.Context,
+	request *types.QueryNodeLastEpochInfoRequest,
+) (*types.QueryNodeLastEpochInfoResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	node, found := q.GetNode(ctx, request.NodeId)
+	if !found {
+		return nil, types.ErrNodeNotExists.Wrapf("not found node: %s", request.NodeId)
+	}
+
+	prevEpoch := q.Keeper.GetCurrentEpoch(ctx) - 1
+	emission := q.Keeper.CalNodeEmissionOnEpoch(ctx, prevEpoch, node.Id).String()
+	historical := q.Keeper.CalNodeHistoricalEmissionOnEpoch(ctx, prevEpoch, node.Id).String()
+	ratio := q.Keeper.CalcNodePledgeRatioOnEpoch(ctx, prevEpoch, node.Id).String()
+
+	return &types.QueryNodeLastEpochInfoResponse{
+		Epoch:              prevEpoch,
+		LastEpochEmission:  emission,
+		HistoricalEmission: historical,
+		PledgeRatio:        ratio,
+	}, nil
+}
+
 // Division queries an node division by its ID
 func (q Querier) Division(
 	goCtx context.Context,
@@ -195,4 +220,19 @@ func (q Querier) AuthorizedMembers(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	members := q.GetAuthorizedMembers(ctx)
 	return &types.QueryAuthorizedMembersResponse{Members: members}, nil
+}
+
+// CurrentEpoch queries current epoch and its block height.
+func (q Querier) CurrentEpoch(
+	goCtx context.Context,
+	_ *types.QueryCurrentEpochRequest,
+) (*types.QueryCurrentEpochResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	epoch := q.GetCurrentEpoch(ctx)
+	height := ctx.BlockHeight()
+
+	return &types.QueryCurrentEpochResponse{
+		Epoch:  epoch,
+		Height: uint64(height),
+	}, nil
 }

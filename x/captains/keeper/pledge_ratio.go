@@ -35,13 +35,23 @@ func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 	return ratio
 }
 
+// CalcAndSetNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t but also prune pledge 2 epochs before.
+func (k Keeper) CalcAndSetNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
+	owner := k.GetNodeOwner(ctx, nodeID)
+	ratio := k.CalcNodePledgeRatioOnEpoch(ctx, epochID, nodeID)
+
+	// NOTE: it's fine to delete epoch(-1) since it never exists.
+	k.delOwnerPledge(ctx, owner, epochID-2)
+	return ratio
+}
+
 // CalcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t.
-func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) (sdk.Dec, error) {
+func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	owner := k.GetNodeOwner(ctx, nodeID)
 
 	claimed := k.GetOwnerHistoricalEmissionOnLastClaim(ctx, owner)
 	if claimed.Equal(sdk.ZeroDec()) {
-		return ownerPledgeRatioUpperBound, nil
+		return ownerPledgeRatioUpperBound
 	}
 
 	ownerPledge, _ := k.GetOwnerPledge(ctx, owner, epochID)
@@ -50,11 +60,7 @@ func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, node
 	if nodePledgeRatio.GTE(ownerPledgeRatioLowerBound) {
 		nodePledgeRatio = ownerPledgeRatioLowerBound
 	}
-
-	// prune previous pledge
-	k.delOwnerPledge(ctx, owner, epochID-1)
-
-	return nodePledgeRatio, nil
+	return nodePledgeRatio
 }
 
 // SampleOwnerPledge sample pledge amount of the owner on the epoch.

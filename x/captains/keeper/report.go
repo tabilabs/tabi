@@ -42,12 +42,9 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 		owner := k.GetNodeOwner(ctx, node.NodeId)
 
 		// try to calculate historical emission
-		k.calNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
+		k.CalAndSetNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
 
-		pledgeRatio, err := k.CalcNodePledgeRatioOnEpoch(ctx, epochId, node.NodeId)
-		if err != nil {
-			return err
-		}
+		pledgeRatio := k.CalcAndSetNodePledgeRatioOnEpoch(ctx, epochId, node.NodeId)
 
 		power, err := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio, pledgeRatio)
 		if err != nil {
@@ -84,10 +81,6 @@ func (k Keeper) HandleReportEnd(ctx sdk.Context, report *types.ReportEnd) error 
 	if err := k.IsReportCompleted(ctx, epochId); err != nil {
 		return err
 	}
-
-	// prune useless epoch data
-	k.delEpochEmission(ctx, epochId-1)
-	k.delComputingPowerSumOnEpoch(ctx, epochId-1)
 
 	// marks we are ready for the next epoch.
 	k.SetEndEpoch(ctx, epochId)

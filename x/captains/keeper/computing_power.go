@@ -39,8 +39,8 @@ func (k Keeper) incrComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, am
 	k.setComputingPowerSumOnEpoch(ctx, epochID, sum)
 }
 
-// delComputingPowerSumOnEpoch deletes the sum of computing power of all nodes.
-func (k Keeper) delComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) {
+// DelComputingPowerSumOnEpoch deletes the sum of computing power of all nodes.
+func (k Keeper) DelComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
 	store.Delete(key)
