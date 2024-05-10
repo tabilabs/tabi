@@ -167,6 +167,8 @@ func (suite *CaptainsTestSuite) TestUpdateSaleLevel() {
 }
 
 func (suite *CaptainsTestSuite) TestCommitComputingPower() {
+	// NOTE: only test report validation here, the full commit logic is tested
+	// in epoch_test.go
 	member := accounts[0].String()
 	owner := accounts[1].String()
 
@@ -340,7 +342,7 @@ func (suite *CaptainsTestSuite) TestCommitReport() {
 			name: "failure - invalid report end fields",
 			mellateReport: func(msg *types.MsgCommitReport) {
 				report := types.ReportEnd{
-					Epoch: 100,
+					EpochId: 100,
 				}
 				val, err := sdkcdc.NewAnyWithValue(&report)
 				if err != nil {

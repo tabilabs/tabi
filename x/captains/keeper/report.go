@@ -78,7 +78,7 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 
 // HandleReportEnd processes a report end
 func (k Keeper) HandleReportEnd(ctx sdk.Context, report *types.ReportEnd) error {
-	epochId := report.Epoch
+	epochId := report.EpochId
 
 	// validate calculation finished.
 	if err := k.IsReportCompleted(ctx, epochId); err != nil {
@@ -212,11 +212,11 @@ func (k Keeper) ValidateReportBatch(ctx sdk.Context, report *types.ReportBatch) 
 
 // ValidateReportEnd checks if the report end is valid
 func (k Keeper) ValidateReportEnd(ctx sdk.Context, report *types.ReportEnd) error {
-	if err := k.ValidateReportEpoch(ctx, report.Epoch); err != nil {
+	if err := k.ValidateReportEpoch(ctx, report.EpochId); err != nil {
 		return err
 	}
 
-	if k.HasEndEpoch(ctx, report.Epoch) {
+	if k.HasEndEpoch(ctx, report.EpochId) {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "eport end epoch already ended")
 	}
 	return nil

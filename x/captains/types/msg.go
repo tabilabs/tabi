@@ -182,7 +182,7 @@ func (msg *MsgCommitReport) ValidateBasic() error {
 		if err != nil {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 		}
-		if end.Epoch == 0 {
+		if end.EpochId == 0 {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "epoch id is zero")
 		}
 	}

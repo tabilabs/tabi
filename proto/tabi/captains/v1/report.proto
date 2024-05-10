@@ -44,7 +44,7 @@ message ReportBatch {
 
 // ReportEnd marks the end of commiting a report.
 message ReportEnd {
-  uint64 epoch = 1;
+  uint64 epoch_id = 1;
 }
 
 // NodePowerOnRatio is the power on ratio of a node.

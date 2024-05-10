@@ -130,6 +130,10 @@ func (k Keeper) GetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeHistoricalEmissionOnEpochStoreKey(epochID, nodeID)
 	bz := store.Get(key)
+	if len(bz) == 0 {
+		return sdk.ZeroDec()
+	}
+
 	res, _ := sdk.NewDecFromStr(string(bz))
 	return res
 }
