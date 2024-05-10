@@ -13,6 +13,7 @@ func (suite *CaptainsTestSuite) TestComputingPower() {
 		epoch1,
 		node1,
 		sdk.NewDecWithPrec(1, 0),
+		sdk.NewDecWithPrec(1, 0),
 	)
 	suite.Require().NoError(err)
 	suite.Require().Equal(sdk.NewDecWithPrec(1571543988, 3), power1)
@@ -24,12 +25,9 @@ func (suite *CaptainsTestSuite) TestComputingPower() {
 		suite.ctx,
 		epoch2,
 		node1,
+		sdk.NewDecWithPrec(1, 0),
 		sdk.NewDecWithPrec(5, 1),
 	)
 	suite.Require().NoError(err)
 	suite.Require().Equal(sdk.NewDecWithPrec(5606325, 2), power2)
-
-	// power on previous epoch shall be deleted.
-	prevPower := suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch1, node1)
-	suite.Require().Equal(sdk.ZeroDec(), prevPower)
 }

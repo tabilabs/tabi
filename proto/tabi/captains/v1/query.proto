@@ -26,6 +26,11 @@ service Query {
     option (google.api.http).get = "/x/captains/v1/nodes";
   }
 
+  // NodeLastEpochInfo queries the node last epoch emission, historical emission and pledge ratio.
+  rpc NodeLastEpochInfo(QueryNodeLastEpochInfoRequest) returns (QueryNodeLastEpochInfoResponse) {
+    option (google.api.http).get = "/x/captains/v1/nodes/{node_id}/last-epoch-info";
+  }
+
   // Divisions queries all Node divisions
   rpc Divisions(QueryDivisionsRequest) returns (QueryDivisionsResponse) {
     option (google.api.http).get = "/x/captains/v1/divisions";
@@ -49,6 +54,11 @@ service Query {
   // AuthorizedMembers queries all the callers
   rpc AuthorizedMembers(QueryAuthorizedMembersRequest) returns (QueryAuthorizedMembersResponse) {
     option (google.api.http).get = "/x/captains/v1/authorized-members";
+  }
+
+  // CurrentEpoch queries the current epoch as well as its height;
+  rpc CurrentEpoch(QueryCurrentEpochRequest) returns (QueryCurrentEpochResponse) {
+    option (google.api.http).get = "/x/captains/v1/current-epoch";
   }
 }
 
@@ -130,4 +140,28 @@ message QueryAuthorizedMembersRequest {
 // QueryAuthorizedMembersResponse is the response type for the Query/AuthorizedMembers RPC method
 message QueryAuthorizedMembersResponse {
   repeated string members = 1;
+}
+
+// QueryCurrentEpochRequest is the request type for the Query/CurrentEpoch RPC method
+message QueryCurrentEpochRequest {
+}
+
+// QueryCurrentEpochResponse is the response type for the Query/CurrentEpoch RPC method
+message QueryCurrentEpochResponse {
+  uint64 epoch = 1;
+  uint64 height = 2;
+}
+
+// QueryNodeLastEpochInfoRequest is the request type for the Query/NodeLastEpochInfo RPC method
+message QueryNodeLastEpochInfoRequest {
+  string node_id = 1;
+}
+
+// QueryNodeLastEpochInfoResponse is the response type for the Query/NodeLastEpochInfo RPC method
+message QueryNodeLastEpochInfoResponse {
+  uint64 epoch = 1;
+  uint64 height = 2;
+  string last_epoch_emission = 3;
+  string historical_emission = 4;
+  string pledge_ratio = 5;
 }

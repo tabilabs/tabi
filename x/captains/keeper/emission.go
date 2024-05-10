@@ -28,14 +28,14 @@ func (k Keeper) GetEpochEmission(ctx sdk.Context, epochID uint64) (sdk.Dec, bool
 }
 
 // calcEpochEmission returns the total emission reward for an epoch.
-func (k Keeper) calcEpochEmission(ctx sdk.Context, epochID uint64, globalOperationRatio sdk.Dec) (sdk.Dec, error) {
+func (k Keeper) calcEpochEmission(ctx sdk.Context, epochID uint64, globalOperationRatio sdk.Dec) sdk.Dec {
 	base := k.GetBaseEpochEmission(ctx)
 	pledgeRatio := k.CalcGlobalPledgeRatio(ctx, epochID)
 	sum := base.Mul(pledgeRatio).Mul(globalOperationRatio)
 
 	k.setEpochEmission(ctx, epochID, sum)
 
-	return sum, nil
+	return sum
 }
 
 // setEpochEmission sets the emission sum for an epoch.
@@ -45,8 +45,8 @@ func (k Keeper) setEpochEmission(ctx sdk.Context, epochID uint64, amount sdk.Dec
 	store.Set(key, []byte(amount.String()))
 }
 
-// delEpochEmission deletes the emission sum for an epoch.
-func (k Keeper) delEpochEmission(ctx sdk.Context, epochID uint64) {
+// DelEpochEmission deletes the emission sum for an epoch.
+func (k Keeper) DelEpochEmission(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.EmissionSumOnEpochStoreKey(epochID)
 	store.Delete(key)
@@ -84,15 +84,31 @@ func (k Keeper) calcOwnerHistoricalEmissionSum(ctx sdk.Context, epochID uint64, 
 	total := sdk.ZeroDec()
 
 	for _, node := range nodes {
-		amount := k.calNodeHistoricalEmissionOnEpoch(ctx, epochID, node.Id)
+		amount := k.CalAndSetNodeHistoricalEmissionOnEpoch(ctx, epochID, node.Id)
 		total = total.Add(amount)
 	}
 	return total
 }
 
-// calNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
+// CalAndSetNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
 // NOTE: this function set the historical emission by the end of epoch(t) and removes that of epoch(t-1).
-func (k Keeper) calNodeHistoricalEmissionOnEpoch(
+func (k Keeper) CalAndSetNodeHistoricalEmissionOnEpoch(
+	ctx sdk.Context,
+	epochID uint64,
+	nodeID string,
+) sdk.Dec {
+	res := k.CalNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID)
+
+	k.setNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID, res)
+	k.delNodeHistoricalEmissionOnEpoch(ctx, epochID-1, nodeID)
+	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
+
+	return res
+}
+
+// CalNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
+// NOTE: this func is only used to query and it won't set or prune state data.
+func (k Keeper) CalNodeHistoricalEmissionOnEpoch(
 	ctx sdk.Context,
 	epochID uint64,
 	nodeID string,
@@ -107,22 +123,26 @@ func (k Keeper) calNodeHistoricalEmissionOnEpoch(
 	}
 
 	prevHistoryEmission := k.GetNodeHistoricalEmissionOnEpoch(ctx, epochID-1, nodeID)
-	emission, _ := k.GetEpochEmission(ctx, epochID)
-	power := k.GetNodeComputingPowerOnEpoch(ctx, epochID, nodeID)
-	powerSum := k.GetComputingPowerSumOnEpoch(ctx, epochID)
-
-	res := emission.Mul(power).Quo(powerSum).Add(prevHistoryEmission)
-
-	k.setNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID, emission)
-	k.delNodeHistoricalEmissionOnEpoch(ctx, epochID-1, nodeID)
-	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
+	epochEmission := k.CalNodeEmissionOnEpoch(ctx, epochID, nodeID)
+	res := epochEmission.Add(prevHistoryEmission)
 
 	return res
 }
 
+// CalNodeEmissionOnEpoch returns the emission for a node at the end of an epoch.
+func (k Keeper) CalNodeEmissionOnEpoch(
+	ctx sdk.Context,
+	epochID uint64,
+	nodeID string) sdk.Dec {
+	emission, _ := k.GetEpochEmission(ctx, epochID)
+	power := k.GetNodeComputingPowerOnEpoch(ctx, epochID, nodeID)
+	powerSum := k.GetComputingPowerSumOnEpoch(ctx, epochID)
+	return emission.Mul(power).Quo(powerSum)
+}
+
 // CalAndGetNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
 func (k Keeper) CalAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
-	return k.calNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID)
+	return k.CalAndSetNodeHistoricalEmissionOnEpoch(ctx, epochID, nodeID)
 }
 
 // GetNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
@@ -130,6 +150,10 @@ func (k Keeper) GetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeHistoricalEmissionOnEpochStoreKey(epochID, nodeID)
 	bz := store.Get(key)
+	if len(bz) == 0 {
+		return sdk.ZeroDec()
+	}
+
 	res, _ := sdk.NewDecFromStr(string(bz))
 	return res
 }
@@ -179,7 +203,7 @@ func (k Keeper) setNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID str
 
 // GetOwnerHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
 func (k Keeper) GetOwnerHistoricalEmissionOnLastClaim(ctx sdk.Context, owner sdk.AccAddress) sdk.Dec {
-	nodes := k.GetNodes(ctx)
+	nodes := k.GetNodesByOwner(ctx, owner)
 	total := sdk.ZeroDec()
 	for _, node := range nodes {
 		total = total.Add(k.GetNodeHistoricalEmissionOnLastClaim(ctx, node.Id))

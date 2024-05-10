@@ -2,6 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
@@ -53,6 +54,12 @@ func (k Keeper) SetDigest(ctx sdk.Context, epochID uint64, digest *types.ReportD
 func (k Keeper) DelDigest(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.DigestOnEpochStoreKey(epochID))
+}
+
+// HasReportBatch checks if the batch exists.
+func (k Keeper) HasReportBatch(ctx sdk.Context, epochID, batchID uint64) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.ReportBatchOnEpochStoreKey(epochID, batchID))
 }
 
 // SetReportBatch sets the batch count.

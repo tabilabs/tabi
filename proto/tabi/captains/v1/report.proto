@@ -38,11 +38,23 @@ message ReportBatch {
   uint64 batch_id = 2;
   // node_count is the number of nodes in the batch
   uint64 node_count = 3;
-  // node_ids is the list of node ids in the batch
-  repeated string node_ids = 4;
+  // nodes is the list of node in the batch
+  repeated NodePowerOnRatio nodes = 4 [(gogoproto.nullable) = false];
 }
 
 // ReportEnd marks the end of commiting a report.
 message ReportEnd {
-  uint64 epoch = 1;
+  uint64 epoch_id = 1;
+}
+
+// NodePowerOnRatio is the power on ratio of a node.
+message NodePowerOnRatio {
+  // node_id is the id of the node
+  string node_id = 1;
+  // on_operation_ratio is the operation ratio of the node
+  string on_operation_ratio = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
 }

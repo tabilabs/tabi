@@ -1,7 +1,11 @@
 package keeper_test
 
 import (
+	"fmt"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/captains/types"
+	"github.com/tendermint/tendermint/libs/rand"
 )
 
 func (suite *CaptainsTestSuite) utilsAddAuthorizedMember(member string) {
@@ -32,6 +36,30 @@ func (suite *CaptainsTestSuite) utilsBatchCreateCaptainNode(owner string, divisi
 		nodeIds[i] = suite.utilsCreateCaptainNode(owner, divisionLevel)
 	}
 	return nodeIds
+}
+
+func (suite *CaptainsTestSuite) utilsBatchAssignFixedPowerOnRatio(nodes []string, value int64, prec int64) []types.NodePowerOnRatio {
+	nodePowers := make([]types.NodePowerOnRatio, len(nodes))
+	for i, node := range nodes {
+		nodePowers[i] = types.NodePowerOnRatio{
+			NodeId:           node,
+			OnOperationRatio: sdk.NewDecWithPrec(value, prec),
+		}
+	}
+	return nodePowers
+}
+
+func (suite *CaptainsTestSuite) utilsBatchAssignRandomPowerOnRatio(nodes []string) []types.NodePowerOnRatio {
+	rand.Seed(suite.ctx.BlockTime().Unix())
+	nodePowers := make([]types.NodePowerOnRatio, len(nodes))
+	for i, node := range nodes {
+		power, _ := sdk.NewDecFromStr(fmt.Sprintf("%f", 0.47+rand.Float64()*0.53))
+		nodePowers[i] = types.NodePowerOnRatio{
+			NodeId:           node,
+			OnOperationRatio: power,
+		}
+	}
+	return nodePowers
 }
 
 func (suite *CaptainsTestSuite) utilsGetDivisions() map[uint64]string {

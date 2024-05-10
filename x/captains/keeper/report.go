@@ -27,10 +27,7 @@ func (k Keeper) CommitReport(ctx sdk.Context, report any) error {
 func (k Keeper) HandleReportDigest(ctx sdk.Context, report *types.ReportDigest) error {
 	epochId := report.EpochId
 
-	_, err := k.calcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
-	if err != nil {
-		return err
-	}
+	k.calcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
 
 	k.SetDigest(ctx, epochId, report)
 
@@ -41,18 +38,15 @@ func (k Keeper) HandleReportDigest(ctx sdk.Context, report *types.ReportDigest) 
 func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) error {
 	epochId := report.EpochId
 
-	for _, nodeId := range report.NodeIds {
-		owner := k.GetNodeOwner(ctx, nodeId)
+	for _, node := range report.Nodes {
+		owner := k.GetNodeOwner(ctx, node.NodeId)
 
 		// try to calculate historical emission
-		k.calNodeHistoricalEmissionOnEpoch(ctx, epochId-1, nodeId)
+		k.CalAndSetNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
 
-		pledgeRatio, err := k.CalcNodePledgeRatioOnEpoch(ctx, epochId, nodeId)
-		if err != nil {
-			return err
-		}
+		pledgeRatio := k.CalcAndSetNodePledgeRatioOnEpoch(ctx, epochId, node.NodeId)
 
-		power, err := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, nodeId, pledgeRatio)
+		power, err := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio, pledgeRatio)
 		if err != nil {
 			return err
 		}
@@ -81,16 +75,12 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 
 // HandleReportEnd processes a report end
 func (k Keeper) HandleReportEnd(ctx sdk.Context, report *types.ReportEnd) error {
-	epochId := report.Epoch
+	epochId := report.EpochId
 
 	// validate calculation finished.
 	if err := k.IsReportCompleted(ctx, epochId); err != nil {
 		return err
 	}
-
-	// prune useless epoch data
-	k.delEpochEmission(ctx, epochId-1)
-	k.delComputingPowerSumOnEpoch(ctx, epochId-1)
 
 	// marks we are ready for the next epoch.
 	k.SetEndEpoch(ctx, epochId)
@@ -135,37 +125,30 @@ func (k Keeper) ValidateReport(ctx sdk.Context, reportType types.ReportType, rep
 		if !ok {
 			return nil, errorsmod.Wrapf(types.ErrInvalidReport, "invalid report")
 		}
-
-		if err := k.ValidateReportEpoch(ctx, digest.EpochId); err != nil {
+		if err := k.ValidateReportDigest(ctx, digest); err != nil {
 			return nil, err
 		}
 
-		// TODO: maybe validate digest fields as well?
-
-		return &digest, nil
+		return digest, nil
 	case types.ReportType_REPORT_TYPE_BATCH:
 		batch, ok := message.(*types.ReportBatch)
 		if !ok {
 			return nil, errorsmod.Wrapf(types.ErrInvalidReport, "invalid report")
 		}
-
-		if err := k.ValidateReportEpoch(ctx, batch.EpochId); err != nil {
-			return nil, err
-		}
 		if err := k.ValidateReportBatch(ctx, batch); err != nil {
 			return nil, err
 		}
 
-		return &batch, nil
+		return batch, nil
 	case types.ReportType_REPORT_TYPE_END:
 		end, ok := message.(*types.ReportEnd)
 		if !ok {
 			return nil, errorsmod.Wrapf(types.ErrInvalidReport, "invalid report")
 		}
-		if err := k.ValidateReportEpoch(ctx, end.Epoch); err != nil {
+		if err := k.ValidateReportEnd(ctx, end); err != nil {
 			return nil, err
 		}
-		return &end, nil
+		return end, nil
 	}
 	return nil, errorsmod.Wrapf(types.ErrInvalidReport, "invalid report type")
 }
@@ -178,8 +161,26 @@ func (k Keeper) ValidateReportEpoch(ctx sdk.Context, epochID uint64) error {
 	return nil
 }
 
+// ValidateReportDigest checks if the report digest is valid
+func (k Keeper) ValidateReportDigest(ctx sdk.Context, report *types.ReportDigest) error {
+	if err := k.ValidateReportEpoch(ctx, report.EpochId); err != nil {
+		return err
+	}
+
+	_, found := k.GetDigest(ctx, report.EpochId)
+	if found {
+		return errorsmod.Wrapf(types.ErrInvalidReport, "digest already exists")
+	}
+
+	return nil
+}
+
 // ValidateReportBatch checks if the report batch is valid
 func (k Keeper) ValidateReportBatch(ctx sdk.Context, report *types.ReportBatch) error {
+	if err := k.ValidateReportEpoch(ctx, report.EpochId); err != nil {
+		return err
+	}
+
 	digest, found := k.GetDigest(ctx, report.EpochId)
 	if !found {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "digest not found")
@@ -189,11 +190,27 @@ func (k Keeper) ValidateReportBatch(ctx sdk.Context, report *types.ReportBatch) 
 		return errorsmod.Wrapf(types.ErrInvalidReport, "node count exceeded")
 	}
 
-	for _, nodeId := range report.NodeIds {
-		if !k.HasNode(ctx, nodeId) {
-			return errorsmod.Wrapf(types.ErrNodeNotExists, "node-%s not exists", nodeId)
+	if k.HasReportBatch(ctx, report.EpochId, report.BatchId) {
+		return errorsmod.Wrapf(types.ErrInvalidReport, "batch already precessed")
+	}
+
+	for _, node := range report.Nodes {
+		if !k.HasNode(ctx, node.NodeId) {
+			return errorsmod.Wrapf(types.ErrNodeNotExists, "node-%s not exists", node.NodeId)
 		}
 	}
 
+	return nil
+}
+
+// ValidateReportEnd checks if the report end is valid
+func (k Keeper) ValidateReportEnd(ctx sdk.Context, report *types.ReportEnd) error {
+	if err := k.ValidateReportEpoch(ctx, report.EpochId); err != nil {
+		return err
+	}
+
+	if k.HasEndEpoch(ctx, report.EpochId) {
+		return errorsmod.Wrapf(types.ErrInvalidReport, "eport end epoch already ended")
+	}
 	return nil
 }

@@ -39,12 +39,11 @@ func (k Keeper) incrComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, am
 	k.setComputingPowerSumOnEpoch(ctx, epochID, sum)
 }
 
-// delComputingPowerSumOnEpoch deletes the sum of computing power of all nodes.
-func (k Keeper) delComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) {
+// DelComputingPowerSumOnEpoch deletes the sum of computing power of all nodes.
+func (k Keeper) DelComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
 	store.Delete(key)
-
 }
 
 // NodeComputingPowerOnEpoch functions
@@ -54,6 +53,7 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 	ctx sdk.Context,
 	epochID uint64,
 	nodeID string,
+	powerOnRatio sdk.Dec,
 	pledgeRatio sdk.Dec,
 ) (sdk.Dec, error) {
 	basePower := sdk.NewDec(int64(k.GetNodeBaseComputingPower(ctx, nodeID)))
@@ -61,15 +61,14 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 	// exponent = pledge_ratio * 20 / 3
 	exponentiation, _ := pledgeRatio.Mul(sdk.NewDec(20)).Quo(sdk.NewDec(3)).Float64()
 
-	// decimal precision is 6
+	// NOTE: decimal precision is 6
 	exponentiated, err := sdk.NewDecFromStr(fmt.Sprintf("%f", math.Exp(exponentiation)))
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}
 
-	power := basePower.Mul(exponentiated)
+	power := basePower.Mul(exponentiated).Mul(powerOnRatio)
 	k.setNodeComputingPowerOnEpoch(ctx, epochID, nodeID, power)
-	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
 
 	return power, err
 }

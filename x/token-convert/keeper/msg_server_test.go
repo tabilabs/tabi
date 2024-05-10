@@ -259,6 +259,26 @@ func (suite *TokenConvertTestSuite) TestWithdrawTabi() {
 			expectErr:    false,
 		},
 		{
+			name: "success - strategy 90 days, withdraw after 45 days",
+			msg: &types.MsgWithdrawTabi{
+				Sender: sender,
+			},
+			melleate: func(msg *types.MsgWithdrawTabi) {
+				suite.utilsFundToken(accounts[0], 1, tabitypes.AttoVeTabi)
+				resp, err := suite.msgServer.ConvertVetabi(suite.ctx, &types.MsgConvertVetabi{
+					Coin:     tabitypes.NewVeTabiCoinInt64(1_000_001),
+					Strategy: types.Strategy90Days,
+					Sender:   sender,
+				})
+				suite.Require().NoError(err)
+				msg.VoucherId = resp.VoucherId
+			},
+			timeAfter:    45 * 24 * time.Hour,
+			expectTabi:   tabitypes.NewTabiCoinInt64(250_000),   // truncate(round(10^6+1 * 45 / 90) * 0.5)
+			expectVetabi: tabitypes.NewVeTabiCoinInt64(500_001), // round(10^6+1 * 45 / 90)
+			expectErr:    false,
+		},
+		{
 			name: "success - strategy 90 days, withdraw after 90 days",
 			msg: &types.MsgWithdrawTabi{
 				Sender: sender,

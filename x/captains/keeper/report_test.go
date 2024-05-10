@@ -37,15 +37,15 @@ func (suite *CaptainsTestSuite) TestHandleReportDigest() {
 func (suite *CaptainsTestSuite) TestHandleReportBatch() {
 	// prepare addresses and args
 	addr1 := accounts[1].String()
-	addr2 := accounts[2].String()
 
 	// prepare nodes
-	nodes := suite.utilsBatchCreateCaptainNode(addr1, 1, 5)
-	nodes = append(nodes, suite.utilsBatchCreateCaptainNode(addr2, 2, 5)...)
+	nodes := suite.utilsBatchCreateCaptainNode(addr1, 1, 10)
 
 	resp, err := suite.queryClient.Nodes(suite.ctx, &types.QueryNodesRequest{})
 	suite.NoError(err)
 	suite.Require().Len(resp.Nodes, len(nodes))
+
+	ratios := suite.utilsBatchAssignFixedPowerOnRatio(nodes, 1, 0)
 
 	// submit report digest on epoch 1
 	err = suite.keeper.HandleReportDigest(suite.ctx, &types.ReportDigest{
@@ -66,7 +66,7 @@ func (suite *CaptainsTestSuite) TestHandleReportBatch() {
 		EpochId:   suite.keeper.GetCurrentEpoch(suite.ctx),
 		BatchId:   1,
 		NodeCount: 4,
-		NodeIds:   nodes[:4],
+		Nodes:     ratios[:4],
 	})
 	suite.Require().NoError(err)
 
@@ -79,7 +79,7 @@ func (suite *CaptainsTestSuite) TestHandleReportBatch() {
 		EpochId:   suite.keeper.GetCurrentEpoch(suite.ctx),
 		BatchId:   2,
 		NodeCount: 4,
-		NodeIds:   nodes[4:8],
+		Nodes:     ratios[4:8],
 	})
 	suite.Require().NoError(err)
 
@@ -92,7 +92,7 @@ func (suite *CaptainsTestSuite) TestHandleReportBatch() {
 		EpochId:   suite.keeper.GetCurrentEpoch(suite.ctx),
 		BatchId:   3,
 		NodeCount: 2,
-		NodeIds:   nodes[8:10],
+		Nodes:     ratios[8:],
 	})
 	suite.Require().NoError(err)
 

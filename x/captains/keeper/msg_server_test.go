@@ -5,6 +5,7 @@ import (
 
 	sdkcdc "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
@@ -34,109 +35,6 @@ func (suite *CaptainsTestSuite) TestCreateCaptainNode() {
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("MsgCreateCaptainNode - %s", tc.name), func() {
 			_, err := suite.msgServer.CreateCaptainNode(suite.ctx, tc.request)
-
-			if tc.expectErr {
-				suite.Require().Errorf(err, "%s", err.Error())
-			} else {
-				suite.Require().NoError(err)
-			}
-		})
-	}
-}
-
-func (suite *CaptainsTestSuite) TestCommitReport() {
-	member := accounts[0].String()
-	owner := accounts[1].String()
-
-	testCases := []struct {
-		name          string
-		mellateReport func(*types.MsgCommitReport)
-		request       *types.MsgCommitReport
-		expectErr     bool
-	}{
-		{
-			name:          "failure - unauthorized member",
-			mellateReport: func(msg *types.MsgCommitReport) {},
-			request: &types.MsgCommitReport{
-				Authority: owner,
-			},
-			expectErr: true,
-		},
-		{
-			name:          "failure - invalid report type",
-			mellateReport: func(msg *types.MsgCommitReport) {},
-			request: &types.MsgCommitReport{
-				Authority:  member,
-				ReportType: types.ReportType_REPORT_TYPE_UNSPECIFIED,
-			},
-			expectErr: true,
-		},
-		{
-			name: "failure - invalid report digest epoch",
-			mellateReport: func(msg *types.MsgCommitReport) {
-				report := types.ReportDigest{
-					EpochId:                  0,
-					TotalBatchCount:          100,
-					TotalNodeCount:           10000,
-					MaximumNodeCountPerBatch: 10,
-					GlobalOnOperationRatio:   sdk.Dec{},
-				}
-				val, err := sdkcdc.NewAnyWithValue(&report)
-				if err != nil {
-					panic(err)
-				}
-				msg.Report = val
-			},
-			request: &types.MsgCommitReport{
-				Authority:  member,
-				ReportType: types.ReportType_REPORT_TYPE_DIGEST,
-			},
-			expectErr: true,
-		},
-		{
-			name: "failure - digest not found on epoch",
-			mellateReport: func(msg *types.MsgCommitReport) {
-				report := types.ReportBatch{
-					EpochId: 1,
-					BatchId: 10,
-				}
-				val, err := sdkcdc.NewAnyWithValue(&report)
-				if err != nil {
-					panic(err)
-				}
-				msg.Report = val
-			},
-			request: &types.MsgCommitReport{
-				Authority:  member,
-				ReportType: types.ReportType_REPORT_TYPE_BATCH,
-			},
-			expectErr: true,
-		},
-		{
-			name: "failure - invalid report end fields",
-			mellateReport: func(msg *types.MsgCommitReport) {
-				report := types.ReportEnd{
-					Epoch: 100,
-				}
-				val, err := sdkcdc.NewAnyWithValue(&report)
-				if err != nil {
-					panic(err)
-				}
-				msg.Report = val
-			},
-			request: &types.MsgCommitReport{
-				Authority:  member,
-				ReportType: types.ReportType_REPORT_TYPE_END,
-			},
-			expectErr: true,
-		},
-	}
-
-	for _, tc := range testCases {
-		suite.Run(fmt.Sprintf("MsgCommitReport - %s", tc.name), func() {
-			tc.mellateReport(tc.request)
-
-			_, err := suite.msgServer.CommitReport(suite.ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())
@@ -269,6 +167,8 @@ func (suite *CaptainsTestSuite) TestUpdateSaleLevel() {
 }
 
 func (suite *CaptainsTestSuite) TestCommitComputingPower() {
+	// NOTE: only test report validation here, the full commit logic is tested
+	// in epoch_test.go
 	member := accounts[0].String()
 	owner := accounts[1].String()
 
@@ -360,6 +260,109 @@ func (suite *CaptainsTestSuite) TestClaimComputingPower() {
 		suite.Run(fmt.Sprintf("MsgClaimComputingPower - %s", tc.name), func() {
 			tc.malleate()
 			_, err := suite.msgServer.ClaimComputingPower(suite.ctx, tc.request)
+
+			if tc.expectErr {
+				suite.Require().Errorf(err, "%s", err.Error())
+			} else {
+				suite.Require().NoError(err)
+			}
+		})
+	}
+}
+
+func (suite *CaptainsTestSuite) TestCommitReport() {
+	member := accounts[0].String()
+	owner := accounts[1].String()
+
+	testCases := []struct {
+		name          string
+		mellateReport func(*types.MsgCommitReport)
+		request       *types.MsgCommitReport
+		expectErr     bool
+	}{
+		{
+			name:          "failure - unauthorized member",
+			mellateReport: func(msg *types.MsgCommitReport) {},
+			request: &types.MsgCommitReport{
+				Authority: owner,
+			},
+			expectErr: true,
+		},
+		{
+			name:          "failure - invalid report type",
+			mellateReport: func(msg *types.MsgCommitReport) {},
+			request: &types.MsgCommitReport{
+				Authority:  member,
+				ReportType: types.ReportType_REPORT_TYPE_UNSPECIFIED,
+			},
+			expectErr: true,
+		},
+		{
+			name: "failure - invalid report digest epoch",
+			mellateReport: func(msg *types.MsgCommitReport) {
+				report := types.ReportDigest{
+					EpochId:                  0,
+					TotalBatchCount:          100,
+					TotalNodeCount:           10000,
+					MaximumNodeCountPerBatch: 10,
+					GlobalOnOperationRatio:   sdk.Dec{},
+				}
+				val, err := sdkcdc.NewAnyWithValue(&report)
+				if err != nil {
+					panic(err)
+				}
+				msg.Report = val
+			},
+			request: &types.MsgCommitReport{
+				Authority:  member,
+				ReportType: types.ReportType_REPORT_TYPE_DIGEST,
+			},
+			expectErr: true,
+		},
+		{
+			name: "failure - digest not found on epoch",
+			mellateReport: func(msg *types.MsgCommitReport) {
+				report := types.ReportBatch{
+					EpochId: 1,
+					BatchId: 10,
+				}
+				val, err := sdkcdc.NewAnyWithValue(&report)
+				if err != nil {
+					panic(err)
+				}
+				msg.Report = val
+			},
+			request: &types.MsgCommitReport{
+				Authority:  member,
+				ReportType: types.ReportType_REPORT_TYPE_BATCH,
+			},
+			expectErr: true,
+		},
+		{
+			name: "failure - invalid report end fields",
+			mellateReport: func(msg *types.MsgCommitReport) {
+				report := types.ReportEnd{
+					EpochId: 100,
+				}
+				val, err := sdkcdc.NewAnyWithValue(&report)
+				if err != nil {
+					panic(err)
+				}
+				msg.Report = val
+			},
+			request: &types.MsgCommitReport{
+				Authority:  member,
+				ReportType: types.ReportType_REPORT_TYPE_END,
+			},
+			expectErr: true,
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("MsgCommitReport - %s", tc.name), func() {
+			tc.mellateReport(tc.request)
+
+			_, err := suite.msgServer.CommitReport(suite.ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())

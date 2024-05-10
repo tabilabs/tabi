@@ -246,7 +246,7 @@ func ReportBatchOnEpochStoreKey(epochID, batchID uint64) []byte {
 	copy(key, ReportBatchOnEpochKey)
 	copy(key[len(ReportBatchOnEpochKey):], epochBz)
 	copy(key[len(ReportBatchOnEpochKey)+len(epochBz):], Delimiter)
-	copy(key[len(ReportBatchOnEpochKey)+len(epochBz)+len(Delimiter):], epochBz)
+	copy(key[len(ReportBatchOnEpochKey)+len(epochBz)+len(Delimiter):], batchBz)
 	return key
 }
 

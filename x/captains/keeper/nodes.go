@@ -19,10 +19,6 @@ func (k Keeper) CreateNode(
 	divisionID string,
 	owner sdk.AccAddress,
 ) (string, error) {
-	if k.isMaximumHoldingAmount(ctx, owner) {
-		return "", errorsmod.Wrap(types.ErrUserHoldingQuantityExceeded, owner.String())
-	}
-
 	division, found := k.GetDivision(ctx, divisionID)
 	if !found {
 		return "", errorsmod.Wrap(types.ErrDivisionNotExists, divisionID)
@@ -47,8 +43,8 @@ func (k Keeper) CreateNode(
 	}
 	k.setNodeByOwner(ctx, nodeID, owner)
 
-	division.TotalCount++
-	division.SoldCount++
+	division.TotalCount += 1
+	division.SoldCount += 1
 	if err := k.setDivision(ctx, division); err != nil {
 		return "", err
 	}
@@ -252,11 +248,6 @@ func (k Keeper) setNodeByOwner(ctx sdk.Context, nodeID string, owner sdk.AccAddr
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeByOwnerStoreKey(owner, nodeID)
 	store.Set(key, types.PlaceHolder)
-}
-
-// isMaximumHoldingAmount checks if the user holding quantity exceeded
-func (k Keeper) isMaximumHoldingAmount(ctx sdk.Context, owner sdk.AccAddress) bool {
-	return k.GetParams(ctx).MaximumHoldingAmount == k.GetUserHoldingAmount(ctx, owner)
 }
 
 // getNodesStoreByOwner returns the store for the nodes owned by the specified owner
