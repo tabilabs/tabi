@@ -27,9 +27,11 @@ func (k Keeper) CommitReport(ctx sdk.Context, report any) error {
 func (k Keeper) HandleReportDigest(ctx sdk.Context, report *types.ReportDigest) error {
 	epochId := report.EpochId
 
-	k.calcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
+	sum := k.CalcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
 
-	k.SetDigest(ctx, epochId, report)
+	k.delPledgeSum(ctx, epochId)
+	k.setEpochEmission(ctx, epochId, sum)
+	k.setDigest(ctx, epochId, report)
 
 	return nil
 }
@@ -44,20 +46,17 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 		// try to calculate historical emission
 		k.CalAndSetNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
 
-		pledgeRatio := k.CalcAndSetNodePledgeRatioOnEpoch(ctx, epochId, node.NodeId)
+		pledgeRatio := k.CalcNodePledgeRatioOnEpoch(ctx, epochId, node.NodeId)
+		power := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio, pledgeRatio)
 
-		power, err := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio, pledgeRatio)
-		if err != nil {
-			return err
-		}
-
-		// accumulate computing power sum
+		k.setNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, power)
+		k.delOwnerPledge(ctx, owner, epochId-2) // it's fine to delete epoch(-1) which doesn't exist at all.
 		k.incrComputingPowerSumOnEpoch(ctx, epochId, power)
 
 		// sample owner pledge once for next epoch
-		pledge, found := k.GetOwnerPledge(ctx, owner, epochId+1)
+		_, found := k.GetOwnerPledge(ctx, owner, epochId+1)
 		if !found {
-			pledge, err = k.SampleOwnerPledge(ctx, owner)
+			pledge, err := k.SampleOwnerPledge(ctx, owner)
 			if err != nil {
 				return err
 			}

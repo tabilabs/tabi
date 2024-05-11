@@ -42,8 +42,8 @@ func (k Keeper) GetDigest(ctx sdk.Context, epochID uint64) (*types.ReportDigest,
 	return &digest, true
 }
 
-// SetDigest sets the digest.
-func (k Keeper) SetDigest(ctx sdk.Context, epochID uint64, digest *types.ReportDigest) {
+// setDigest sets the digest.
+func (k Keeper) setDigest(ctx sdk.Context, epochID uint64, digest *types.ReportDigest) {
 	store := ctx.KVStore(k.storeKey)
 	bz, _ := k.cdc.Marshal(digest)
 	key := types.DigestOnEpochStoreKey(epochID)
@@ -120,7 +120,7 @@ func (k Keeper) DelEndEpoch(ctx sdk.Context, epochID uint64) {
 
 // GetEpochBase returns the base information of an epoch.
 func (k Keeper) GetEpochBase(ctx sdk.Context, epochID uint64) types.EpochBase {
-	emission, _ := k.GetEpochEmission(ctx, epochID)
+	emission := k.GetEpochEmission(ctx, epochID)
 	computingPower := k.GetComputingPowerSumOnEpoch(ctx, epochID)
 	pledgeAmount := k.GetPledgeSum(ctx, epochID)
 

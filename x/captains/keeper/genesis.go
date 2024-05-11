@@ -43,7 +43,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 		k.SetEndEpoch(ctx, currEpochID)
 	}
 	if data.EpochState.Digest != nil {
-		k.SetDigest(ctx, currEpochID, data.EpochState.Digest)
+		k.setDigest(ctx, currEpochID, data.EpochState.Digest)
 	}
 	k.SetEpochBase(ctx, currEpochID, data.EpochState.Current)
 	k.SetEpochBase(ctx, currEpochID-1, data.EpochState.Previous)

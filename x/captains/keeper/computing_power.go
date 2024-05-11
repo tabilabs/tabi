@@ -55,22 +55,11 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 	nodeID string,
 	powerOnRatio sdk.Dec,
 	pledgeRatio sdk.Dec,
-) (sdk.Dec, error) {
+) sdk.Dec {
 	basePower := sdk.NewDec(int64(k.GetNodeBaseComputingPower(ctx, nodeID)))
-
-	// exponent = pledge_ratio * 20 / 3
 	exponentiation, _ := pledgeRatio.Mul(sdk.NewDec(20)).Quo(sdk.NewDec(3)).Float64()
-
-	// NOTE: decimal precision is 6
-	exponentiated, err := sdk.NewDecFromStr(fmt.Sprintf("%f", math.Exp(exponentiation)))
-	if err != nil {
-		return sdk.ZeroDec(), err
-	}
-
-	power := basePower.Mul(exponentiated).Mul(powerOnRatio)
-	k.setNodeComputingPowerOnEpoch(ctx, epochID, nodeID, power)
-
-	return power, err
+	exponentiated, _ := sdk.NewDecFromStr(fmt.Sprintf("%f", math.Exp(exponentiation)))
+	return basePower.Mul(exponentiated).Mul(powerOnRatio)
 }
 
 // setComputingPowerByNode returns the computing power of a node as per its node info.

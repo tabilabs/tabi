@@ -6,13 +6,12 @@ var (
 	TechProgressCoefficientCardinality = sdk.NewDecWithPrec(16, 1) // constant 1.6
 )
 
-// GetTechProgressCoefficient calculates tech progress coefficient
+// CalcTechProgressCoefficient calculates tech progress coefficient
 // TechProgressCoefficient = 1.6 ^ (captainNodeSaleLevel - 1)
-func (k Keeper) GetTechProgressCoefficient(ctx sdk.Context) sdk.Dec {
+func (k Keeper) CalcTechProgressCoefficient(ctx sdk.Context) sdk.Dec {
 	captainNodeSaleLevel := k.GetSaleLevel(ctx)
 	// Calculate cardinality raised to the power of captainNodeSaleLevel-1
-	techProgressCoefficient := TechProgressCoefficientCardinality.Power(captainNodeSaleLevel - 1)
-	return techProgressCoefficient
+	return TechProgressCoefficientCardinality.Power(captainNodeSaleLevel - 1)
 }
 
 // GetHalvingEraCoefficient returns the tech progress coefficient

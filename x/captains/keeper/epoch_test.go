@@ -7,47 +7,64 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-// In epoch(t), we check state value or calc transit value as follows:
+//  In epoch(t), we check state value or calc intermediate value as follows:
 //
-// Before submitting digest:
+//	A1. BeforeReportDigest(T)
 //
-// - pledge_sum(t)
-// - historical_claimed_sum(t)
-// - epoch_emission_base(t)
+//	| Name                    | Action | Expect                                  |
+//	| ----------------------- | ------ | --------------------------------------- |
+//	| PledgeSum(T)            | Get    | - Staked: NonZero<br>- Unstaked: Zero   |
+//	| HistoricalClaimedSum    | Get    | - Claimed: NonZero<br>- Unclaimed: Zero |
+//	| EpochEmissionSum(T)@Ref | Calc   | For comparison                          |
 //
-// After submitting digest:
+//	A2. AfterReportDigest(T)
 //
-// - epoch_emission_sum(t)
+//	| Name                | Action | Expect                  |
+//	| ------------------- | ------ | ----------------------- |
+//	| PledgeSum(T)        | Get    | Zero                    |
+//	| EpochEmissionSum(T) | Get    | EpochEmissionSum(T)@Ref |
 //
-// Before submitting batch:
+//	B1. BeforeReportBatch(T)
 //
-// - historical_emission_sum_by_node(t-2, n)
-// - get: pledge_by_owner(t-1) (should be non-zero if has pledge)
+//	| Name                              | Action | Expect                         |
+//	| --------------------------------- | ------ | ------------------------------ |
+//	| HistoricalEmissionByNode(T-2)     | Get    | - T<=2, Zero<br>- T>2, NonZero |
+//	| EpochEmissionSum(T-1)             | Get    | - T=1, Zero<br>- T=2, NonZero  |
+//	| ComputingPowerSum(T-1)            | Get    |                                |
+//	| ComputingPowerByNode(T-1)         | Get    |                                |
+//	| HistoricalEmissionByNode(T-1)@Ref | Calc   | For comparison                 |
+//	| PledgeByOwner(T-2)                | Get    |                                |
+//	| ComputingPowerByNode(T)@Ref       | Calc   | For comparison                 |
+//	| ComputingPowerSum(T)@Ref          | Calc   | For comparison                 |
+//	| PledgeByOwner(T+1)                | Get    | Zero                           |
 //
-// After submitting batch:
+//	B2. AfterReportBatch(T)
 //
-// - get: historical_emission_sum_by_node(t-1, n)
-// - check: pledge_by_owner(t-1) (should be zero)
-// - check: pledge_by_owner(t+1) (if has pledge)
+//	| Name                          | Action | Expect                            |
+//	| ----------------------------- | ------ | --------------------------------- |
+//	| HistoricalEmissionByNode(T-2) | Get    | deleted                           |
+//	| ComputingPower(T-2)           | Get    | deleted                           |
+//	| HistoricalEmissionByNode(T-1) | Get    | HistoricalEmissionByNode(T-1)@Ref |
+//	| PledgeByOwner(T-2)            | Get    | deleted                           |
+//	| ComputingPowerByNode(T)       | Get    | ComputingPowerByNode(T)@Ref       |
+//	| ComputingPowerSum(T)          | Get    | ComputingPowerSum(T)@Ref          |
+//	| PledgeByOwner(T+1)            | Get    | NonZero if staked                 |
 //
+//	C1. AfterEpochEnd(T)
 //
-// After submitting all batches:
+//	| Name                   | Action | Expect   |
+//	| ---------------------- | ------ | -------- |
+//	| EpochEmissionSum(T-1)  | Get    | Non zero |
+//	| ComputingPowerSum(T-1) | Get    | Non zero |
 //
-// Before submitting end:
+//	D1. BeginBlocker
 //
-// After submitting end:
-//
-// Before enter new epoch:
-//
-// 1. PledgeSum
-// 2.
-// 3. ComputingPowerSum
-// 4. NodeComputingPower
-// 5.
-//
-// And we cal values as follows:
-//
+//	| Name                   | Action | Expect  |
+//	| ---------------------- | ------ | ------- |
+//	| EpochEmissionSum(T-1)  | Get    | deleted |
+//	| ComputingPowerSum(T-1) | Get    | deleted |
 
+// TestFullEpochPeriodWithoutOwnerStaking tests the full epoch period without owner staking or claiming.
 func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 	// create 100 nodes for addr1
 	addr1 := accounts[1].String()
@@ -62,7 +79,10 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 	epoch1 := suite.keeper.GetCurrentEpoch(suite.ctx)
 	suite.T().Logf("current epoch: %d", epoch1)
 
-	// submit digest
+	// BeforeReportDigest(1)
+	//
+
+	// Submit Report Digest
 	suite.T().Logf("subimit digest at height: %d", suite.ctx.BlockHeight())
 	digest1 := types.ReportDigest{
 		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
@@ -85,6 +105,12 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 	suite.Require().True(found)
 	suite.Commit()
 
+	// AfterReportDigest(1)
+	emission := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
+	suite.T().Logf("emission at 1: %s", emission.String())
+
+	// Before Submit Report Batch
+
 	// submit batches
 	nodeWithRatios1 := suite.utilsBatchAssignFixedPowerOnRatio(nodes, 1, 0)
 	for i := uint64(1); i <= digest1.TotalBatchCount; i++ {
@@ -104,7 +130,6 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
 		})
 		suite.Require().NoError(err)
-
 		suite.Commit()
 	}
 
@@ -131,11 +156,6 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 	epoch2 := suite.keeper.GetCurrentEpoch(suite.ctx)
 	suite.T().Logf("current epoch: %d", epoch2)
 	suite.Require().Equal(epoch2, epoch1+1)
-
-	// query results
-	suite.T().Logf("computing power sum: %s", suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1).String())
-	emission, _ := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
-	suite.T().Logf("epoch emission sum: %s", emission.String())
 
 	// submit digest
 	suite.T().Logf("subimit digest at height: %d", suite.ctx.BlockHeight())
@@ -209,6 +229,6 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 
 	// query results
 	suite.T().Logf("computing power sum: %s", suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2).String())
-	emission, _ = suite.keeper.GetEpochEmission(suite.ctx, epoch2)
+	emission = suite.keeper.GetEpochEmission(suite.ctx, epoch2)
 	suite.T().Logf("epoch emission sum: %s", emission.String())
 }

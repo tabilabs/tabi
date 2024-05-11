@@ -43,7 +43,7 @@ func (suite *CaptainsTestSuite) TestTechCoefficient() {
 		suite.Run(fmt.Sprintf("TechCoefficient - %s", tc.name), func() {
 			suite.utilsUpdateLevel(tc.level)
 
-			tec := suite.keeper.GetTechProgressCoefficient(suite.ctx)
+			tec := suite.keeper.CalcTechProgressCoefficient(suite.ctx)
 			expect, err := sdk.NewDecFromStr(tc.expect)
 
 			suite.Require().NoError(err)
