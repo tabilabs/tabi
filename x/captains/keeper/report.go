@@ -45,9 +45,7 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 
 		// try to calculate historical emission
 		k.CalAndSetNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
-
-		pledgeRatio := k.CalcNodePledgeRatioOnEpoch(ctx, epochId, node.NodeId)
-		power := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio, pledgeRatio)
+		power := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio)
 
 		k.setNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, power)
 		k.delOwnerPledge(ctx, owner, epochId-2) // it's fine to delete epoch(-1) which doesn't exist at all.
