@@ -8,7 +8,6 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
-// default paramspace for params keeper
 const (
 	DefaultParamSpace = ModuleName
 )
@@ -21,13 +20,14 @@ func ParamKeyTable() paramtypes.KeyTable {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return Params{
-		CaptainsTotalCount:    100000,
-		MinimumPowerOnPeriod:  6,
-		MaximumPowerOnPeriod:  24,
-		CaptainsConstant:      300000,
-		HalvingEraCoefficient: sdk.OneDec(),
-		CurrentSaleLevel:      1,
-		AuthorizedMembers:     nil,
+		CaptainsTotalCount:                 100000,
+		MinimumPowerOnPeriod:               6,
+		MaximumPowerOnPeriod:               24,
+		CaptainsConstant:                   sdk.NewDec(300000),
+		TechProgressCoefficientCardinality: sdk.NewDecWithPrec(16, 1),
+		HalvingEraCoefficient:              sdk.OneDec(),
+		CurrentSaleLevel:                   1,
+		AuthorizedMembers:                  nil,
 	}
 }
 
@@ -36,19 +36,21 @@ func NewParams(
 	captainsTotalCount uint64,
 	minimumPowerOnPeriod uint64,
 	maximumPowerOnPeriod uint64,
-	captainsConstant uint64,
+	captainsConstant sdk.Dec,
+	techProgressCoefficientCardinality sdk.Dec,
 	halvingEraCoefficient sdk.Dec,
 	currentSaleLevel uint64,
 	authorizedMembers []string,
 ) Params {
 	return Params{
-		CaptainsTotalCount:    captainsTotalCount,
-		MinimumPowerOnPeriod:  minimumPowerOnPeriod,
-		MaximumPowerOnPeriod:  maximumPowerOnPeriod,
-		CaptainsConstant:      captainsConstant,
-		HalvingEraCoefficient: halvingEraCoefficient,
-		CurrentSaleLevel:      currentSaleLevel,
-		AuthorizedMembers:     authorizedMembers,
+		CaptainsTotalCount:                 captainsTotalCount,
+		MinimumPowerOnPeriod:               minimumPowerOnPeriod,
+		MaximumPowerOnPeriod:               maximumPowerOnPeriod,
+		CaptainsConstant:                   captainsConstant,
+		TechProgressCoefficientCardinality: techProgressCoefficientCardinality,
+		HalvingEraCoefficient:              halvingEraCoefficient,
+		CurrentSaleLevel:                   currentSaleLevel,
+		AuthorizedMembers:                  authorizedMembers,
 	}
 }
 
@@ -76,9 +78,14 @@ func (p *Params) Validate() error {
 		return fmt.Errorf("minimum power on period should be positive, less than or equal to 24 and less than or equal to maximum power on period")
 	}
 
-	if p.CaptainsConstant <= 0 {
+	if !p.CaptainsConstant.IsPositive() {
 		return fmt.Errorf("captains constant should be positive")
 	}
+
+	if !p.TechProgressCoefficientCardinality.IsPositive() {
+		return fmt.Errorf("tech progress coefficient cardinality should be positive")
+	}
+
 	if p.CurrentSaleLevel <= 0 || p.CurrentSaleLevel > 5 {
 		return fmt.Errorf("current sale level should be non-negative and less than or equal to 7")
 	}

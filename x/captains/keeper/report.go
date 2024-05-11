@@ -44,7 +44,7 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 		owner := k.GetNodeOwner(ctx, node.NodeId)
 
 		// try to calculate historical emission
-		k.CalAndSetNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
+		k.CalcAndSetNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
 		power := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio)
 
 		k.setNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, power)
@@ -80,7 +80,7 @@ func (k Keeper) HandleReportEnd(ctx sdk.Context, report *types.ReportEnd) error 
 	}
 
 	// marks we are ready for the next epoch.
-	k.SetEndEpoch(ctx, epochId)
+	k.setEndEpoch(ctx, epochId)
 
 	return nil
 }
