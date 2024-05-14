@@ -13,6 +13,17 @@ import (
 
 var _ types.QueryServer = Keeper{}
 
+type Querier struct {
+	*Keeper
+}
+
+// NewQuerierImpl returns an implementation of the captains QueryServer interface.
+func NewQuerierImpl(k *Keeper) types.QueryServer {
+	return &Querier{k}
+}
+
+var _ types.QueryServer = Querier{}
+
 // Params queries the staking parameters
 func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)

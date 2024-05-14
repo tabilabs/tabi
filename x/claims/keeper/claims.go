@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	tabitypes "github.com/tabilabs/tabi/types"
@@ -9,6 +11,8 @@ import (
 )
 
 func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (sdk.Coins, error) {
+	epoch := k.captainsKeeper.GetCurrentEpoch(ctx)
+	fmt.Println("Current epoch: ", epoch)
 	// Get the Node associated with the sender and traverse the epochs associated with the Node
 	nodes := k.captainsKeeper.GetNodesByOwner(ctx, sender.Bytes())
 	// check if the sender has not held node

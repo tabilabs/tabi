@@ -54,3 +54,8 @@ func NewKeeper(cdc codec.Codec, authority sdk.AccAddress,
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("%s", types.ModuleName))
 }
+
+// SetCaptainsKeeper
+func (k Keeper) SetCaptainsKeeper(ck types.CaptainsKeeper) {
+	k.captainsKeeper = ck
+}
