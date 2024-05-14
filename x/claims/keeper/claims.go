@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"fmt"
-
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	tabitypes "github.com/tabilabs/tabi/types"
@@ -11,8 +9,6 @@ import (
 )
 
 func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (sdk.Coins, error) {
-	epoch := k.captainsKeeper.GetCurrentEpoch(ctx)
-	fmt.Println("Current epoch: ", epoch)
 	// Get the Node associated with the sender and traverse the epochs associated with the Node
 	nodes := k.captainsKeeper.GetNodesByOwner(ctx, sender.Bytes())
 	// check if the sender has not held node
@@ -23,6 +19,10 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 	totalRewards, err := k.CalculateRewards(ctx, nodes)
 	if err != nil {
 		return sdk.Coins{}, types.ErrCalculateRewards
+	}
+
+	if totalRewards.IsZero() {
+		return sdk.Coins{}, types.ErrZeroRewards
 	}
 
 	// Truncate the rewards
@@ -66,7 +66,14 @@ func (k Keeper) CalculateRewards(ctx sdk.Context, nodes []captainnodetypes.Node)
 func (k Keeper) CalculateRewardsByNodeId(ctx sdk.Context, nodeId string) (sdk.DecCoins, error) {
 	// Get Current epoch
 	epochSequence := k.captainsKeeper.GetCurrentEpoch(ctx) - 1
+
+	if epochSequence == 0 {
+		return sdk.DecCoins{}, types.ErrFirstEpoch
+	}
+
+	// all historical emission
 	historicalEmission := k.captainsKeeper.CalcAndGetNodeHistoricalEmissionOnEpoch(ctx, epochSequence, nodeId)
+	// historical emission on last claim
 	historicalEmissionOnLastClaim := k.captainsKeeper.GetNodeHistoricalEmissionOnLastClaim(ctx, nodeId)
 	reward := historicalEmission.Sub(historicalEmissionOnLastClaim)
 

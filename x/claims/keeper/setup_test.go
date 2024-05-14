@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	tabitypes "github.com/tabilabs/tabi/types"
+
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
@@ -40,8 +42,6 @@ type ClaimsTestSuite struct {
 	keeper      *claimskeeper.Keeper
 	msgServer   types.MsgServer
 	queryClient types.QueryClient
-
-	mockCk *MockCaptains
 
 	signer keyring.Signer
 
@@ -89,13 +89,12 @@ func (suite *ClaimsTestSuite) execSetupTest(checkTx bool, t require.TestingT) {
 	suite.ctx = suite.app.BaseApp.NewContext(checkTx, header)
 
 	// setup captains keeper
-	mockCk := NewMockCaptains()
-	suite.mockCk = mockCk
-	suite.app.ClaimsKeeper.SetCaptainsKeeper(mockCk)
 
 	// setup keeper & msg server
 	suite.keeper = &suite.app.ClaimsKeeper
-	suite.msgServer = claimskeeper.NewMsgServerImpl(suite.app.ClaimsKeeper)
+	suite.msgServer = claimskeeper.NewMsgServerImpl(&suite.app.ClaimsKeeper)
+	err = testutil.FundModuleAccount(suite.ctx, suite.app.BankKeeper, types.ModuleName, sdk.NewCoins(sdk.NewCoin(tabitypes.AttoVeTabi, sdk.NewInt(1000000000000000000))))
+	require.NoError(t, err)
 
 	// setup query client
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())

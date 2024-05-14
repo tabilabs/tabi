@@ -34,7 +34,7 @@ func NewKeeper(cdc codec.Codec, authority sdk.AccAddress,
 	key storetypes.StoreKey, paramSpace paramtypes.Subspace,
 	ak types.AccountKeeper, bk types.BankKeeper, ck types.CaptainsKeeper) Keeper {
 	// ensure mint module account is set
-	if addr := ak.GetModuleAddress(types.ClaimsCollectorName); addr == nil {
+	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
 		panic("the climas collector account has not been set")
 	}
 
