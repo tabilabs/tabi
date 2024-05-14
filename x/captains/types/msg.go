@@ -43,8 +43,12 @@ func (msg *MsgUpdateParams) ValidateBasic() error {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "max node per batch cannot be zero")
 	}
 
-	if msg.Params.CaptainsConstant == 0 {
+	if !msg.Params.CaptainsConstant.IsPositive() {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains constant cannot be zero")
+	}
+
+	if !msg.Params.TechProgressCoefficientCardinality.IsPositive() {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "tech progress coefficient cardinality cannot be zero")
 	}
 
 	if len(msg.Params.AuthorizedMembers) == 0 {

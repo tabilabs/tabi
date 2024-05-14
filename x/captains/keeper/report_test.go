@@ -28,7 +28,7 @@ func (suite *CaptainsTestSuite) TestHandleReportDigest() {
 			suite.Require().Errorf(err, "%s", err.Error())
 		} else {
 			suite.Require().NoError(err)
-			val, _ := suite.keeper.GetEpochEmission(suite.ctx, tc.report.EpochId)
+			val := suite.keeper.GetEpochEmission(suite.ctx, tc.report.EpochId)
 			suite.T().Log(val)
 		}
 	}
