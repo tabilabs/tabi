@@ -88,6 +88,11 @@ func (suite *ClaimsTestSuite) execSetupTest(checkTx bool, t require.TestingT) {
 	)
 	suite.ctx = suite.app.BaseApp.NewContext(checkTx, header)
 
+	// setup captains keeper
+	mockCk := NewMockCaptains()
+	suite.mockCk = mockCk
+	suite.app.ClaimsKeeper.SetCaptainsKeeper(mockCk)
+
 	// setup keeper & msg server
 	suite.keeper = &suite.app.ClaimsKeeper
 	suite.msgServer = claimskeeper.NewMsgServerImpl(suite.app.ClaimsKeeper)
@@ -101,11 +106,6 @@ func (suite *ClaimsTestSuite) execSetupTest(checkTx bool, t require.TestingT) {
 	params := types.DefaultParams()
 	err = suite.app.ClaimsKeeper.SetParams(suite.ctx, params)
 	require.NoError(t, err)
-
-	// setup captains keeper
-	mockCk := NewMockCaptains()
-	suite.mockCk = mockCk
-	suite.app.ClaimsKeeper.SetCaptainsKeeper(mockCk)
 
 	// setup validators
 	valAddr := sdk.ValAddress(suite.address.Bytes())

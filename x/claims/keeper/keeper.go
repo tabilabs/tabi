@@ -56,6 +56,6 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // SetCaptainsKeeper
-func (k Keeper) SetCaptainsKeeper(ck types.CaptainsKeeper) {
+func (k *Keeper) SetCaptainsKeeper(ck types.CaptainsKeeper) {
 	k.captainsKeeper = ck
 }
