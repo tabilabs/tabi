@@ -66,7 +66,7 @@ func (k Keeper) CalculateRewards(ctx sdk.Context, nodes []captainnodetypes.Node)
 func (k Keeper) CalculateRewardsByNodeId(ctx sdk.Context, nodeId string) (sdk.DecCoins, error) {
 	// Get Current epoch
 	epochSequence := k.captainsKeeper.GetCurrentEpoch(ctx) - 1
-	historicalEmission := k.captainsKeeper.CalAndGetNodeHistoricalEmissionOnEpoch(ctx, epochSequence, nodeId)
+	historicalEmission := k.captainsKeeper.CalcAndGetNodeHistoricalEmissionOnEpoch(ctx, epochSequence, nodeId)
 	historicalEmissionOnLastClaim := k.captainsKeeper.GetNodeHistoricalEmissionOnLastClaim(ctx, nodeId)
 	reward := historicalEmission.Sub(historicalEmissionOnLastClaim)
 

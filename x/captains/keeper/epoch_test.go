@@ -7,63 +7,82 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-// In epoch(t), we check state value or calc transit value as follows:
+//  In epoch(t), check state value or calc intermediate value as follows:
 //
-// Before submitting digest:
+//	A1. BeforeReportDigest(T)
 //
-// - pledge_sum(t)
-// - historical_claimed_sum(t)
-// - epoch_emission_base(t)
+//	| Name                    | Action | Expect                                  |
+//	| ----------------------- | ------ | --------------------------------------- |
+//	| PledgeSum(T)            | Get    | - Staked: NonZero<br>- Unstaked: Zero   |
+//	| HistoricalClaimedSum    | Get    | - Claimed: NonZero<br>- Unclaimed: Zero |
+//	| EpochEmissionSum(T)@Ref | Calc   | For comparison                          |
 //
-// After submitting digest:
+//	A2. AfterReportDigest(T)
 //
-// - epoch_emission_sum(t)
+//	| Name                | Action | Expect                  |
+//	| ------------------- | ------ | ----------------------- |
+//	| PledgeSum(T)        | Get    | Zero                    |
+//	| EpochEmissionSum(T) | Get    | EpochEmissionSum(T)@Ref |
 //
-// Before submitting batch:
+//	B1. BeforeReportBatch(T)
 //
-// - historical_emission_sum_by_node(t-2, n)
-// - get: pledge_by_owner(t-1) (should be non-zero if has pledge)
+//	| Name                              | Action | Expect                         |
+//	| --------------------------------- | ------ | ------------------------------ |
+//	| HistoricalEmissionByNode(T-2)     | Get    | - T<=2, Zero<br>- T>2, NonZero |
+//	| EpochEmissionSum(T-1)             | Get    | - T=1, Zero<br>- T=2, NonZero  |
+//	| ComputingPowerSum(T-1)            | Get    |                                |
+//	| ComputingPowerByNode(T-1)         | Get    |                                |
+//	| HistoricalEmissionByNode(T-1)@Ref | Calc   | For comparison                 |
+//	| PledgeByOwner(T-2)                | Get    |                                |
+//	| ComputingPowerByNode(T)@Ref       | Calc   | For comparison                 |
+//	| ComputingPowerSum(T)@Ref          | Calc   | For comparison                 |
+//	| PledgeByOwner(T+1)                | Get    | Zero                           |
 //
-// After submitting batch:
+//	B2. AfterReportBatch(T)
 //
-// - get: historical_emission_sum_by_node(t-1, n)
-// - check: pledge_by_owner(t-1) (should be zero)
-// - check: pledge_by_owner(t+1) (if has pledge)
+//	| Name                          | Action | Expect                            |
+//	| ----------------------------- | ------ | --------------------------------- |
+//	| HistoricalEmissionByNode(T-2) | Get    | deleted                           |
+//	| ComputingPower(T-2)           | Get    | deleted                           |
+//	| HistoricalEmissionByNode(T-1) | Get    | HistoricalEmissionByNode(T-1)@Ref |
+//	| PledgeByOwner(T-2)            | Get    | deleted                           |
+//	| ComputingPowerByNode(T)       | Get    | ComputingPowerByNode(T)@Ref       |
+//	| ComputingPowerSum(T)          | Get    | ComputingPowerSum(T)@Ref          |
+//	| PledgeByOwner(T+1)            | Get    | NonZero if staked                 |
 //
+//	C1. AfterEpochEnd(T)
 //
-// After submitting all batches:
+//	| Name                   | Action | Expect   |
+//	| ---------------------- | ------ | -------- |
+//	| EpochEmissionSum(T-1)  | Get    | Non zero |
+//	| ComputingPowerSum(T-1) | Get    | Non zero |
 //
-// Before submitting end:
+//	D1. BeginBlocker(T+1)
 //
-// After submitting end:
-//
-// Before enter new epoch:
-//
-// 1. PledgeSum
-// 2.
-// 3. ComputingPowerSum
-// 4. NodeComputingPower
-// 5.
-//
-// And we cal values as follows:
-//
+//	| Name                   | Action | Expect  |
+//	| ---------------------- | ------ | ------- |
+//	| EpochEmissionSum(T-1)  | Get    | deleted |
+//	| ComputingPowerSum(T-1) | Get    | deleted |
 
-func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
+// TestCompletedEpochesScenario1 tests the full epoch period but:
+// 1. no user claim their rewards: so pledge ratio is always 1
+// 2. no user stake their coins: so not historical claimed emissions
+func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	// create 100 nodes for addr1
 	addr1 := accounts[1].String()
 	nodes := suite.utilsBatchCreateCaptainNode(addr1, 1, 100)
 	resp, err := suite.queryClient.Nodes(suite.ctx, &types.QueryNodesRequest{})
 	suite.Require().NoError(err)
 	suite.Require().Len(resp.Nodes, len(nodes))
+	nodeWithRatios := suite.utilsBatchAssignFixedPowerOnRatio(nodes, 1, 0)
 
-	///////////////////////////////////////////////
-	//                 epoch 1                   //
-	///////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////
+	//                                epoch 1                           //
+	//////////////////////////////////////////////////////////////////////
 	epoch1 := suite.keeper.GetCurrentEpoch(suite.ctx)
-	suite.T().Logf("current epoch: %d", epoch1)
-
-	// submit digest
-	suite.T().Logf("subimit digest at height: %d", suite.ctx.BlockHeight())
+	// BeforeReportDigest(1)
+	expectEmission1 := suite.keeper.CalcEpochEmission(suite.ctx, epoch1, sdk.NewDecWithPrec(1, 0))
+	// Submit ReportDigest(1)
 	digest1 := types.ReportDigest{
 		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
 		TotalBatchCount:          10,
@@ -80,35 +99,46 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
 	})
 	suite.Require().NoError(err)
-
-	_, found := suite.keeper.GetDigest(suite.ctx, digest1.EpochId)
-	suite.Require().True(found)
 	suite.Commit()
 
-	// submit batches
-	nodeWithRatios1 := suite.utilsBatchAssignFixedPowerOnRatio(nodes, 1, 0)
+	// AfterReportDigest(1)
+	_, found := suite.keeper.GetDigest(suite.ctx, digest1.EpochId)
+	suite.Require().True(found)
+	actualEmission1 := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
+	suite.Require().Equal(expectEmission1, actualEmission1)
+
+	// Submit ReportBatches(1)
+	expectedComputingPowerSum1 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest1.TotalBatchCount; i++ {
+		// Before Submit ReportBatches(1,i)
+		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
+			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+				epoch1, node.NodeId, node.OnOperationRatio)
+			expectedComputingPowerSum1 = expectedComputingPowerSum1.Add(expectedNodeComputingPower)
+		}
+		// Submit ReportBatch(1, i)
 		batch := types.ReportBatch{
 			EpochId:   epoch1,
 			BatchId:   i,
 			NodeCount: 10,
-			Nodes:     nodeWithRatios1[(i-1)*10 : i*10],
+			Nodes:     nodeWithRatios[(i-1)*10 : i*10],
 		}
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		suite.T().Logf("subimit report-%d at height: %d", i, suite.ctx.BlockHeight())
 		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
 		})
 		suite.Require().NoError(err)
-
 		suite.Commit()
+		// After Submit ReportBatches(1,i)
+		actualComputingPowerSum1 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1)
+		suite.Require().Equal(expectedComputingPowerSum1, actualComputingPowerSum1)
 	}
 
-	// submit batch end
+	// Submit ReportEnd(1)
 	end1 := types.ReportEnd{
 		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
 	}
@@ -123,28 +153,19 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 	suite.Require().NoError(err)
 	suite.Commit()
 
-	///////////////////////////////////////////////
-	//                 epoch 2                   //
-	///////////////////////////////////////////////
-
-	// check epoch
+	//////////////////////////////////////////////////////////////////////
+	//                                epoch 2                           //
+	//////////////////////////////////////////////////////////////////////
 	epoch2 := suite.keeper.GetCurrentEpoch(suite.ctx)
-	suite.T().Logf("current epoch: %d", epoch2)
-	suite.Require().Equal(epoch2, epoch1+1)
-
-	// query results
-	suite.T().Logf("computing power sum: %s", suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1).String())
-	emission, _ := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
-	suite.T().Logf("epoch emission sum: %s", emission.String())
-
-	// submit digest
-	suite.T().Logf("subimit digest at height: %d", suite.ctx.BlockHeight())
+	// BeforeReportDigest(2)
+	expectEmission2 := suite.keeper.CalcEpochEmission(suite.ctx, epoch2, sdk.NewDecWithPrec(47, 1))
+	// Submit ReportDigest(2)
 	digest2 := types.ReportDigest{
 		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
 		TotalBatchCount:          10,
 		TotalNodeCount:           100,
 		MaximumNodeCountPerBatch: 10,
-		GlobalOnOperationRatio:   sdk.NewDecWithPrec(47, 0),
+		GlobalOnOperationRatio:   sdk.NewDecWithPrec(47, 1),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&digest2)
 	suite.Require().NoError(err)
@@ -155,37 +176,51 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
 	})
 	suite.Require().NoError(err)
-
-	_, found = suite.keeper.GetDigest(suite.ctx, digest2.EpochId)
-	suite.Require().True(found)
 	suite.Commit()
 
-	// submit batches
-	nodeWithRatios2 := suite.utilsBatchAssignRandomPowerOnRatio(nodes)
+	// AfterReportDigest(2)
+	_, found = suite.keeper.GetDigest(suite.ctx, digest2.EpochId)
+	suite.Require().True(found)
+	actualEmission2 := suite.keeper.GetEpochEmission(suite.ctx, epoch2)
+	suite.Require().Equal(expectEmission2, actualEmission2)
+
+	// Submit ReportBatches(2)
+	suite.Require().Equal(expectEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+
+	expectedComputingPowerSum2 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
+		// Before Submit ReportBatches(2,i)
+		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
+			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+				epoch2, node.NodeId, node.OnOperationRatio)
+			expectedComputingPowerSum2 = expectedComputingPowerSum2.Add(expectedNodeComputingPower)
+		}
+		// Submit ReportBatch(2, i)
 		batch := types.ReportBatch{
 			EpochId:   epoch2,
 			BatchId:   i,
 			NodeCount: 10,
-			Nodes:     nodeWithRatios2[(i-1)*10 : i*10],
+			Nodes:     nodeWithRatios[(i-1)*10 : i*10],
 		}
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		suite.T().Logf("subimit report-%d at height: %d", i, suite.ctx.BlockHeight())
 		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
 		})
 		suite.Require().NoError(err)
-
 		suite.Commit()
+		// After Submit ReportBatches(2,i)
+		actualComputingPowerSum2 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2)
+		suite.Require().Equal(expectedComputingPowerSum2, actualComputingPowerSum2)
 	}
 
-	// submit batch end
+	// Submit ReportEnd(2)
 	end2 := types.ReportEnd{
-		EpochId: epoch2,
+		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&end2)
 	suite.Require().NoError(err)
@@ -196,19 +231,108 @@ func (suite *CaptainsTestSuite) TestFullEpochPeriodWithoutOwnerStaking() {
 		Report:     anyVal,
 	})
 	suite.Require().NoError(err)
+	// After ReportEnd(2)
+	suite.Require().Equal(actualEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+
+	suite.Commit()
+	// BeginBlocker
+	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch1))
+	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+
+	//////////////////////////////////////////////////////////////////////
+	//                                epoch 3                           //
+	//////////////////////////////////////////////////////////////////////
+	epoch3 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	// BeforeReportDigest(3)
+	expectEmission3 := suite.keeper.CalcEpochEmission(suite.ctx, epoch3, sdk.NewDecWithPrec(66, 1))
+	// Submit ReportDigest(2)
+	digest3 := types.ReportDigest{
+		EpochId:                  epoch3,
+		TotalBatchCount:          10,
+		TotalNodeCount:           100,
+		MaximumNodeCountPerBatch: 10,
+		GlobalOnOperationRatio:   sdk.NewDecWithPrec(66, 1),
+	}
+	anyVal, err = cdctypes.NewAnyWithValue(&digest3)
+	suite.Require().NoError(err)
+
+	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		Authority:  accounts[0].String(),
+		Report:     anyVal,
+		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
+	})
+	suite.Require().NoError(err)
 	suite.Commit()
 
-	///////////////////////////////////////////////
-	//                 epoch 3                   //
-	///////////////////////////////////////////////
+	// AfterReportDigest(3)
+	_, found = suite.keeper.GetDigest(suite.ctx, digest3.EpochId)
+	suite.Require().True(found)
+	actualEmission3 := suite.keeper.GetEpochEmission(suite.ctx, epoch3)
+	suite.Require().Equal(expectEmission3, actualEmission3)
 
-	// check epoch
-	epoch3 := suite.keeper.GetCurrentEpoch(suite.ctx)
-	suite.T().Logf("current epoch: %d", epoch3)
-	suite.Require().Equal(epoch3, epoch2+1)
+	// Submit ReportBatches(3)
+	suite.Require().Equal(expectEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
 
-	// query results
-	suite.T().Logf("computing power sum: %s", suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2).String())
-	emission, _ = suite.keeper.GetEpochEmission(suite.ctx, epoch2)
-	suite.T().Logf("epoch emission sum: %s", emission.String())
+	expectedComputingPowerSum3 := sdk.NewDec(0)
+	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
+		// Before Submit ReportBatches(3,i)
+		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
+			suite.Require().NotEmpty(suite.keeper.GetNodeHistoricalEmissionOnEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().NotEmpty(suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch2, node.NodeId))
+
+			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+				epoch3, node.NodeId, node.OnOperationRatio)
+			expectedComputingPowerSum3 = expectedComputingPowerSum3.Add(expectedNodeComputingPower)
+		}
+		// Submit ReportBatch(3, i)
+		batch := types.ReportBatch{
+			EpochId:   epoch3,
+			BatchId:   i,
+			NodeCount: 10,
+			Nodes:     nodeWithRatios[(i-1)*10 : i*10],
+		}
+		anyVal, err := cdctypes.NewAnyWithValue(&batch)
+		suite.Require().NoError(err)
+
+		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+			Authority:  accounts[0].String(),
+			Report:     anyVal,
+			ReportType: types.ReportType_REPORT_TYPE_BATCH,
+		})
+		suite.Require().NoError(err)
+		suite.Commit()
+
+		// After Submit ReportBatches(2,i)
+		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
+			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeHistoricalEmissionOnEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch1, node.NodeId))
+		}
+
+		actualComputingPowerSum3 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch3)
+		suite.Require().Equal(expectedComputingPowerSum3, actualComputingPowerSum3)
+	}
+
+	// Submit ReportEnd(3)
+	end3 := types.ReportEnd{
+		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+	}
+	anyVal, err = cdctypes.NewAnyWithValue(&end3)
+	suite.Require().NoError(err)
+
+	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		Authority:  accounts[0].String(),
+		ReportType: types.ReportType_REPORT_TYPE_END,
+		Report:     anyVal,
+	})
+	suite.Require().NoError(err)
+	// After ReportEnd(3)
+	suite.Require().Equal(actualEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
+
+	suite.Commit()
+	// BeginBlocker
+	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch2))
+	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
 }

@@ -59,8 +59,8 @@ type CaptainsKeeper interface {
 	// GetCurrentEpoch return the current epoch id.
 	GetCurrentEpoch(ctx sdk.Context) uint64
 
-	// CalAndGetNodeHistoricalEmissionOnEpoch returns the historical mission of the node at the end of epoch.
-	CalAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec
+	// CalcAndGetNodeHistoricalEmissionOnEpoch returns the historical mission of the node at the end of epoch.
+	CalcAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec
 
 	// GetNodeHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
 	GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) sdk.Dec

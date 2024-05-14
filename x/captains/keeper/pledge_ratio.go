@@ -29,23 +29,10 @@ func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 	if ratio.LT(globalPledgeRatioLowerBound) {
 		ratio = globalPledgeRatioLowerBound
 	}
-
-	k.delPledgeSum(ctx, epochID)
-
 	return ratio
 }
 
-// CalcAndSetNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t but also prune pledge 2 epochs before.
-func (k Keeper) CalcAndSetNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
-	owner := k.GetNodeOwner(ctx, nodeID)
-	ratio := k.CalcNodePledgeRatioOnEpoch(ctx, epochID, nodeID)
-
-	// NOTE: it's fine to delete epoch(-1) since it never exists.
-	k.delOwnerPledge(ctx, owner, epochID-2)
-	return ratio
-}
-
-// CalcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t.
+// CalcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t but also prune pledge 2 epochs before.
 func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	owner := k.GetNodeOwner(ctx, nodeID)
 
@@ -118,8 +105,7 @@ func (k Keeper) GetPledgeSum(ctx sdk.Context, epochID uint64) sdk.Dec {
 	if bz == nil {
 		return sdk.ZeroDec()
 	}
-	res, _ := sdk.NewDecFromStr(string(bz))
-	return res
+	return sdk.MustNewDecFromStr(string(bz))
 }
 
 // incrPledgeSum increments the total pledge amount of captains' owners on the epoch end.

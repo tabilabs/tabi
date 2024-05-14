@@ -38,12 +38,12 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 	}
 	// set epoch state
 	currEpochID := data.EpochState.CurrEpoch
-	k.SetEpoch(ctx, currEpochID)
+	k.setEpoch(ctx, currEpochID)
 	if data.EpochState.IsEnd {
-		k.SetEndEpoch(ctx, currEpochID)
+		k.setEndEpoch(ctx, currEpochID)
 	}
 	if data.EpochState.Digest != nil {
-		k.SetDigest(ctx, currEpochID, data.EpochState.Digest)
+		k.setDigest(ctx, currEpochID, data.EpochState.Digest)
 	}
 	k.SetEpochBase(ctx, currEpochID, data.EpochState.Current)
 	k.SetEpochBase(ctx, currEpochID-1, data.EpochState.Previous)

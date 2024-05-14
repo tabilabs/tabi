@@ -1,18 +1,15 @@
 package keeper
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
-
-var (
-	TechProgressCoefficientCardinality = sdk.NewDecWithPrec(16, 1) // constant 1.6
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// GetTechProgressCoefficient calculates tech progress coefficient
+// CalcTechProgressCoefficient calculates tech progress coefficient
 // TechProgressCoefficient = 1.6 ^ (captainNodeSaleLevel - 1)
-func (k Keeper) GetTechProgressCoefficient(ctx sdk.Context) sdk.Dec {
+func (k Keeper) CalcTechProgressCoefficient(ctx sdk.Context) sdk.Dec {
 	captainNodeSaleLevel := k.GetSaleLevel(ctx)
-	// Calculate cardinality raised to the power of captainNodeSaleLevel-1
-	techProgressCoefficient := TechProgressCoefficientCardinality.Power(captainNodeSaleLevel - 1)
-	return techProgressCoefficient
+	cardinality := k.GetParams(ctx).TechProgressCoefficientCardinality
+	return cardinality.Power(captainNodeSaleLevel - 1)
 }
 
 // GetHalvingEraCoefficient returns the tech progress coefficient
@@ -22,6 +19,5 @@ func (k Keeper) GetHalvingEraCoefficient(ctx sdk.Context) sdk.Dec {
 
 // GetCaptainsConstant returns the captains constant
 func (k Keeper) GetCaptainsConstant(ctx sdk.Context) sdk.Dec {
-	cc := k.GetParams(ctx).CaptainsConstant
-	return sdk.NewDec(int64(cc))
+	return k.GetParams(ctx).CaptainsConstant
 }
