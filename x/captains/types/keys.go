@@ -95,9 +95,10 @@ func NodeByOwnerStoreKey(owner sdk.AccAddress, nodeID string) []byte {
 // <prefix_key><owner><delimiter>
 func NodeByOwnerPrefixStoreKey(owner sdk.AccAddress) []byte {
 	owner = address.MustLengthPrefix(owner)
-	key := make([]byte, len(NodeByOwnerKey)+len(owner))
+	key := make([]byte, len(NodeByOwnerKey)+len(owner)+len(Delimiter))
 	copy(key, NodeByOwnerKey)
 	copy(key[len(NodeByOwnerKey):], owner)
+	copy(key[len(NodeByOwnerKey)+len(owner):], Delimiter)
 	return key
 }
 

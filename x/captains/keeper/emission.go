@@ -146,6 +146,9 @@ func (k Keeper) GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID str
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeHistoricalEmissionOnLastClaimStoreKey(nodeID)
 	bz := store.Get(key)
+	if len(bz) == 0 {
+		return sdk.ZeroDec()
+	}
 	return sdk.MustNewDecFromStr(string(bz))
 }
 
