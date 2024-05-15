@@ -15,7 +15,8 @@ func (suite *ClaimsTestSuite) TestUpdateParams() {
 		expectErr bool
 	}{
 		{
-			name:      "fail - invalid authority",
+			name: "fail - invalid authority",
+
 			request:   &types.MsgUpdateParams{Authority: "foobar"},
 			expectErr: true,
 		},
@@ -100,6 +101,40 @@ func (suite *ClaimsTestSuite) TestClaims() {
 			},
 		},
 		// has 1 node end
+		// has 5 node start
+		{
+			name:      "fail - owner has 5 node, epoch == 1 the node has no rewards to claim and has no historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: true,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase06)
+			},
+		},
+		{
+			name:      "success - owner has 5 node, epoch == 2 the node has rewards to claim and has no historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: false,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase07)
+			},
+		},
+		{
+			name:      "fail - owner has 5 node, epoch == 2 the node has no rewards to claim and has historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: true,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase08)
+			},
+		},
+		{
+			name:      "success - owner has 5 node, epoch == 3 the node has rewards to claim and has historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: false,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase09)
+			},
+		},
+		// has 5 node end
 
 	}
 	for _, tc := range testCases {

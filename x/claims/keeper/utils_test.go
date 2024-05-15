@@ -19,6 +19,24 @@ const (
 	KeyCase06
 	KeyCase07
 	KeyCase08
+	KeyCase09
+)
+
+const (
+	KeyQueryNodeTotalRewards01 = iota + 100
+	KeyQueryNodeTotalRewards02
+	KeyQueryNodeTotalRewards03
+	KeyQueryNodeTotalRewards04
+)
+
+const (
+	KeyQueryHolderTotalRewards01 = iota + 200
+	KeyQueryHolderTotalRewards02
+	KeyQueryHolderTotalRewards03
+	KeyQueryHolderTotalRewards04
+	KeyQueryHolderTotalRewards05
+	KeyQueryHolderTotalRewards06
+	KeyQueryHolderTotalRewards07
 )
 
 var (
