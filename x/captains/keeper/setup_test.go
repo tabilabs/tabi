@@ -95,7 +95,7 @@ func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) 
 	// setup keeper & msg server
 	suite.keeper = &suite.app.CaptainsKeeper
 	suite.msgServer = captainskeeper.NewMsgServerImpl(&suite.app.CaptainsKeeper)
-	suite.claimsServer = claimskeeper.NewMsgServerImpl(suite.app.ClaimsKeeper)
+	suite.claimsServer = claimskeeper.NewMsgServerImpl(&suite.app.ClaimsKeeper)
 
 	// setup query client
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
