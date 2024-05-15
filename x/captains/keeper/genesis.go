@@ -30,7 +30,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 	}
 	// set nodes extra info
 	for _, extra := range data.NodesExtraInfo {
-		k.setNodeHistoricalEmissionOnLastClaim(ctx, extra.Id, extra.LastClaimHistoricalEmission)
+		k.SetNodeHistoricalEmissionOnLastClaim(ctx, extra.Id, extra.LastClaimHistoricalEmission)
 		for _, epoch := range extra.Epochs {
 			k.setNodeComputingPowerOnEpoch(ctx, epoch.EpochId, extra.Id, epoch.ComputingPower)
 			k.setNodeHistoricalEmissionOnEpoch(ctx, epoch.EpochId, extra.Id, epoch.HistoricalEmission)
@@ -45,9 +45,9 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 	if data.EpochState.Digest != nil {
 		k.setDigest(ctx, currEpochID, data.EpochState.Digest)
 	}
-	k.SetEpochBase(ctx, currEpochID, data.EpochState.Current)
-	k.SetEpochBase(ctx, currEpochID-1, data.EpochState.Previous)
-	k.setEmissionClaimedSum(ctx, data.EpochState.EmissionClaimedSum)
+	k.setEpochBase(ctx, currEpochID, data.EpochState.Current)
+	k.setEpochBase(ctx, currEpochID-1, data.EpochState.Previous)
+	k.SetEmissionClaimedSum(ctx, data.EpochState.EmissionClaimedSum)
 
 	// set computing power
 	for _, power := range data.ClaimableComputingPowers {

@@ -90,8 +90,8 @@ func (p *Params) Validate() error {
 		return fmt.Errorf("current sale level should be non-negative and less than or equal to 7")
 	}
 
-	for _, memeber := range p.AuthorizedMembers {
-		if _, err := sdk.AccAddressFromBech32(memeber); err != nil {
+	for _, member := range p.AuthorizedMembers {
+		if _, err := sdk.AccAddressFromBech32(member); err != nil {
 			return fmt.Errorf("memeber address is invalid: %s", err)
 		}
 	}
