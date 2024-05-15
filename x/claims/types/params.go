@@ -2,6 +2,7 @@ package types
 
 import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	tabitypes "github.com/tabilabs/tabi/types"
 )
 
 // default paramspace for params keeper
@@ -18,7 +19,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 func DefaultParams() Params {
 	return Params{
 		EnableClaims: true,
-		ClaimsDenom:  "claims",
+		ClaimsDenom:  tabitypes.AttoVeTabi,
 	}
 }
 

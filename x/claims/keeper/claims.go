@@ -21,6 +21,10 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 		return sdk.Coins{}, types.ErrCalculateRewards
 	}
 
+	if totalRewards.IsZero() {
+		return sdk.Coins{}, types.ErrZeroRewards
+	}
+
 	// Truncate the rewards
 	truncatedCoins, _ := totalRewards.TruncateDecimal()
 	// send the rewards to the receiver
@@ -62,7 +66,14 @@ func (k Keeper) CalculateRewards(ctx sdk.Context, nodes []captainnodetypes.Node)
 func (k Keeper) CalculateRewardsByNodeId(ctx sdk.Context, nodeId string) (sdk.DecCoins, error) {
 	// Get Current epoch
 	epochSequence := k.captainsKeeper.GetCurrentEpoch(ctx) - 1
+
+	if epochSequence == 0 {
+		return sdk.DecCoins{}, types.ErrFirstEpoch
+	}
+
+	// all historical emission
 	historicalEmission := k.captainsKeeper.CalcAndGetNodeHistoricalEmissionOnEpoch(ctx, epochSequence, nodeId)
+	// historical emission on last claim
 	historicalEmissionOnLastClaim := k.captainsKeeper.GetNodeHistoricalEmissionOnLastClaim(ctx, nodeId)
 	reward := historicalEmission.Sub(historicalEmissionOnLastClaim)
 
