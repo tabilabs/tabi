@@ -13,10 +13,21 @@ import (
 
 var _ types.QueryServer = Keeper{}
 
+type Querier struct {
+	*Keeper
+}
+
+// NewQuerierImpl returns an implementation of the captains QueryServer interface.
+func NewQuerierImpl(k *Keeper) types.QueryServer {
+	return &Querier{k}
+}
+
+var _ types.QueryServer = Querier{}
+
 // Params queries the staking parameters
 func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
-	params := k.GetParamSet(ctx)
+	params := k.GetParams(ctx)
 
 	return &types.QueryParamsResponse{Params: params}, nil
 }
@@ -45,12 +56,15 @@ func (k Keeper) HolderTotalRewards(goCtx context.Context, request *types.QueryHo
 		return nil, status.Error(codes.InvalidArgument, "empty holder address")
 	}
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	owner, err := sdk.ValAddressFromBech32(request.Owner)
+	owner, err := sdk.AccAddressFromBech32(request.Owner)
 	if err != nil {
 		return nil, err
 	}
 
 	nodes := k.captainsKeeper.GetNodesByOwner(ctx, owner.Bytes())
+	if len(nodes) == 0 {
+		return nil, types.ErrHolderNotFound
+	}
 
 	rewards, err := k.CalculateRewards(ctx, nodes)
 	if err != nil {
