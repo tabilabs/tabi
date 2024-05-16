@@ -9,44 +9,37 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-// ComputingPowerSumOnEpoch functions
-
-// GetComputingPowerSumOnEpoch returns the sum of computing power of all nodes.
-func (k Keeper) GetComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) sdk.Dec {
+// GetGlobalComputingPowerOnEpoch returns the sum of computing power of all nodes.
+func (k Keeper) GetGlobalComputingPowerOnEpoch(ctx sdk.Context, epochID uint64) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
-	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
+	key := types.GlobalComputingPowerOnEpochStoreKey(epochID)
 	bz := store.Get(key)
 	if bz == nil {
 		return sdk.ZeroDec()
 	}
-
-	sum, _ := sdk.NewDecFromStr(string(bz))
-	return sum
+	return sdk.MustNewDecFromStr(string(bz))
 }
 
-// setComputingPowerSumOnEpoch sets the sum of computing power of all nodes.
-func (k Keeper) setComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
+// setGlobalComputingPowerOnEpoch sets the sum of computing power of all nodes.
+func (k Keeper) setGlobalComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
+	key := types.GlobalComputingPowerOnEpochStoreKey(epochID)
 	store.Set(key, []byte(amount.String()))
 }
 
-// incrComputingPowerSumOnEpoch increases the sum of computing power of all nodes.
-// NOTE: call only after computing a node power so that by end of epoch we have the power sum of all nodes.
-func (k Keeper) incrComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
-	sum := k.GetComputingPowerSumOnEpoch(ctx, epochID)
+// incrGlobalComputingPowerOnEpoch increases the sum of computing power of all nodes.
+func (k Keeper) incrGlobalComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
+	sum := k.GetGlobalComputingPowerOnEpoch(ctx, epochID)
 	sum = sum.Add(amount)
-	k.setComputingPowerSumOnEpoch(ctx, epochID, sum)
+	k.setGlobalComputingPowerOnEpoch(ctx, epochID, sum)
 }
 
-// delComputingPowerSumOnEpoch deletes the sum of computing power of all nodes.
-func (k Keeper) delComputingPowerSumOnEpoch(ctx sdk.Context, epochID uint64) {
+// delGlobalComputingPowerOnEpoch deletes the sum of computing power of all nodes.
+func (k Keeper) delGlobalComputingPowerOnEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.ComputingPowerSumOnEpochStoreKey(epochID)
+	key := types.GlobalComputingPowerOnEpochStoreKey(epochID)
 	store.Delete(key)
 }
-
-// NodeComputingPowerOnEpoch functions
 
 // CalcNodeComputingPowerOnEpoch returns the computing power of a node as per its node info.
 func (k Keeper) CalcNodeComputingPowerOnEpoch(
@@ -100,40 +93,31 @@ func (k Keeper) GetNodeBaseComputingPower(ctx sdk.Context, nodeID string) uint64
 	return node.ComputingPower
 }
 
-// ComputingPowerClaimable functions
-
 // CommitComputingPower commits the pending computing power.
-func (k Keeper) CommitComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) (uint64, uint64, error) {
-	before := k.GetComputingPowerClaimable(ctx, owner)
+func (k Keeper) CommitComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) (uint64, uint64) {
+	before := k.GetClaimableComputingPower(ctx, owner)
 	after := before + amount
-	k.setComputingPowerClaimable(ctx, after, owner)
-	return before, after, nil
+	k.setClaimableComputingPower(ctx, after, owner)
+	return before, after
 }
 
-// incrComputingPowerClaimable decrements the claimable computing power of an owner.
-func (k Keeper) incrComputingPowerClaimable(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
-	before := k.GetComputingPowerClaimable(ctx, owner)
-	after := before + amount
-	k.setComputingPowerClaimable(ctx, after, owner)
+// decrClaimableComputingPower decrements the claimable computing power of an owner.
+func (k Keeper) decrClaimableComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
+	power := k.GetClaimableComputingPower(ctx, owner)
+	power -= amount
+	k.setClaimableComputingPower(ctx, power, owner)
 }
 
-// decrComputingPowerClaimable decrements the claimable computing power of an owner.
-func (k Keeper) decrComputingPowerClaimable(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
-	before := k.GetComputingPowerClaimable(ctx, owner)
-	after := before - amount
-	k.setComputingPowerClaimable(ctx, after, owner)
-}
-
-// setComputingPowerClaimable sets the claimable computing power of an owner.
-func (k Keeper) setComputingPowerClaimable(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
+// setClaimableComputingPower sets the claimable computing power of an owner.
+func (k Keeper) setClaimableComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
-	store.Set(types.NodeClaimableComputingPowerStoreKey(owner), sdk.Uint64ToBigEndian(amount))
+	store.Set(types.ClaimableComputingPowerStoreKey(owner), sdk.Uint64ToBigEndian(amount))
 }
 
-// GetComputingPowerClaimable returns the claimable computing power of an owner.
-func (k Keeper) GetComputingPowerClaimable(ctx sdk.Context, owner sdk.AccAddress) uint64 {
+// GetClaimableComputingPower returns the claimable computing power of an owner.
+func (k Keeper) GetClaimableComputingPower(ctx sdk.Context, owner sdk.AccAddress) uint64 {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.NodeClaimableComputingPowerStoreKey(owner))
+	bz := store.Get(types.ClaimableComputingPowerStoreKey(owner))
 	if bz == nil {
 		return 0
 	}
@@ -145,7 +129,7 @@ func (k Keeper) GetComputingPowersClaimable(ctx sdk.Context) []types.ClaimableCo
 	var claimableComputingPowers []types.ClaimableComputingPower
 
 	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, types.ComputingPowerClaimableKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.ClaimableComputingPowerKey)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

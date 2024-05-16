@@ -19,7 +19,7 @@ func (k Keeper) CalcBaseEpochEmission(ctx sdk.Context) sdk.Dec {
 // GetEpochEmission returns the emission reward for an epoch.
 func (k Keeper) GetEpochEmission(ctx sdk.Context, epochID uint64) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
-	key := types.EmissionSumOnEpochStoreKey(epochID)
+	key := types.EpochEmissionStoreKey(epochID)
 	bz := store.Get(key)
 	if len(bz) == 0 {
 		return sdk.ZeroDec()
@@ -37,21 +37,21 @@ func (k Keeper) CalcEpochEmission(ctx sdk.Context, epochID uint64, globalOperati
 // setEpochEmission sets the emission sum for an epoch.
 func (k Keeper) setEpochEmission(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.EmissionSumOnEpochStoreKey(epochID)
+	key := types.EpochEmissionStoreKey(epochID)
 	store.Set(key, []byte(amount.String()))
 }
 
 // delEpochEmission deletes the emission sum for an epoch.
 func (k Keeper) delEpochEmission(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.EmissionSumOnEpochStoreKey(epochID)
+	key := types.EpochEmissionStoreKey(epochID)
 	store.Delete(key)
 }
 
-// GetEmissionClaimedSum returns the emission claimed sum.
-func (k Keeper) GetEmissionClaimedSum(ctx sdk.Context) sdk.Dec {
+// GetGlobalClaimedEmission returns global claimed emission.
+func (k Keeper) GetGlobalClaimedEmission(ctx sdk.Context) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
-	key := types.EmissionClaimedSumKey
+	key := types.GlobalClaimedEmissionKey
 	bz := store.Get(key)
 	if len(bz) == 0 {
 		return sdk.ZeroDec()
@@ -59,18 +59,18 @@ func (k Keeper) GetEmissionClaimedSum(ctx sdk.Context) sdk.Dec {
 	return sdk.MustNewDecFromStr(string(bz))
 }
 
-// SetEmissionClaimedSum sets the emission claimed sum.
-func (k Keeper) SetEmissionClaimedSum(ctx sdk.Context, amount sdk.Dec) {
+// SetGlobalClaimedEmission sets global claimed emission.
+func (k Keeper) SetGlobalClaimedEmission(ctx sdk.Context, amount sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.EmissionClaimedSumKey
+	key := types.GlobalClaimedEmissionKey
 	store.Set(key, []byte(amount.String()))
 }
 
-// incrEmissionClaimedSum increases the emission claimed sum by amount.
-func (k Keeper) incrEmissionClaimedSum(ctx sdk.Context, amount sdk.Dec) {
-	emission := k.GetEmissionClaimedSum(ctx)
+// incrGlobalClaimedEmission increases global claimed emission by amount.
+func (k Keeper) incrGlobalClaimedEmission(ctx sdk.Context, amount sdk.Dec) {
+	emission := k.GetGlobalClaimedEmission(ctx)
 	emission.Add(amount)
-	k.SetEmissionClaimedSum(ctx, emission)
+	k.SetGlobalClaimedEmission(ctx, emission)
 }
 
 // CalcAndSetNodeHistoricalEmissionByEpoch returns the historical emission for a node at the end of an epoch.
@@ -108,7 +108,7 @@ func (k Keeper) CalcNodeHistoricalEmissionByEpoch(ctx sdk.Context, epochID uint6
 func (k Keeper) CalcNodeEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	emission := k.GetEpochEmission(ctx, epochID)
 	power := k.GetNodeComputingPowerOnEpoch(ctx, epochID, nodeID)
-	powerSum := k.GetComputingPowerSumOnEpoch(ctx, epochID)
+	powerSum := k.GetGlobalComputingPowerOnEpoch(ctx, epochID)
 	return emission.Mul(power).Quo(powerSum)
 }
 
@@ -120,7 +120,7 @@ func (k Keeper) CalcAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID
 // GetNodeHistoricalEmissionByEpoch returns the historical emission for a node at the end of an epoch.
 func (k Keeper) GetNodeHistoricalEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
-	key := types.NodeHistoricalEmissionOnEpochStoreKey(epochID, nodeID)
+	key := types.NodeCumulativeEmissionByEpochStoreKey(epochID, nodeID)
 	bz := store.Get(key)
 	if len(bz) == 0 {
 		return sdk.ZeroDec()
@@ -131,21 +131,21 @@ func (k Keeper) GetNodeHistoricalEmissionByEpoch(ctx sdk.Context, epochID uint64
 // setNodeHistoricalEmissionByEpoch sets the historical emission for a node at the end of an epoch.
 func (k Keeper) setNodeHistoricalEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string, amount sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.NodeHistoricalEmissionOnEpochStoreKey(epochID, nodeID)
+	key := types.NodeCumulativeEmissionByEpochStoreKey(epochID, nodeID)
 	store.Set(key, []byte(amount.String()))
 }
 
 // delNodeHistoricalEmissionByEpoch deletes the historical emission for a node at the end of an epoch.
 func (k Keeper) delNodeHistoricalEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.NodeHistoricalEmissionOnEpochStoreKey(epochID, nodeID)
+	key := types.NodeCumulativeEmissionByEpochStoreKey(epochID, nodeID)
 	store.Delete(key)
 }
 
 // GetNodeHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
 func (k Keeper) GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
-	key := types.NodeHistoricalEmissionOnLastClaimStoreKey(nodeID)
+	key := types.NodeClaimedEmissionByEpochStoreKey(nodeID)
 	bz := store.Get(key)
 	if len(bz) == 0 {
 		return sdk.ZeroDec()
@@ -160,7 +160,7 @@ func (k Keeper) UpdateNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID 
 	amount := k.CalcNodeHistoricalEmissionByEpoch(ctx, epoch-1, nodeID)
 
 	k.SetNodeHistoricalEmissionOnLastClaim(ctx, nodeID, amount)
-	k.incrEmissionClaimedSum(ctx, amount)
+	k.incrGlobalClaimedEmission(ctx, amount)
 
 	// TODO: we don't need to return error? we should return sum right?
 	return nil
@@ -169,7 +169,7 @@ func (k Keeper) UpdateNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID 
 // SetNodeHistoricalEmissionOnLastClaim sets the historical emission the last time user claimed.ß
 func (k Keeper) SetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string, amount sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.NodeHistoricalEmissionOnLastClaimStoreKey(nodeID)
+	key := types.NodeClaimedEmissionByEpochStoreKey(nodeID)
 	store.Set(key, []byte(amount.String()))
 }
 

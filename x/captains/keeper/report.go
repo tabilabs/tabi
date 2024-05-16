@@ -29,9 +29,9 @@ func (k Keeper) HandleReportDigest(ctx sdk.Context, report *types.ReportDigest) 
 
 	sum := k.CalcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
 
-	k.DelPledgeSum(ctx, epochId)
+	k.DelGlobalPledge(ctx, epochId)
 	k.setEpochEmission(ctx, epochId, sum)
-	k.setDigest(ctx, epochId, report)
+	k.setReportDigest(ctx, epochId, report)
 
 	return nil
 }
@@ -49,7 +49,7 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 
 		k.setNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, power)
 		k.delOwnerPledge(ctx, owner, epochId-2) // it's fine to delete epoch(-1) which doesn't exist at all.
-		k.incrComputingPowerSumOnEpoch(ctx, epochId, power)
+		k.incrGlobalComputingPowerOnEpoch(ctx, epochId, power)
 
 		// sample owner pledge once for next epoch
 		if !k.HasOwnerPledge(ctx, owner, epochId+1) {
@@ -59,7 +59,7 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 			}
 
 			k.SetOwnerPledge(ctx, owner, epochId+1, pledge)
-			k.IncrPledgeSum(ctx, epochId+1, pledge)
+			k.IncrGlobalPledge(ctx, epochId+1, pledge)
 		}
 	}
 
@@ -79,7 +79,7 @@ func (k Keeper) HandleReportEnd(ctx sdk.Context, report *types.ReportEnd) error 
 	}
 
 	// marks we are ready for the next epoch.
-	k.setEndEpoch(ctx, epochId)
+	k.setEndOnEpoch(ctx, epochId)
 
 	return nil
 }
@@ -90,14 +90,14 @@ func (k Keeper) IsReportCompleted(ctx sdk.Context, epochId uint64) error {
 	batchCount := uint64(0)
 
 	store := ctx.KVStore(k.storeKey)
-	prefixStore := prefix.NewStore(store, types.ReportBatchOnEpochPrefixKey(epochId))
+	prefixStore := prefix.NewStore(store, types.ReportBatchOnEpochPrefixStoreKey(epochId))
 	iterator := prefixStore.Iterator(nil, nil)
 	for ; iterator.Valid(); iterator.Next() {
 		batchCount++
 		nodeCount += sdk.BigEndianToUint64(iterator.Value())
 	}
 
-	digest, _ := k.GetDigest(ctx, epochId)
+	digest, _ := k.GetReportDigest(ctx, epochId)
 	if digest.TotalBatchCount != batchCount || digest.TotalNodeCount != nodeCount {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "commit end report too early!")
 	}
@@ -163,7 +163,7 @@ func (k Keeper) ValidateReportDigest(ctx sdk.Context, report *types.ReportDigest
 		return err
 	}
 
-	_, found := k.GetDigest(ctx, report.EpochId)
+	_, found := k.GetReportDigest(ctx, report.EpochId)
 	if found {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "digest already exists")
 	}
@@ -177,7 +177,7 @@ func (k Keeper) ValidateReportBatch(ctx sdk.Context, report *types.ReportBatch) 
 		return err
 	}
 
-	digest, found := k.GetDigest(ctx, report.EpochId)
+	digest, found := k.GetReportDigest(ctx, report.EpochId)
 	if !found {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "digest not found")
 	}

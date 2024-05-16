@@ -263,7 +263,7 @@ func (m msgServer) CommitComputingPower(
 		if err != nil {
 			return nil, err
 		}
-		before, after, err := m.k.CommitComputingPower(ctx, cpr.Amount, owner)
+		before, after := m.k.CommitComputingPower(ctx, cpr.Amount, owner)
 
 		events = append(events, sdk.NewEvent(
 			types.EventCommitComputingPower,

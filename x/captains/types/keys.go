@@ -15,53 +15,46 @@ const (
 
 const (
 	prefixParams = iota + 1
-	prefixCurrEpoch
 	prefixNodeNextSeq
 	prefixNode
 	prefixNodeByOwner
 	prefixDivision
 	prefixDivisionByNode
-	prefixEmissionClaimedSum
-	prefixEmissionSumOnEpoch
-	prefixNodeHistoricalEmissionOnEpoch
-	prefixNodeHistoricalEmissionOnLastClaim
-	prefixComputingPowerClaimable
-	prefixComputingPowerSumOnEpoch
+	prefixEpochEmission
+	prefixGlobalClaimedEmission
+	prefixNodeClaimedEmission
+	prefixNodeCumulativeEmissionByEpoch
+	prefixClaimableComputingPower
+	prefixGlobalComputingPowerOnEpoch
 	prefixNodeComputingPowerOnEpoch
+	prefixGlobalPledgeOnEpoch
 	prefixOwnerPledgeOnEpoch
-	prefixPledgeSumOnEpoch
-	prefixDigestOnEpoch
-	prefixReportBatch
+	prefixCurrEpoch
+	prefixReportDigestOnEpoch
+	prefixReportBatchOnEpoch
 	prefixEndOnEpoch
 )
 
 var (
-	ParamsKey = []byte{prefixParams}
-
-	CurrEpochKey = []byte{prefixCurrEpoch}
-
-	NodeKey             = []byte{prefixNode}
-	NodeNextSequenceKey = []byte{prefixNodeNextSeq}
-	NodeByOwnerKey      = []byte{prefixNodeByOwner}
-
-	DivisionKey    = []byte{prefixDivision}
-	DivisionByNode = []byte{prefixDivisionByNode}
-
-	EmissionClaimedSumKey                = []byte{prefixEmissionClaimedSum}
-	EmissionSumOnEpochKey                = []byte{prefixEmissionSumOnEpoch}
-	NodeHistoricalEmissionOnEpochKey     = []byte{prefixNodeHistoricalEmissionOnEpoch}
-	NodeHistoricalEmissionOnLastClaimKey = []byte{prefixNodeHistoricalEmissionOnLastClaim}
-
-	ComputingPowerClaimableKey   = []byte{prefixComputingPowerClaimable}
-	ComputingPowerSumOnEpochKey  = []byte{prefixComputingPowerSumOnEpoch}
-	NodeComputingPowerOnEpochKey = []byte{prefixNodeComputingPowerOnEpoch}
-
-	OwnerPledgeOnEpochKey = []byte{prefixOwnerPledgeOnEpoch}
-	PledgeSumOnEpochKey   = []byte{prefixPledgeSumOnEpoch}
-
-	DigestOnEpochKey      = []byte{prefixDigestOnEpoch}
-	ReportBatchOnEpochKey = []byte{prefixReportBatch}
-	EndOnEpochKey         = []byte{prefixEndOnEpoch}
+	ParamsKey                        = []byte{prefixParams}
+	CurrEpochKey                     = []byte{prefixCurrEpoch}
+	NodeKey                          = []byte{prefixNode}
+	NodeNextSequenceKey              = []byte{prefixNodeNextSeq}
+	NodeByOwnerKey                   = []byte{prefixNodeByOwner}
+	DivisionKey                      = []byte{prefixDivision}
+	DivisionByNode                   = []byte{prefixDivisionByNode}
+	EpochEmissionKey                 = []byte{prefixEpochEmission}
+	GlobalClaimedEmissionKey         = []byte{prefixGlobalClaimedEmission}
+	NodeClaimedEmissionKey           = []byte{prefixNodeClaimedEmission}
+	NodeCumulativeEmissionByEpochKey = []byte{prefixNodeCumulativeEmissionByEpoch}
+	ClaimableComputingPowerKey       = []byte{prefixClaimableComputingPower}
+	GlobalComputingPowerOnEpochKey   = []byte{prefixGlobalComputingPowerOnEpoch}
+	NodeComputingPowerOnEpochKey     = []byte{prefixNodeComputingPowerOnEpoch}
+	GlobalPledgeOnEpochKey           = []byte{prefixGlobalPledgeOnEpoch}
+	OwnerPledgeOnEpochKey            = []byte{prefixOwnerPledgeOnEpoch}
+	ReportDigestOnEpochKey           = []byte{prefixReportDigestOnEpoch}
+	ReportBatchOnEpochKey            = []byte{prefixReportBatchOnEpoch}
+	EndOnEpochKey                    = []byte{prefixEndOnEpoch}
 
 	Delimiter   = []byte{0x00}
 	PlaceHolder = []byte{0x01}
@@ -124,48 +117,59 @@ func DivisionByNodeStoreKey(divisionID, nodeID string) []byte {
 	return key
 }
 
-// NodeHistoricalEmissionOnEpochStoreKey returns the byte representation of the historical emission by node on epoch key
+// EpochEmissionStoreKey returns the byte representation of the emission sum on epoch key
+// Items are stored with the following key: values
+// <prefix_key><epoch_id> -> <emission>
+func EpochEmissionStoreKey(epochID uint64) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(EpochEmissionKey)+len(epochBz))
+	copy(key, EpochEmissionKey)
+	copy(key[len(EpochEmissionKey):], epochBz)
+	return key
+}
+
+// NodeCumulativeEmissionByEpochStoreKey returns the byte representation of cumulative emission by node on epoch key
 // Items are stored with the following key: values
 // <prefix_key><epoch_id><delimiter><node_id> -> <emission>
-func NodeHistoricalEmissionOnEpochStoreKey(epochID uint64, nodeID string) []byte {
+func NodeCumulativeEmissionByEpochStoreKey(epochID uint64, nodeID string) []byte {
 	epochBz := sdk.Uint64ToBigEndian(epochID)
-	key := make([]byte, len(NodeHistoricalEmissionOnEpochKey)+len(epochBz)+len(Delimiter)+len(nodeID))
-	copy(key, NodeHistoricalEmissionOnEpochKey)
-	copy(key[len(NodeHistoricalEmissionOnEpochKey):], epochBz)
-	copy(key[len(NodeHistoricalEmissionOnEpochKey)+len(epochBz):], Delimiter)
-	copy(key[len(NodeHistoricalEmissionOnEpochKey)+len(epochBz)+len(Delimiter):], nodeID)
+	key := make([]byte, len(NodeCumulativeEmissionByEpochKey)+len(epochBz)+len(Delimiter)+len(nodeID))
+	copy(key, NodeCumulativeEmissionByEpochKey)
+	copy(key[len(NodeCumulativeEmissionByEpochKey):], epochBz)
+	copy(key[len(NodeCumulativeEmissionByEpochKey)+len(epochBz):], Delimiter)
+	copy(key[len(NodeCumulativeEmissionByEpochKey)+len(epochBz)+len(Delimiter):], nodeID)
 	return key
 }
 
-// NodeHistoricalEmissionOnLastClaimStoreKey returns the byte representation of the historical emission last claimed key
+// NodeClaimedEmissionByEpochStoreKey returns the byte representation of the historical emission last claimed key
 // Items are stored with the following key: values
 // <prefix_key><node_id> -> <emission>
-func NodeHistoricalEmissionOnLastClaimStoreKey(nodeID string) []byte {
-	key := make([]byte, len(NodeHistoricalEmissionOnLastClaimKey)+len(nodeID))
-	copy(key, NodeHistoricalEmissionOnLastClaimKey)
-	copy(key[len(NodeHistoricalEmissionOnLastClaimKey):], nodeID)
+func NodeClaimedEmissionByEpochStoreKey(nodeID string) []byte {
+	key := make([]byte, len(NodeClaimedEmissionKey)+len(nodeID))
+	copy(key, NodeClaimedEmissionKey)
+	copy(key[len(NodeClaimedEmissionKey):], nodeID)
 	return key
 }
 
-// NodeClaimableComputingPowerStoreKey returns the byte representation of the computing power claimable key
+// ClaimableComputingPowerStoreKey returns the byte representation of claimable computing power key
 // Items are stored with the following key: values
 // <prefix_key><owner> -> <computing_power>
-func NodeClaimableComputingPowerStoreKey(owner sdk.AccAddress) []byte {
+func ClaimableComputingPowerStoreKey(owner sdk.AccAddress) []byte {
 	owner = address.MustLengthPrefix(owner)
-	key := make([]byte, len(ComputingPowerClaimableKey)+len(owner))
-	copy(key, ComputingPowerClaimableKey)
-	copy(key[len(ComputingPowerClaimableKey):], owner)
+	key := make([]byte, len(ClaimableComputingPowerKey)+len(owner))
+	copy(key, ClaimableComputingPowerKey)
+	copy(key[len(ClaimableComputingPowerKey):], owner)
 	return key
 }
 
-// ComputingPowerSumOnEpochStoreKey returns the byte representation of the computing power sum on epoch key
+// GlobalComputingPowerOnEpochStoreKey returns the byte representation of the computing power sum on epoch key
 // Items are stored with the following key: values
 // <prefix_key><epoch_id> -> <computing_power>
-func ComputingPowerSumOnEpochStoreKey(epochID uint64) []byte {
+func GlobalComputingPowerOnEpochStoreKey(epochID uint64) []byte {
 	epochBz := sdk.Uint64ToBigEndian(epochID)
-	key := make([]byte, len(ComputingPowerSumOnEpochKey)+len(epochBz))
-	copy(key, ComputingPowerSumOnEpochKey)
-	copy(key[len(ComputingPowerSumOnEpochKey):], epochBz)
+	key := make([]byte, len(GlobalComputingPowerOnEpochKey)+len(epochBz))
+	copy(key, GlobalComputingPowerOnEpochKey)
+	copy(key[len(GlobalComputingPowerOnEpochKey):], epochBz)
 	return key
 }
 
@@ -182,10 +186,10 @@ func NodeComputingPowerOnEpochStoreKey(epochID uint64, nodeID string) []byte {
 	return key
 }
 
-// NodeComputingPowerOnEpochStorePrefixKey returns the prefix key.
+// NodeComputingPowerOnEpochPrefixStoreKey returns the prefix key.
 // Items are stored with the following key: values
 // <prefix_key><node_id><delimiter>
-func NodeComputingPowerOnEpochStorePrefixKey(nodeID string) []byte {
+func NodeComputingPowerOnEpochPrefixStoreKey(nodeID string) []byte {
 	key := make([]byte, len(NodeComputingPowerOnEpochKey)+len(nodeID)+len(Delimiter))
 	copy(key, NodeComputingPowerOnEpochKey)
 	copy(key[len(NodeComputingPowerOnEpochKey):], nodeID)
@@ -193,25 +197,14 @@ func NodeComputingPowerOnEpochStorePrefixKey(nodeID string) []byte {
 	return key
 }
 
-// PledgeSumOnEpochStoreKey returns the byte representation of the pledge amount sum on epoch key
+// GlobalPledgeOnEpochStoreKey returns the byte representation of the pledge amount sum on epoch key
 // Items are stored with the following key: values
 // <prefix_key><epoch_id> -> <pledge_amount>
-func PledgeSumOnEpochStoreKey(epochID uint64) []byte {
+func GlobalPledgeOnEpochStoreKey(epochID uint64) []byte {
 	epochBz := sdk.Uint64ToBigEndian(epochID)
-	key := make([]byte, len(PledgeSumOnEpochKey)+len(epochBz))
-	copy(key, PledgeSumOnEpochKey)
-	copy(key[len(PledgeSumOnEpochKey):], epochBz)
-	return key
-}
-
-// EmissionSumOnEpochStoreKey returns the byte representation of the emission sum on epoch key
-// Items are stored with the following key: values
-// <prefix_key><epoch_id> -> <emission>
-func EmissionSumOnEpochStoreKey(epochID uint64) []byte {
-	epochBz := sdk.Uint64ToBigEndian(epochID)
-	key := make([]byte, len(EmissionSumOnEpochKey)+len(epochBz))
-	copy(key, EmissionSumOnEpochKey)
-	copy(key[len(EmissionSumOnEpochKey):], epochBz)
+	key := make([]byte, len(GlobalPledgeOnEpochKey)+len(epochBz))
+	copy(key, GlobalPledgeOnEpochKey)
+	copy(key[len(GlobalPledgeOnEpochKey):], epochBz)
 	return key
 }
 
@@ -228,13 +221,13 @@ func OwnerPledgeOnEpochStoreKey(owner sdk.AccAddress, epochID uint64) []byte {
 	return key
 }
 
-// DigestOnEpochStoreKey returns the byte representation of the digest on epoch key
+// ReportDigestOnEpochStoreKey returns the byte representation of the digest on epoch key
 // <prefix_key><epoch_id> -> <digest>
-func DigestOnEpochStoreKey(epochID uint64) []byte {
+func ReportDigestOnEpochStoreKey(epochID uint64) []byte {
 	epochBz := sdk.Uint64ToBigEndian(epochID)
-	key := make([]byte, len(DigestOnEpochKey)+len(epochBz))
-	copy(key, DigestOnEpochKey)
-	copy(key[len(DigestOnEpochKey):], epochBz)
+	key := make([]byte, len(ReportDigestOnEpochKey)+len(epochBz))
+	copy(key, ReportDigestOnEpochKey)
+	copy(key[len(ReportDigestOnEpochKey):], epochBz)
 	return key
 }
 
@@ -251,9 +244,9 @@ func ReportBatchOnEpochStoreKey(epochID, batchID uint64) []byte {
 	return key
 }
 
-// ReportBatchOnEpochPrefixKey returns the byte representation of the report batch on epoch prefix key
+// ReportBatchOnEpochPrefixStoreKey returns the byte representation of the report batch on epoch prefix key
 // <prefix_key><epoch_id><delimiter>
-func ReportBatchOnEpochPrefixKey(epochID uint64) []byte {
+func ReportBatchOnEpochPrefixStoreKey(epochID uint64) []byte {
 	epochBz := sdk.Uint64ToBigEndian(epochID)
 	key := make([]byte, len(ReportBatchOnEpochKey)+len(epochBz)+len(Delimiter))
 	copy(key, ReportBatchOnEpochKey)
@@ -267,7 +260,7 @@ func ReportBatchOnEpochPrefixKey(epochID uint64) []byte {
 // <prefix_key><epoch_id> -> <end>
 func EndOnEpochStoreKey(epochID uint64) []byte {
 	epochBz := sdk.Uint64ToBigEndian(epochID)
-	key := make([]byte, len(EmissionSumOnEpochKey)+len(epochBz))
+	key := make([]byte, len(EndOnEpochKey)+len(epochBz))
 	copy(key, EndOnEpochKey)
 	copy(key[len(EndOnEpochKey):], epochBz)
 	return key

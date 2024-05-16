@@ -68,7 +68,7 @@ func (k Keeper) UpdateNode(
 		return err
 	}
 
-	claimable := k.GetComputingPowerClaimable(ctx, owner)
+	claimable := k.GetClaimableComputingPower(ctx, owner)
 	if claimable < amount {
 		return errorsmod.Wrap(types.ErrInsufficientComputingPower, nodeID)
 	}
@@ -90,7 +90,7 @@ func (k Keeper) UpdateNode(
 	}
 
 	// set claimable power
-	k.decrComputingPowerClaimable(ctx, amount, owner)
+	k.decrClaimableComputingPower(ctx, amount, owner)
 
 	return nil
 }
@@ -155,7 +155,7 @@ func (k Keeper) GetNodes(ctx sdk.Context) (nodes []types.Node) {
 // GetNodeEpochsInfo returns a node info on epoch.
 func (k Keeper) GetNodeEpochsInfo(ctx sdk.Context, nodeID string) []types.NodeEpochInfo {
 	store := ctx.KVStore(k.storeKey)
-	prefixStore := prefix.NewStore(store, types.NodeComputingPowerOnEpochStorePrefixKey(nodeID))
+	prefixStore := prefix.NewStore(store, types.NodeComputingPowerOnEpochPrefixStoreKey(nodeID))
 	iter := prefixStore.Iterator(nil, nil)
 	res := make([]types.NodeEpochInfo, 0)
 	for ; iter.Valid(); iter.Next() {

@@ -40,14 +40,14 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 	currEpochID := data.EpochState.CurrEpoch
 	k.setEpoch(ctx, currEpochID)
 	if data.EpochState.IsEnd {
-		k.setEndEpoch(ctx, currEpochID)
+		k.setEndOnEpoch(ctx, currEpochID)
 	}
 	if data.EpochState.Digest != nil {
-		k.setDigest(ctx, currEpochID, data.EpochState.Digest)
+		k.setReportDigest(ctx, currEpochID, data.EpochState.Digest)
 	}
 	k.setEpochBase(ctx, currEpochID, data.EpochState.Current)
 	k.setEpochBase(ctx, currEpochID-1, data.EpochState.Previous)
-	k.SetEmissionClaimedSum(ctx, data.EpochState.EmissionClaimedSum)
+	k.SetGlobalClaimedEmission(ctx, data.EpochState.EmissionClaimedSum)
 
 	// set computing power
 	for _, power := range data.ClaimableComputingPowers {
@@ -55,7 +55,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 		if err != nil {
 			panic(fmt.Errorf("failed to convert addr from bech32: %s", err.Error()))
 		}
-		k.setComputingPowerClaimable(ctx, power.Amount, owner)
+		k.setClaimableComputingPower(ctx, power.Amount, owner)
 	}
 }
 
