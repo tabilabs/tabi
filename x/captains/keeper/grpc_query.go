@@ -114,7 +114,7 @@ func (q Querier) NodeLastEpochInfo(
 
 	prevEpoch := q.Keeper.GetCurrentEpoch(ctx) - 1
 	emission := q.Keeper.CalcNodeEmissionOnEpoch(ctx, prevEpoch, node.Id).String()
-	historical := q.Keeper.CalcNodeHistoricalEmissionOnEpoch(ctx, prevEpoch, node.Id).String()
+	historical := q.Keeper.CalcNodeHistoricalEmissionByEpoch(ctx, prevEpoch, node.Id).String()
 	ratio := q.Keeper.CalcNodePledgeRatioOnEpoch(ctx, prevEpoch, node.Id).String()
 
 	return &types.QueryNodeLastEpochInfoResponse{

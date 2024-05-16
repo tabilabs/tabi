@@ -11,6 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	tabitypes "github.com/tabilabs/tabi/types"
 	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 
@@ -96,6 +97,9 @@ func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) 
 	suite.keeper = &suite.app.CaptainsKeeper
 	suite.msgServer = captainskeeper.NewMsgServerImpl(&suite.app.CaptainsKeeper)
 	suite.claimsServer = claimskeeper.NewMsgServerImpl(&suite.app.ClaimsKeeper)
+	err := testutil.FundModuleAccount(suite.ctx, suite.app.BankKeeper, claimstypes.ModuleName,
+		sdk.NewCoins(sdk.NewCoin(tabitypes.AttoVeTabi, sdk.NewInt(4_000_000_000_000_000))))
+	require.NoError(t, err)
 
 	// setup query client
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.ctx, suite.app.InterfaceRegistry())
@@ -105,7 +109,7 @@ func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) 
 	// setup module params & default authorized member
 	params := types.DefaultParams()
 	params.AuthorizedMembers = []string{accounts[0].String()}
-	err := suite.app.CaptainsKeeper.SetParams(suite.ctx, params)
+	err = suite.app.CaptainsKeeper.SetParams(suite.ctx, params)
 	suite.Require().NoError(err)
 
 	// setup validators

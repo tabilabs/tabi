@@ -160,7 +160,7 @@ func (k Keeper) GetNodeEpochsInfo(ctx sdk.Context, nodeID string) []types.NodeEp
 	res := make([]types.NodeEpochInfo, 0)
 	for ; iter.Valid(); iter.Next() {
 		epochId := sdk.BigEndianToUint64(iter.Key())
-		emission := k.GetNodeHistoricalEmissionOnEpoch(ctx, epochId, nodeID)
+		emission := k.GetNodeHistoricalEmissionByEpoch(ctx, epochId, nodeID)
 		power := k.GetNodeComputingPowerOnEpoch(ctx, epochId, nodeID)
 		info := types.NodeEpochInfo{
 			EpochId:            epochId,

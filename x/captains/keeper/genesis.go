@@ -33,7 +33,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
 		k.SetNodeHistoricalEmissionOnLastClaim(ctx, extra.Id, extra.LastClaimHistoricalEmission)
 		for _, epoch := range extra.Epochs {
 			k.setNodeComputingPowerOnEpoch(ctx, epoch.EpochId, extra.Id, epoch.ComputingPower)
-			k.setNodeHistoricalEmissionOnEpoch(ctx, epoch.EpochId, extra.Id, epoch.HistoricalEmission)
+			k.setNodeHistoricalEmissionByEpoch(ctx, epoch.EpochId, extra.Id, epoch.HistoricalEmission)
 		}
 	}
 	// set epoch state
