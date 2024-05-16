@@ -45,7 +45,7 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 		}
 	}
 
-	return sdk.Coins{}, nil
+	return truncatedCoins, nil
 }
 
 func (k Keeper) CalculateRewards(ctx sdk.Context, nodes []captainnodetypes.Node) (sdk.DecCoins, error) {

@@ -7,8 +7,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/types/query"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tabilabs/tabi/x/captains/types"
@@ -40,10 +38,6 @@ func (q Querier) Node(
 	goCtx context.Context,
 	request *types.QueryNodeRequest,
 ) (*types.QueryNodeResponse, error) {
-	if request == nil {
-		return nil, sdkerrors.ErrInvalidRequest.Wrap("empty request")
-	}
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	node, found := q.GetNode(ctx, request.NodeId)
 	if !found {
@@ -60,10 +54,6 @@ func (q Querier) Nodes(
 	goCtx context.Context,
 	request *types.QueryNodesRequest,
 ) (*types.QueryNodesResponse, error) {
-	if request == nil {
-		return nil, sdkerrors.ErrInvalidRequest.Wrap("empty request")
-	}
-
 	var err error
 	var owner sdk.AccAddress
 	if len(request.Owner) > 0 {
@@ -79,26 +69,27 @@ func (q Querier) Nodes(
 
 	switch {
 	case len(request.Owner) > 0:
-
-		if pageRes, err = query.Paginate(q.getNodeByOwnerPrefixStore(ctx, owner), request.Pagination, func(key []byte, value []byte) error {
-			node, has := q.GetNode(ctx, string(key))
-			if has {
-				nodes = append(nodes, node)
-			}
-			return nil
-		}); err != nil {
+		if pageRes, err = query.Paginate(q.getNodeByOwnerPrefixStore(ctx, owner), request.Pagination,
+			func(key []byte, value []byte) error {
+				node, found := q.GetNode(ctx, string(key))
+				if found {
+					nodes = append(nodes, node)
+				}
+				return nil
+			}); err != nil {
 			return nil, err
 		}
 	default:
 		nodeStore := q.getNodesPrefixStore(ctx)
-		if pageRes, err = query.Paginate(nodeStore, request.Pagination, func(_ []byte, value []byte) error {
-			var node types.Node
-			if err := q.cdc.Unmarshal(value, &node); err != nil {
-				return err
-			}
-			nodes = append(nodes, node)
-			return nil
-		}); err != nil {
+		if pageRes, err = query.Paginate(nodeStore, request.Pagination,
+			func(_ []byte, value []byte) error {
+				var node types.Node
+				if err := q.cdc.Unmarshal(value, &node); err != nil {
+					return err
+				}
+				nodes = append(nodes, node)
+				return nil
+			}); err != nil {
 			return nil, err
 		}
 	}
@@ -123,7 +114,7 @@ func (q Querier) NodeLastEpochInfo(
 
 	prevEpoch := q.Keeper.GetCurrentEpoch(ctx) - 1
 	emission := q.Keeper.CalcNodeEmissionOnEpoch(ctx, prevEpoch, node.Id).String()
-	historical := q.Keeper.CalcNodeHistoricalEmissionOnEpoch(ctx, prevEpoch, node.Id).String()
+	historical := q.Keeper.CalcNodeHistoricalEmissionByEpoch(ctx, prevEpoch, node.Id).String()
 	ratio := q.Keeper.CalcNodePledgeRatioOnEpoch(ctx, prevEpoch, node.Id).String()
 
 	return &types.QueryNodeLastEpochInfoResponse{
@@ -139,10 +130,6 @@ func (q Querier) Division(
 	goCtx context.Context,
 	request *types.QueryDivisionRequest,
 ) (*types.QueryDivisionResponse, error) {
-	if request == nil {
-		return nil, sdkerrors.ErrInvalidRequest.Wrap("empty request")
-	}
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	division, found := q.GetDivision(ctx, request.DivisionId)
 	if !found {
@@ -157,10 +144,6 @@ func (q Querier) Divisions(
 	goCtx context.Context,
 	request *types.QueryDivisionsRequest,
 ) (*types.QueryDivisionsResponse, error) {
-	if request == nil {
-		return nil, sdkerrors.ErrInvalidRequest.Wrap("empty request")
-	}
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	store := ctx.KVStore(q.storeKey)
 
@@ -190,15 +173,11 @@ func (q Querier) Supply(
 	goCtx context.Context,
 	request *types.QuerySupplyRequest,
 ) (*types.QuerySupplyResponse, error) {
-	if request == nil {
-		return nil, sdkerrors.ErrInvalidRequest.Wrap("empty request")
-	}
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	division, found := q.GetDivision(ctx, request.DivisionId)
 	if !found {
 		return nil, types.ErrDivisionNotExists.Wrapf("division not found: %s", request.DivisionId)
 	}
-
 	return &types.QuerySupplyResponse{Amount: division.SoldCount}, nil
 }
 

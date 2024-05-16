@@ -6,7 +6,7 @@ func (suite *CaptainsTestSuite) TestComputingPower() {
 	addr1 := accounts[1].String()
 	node1 := suite.utilsCreateCaptainNode(addr1, 1)
 
-	// epoch 1: 2000 * e ^ (20/3) = 1571543.988
+	// epoch 1: 2000 * e ^ (2) = 14778.112
 	epoch1 := suite.keeper.GetCurrentEpoch(suite.ctx)
 	power1 := suite.keeper.CalcNodeComputingPowerOnEpoch(
 		suite.ctx,
@@ -14,5 +14,5 @@ func (suite *CaptainsTestSuite) TestComputingPower() {
 		node1,
 		sdk.NewDecWithPrec(1, 0),
 	)
-	suite.Require().Equal(sdk.NewDecWithPrec(1571543988, 3), power1)
+	suite.Require().Equal(sdk.NewDecWithPrec(14778112, 3), power1)
 }

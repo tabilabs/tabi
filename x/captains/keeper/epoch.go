@@ -62,8 +62,8 @@ func (k Keeper) HasReportBatch(ctx sdk.Context, epochID, batchID uint64) bool {
 	return store.Has(types.ReportBatchOnEpochStoreKey(epochID, batchID))
 }
 
-// SetReportBatch sets the batch count.
-func (k Keeper) SetReportBatch(ctx sdk.Context, epochID, batchID, count uint64) {
+// setReportBatch sets the batch count.
+func (k Keeper) setReportBatch(ctx sdk.Context, epochID, batchID, count uint64) {
 	store := ctx.KVStore(k.storeKey)
 	bz := sdk.Uint64ToBigEndian(count)
 	key := types.ReportBatchOnEpochStoreKey(epochID, batchID)
@@ -152,8 +152,8 @@ func (k Keeper) GetEpochsState(ctx sdk.Context) types.EpochState {
 	}
 }
 
-// SetEpochBase sets epoch base info.
-func (k Keeper) SetEpochBase(ctx sdk.Context, epochID uint64, base types.EpochBase) {
+// setEpochBase sets epoch base info.
+func (k Keeper) setEpochBase(ctx sdk.Context, epochID uint64, base types.EpochBase) {
 	if epochID < 1 {
 		return
 	}
@@ -162,7 +162,7 @@ func (k Keeper) SetEpochBase(ctx sdk.Context, epochID uint64, base types.EpochBa
 		k.setComputingPowerSumOnEpoch(ctx, epochID, base.ComputingPowerSum)
 	}
 	if !base.PledgeAmountSum.IsZero() {
-		k.setPledgeSum(ctx, epochID, base.PledgeAmountSum)
+		k.SetPledgeSum(ctx, epochID, base.PledgeAmountSum)
 	}
 	if !base.EmissionSum.IsZero() {
 		k.setEpochEmission(ctx, epochID, base.EmissionSum)

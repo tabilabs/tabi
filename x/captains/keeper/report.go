@@ -29,7 +29,7 @@ func (k Keeper) HandleReportDigest(ctx sdk.Context, report *types.ReportDigest) 
 
 	sum := k.CalcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
 
-	k.delPledgeSum(ctx, epochId)
+	k.DelPledgeSum(ctx, epochId)
 	k.setEpochEmission(ctx, epochId, sum)
 	k.setDigest(ctx, epochId, report)
 
@@ -44,7 +44,7 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 		owner := k.GetNodeOwner(ctx, node.NodeId)
 
 		// try to calculate historical emission
-		k.CalcAndSetNodeHistoricalEmissionOnEpoch(ctx, epochId-1, node.NodeId)
+		k.CalcAndSetNodeHistoricalEmissionByEpoch(ctx, epochId-1, node.NodeId)
 		power := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio)
 
 		k.setNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, power)
@@ -52,20 +52,19 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 		k.incrComputingPowerSumOnEpoch(ctx, epochId, power)
 
 		// sample owner pledge once for next epoch
-		_, found := k.GetOwnerPledge(ctx, owner, epochId+1)
-		if !found {
+		if !k.HasOwnerPledge(ctx, owner, epochId+1) {
 			pledge, err := k.SampleOwnerPledge(ctx, owner)
 			if err != nil {
 				return err
 			}
 
-			k.setOwnerPledge(ctx, owner, epochId+1, pledge)
-			k.incrPledgeSum(ctx, epochId+1, pledge)
+			k.SetOwnerPledge(ctx, owner, epochId+1, pledge)
+			k.IncrPledgeSum(ctx, epochId+1, pledge)
 		}
 	}
 
 	// mark we have handle this batch.
-	k.SetReportBatch(ctx, epochId, report.BatchId, report.NodeCount)
+	k.setReportBatch(ctx, epochId, report.BatchId, report.NodeCount)
 
 	return nil
 }

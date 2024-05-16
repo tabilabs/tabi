@@ -3,6 +3,7 @@ package types
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -27,32 +28,32 @@ func (suite *ParamsTestSuite) TestParamsValidation() {
 		},
 		{
 			name:   "NewParamsWithInvalidTotalCountCaptains",
-			params: NewParams(0, 24, 6, 300000, 1, 5),
+			params: NewParams(0, 24, 6, sdk.NewDec(300000), sdk.NewDecWithPrec(16, 1), sdk.OneDec(), 5, nil),
 			expErr: true,
 		},
 		{
 			name:   "NewParamsWithInvalidMaximumPowerOnPeriod",
-			params: NewParams(100000, 25, 6, 300000, 1, 5),
+			params: NewParams(100000, 25, 6, sdk.NewDec(300000), sdk.NewDecWithPrec(16, 1), sdk.OneDec(), 5, nil),
 			expErr: true,
 		},
 		{
 			name:   "NewParamsWithInvalidMinimumPowerOnPeriod",
-			params: NewParams(100000, 24, 25, 300000, 1, 5),
+			params: NewParams(100000, 24, 25, sdk.NewDec(300000), sdk.NewDecWithPrec(16, 1), sdk.OneDec(), 5, nil),
 			expErr: true,
 		},
 		{
 			name:   "NewParamsWithInvalidConstantA",
-			params: NewParams(100000, 24, 6, 0, 1, 5),
+			params: NewParams(100000, 24, 6, sdk.NewDec(0), sdk.NewDecWithPrec(16, 1), sdk.OneDec(), 5, nil),
 			expErr: true,
 		},
 		{
 			name:   "NewParamsWithInvalidCurrentLevelForSale",
-			params: NewParams(100000, 24, 6, 300000, 6, 5),
+			params: NewParams(100000, 24, 6, sdk.NewDec(300000), sdk.NewDecWithPrec(16, 1), sdk.OneDec(), 5, nil),
 			expErr: true,
 		},
 		{
 			name:   "NewParamsWithInvalidMaximumNumberOfHoldings",
-			params: NewParams(100000, 24, 6, 300000, 1, 100001),
+			params: NewParams(100000, 24, 6, sdk.NewDec(300000), sdk.NewDecWithPrec(16, 1), sdk.OneDec(), 100001, nil),
 			expErr: true,
 		},
 	}

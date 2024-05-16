@@ -34,7 +34,7 @@ func (suite *GenesisTestSuite) TestValidateGenesis() {
 				},
 				Divisions:                DefaultDivision(),
 				Nodes:                    nil,
-				Epochs:                   nil,
+				EpochState:               EpochState{},
 				ClaimableComputingPowers: nil,
 			},
 			expPass: false,

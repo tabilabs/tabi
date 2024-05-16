@@ -101,7 +101,7 @@ func (AppModule) Name() string { return types.ModuleName }
 
 // RegisterServices registers module services.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(&am.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQuerierImpl(&am.keeper))
 }
 
