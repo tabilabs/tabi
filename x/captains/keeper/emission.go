@@ -67,10 +67,11 @@ func (k Keeper) SetGlobalClaimedEmission(ctx sdk.Context, amount sdk.Dec) {
 }
 
 // incrGlobalClaimedEmission increases global claimed emission by amount.
-func (k Keeper) incrGlobalClaimedEmission(ctx sdk.Context, amount sdk.Dec) {
+func (k Keeper) incrGlobalClaimedEmission(ctx sdk.Context, amount sdk.Dec) sdk.Dec {
 	emission := k.GetGlobalClaimedEmission(ctx)
-	emission.Add(amount)
+	emission = emission.Add(amount)
 	k.SetGlobalClaimedEmission(ctx, emission)
+	return emission
 }
 
 // CalcAndSetNodeCumulativeEmissionByEpoch returns the historical emission for a node at the end of an epoch.
@@ -112,9 +113,8 @@ func (k Keeper) CalcNodeEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID 
 	return emission.Mul(power).Quo(powerSum)
 }
 
-// CalcAndGetNodeHistoricalEmissionOnEpoch returns the historical emission for a node at the end of an epoch.
-// TODO: rename interface
-func (k Keeper) CalcAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
+// CalcAndGetNodeCumulativeEmissionByEpoch returns the historical emission for a node at the end of an epoch.
+func (k Keeper) CalcAndGetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	return k.CalcNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
 }
 
@@ -143,17 +143,14 @@ func (k Keeper) delNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64
 	store.Delete(key)
 }
 
-// UpdateNodeHistoricalEmissionOnLastClaim updates node_historical_emission_on_last_claim after the user claim.
+// UpdateGlobalAndNodeClaimedEmission updates node's claimed emission and incr global claimed emission.
 // NOTE: call this function only after claiming the rewards.
-// TODO: rename interface
-func (k Keeper) UpdateNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) error {
+func (k Keeper) UpdateGlobalAndNodeClaimedEmission(ctx sdk.Context, nodeID string) error {
 	epoch := k.GetCurrentEpoch(ctx)
-	amount := k.CalcNodeCumulativeEmissionByEpoch(ctx, epoch-1, nodeID)
-
-	k.SetNodeClaimedEmission(ctx, nodeID, amount)
-	k.incrGlobalClaimedEmission(ctx, amount)
-
-	// TODO: we don't need to return error? we should return sum right?
+	before := k.GetNodeClaimedEmission(ctx, nodeID)
+	after := k.CalcNodeCumulativeEmissionByEpoch(ctx, epoch-1, nodeID)
+	k.SetNodeClaimedEmission(ctx, nodeID, after)
+	k.incrGlobalClaimedEmission(ctx, after.Sub(before))
 	return nil
 }
 
