@@ -24,16 +24,25 @@ func (k Keeper) CommitReport(ctx sdk.Context, report any) error {
 }
 
 // HandleReportDigest processes a report digest
+//
+// NOTE: Part of handle logic are delayed to the end blocker. This is because we may encounter
+// multiple params update in the same block which affect the calculation.
 func (k Keeper) HandleReportDigest(ctx sdk.Context, report *types.ReportDigest) error {
 	epochId := report.EpochId
-
-	sum := k.CalcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
-
-	k.DelGlobalPledge(ctx, epochId)
-	k.setEpochEmission(ctx, epochId, sum)
 	k.setReportDigest(ctx, epochId, report)
 
 	return nil
+}
+
+// execReportDigestEndBlock processes a report digest at the end block
+func (k Keeper) execReportDigestEndBlock(ctx sdk.Context, digest *types.ReportDigest) {
+	epochId := k.GetCurrentEpoch(ctx)
+	sum := k.CalcEpochEmission(ctx, epochId, digest.GlobalOnOperationRatio)
+
+	k.DelGlobalPledge(ctx, epochId)
+	k.setEpochEmission(ctx, epochId, sum)
+	// we will enter report calculation in the next block.
+	k.setStandByFlag(ctx)
 }
 
 // HandleReportBatch processes a report batch
@@ -168,6 +177,11 @@ func (k Keeper) ValidateReportDigest(ctx sdk.Context, report *types.ReportDigest
 		return errorsmod.Wrapf(types.ErrInvalidReport, "digest already exists")
 	}
 
+	// NOTE:  assure all nodes created on chain submitted, otherwise emission calc will be incorrect.
+	if report.TotalNodeCount != k.GetNodesCount(ctx) {
+		return errorsmod.Wrapf(types.ErrInvalidReport, "node count mismatch")
+	}
+
 	return nil
 }
 
@@ -209,6 +223,12 @@ func (k Keeper) ValidateReportEnd(ctx sdk.Context, report *types.ReportEnd) erro
 		return errorsmod.Wrapf(types.ErrInvalidReport, "eport end epoch already ended")
 	}
 	return nil
+}
+
+// HasReportDigest checks if the digest exists.
+func (k Keeper) HasReportDigest(ctx sdk.Context, epochID uint64) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.ReportDigestOnEpochStoreKey(epochID))
 }
 
 // GetReportDigest returns the digest.

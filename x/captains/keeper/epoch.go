@@ -47,3 +47,27 @@ func (k Keeper) delEndEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.EndOnEpochStoreKey(epochID))
 }
+
+// IsStandByPhrase checks if the stand by phrase is active.
+func (k Keeper) IsStandByPhrase(ctx sdk.Context) bool {
+	return !k.HasStandByFlag(ctx)
+}
+
+// HasStandByFlag checks if the stand by flag exists.
+func (k Keeper) HasStandByFlag(ctx sdk.Context) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.StandByKey)
+}
+
+// setStandBy sets the stand by flag.
+// NOTE: if set, the stand-by phrase is over in current epoch.
+func (k Keeper) setStandByFlag(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.StandByKey, types.PlaceHolder)
+}
+
+// delStandByFlag deletes the stand by flag.
+func (k Keeper) delStandByFlag(ctx sdk.Context) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.StandByKey)
+}

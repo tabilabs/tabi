@@ -23,6 +23,14 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
+var (
+	_ module.AppModule           = AppModule{}
+	_ module.AppModuleBasic      = AppModuleBasic{}
+	_ module.AppModuleSimulation = AppModule{}
+	_ module.BeginBlockAppModule = AppModule{}
+	_ module.EndBlockAppModule   = AppModule{}
+)
+
 // AppModuleBasic defines the basic application module used by the captains module.
 type AppModuleBasic struct {
 	cdc codec.Codec
@@ -155,8 +163,8 @@ func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
 
 // EndBlock returns the end blocker for the mint module. It returns no validator
 // updates.
-func (AppModule) EndBlock(_ sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
-	return []abci.ValidatorUpdate{}
+func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.ValidatorUpdate {
+	return EndBlocker(ctx, req, am.keeper)
 }
 
 // ____________________________________________________________________________

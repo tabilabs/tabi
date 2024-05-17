@@ -152,6 +152,16 @@ func (k Keeper) GetNodes(ctx sdk.Context) (nodes []types.Node) {
 	return nodes
 }
 
+// GetNodesCount returns the total number of nodes
+func (k Keeper) GetNodesCount(ctx sdk.Context) uint64 {
+	var count uint64
+	divisions := k.GetDivisions(ctx)
+	for _, division := range divisions {
+		count += division.TotalCount
+	}
+	return count
+}
+
 // GetNodesByOwner return all nodes owned by the specified owner
 func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []types.Node) {
 	store := k.getNodeByOwnerPrefixStore(ctx, owner)
@@ -163,7 +173,6 @@ func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []
 			nodes = append(nodes, node)
 		}
 	}
-
 	return nodes
 }
 
@@ -175,17 +184,6 @@ func (k Keeper) GetNodeOwner(ctx sdk.Context, nodeID string) sdk.AccAddress {
 	}
 	owner, _ := sdk.AccAddressFromBech32(node.Owner)
 	return owner
-}
-
-// GetUserHoldingAmount returns the amount of nodes owned by the specified owner
-func (k Keeper) GetUserHoldingAmount(ctx sdk.Context, owner sdk.AccAddress) uint64 {
-	store := k.getNodeByOwnerPrefixStore(ctx, owner)
-	amount := uint64(0)
-	iterator := store.Iterator(nil, nil)
-	for ; iterator.Valid(); iterator.Next() {
-		amount++
-	}
-	return amount
 }
 
 // setNode defines a method for setting the node

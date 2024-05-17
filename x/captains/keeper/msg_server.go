@@ -119,11 +119,17 @@ func (m msgServer) CommitReport(
 		return nil, err
 	}
 
-	ctx.EventManager().EmitEvent(sdk.NewEvent(
-		sdk.EventTypeMessage,
-		sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-		sdk.NewAttribute(sdk.AttributeKeySender, msg.Authority),
-	))
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Authority),
+		),
+		sdk.NewEvent(
+			types.EventTypeCommitReport,
+			sdk.NewAttribute(types.AttributeKeyReportType, msg.ReportType.String()),
+		),
+	})
 
 	return &types.MsgCommitReportResponse{}, nil
 }
@@ -266,7 +272,7 @@ func (m msgServer) CommitComputingPower(
 		before, after := m.k.CommitComputingPower(ctx, cpr.Amount, owner)
 
 		events = append(events, sdk.NewEvent(
-			types.EventCommitComputingPower,
+			types.EventTypeCommitComputingPower,
 			sdk.NewAttribute(types.AttributeKeyOwner, cpr.Owner),
 			sdk.NewAttribute(types.AttributeKeyComputingPowerBefore, fmt.Sprintf("%d", before)),
 			sdk.NewAttribute(types.AttributeKeyComputingPowerAfter, fmt.Sprintf("%d", after)),
@@ -301,7 +307,7 @@ func (m msgServer) ClaimComputingPower(
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
-			types.EventClaimComputingPower,
+			types.EventTypeClaimComputingPower,
 			sdk.NewAttribute(types.AttributeKeyNodeID, msg.NodeId),
 			sdk.NewAttribute(types.AttributeKeyComputingPower, fmt.Sprintf("%d", msg.ComputingPowerAmount)),
 			sdk.NewAttribute(types.AttributeKeyReceiver, msg.Sender),
