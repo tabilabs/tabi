@@ -58,3 +58,11 @@ message NodePowerOnRatio {
     (gogoproto.nullable)   = false
   ];
 }
+
+// BaseBatch is the base batch message.
+message BatchBase {
+  // batch_id is the batch id of the report
+  uint64 batch_id = 1;
+  // node_count is the number of nodes in the batch
+  uint64 count = 2;
+}

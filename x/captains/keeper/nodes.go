@@ -152,49 +152,6 @@ func (k Keeper) GetNodes(ctx sdk.Context) (nodes []types.Node) {
 	return nodes
 }
 
-// GetNodeEpochsInfo returns a node info on epoch.
-func (k Keeper) GetNodeEpochsInfo(ctx sdk.Context, nodeID string) []types.NodeEpochInfo {
-	store := ctx.KVStore(k.storeKey)
-	prefixStore := prefix.NewStore(store, types.NodeComputingPowerOnEpochPrefixStoreKey(nodeID))
-	iter := prefixStore.Iterator(nil, nil)
-	res := make([]types.NodeEpochInfo, 0)
-	for ; iter.Valid(); iter.Next() {
-		epochId := sdk.BigEndianToUint64(iter.Key())
-		emission := k.GetNodeHistoricalEmissionByEpoch(ctx, epochId, nodeID)
-		power := k.GetNodeComputingPowerOnEpoch(ctx, epochId, nodeID)
-		info := types.NodeEpochInfo{
-			EpochId:            epochId,
-			HistoricalEmission: emission,
-			ComputingPower:     power,
-		}
-		res = append(res, info)
-	}
-
-	return res
-}
-
-// GetNodesExtraInfo returns nodes' extra info.
-func (k Keeper) GetNodesExtraInfo(ctx sdk.Context) []types.NodeExtraInfo {
-	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, types.NodeKey)
-	defer iterator.Close()
-
-	res := make([]types.NodeExtraInfo, 0)
-	for ; iterator.Valid(); iterator.Next() {
-		nodeId := string(iterator.Key())
-		lastEmission := k.GetNodeHistoricalEmissionOnLastClaim(ctx, nodeId)
-		epochs := k.GetNodeEpochsInfo(ctx, nodeId)
-
-		info := types.NodeExtraInfo{
-			Id:                          nodeId,
-			LastClaimHistoricalEmission: lastEmission,
-			Epochs:                      epochs,
-		}
-		res = append(res, info)
-	}
-	return res
-}
-
 // GetNodesByOwner return all nodes owned by the specified owner
 func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []types.Node) {
 	store := k.getNodeByOwnerPrefixStore(ctx, owner)

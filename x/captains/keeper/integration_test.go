@@ -280,7 +280,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(3,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().NotEmpty(suite.keeper.GetNodeHistoricalEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().NotEmpty(suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
 			suite.Require().NotEmpty(suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch2, node.NodeId))
 
 			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
@@ -307,7 +307,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 
 		// After Submit ReportBatches(2,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeHistoricalEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
 			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch1, node.NodeId))
 		}
 
@@ -565,7 +565,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(3,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().NotEmpty(suite.keeper.GetNodeHistoricalEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().NotEmpty(suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
 			suite.Require().NotEmpty(suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch2, node.NodeId))
 
 			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
@@ -592,7 +592,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 
 		// After Submit ReportBatches(2,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeHistoricalEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
 			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch1, node.NodeId))
 		}
 

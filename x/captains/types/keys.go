@@ -1,6 +1,9 @@
 package types
 
 import (
+	"bytes"
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 )
@@ -141,10 +144,22 @@ func NodeCumulativeEmissionByEpochStoreKey(epochID uint64, nodeID string) []byte
 	return key
 }
 
-// NodeClaimedEmissionByEpochStoreKey returns the byte representation of the historical emission last claimed key
+// ParseNodeCumulativeEmissionByEpochPrefixStoreKey returns the epochID and nodeID from the key
+// <epoch_id><delimiter><node_id> are split by delimiter
+func ParseNodeCumulativeEmissionByEpochPrefixStoreKey(key []byte) (uint64, string) {
+	splits := bytes.Split(key, Delimiter)
+	if len(splits) != 2 {
+		panic(fmt.Errorf("unexpected key: %s", string(key)))
+	}
+	epochID := sdk.BigEndianToUint64(splits[0])
+	nodeID := string(splits[1])
+	return epochID, nodeID
+}
+
+// NodeClaimedEmissionStoreKey returns the byte representation of the historical emission last claimed key
 // Items are stored with the following key: values
 // <prefix_key><node_id> -> <emission>
-func NodeClaimedEmissionByEpochStoreKey(nodeID string) []byte {
+func NodeClaimedEmissionStoreKey(nodeID string) []byte {
 	key := make([]byte, len(NodeClaimedEmissionKey)+len(nodeID))
 	copy(key, NodeClaimedEmissionKey)
 	copy(key[len(NodeClaimedEmissionKey):], nodeID)
@@ -186,15 +201,15 @@ func NodeComputingPowerOnEpochStoreKey(epochID uint64, nodeID string) []byte {
 	return key
 }
 
-// NodeComputingPowerOnEpochPrefixStoreKey returns the prefix key.
-// Items are stored with the following key: values
-// <prefix_key><node_id><delimiter>
-func NodeComputingPowerOnEpochPrefixStoreKey(nodeID string) []byte {
-	key := make([]byte, len(NodeComputingPowerOnEpochKey)+len(nodeID)+len(Delimiter))
-	copy(key, NodeComputingPowerOnEpochKey)
-	copy(key[len(NodeComputingPowerOnEpochKey):], nodeID)
-	copy(key[len(NodeComputingPowerOnEpochKey)+len(nodeID):], Delimiter)
-	return key
+// ParseNodeComputingPowerOnEpochPrefixStoreKey return the epoch id and node id of the computing power on epoch key.
+func ParseNodeComputingPowerOnEpochPrefixStoreKey(key []byte) (uint64, string) {
+	splits := bytes.Split(key, Delimiter)
+	if len(splits) != 2 {
+		panic(fmt.Errorf("unexpected key: %s", string(key)))
+	}
+	nodeID := string(splits[0])
+	epochID := sdk.BigEndianToUint64(splits[1])
+	return epochID, nodeID
 }
 
 // GlobalPledgeOnEpochStoreKey returns the byte representation of the pledge amount sum on epoch key
@@ -209,7 +224,7 @@ func GlobalPledgeOnEpochStoreKey(epochID uint64) []byte {
 }
 
 // OwnerPledgeOnEpochStoreKey returns the byte representation of the owner pledge on epoch key
-// <prefix_key><epoch_id><delimiter><node_id> -> <pledge>
+// <prefix_key><epoch_id><delimiter><owner> -> <pledge>
 func OwnerPledgeOnEpochStoreKey(owner sdk.AccAddress, epochID uint64) []byte {
 	owner = address.MustLengthPrefix(owner)
 	epochBz := sdk.Uint64ToBigEndian(epochID)
@@ -219,6 +234,17 @@ func OwnerPledgeOnEpochStoreKey(owner sdk.AccAddress, epochID uint64) []byte {
 	copy(key[len(OwnerPledgeOnEpochKey)+len(owner):], Delimiter)
 	copy(key[len(OwnerPledgeOnEpochKey)+len(owner)+len(Delimiter):], epochBz)
 	return key
+}
+
+// ParseOwnerPledgeOnEpochPrefixStoreKey returns the epoch id and node id of the owner pledge on epoch key
+func ParseOwnerPledgeOnEpochPrefixStoreKey(key []byte) (uint64, string) {
+	splits := bytes.Split(key, Delimiter)
+	if len(splits) != 2 {
+		panic(fmt.Errorf("unexpected key: %s", string(key)))
+	}
+	epochID := sdk.BigEndianToUint64(splits[0])
+	owner := string(splits[1])
+	return epochID, owner
 }
 
 // ReportDigestOnEpochStoreKey returns the byte representation of the digest on epoch key

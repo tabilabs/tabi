@@ -5,7 +5,6 @@ import (
 	"math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
@@ -124,24 +123,52 @@ func (k Keeper) GetClaimableComputingPower(ctx sdk.Context, owner sdk.AccAddress
 	return sdk.BigEndianToUint64(bz)
 }
 
-// GetComputingPowersClaimable returns all claimable computing powers.
-func (k Keeper) GetComputingPowersClaimable(ctx sdk.Context) []types.ClaimableComputingPower {
-	var claimableComputingPowers []types.ClaimableComputingPower
+// Genesis Export/Import Helpers
 
+// GetClaimableComputingPowers returns all claimable computing powers.
+func (k Keeper) GetClaimableComputingPowers(ctx sdk.Context) []types.ClaimableComputingPower {
+	var powers []types.ClaimableComputingPower
 	store := ctx.KVStore(k.storeKey)
 	iterator := sdk.KVStorePrefixIterator(store, types.ClaimableComputingPowerKey)
 	defer iterator.Close()
-
 	for ; iterator.Valid(); iterator.Next() {
-		amount := sdk.BigEndianToUint64(iterator.Value())
-		owner := string(iterator.Key())
-
-		power := types.ClaimableComputingPower{
-			Amount: amount,
-			Owner:  owner,
-		}
-		claimableComputingPowers = append(claimableComputingPowers, power)
+		var power types.ClaimableComputingPower
+		power.Amount = sdk.BigEndianToUint64(iterator.Value())
+		power.Owner = string(iterator.Key())
+		powers = append(powers, power)
 	}
 
-	return claimableComputingPowers
+	return powers
+}
+
+// GetGlobalsComputingPower returns all global computing power.
+func (k Keeper) GetGlobalsComputingPower(ctx sdk.Context) []types.GlobalComputingPower {
+	var powers []types.GlobalComputingPower
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.GlobalComputingPowerOnEpochKey)
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var power types.GlobalComputingPower
+		power.EpochId = sdk.BigEndianToUint64(iterator.Key())
+		power.Amount = k.GetGlobalComputingPowerOnEpoch(ctx, power.EpochId)
+		powers = append(powers, power)
+	}
+	return powers
+}
+
+// GetNodesComputingPower returns all nodes computing power.
+func (k Keeper) GetNodesComputingPower(ctx sdk.Context) []types.NodesComputingPower {
+	var powers []types.NodesComputingPower
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.NodeComputingPowerOnEpochKey)
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var power types.NodesComputingPower
+		epochId, nodeId := types.ParseNodeComputingPowerOnEpochPrefixStoreKey(iterator.Key())
+		power.EpochId = epochId
+		power.NodeId = nodeId
+		power.Amount = k.GetNodeComputingPowerOnEpoch(ctx, power.EpochId, nodeId)
+		powers = append(powers, power)
+	}
+	return powers
 }

@@ -35,7 +35,7 @@ func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	owner := k.GetNodeOwner(ctx, nodeID)
 
-	claimed := k.GetOwnerHistoricalEmissionOnLastClaim(ctx, owner)
+	claimed := k.GetOwnerClaimedEmission(ctx, owner)
 	if claimed.Equal(sdk.ZeroDec()) {
 		return ownerPledgeRatioUpperBound
 	}
@@ -133,4 +133,38 @@ func (k Keeper) DelGlobalPledge(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.GlobalPledgeOnEpochStoreKey(epochID)
 	store.Delete(key)
+}
+
+// Genesis State Export/Import Helpers
+
+// GetGlobalsPledge returns all global pledge.
+func (k Keeper) GetGlobalsPledge(ctx sdk.Context) []types.GlobalPledge {
+	var globalsPledge []types.GlobalPledge
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.GlobalPledgeOnEpochKey)
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var globalPledge types.GlobalPledge
+		globalPledge.EpochId = sdk.BigEndianToUint64(iterator.Key())
+		globalPledge.Amount = k.GetGlobalPledge(ctx, globalPledge.EpochId)
+		globalsPledge = append(globalsPledge, globalPledge)
+	}
+	return globalsPledge
+}
+
+// GetOwnersPledge returns all owner pledge.
+func (k Keeper) GetOwnersPledge(ctx sdk.Context) []types.OwnerPledge {
+	var ownersPledge []types.OwnerPledge
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.OwnerPledgeOnEpochKey)
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var ownerPledge types.OwnerPledge
+		epochId, owner := types.ParseOwnerPledgeOnEpochPrefixStoreKey(iterator.Key())
+		ownerPledge.EpochId = epochId
+		ownerPledge.Owner = owner
+		ownerPledge.Amount = k.GetOwnerPledge(ctx, sdk.MustAccAddressFromBech32(owner), epochId)
+		ownersPledge = append(ownersPledge, ownerPledge)
+	}
+	return ownersPledge
 }

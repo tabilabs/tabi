@@ -44,7 +44,7 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 		owner := k.GetNodeOwner(ctx, node.NodeId)
 
 		// try to calculate historical emission
-		k.CalcAndSetNodeHistoricalEmissionByEpoch(ctx, epochId-1, node.NodeId)
+		k.CalcAndSetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId)
 		power := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio)
 
 		k.setNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, power)
@@ -227,7 +227,7 @@ func (k Keeper) GetReportDigest(ctx sdk.Context, epochID uint64) (*types.ReportD
 // setReportDigest sets the digest.
 func (k Keeper) setReportDigest(ctx sdk.Context, epochID uint64, digest *types.ReportDigest) {
 	store := ctx.KVStore(k.storeKey)
-	bz, _ := k.cdc.Marshal(digest)
+	bz := k.cdc.MustMarshal(digest)
 	key := types.ReportDigestOnEpochStoreKey(epochID)
 	store.Set(key, bz)
 }
@@ -263,8 +263,8 @@ func (k Keeper) GetReportBatches(ctx sdk.Context, epochID uint64) []types.BatchB
 		batchID := sdk.BigEndianToUint64(iterator.Key())
 		count := sdk.BigEndianToUint64(iterator.Value())
 		batches = append(batches, types.BatchBase{
-			Id:    batchID,
-			Count: count,
+			BatchId: batchID,
+			Count:   count,
 		})
 	}
 

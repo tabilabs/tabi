@@ -328,8 +328,8 @@ func (mock *MockCaptains) CalcAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Contex
 	}
 }
 
-// GetNodeHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
-func (mock *MockCaptains) GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) sdk.Dec {
+// GetNodeClaimedEmission returns the historical emission the last time user claimed.
+func (mock *MockCaptains) GetNodeClaimedEmission(ctx sdk.Context, nodeID string) sdk.Dec {
 	switch mock.caseNum {
 	case KeyCase02:
 		return sdk.ZeroDec()
