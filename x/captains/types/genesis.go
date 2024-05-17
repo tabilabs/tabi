@@ -64,6 +64,7 @@ func DefaultBaseState() BaseState {
 		EpochId:               1,
 		NextNodeSequence:      1,
 		GlobalClaimedEmission: sdk.ZeroDec(),
+		IsStandBy:             true, // for sure we start from stand-by phase.
 	}
 }
 

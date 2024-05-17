@@ -36,7 +36,7 @@ const (
 	prefixReportDigestOnEpoch
 	prefixReportBatchOnEpoch
 	prefixEndOnEpoch
-	prefixStandBy
+	prefixStandByOver
 )
 
 var (
@@ -59,7 +59,7 @@ var (
 	ReportDigestOnEpochKey           = []byte{prefixReportDigestOnEpoch}
 	ReportBatchOnEpochKey            = []byte{prefixReportBatchOnEpoch}
 	EndOnEpochKey                    = []byte{prefixEndOnEpoch}
-	StandByKey                       = []byte{prefixStandBy}
+	StandByOverKey                   = []byte{prefixStandByOver}
 
 	Delimiter   = []byte{0x00}
 	PlaceHolder = []byte{0x01}

@@ -80,6 +80,8 @@ message BaseState {
     ];
     // the digest of the report
     ReportDigest report_digest = 5;
+    // is in epoch stand_by phase
+    bool is_stand_by = 6;
 }
 
 message EpochEmission {

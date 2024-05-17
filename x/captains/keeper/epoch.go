@@ -50,24 +50,24 @@ func (k Keeper) delEndEpoch(ctx sdk.Context, epochID uint64) {
 
 // IsStandByPhase checks if the stand by phrase is active.
 func (k Keeper) IsStandByPhase(ctx sdk.Context) bool {
-	return !k.HasStandByFlag(ctx)
+	return !k.HasStandByOverFlag(ctx)
 }
 
-// HasStandByFlag checks if the stand by flag exists.
-func (k Keeper) HasStandByFlag(ctx sdk.Context) bool {
+// HasStandByOverFlag checks if the stand by flag exists.
+func (k Keeper) HasStandByOverFlag(ctx sdk.Context) bool {
 	store := ctx.KVStore(k.storeKey)
-	return store.Has(types.StandByKey)
+	return store.Has(types.StandByOverKey)
 }
 
 // setStandBy sets the stand by flag.
 // NOTE: if set, the stand-by phrase is over in current epoch.
-func (k Keeper) setStandByFlag(ctx sdk.Context) {
+func (k Keeper) setStandByOverFlag(ctx sdk.Context) {
 	store := ctx.KVStore(k.storeKey)
-	store.Set(types.StandByKey, types.PlaceHolder)
+	store.Set(types.StandByOverKey, types.PlaceHolder)
 }
 
-// delStandByFlag deletes the stand by flag.
-func (k Keeper) delStandByFlag(ctx sdk.Context) {
+// delStandByOverFlag deletes the stand by flag.
+func (k Keeper) delStandByOverFlag(ctx sdk.Context) {
 	store := ctx.KVStore(k.storeKey)
-	store.Delete(types.StandByKey)
+	store.Delete(types.StandByOverKey)
 }

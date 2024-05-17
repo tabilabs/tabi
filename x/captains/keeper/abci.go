@@ -25,7 +25,7 @@ func (k Keeper) BeginBlocker(ctx sdk.Context) {
 		// Let's enter new epoch!
 		k.incrEpoch(ctx)
 		// and we are in stand-by phrase again.
-		k.delStandByFlag(ctx)
+		k.delStandByOverFlag(ctx)
 
 		ctx.EventManager().EmitEvents(sdk.Events{
 			sdk.NewEvent(

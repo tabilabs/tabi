@@ -42,7 +42,7 @@ func (k Keeper) execReportDigestEndBlock(ctx sdk.Context, digest *types.ReportDi
 	k.DelGlobalPledge(ctx, epochId)
 	k.setEpochEmission(ctx, epochId, sum)
 	// we will enter report calculation in the next block.
-	k.setStandByFlag(ctx)
+	k.setStandByOverFlag(ctx)
 }
 
 // HandleReportBatch processes a report batch
