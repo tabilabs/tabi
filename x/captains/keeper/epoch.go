@@ -48,8 +48,8 @@ func (k Keeper) delEndEpoch(ctx sdk.Context, epochID uint64) {
 	store.Delete(types.EndOnEpochStoreKey(epochID))
 }
 
-// IsStandByPhrase checks if the stand by phrase is active.
-func (k Keeper) IsStandByPhrase(ctx sdk.Context) bool {
+// IsStandByPhase checks if the stand by phrase is active.
+func (k Keeper) IsStandByPhase(ctx sdk.Context) bool {
 	return !k.HasStandByFlag(ctx)
 }
 

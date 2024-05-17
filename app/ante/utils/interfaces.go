@@ -40,5 +40,5 @@ type StakingKeeper interface {
 // CaptainsKeeper defines the exposed interface for using functionality of the captains keeper
 // in the context of the AnteHandler utils package.
 type CaptainsKeeper interface {
-	IsStandByPhrase(ctx sdk.Context) bool
+	IsStandByPhase(ctx sdk.Context) bool
 }

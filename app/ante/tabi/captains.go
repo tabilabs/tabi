@@ -45,12 +45,12 @@ func (cld CaptainsRestrictionDecorator) restrict(ctx sdk.Context, msgs []sdk.Msg
 			*captainstypes.MsgCreateCaptainNode,
 			*captainstypes.MsgUpdateSaleLevel,
 			*captainstypes.MsgClaimComputingPower:
-			if !cld.captainsKeeper.IsStandByPhrase(ctx) {
+			if !cld.captainsKeeper.IsStandByPhase(ctx) {
 				return fmt.Errorf("msg %s is not allowed in busy phrase", msg.String())
 			}
 		case
 			*captainstypes.MsgCommitReport:
-			if cld.captainsKeeper.IsStandByPhrase(ctx) {
+			if cld.captainsKeeper.IsStandByPhase(ctx) {
 				return fmt.Errorf("msg %s is not allowed in stand-by phrase", msg.String())
 			}
 		}
