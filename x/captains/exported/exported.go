@@ -14,13 +14,12 @@ type Captains interface {
 	// GetCurrentEpoch return the current epoch id.
 	GetCurrentEpoch(ctx sdk.Context) uint64
 
-	// CalcAndGetNodeHistoricalEmissionOnEpoch returns the historical mission of the node at the end of epoch.
-	CalcAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec
+	// CalcAndGetNodeCumulativeEmissionByEpoch returns the historical mission of the node at the end of epoch.
+	CalcAndGetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec
 
-	// GetNodeHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
-	GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) sdk.Dec
+	// GetNodeClaimedEmission returns the historical emission user claimed.
+	GetNodeClaimedEmission(ctx sdk.Context, nodeID string) sdk.Dec
 
-	// UpdateNodeHistoricalEmissionOnLastClaim updates the node_historical_emission_on_last_claim.
-	// NOTE: call this only after claiming.
-	UpdateNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) error
+	// UpdateGlobalAndNodeClaimedEmission updates the node_historical_emission_on_last_claim.
+	UpdateGlobalAndNodeClaimedEmission(ctx sdk.Context, nodeID string) error
 }

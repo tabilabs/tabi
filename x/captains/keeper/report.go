@@ -29,9 +29,9 @@ func (k Keeper) HandleReportDigest(ctx sdk.Context, report *types.ReportDigest) 
 
 	sum := k.CalcEpochEmission(ctx, epochId, report.GlobalOnOperationRatio)
 
-	k.DelPledgeSum(ctx, epochId)
+	k.DelGlobalPledge(ctx, epochId)
 	k.setEpochEmission(ctx, epochId, sum)
-	k.setDigest(ctx, epochId, report)
+	k.setReportDigest(ctx, epochId, report)
 
 	return nil
 }
@@ -44,12 +44,12 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 		owner := k.GetNodeOwner(ctx, node.NodeId)
 
 		// try to calculate historical emission
-		k.CalcAndSetNodeHistoricalEmissionByEpoch(ctx, epochId-1, node.NodeId)
+		k.CalcAndSetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId)
 		power := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio)
 
 		k.setNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, power)
 		k.delOwnerPledge(ctx, owner, epochId-2) // it's fine to delete epoch(-1) which doesn't exist at all.
-		k.incrComputingPowerSumOnEpoch(ctx, epochId, power)
+		k.incrGlobalComputingPowerOnEpoch(ctx, epochId, power)
 
 		// sample owner pledge once for next epoch
 		if !k.HasOwnerPledge(ctx, owner, epochId+1) {
@@ -59,7 +59,7 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 			}
 
 			k.SetOwnerPledge(ctx, owner, epochId+1, pledge)
-			k.IncrPledgeSum(ctx, epochId+1, pledge)
+			k.IncrGlobalPledge(ctx, epochId+1, pledge)
 		}
 	}
 
@@ -79,7 +79,7 @@ func (k Keeper) HandleReportEnd(ctx sdk.Context, report *types.ReportEnd) error 
 	}
 
 	// marks we are ready for the next epoch.
-	k.setEndEpoch(ctx, epochId)
+	k.setEndOnEpoch(ctx, epochId)
 
 	return nil
 }
@@ -90,14 +90,14 @@ func (k Keeper) IsReportCompleted(ctx sdk.Context, epochId uint64) error {
 	batchCount := uint64(0)
 
 	store := ctx.KVStore(k.storeKey)
-	prefixStore := prefix.NewStore(store, types.ReportBatchOnEpochPrefixKey(epochId))
+	prefixStore := prefix.NewStore(store, types.ReportBatchOnEpochPrefixStoreKey(epochId))
 	iterator := prefixStore.Iterator(nil, nil)
 	for ; iterator.Valid(); iterator.Next() {
 		batchCount++
 		nodeCount += sdk.BigEndianToUint64(iterator.Value())
 	}
 
-	digest, _ := k.GetDigest(ctx, epochId)
+	digest, _ := k.GetReportDigest(ctx, epochId)
 	if digest.TotalBatchCount != batchCount || digest.TotalNodeCount != nodeCount {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "commit end report too early!")
 	}
@@ -163,7 +163,7 @@ func (k Keeper) ValidateReportDigest(ctx sdk.Context, report *types.ReportDigest
 		return err
 	}
 
-	_, found := k.GetDigest(ctx, report.EpochId)
+	_, found := k.GetReportDigest(ctx, report.EpochId)
 	if found {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "digest already exists")
 	}
@@ -177,7 +177,7 @@ func (k Keeper) ValidateReportBatch(ctx sdk.Context, report *types.ReportBatch) 
 		return err
 	}
 
-	digest, found := k.GetDigest(ctx, report.EpochId)
+	digest, found := k.GetReportDigest(ctx, report.EpochId)
 	if !found {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "digest not found")
 	}
@@ -209,4 +209,74 @@ func (k Keeper) ValidateReportEnd(ctx sdk.Context, report *types.ReportEnd) erro
 		return errorsmod.Wrapf(types.ErrInvalidReport, "eport end epoch already ended")
 	}
 	return nil
+}
+
+// GetReportDigest returns the digest.
+func (k Keeper) GetReportDigest(ctx sdk.Context, epochID uint64) (*types.ReportDigest, bool) {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.ReportDigestOnEpochStoreKey(epochID))
+	if len(bz) == 0 {
+		return nil, false
+	}
+
+	var digest types.ReportDigest
+	k.cdc.Unmarshal(bz, &digest)
+	return &digest, true
+}
+
+// setReportDigest sets the digest.
+func (k Keeper) setReportDigest(ctx sdk.Context, epochID uint64, digest *types.ReportDigest) {
+	store := ctx.KVStore(k.storeKey)
+	bz := k.cdc.MustMarshal(digest)
+	key := types.ReportDigestOnEpochStoreKey(epochID)
+	store.Set(key, bz)
+}
+
+// delReportDigest deletes the digest.
+func (k Keeper) delReportDigest(ctx sdk.Context, epochID uint64) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.ReportDigestOnEpochStoreKey(epochID))
+}
+
+// HasReportBatch checks if the batch exists.
+func (k Keeper) HasReportBatch(ctx sdk.Context, epochID, batchID uint64) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.ReportBatchOnEpochStoreKey(epochID, batchID))
+}
+
+// setReportBatch sets the batch count.
+func (k Keeper) setReportBatch(ctx sdk.Context, epochID, batchID, count uint64) {
+	store := ctx.KVStore(k.storeKey)
+	bz := sdk.Uint64ToBigEndian(count)
+	key := types.ReportBatchOnEpochStoreKey(epochID, batchID)
+	store.Set(key, bz)
+}
+
+// GetReportBatches returns the batch count.
+func (k Keeper) GetReportBatches(ctx sdk.Context, epochID uint64) []types.BatchBase {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.ReportBatchOnEpochPrefixStoreKey(epochID))
+	defer iterator.Close()
+
+	var batches []types.BatchBase
+	for ; iterator.Valid(); iterator.Next() {
+		batchID := sdk.BigEndianToUint64(iterator.Key())
+		count := sdk.BigEndianToUint64(iterator.Value())
+		batches = append(batches, types.BatchBase{
+			BatchId: batchID,
+			Count:   count,
+		})
+	}
+
+	return batches
+}
+
+// delReportBatches deletes the batch count.
+func (k Keeper) delReportBatches(ctx sdk.Context, epochID uint64) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.ReportBatchOnEpochPrefixStoreKey(epochID))
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		store.Delete(iterator.Key())
+	}
 }

@@ -305,7 +305,7 @@ func (mock *MockCaptains) GetCurrentEpoch(ctx sdk.Context) uint64 {
 }
 
 // CalAndGetNodeHistoricalEmissionOnEpoch returns the historical mission of the node at the end of epoch.
-func (mock *MockCaptains) CalcAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
+func (mock *MockCaptains) CalcAndGetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	switch mock.caseNum {
 	case KeyCase02:
 		return sdk.ZeroDec()
@@ -328,8 +328,8 @@ func (mock *MockCaptains) CalcAndGetNodeHistoricalEmissionOnEpoch(ctx sdk.Contex
 	}
 }
 
-// GetNodeHistoricalEmissionOnLastClaim returns the historical emission the last time user claimed.
-func (mock *MockCaptains) GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) sdk.Dec {
+// GetNodeClaimedEmission returns the historical emission the last time user claimed.
+func (mock *MockCaptains) GetNodeClaimedEmission(ctx sdk.Context, nodeID string) sdk.Dec {
 	switch mock.caseNum {
 	case KeyCase02:
 		return sdk.ZeroDec()
@@ -352,9 +352,9 @@ func (mock *MockCaptains) GetNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, 
 	}
 }
 
-// UpdateNodeHistoricalEmissionOnLastClaim updates the node_historical_emission_on_last_claim.
+// UpdateGlobalAndNodeClaimedEmission updates the node_historical_emission_on_last_claim.
 // NOTE: call this only after claiming.
-func (mock *MockCaptains) UpdateNodeHistoricalEmissionOnLastClaim(ctx sdk.Context, nodeID string) error {
+func (mock *MockCaptains) UpdateGlobalAndNodeClaimedEmission(ctx sdk.Context, nodeID string) error {
 	switch mock.caseNum {
 	case KeyCase03:
 		return nil

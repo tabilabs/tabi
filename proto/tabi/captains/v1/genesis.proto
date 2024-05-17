@@ -2,16 +2,39 @@ syntax = "proto3";
 package tabi.captains.v1;
 
 import "gogoproto/gogo.proto";
+import "tabi/captains/v1/report.proto";
 import "tabi/captains/v1/captains.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/captains/types";
 
 // GenesisState defines the module's genesis state
 message GenesisState {
+  // params stores all the parameters of the module.
   Params params = 1 [(gogoproto.nullable) = false];
-  EpochState epoch_state = 2 [(gogoproto.nullable) = false];
+
+  // base_state stores the current epoch state.
+  BaseState base_state = 2 [(gogoproto.nullable) = false];
+
+  // divisions stores all divisions base info.
   repeated Division divisions = 3 [(gogoproto.nullable) = false];
+
+  // nodes stores all nodes base info.
   repeated Node  nodes = 4 [(gogoproto.nullable) = false];
-  repeated NodeExtraInfo nodes_extra_info = 5 [(gogoproto.nullable) = false];
-  repeated ClaimableComputingPower claimable_computing_powers = 6 [(gogoproto.nullable) = false];
+
+  // emission
+  repeated EpochEmission epoches_emission = 5 [(gogoproto.nullable) = false];
+  repeated NodeClaimedEmission nodes_claimed_emission = 6 [(gogoproto.nullable) = false];
+  repeated NodeCumulativeEmission nodes_cumulative_emission = 7 [(gogoproto.nullable) = false];
+
+  // pledge
+  repeated GlobalPledge globals_pledge = 8 [(gogoproto.nullable) = false];
+  repeated OwnerPledge owners_pledge = 9 [(gogoproto.nullable) = false];
+
+  // computing powers infos.
+  repeated ClaimableComputingPower owners_claimable_computing_power = 10 [(gogoproto.nullable) = false];
+  repeated GlobalComputingPower globals_computing_power = 11 [(gogoproto.nullable) = false];
+  repeated NodesComputingPower nodes_computing_power = 12 [(gogoproto.nullable) = false];
+
+  // batches
+  repeated BatchBase batches = 13 [(gogoproto.nullable) = false];
 }

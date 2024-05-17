@@ -35,7 +35,7 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 			types.ModuleName, receiver.String())
 	}
 	for _, node := range nodes {
-		if err := k.captainsKeeper.UpdateNodeHistoricalEmissionOnLastClaim(
+		if err := k.captainsKeeper.UpdateGlobalAndNodeClaimedEmission(
 			ctx,
 			node.Id,
 		); err != nil {
@@ -72,9 +72,9 @@ func (k Keeper) CalculateRewardsByNodeId(ctx sdk.Context, nodeId string) (sdk.De
 	}
 
 	// all historical emission
-	historicalEmission := k.captainsKeeper.CalcAndGetNodeHistoricalEmissionOnEpoch(ctx, epochSequence, nodeId)
+	historicalEmission := k.captainsKeeper.CalcAndGetNodeCumulativeEmissionByEpoch(ctx, epochSequence, nodeId)
 	// historical emission on last claim
-	historicalEmissionOnLastClaim := k.captainsKeeper.GetNodeHistoricalEmissionOnLastClaim(ctx, nodeId)
+	historicalEmissionOnLastClaim := k.captainsKeeper.GetNodeClaimedEmission(ctx, nodeId)
 	reward := historicalEmission.Sub(historicalEmissionOnLastClaim)
 
 	return sdk.NewDecCoins(sdk.NewDecCoinFromDec(tabitypes.AttoVeTabi, reward)), nil

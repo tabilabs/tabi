@@ -3,6 +3,7 @@ package types
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -16,38 +17,38 @@ func TestGenesisTestSuite(t *testing.T) {
 
 func (suite *GenesisTestSuite) TestValidateGenesis() {
 	testCases := []struct {
-		name     string
-		genState *GenesisState
-		expPass  bool
+		name      string
+		genState  *GenesisState
+		expectErr bool
 	}{
 		{
-			name:     "TestValidateGenesisWithValidParams",
-			genState: DefaultGenesisState(),
-			expPass:  true,
+			name:      "success: default genesis state",
+			genState:  DefaultGenesisState(),
+			expectErr: false,
 		},
 		{
-			// TODO: complete test here
-			name: "TestValidateGenesisWithInvalidParams",
+			name: "fail: base state",
 			genState: &GenesisState{
-				Params: Params{
-					// Set invalid params here
+				Params: DefaultParams(),
+				BaseState: BaseState{
+					EpochId:               0,
+					NextNodeSequence:      0,
+					GlobalClaimedEmission: sdk.ZeroDec(),
 				},
-				Divisions:                DefaultDivision(),
-				Nodes:                    nil,
-				EpochState:               EpochState{},
-				ClaimableComputingPowers: nil,
+				Divisions: DefaultDivision(),
 			},
-			expPass: false,
+			expectErr: true,
 		},
 	}
 
 	for _, tc := range testCases {
-		tc := tc
-		err := tc.genState.Validate()
-		if tc.expPass {
-			suite.Require().NoError(err, tc.name)
-		} else {
-			suite.Require().Error(err, tc.name)
-		}
+		suite.Run(tc.name, func() {
+			err := tc.genState.Validate()
+			if tc.expectErr {
+				suite.Require().Error(err)
+			} else {
+				suite.Require().NoError(err)
+			}
+		})
 	}
 }

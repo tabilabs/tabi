@@ -13,12 +13,12 @@ var (
 
 // CalcGlobalPledgeRatio calculates the pledge rate of the global on the epoch t.
 func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
-	sum := k.GetEmissionClaimedSum(ctx)
+	sum := k.GetGlobalClaimedEmission(ctx)
 	if sum.IsZero() {
 		return sdk.OneDec()
 	}
 
-	pledgeSum := k.GetPledgeSum(ctx, epochID)
+	pledgeSum := k.GetGlobalPledge(ctx, epochID)
 	ratio := pledgeSum.Quo(sum)
 	// no more than 1.0
 	if ratio.GT(globalPledgeRatioUpperBound) {
@@ -35,7 +35,7 @@ func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	owner := k.GetNodeOwner(ctx, nodeID)
 
-	claimed := k.GetOwnerHistoricalEmissionOnLastClaim(ctx, owner)
+	claimed := k.GetOwnerClaimedEmission(ctx, owner)
 	if claimed.Equal(sdk.ZeroDec()) {
 		return ownerPledgeRatioUpperBound
 	}
@@ -50,8 +50,6 @@ func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, node
 
 	return nodePledgeRatio
 }
-
-// Owner pledge amount
 
 // SampleOwnerPledge sample pledge amount of the owner on the epoch.
 func (k Keeper) SampleOwnerPledge(ctx sdk.Context, owner sdk.AccAddress) (sdk.Dec, error) {
@@ -105,12 +103,10 @@ func (k Keeper) delOwnerPledge(ctx sdk.Context, owner sdk.AccAddress, epochID ui
 	store.Delete(key)
 }
 
-// Pledge Sum
-
-// GetPledgeSum returns the total pledge amount of one epoch end.
-func (k Keeper) GetPledgeSum(ctx sdk.Context, epochID uint64) sdk.Dec {
+// GetGlobalPledge returns the total pledge amount of one epoch end.
+func (k Keeper) GetGlobalPledge(ctx sdk.Context, epochID uint64) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
-	key := types.PledgeSumOnEpochStoreKey(epochID)
+	key := types.GlobalPledgeOnEpochStoreKey(epochID)
 	bz := store.Get(key)
 	if bz == nil {
 		return sdk.ZeroDec()
@@ -118,23 +114,57 @@ func (k Keeper) GetPledgeSum(ctx sdk.Context, epochID uint64) sdk.Dec {
 	return sdk.MustNewDecFromStr(string(bz))
 }
 
-// IncrPledgeSum increments the total pledge amount of captains' owners on the epoch end.
-func (k Keeper) IncrPledgeSum(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
-	sum := k.GetPledgeSum(ctx, epochID)
+// IncrGlobalPledge increments the total pledge amount of captains' owners on the epoch end.
+func (k Keeper) IncrGlobalPledge(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
+	sum := k.GetGlobalPledge(ctx, epochID)
 	sum = sum.Add(amount)
-	k.SetPledgeSum(ctx, epochID, sum)
+	k.SetGlobalPledge(ctx, epochID, sum)
 }
 
-// SetPledgeSum sets the total pledge amount of captains' owners on the epoch end.
-func (k Keeper) SetPledgeSum(ctx sdk.Context, epochID uint64, sum sdk.Dec) {
+// SetGlobalPledge sets the total pledge amount of captains' owners on the epoch end.
+func (k Keeper) SetGlobalPledge(ctx sdk.Context, epochID uint64, sum sdk.Dec) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.PledgeSumOnEpochStoreKey(epochID)
+	key := types.GlobalPledgeOnEpochStoreKey(epochID)
 	store.Set(key, []byte(sum.String()))
 }
 
-// DelPledgeSum deletes the total pledge amount of captains' owners on the epoch end.
-func (k Keeper) DelPledgeSum(ctx sdk.Context, epochID uint64) {
+// DelGlobalPledge deletes the total pledge amount of captains' owners on the epoch end.
+func (k Keeper) DelGlobalPledge(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
-	key := types.PledgeSumOnEpochStoreKey(epochID)
+	key := types.GlobalPledgeOnEpochStoreKey(epochID)
 	store.Delete(key)
+}
+
+// Genesis State Export/Import Helpers
+
+// GetGlobalsPledge returns all global pledge.
+func (k Keeper) GetGlobalsPledge(ctx sdk.Context) []types.GlobalPledge {
+	var globalsPledge []types.GlobalPledge
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.GlobalPledgeOnEpochKey)
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var globalPledge types.GlobalPledge
+		globalPledge.EpochId = sdk.BigEndianToUint64(iterator.Key())
+		globalPledge.Amount = k.GetGlobalPledge(ctx, globalPledge.EpochId)
+		globalsPledge = append(globalsPledge, globalPledge)
+	}
+	return globalsPledge
+}
+
+// GetOwnersPledge returns all owner pledge.
+func (k Keeper) GetOwnersPledge(ctx sdk.Context) []types.OwnerPledge {
+	var ownersPledge []types.OwnerPledge
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, types.OwnerPledgeOnEpochKey)
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		var ownerPledge types.OwnerPledge
+		epochId, owner := types.ParseOwnerPledgeOnEpochPrefixStoreKey(iterator.Key())
+		ownerPledge.EpochId = epochId
+		ownerPledge.Owner = owner
+		ownerPledge.Amount = k.GetOwnerPledge(ctx, sdk.MustAccAddressFromBech32(owner), epochId)
+		ownersPledge = append(ownersPledge, ownerPledge)
+	}
+	return ownersPledge
 }

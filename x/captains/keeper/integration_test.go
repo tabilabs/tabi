@@ -103,7 +103,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	suite.Commit()
 
 	// AfterReportDigest(1)
-	_, found := suite.keeper.GetDigest(suite.ctx, digest1.EpochId)
+	_, found := suite.keeper.GetReportDigest(suite.ctx, digest1.EpochId)
 	suite.Require().True(found)
 	actualEmission1 := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
 	suite.Require().Equal(expectEmission1, actualEmission1)
@@ -135,7 +135,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(1,i)
-		actualComputingPowerSum1 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1)
+		actualComputingPowerSum1 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1)
 		suite.Require().Equal(expectedComputingPowerSum1, actualComputingPowerSum1)
 	}
 
@@ -180,14 +180,14 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	suite.Commit()
 
 	// AfterReportDigest(2)
-	_, found = suite.keeper.GetDigest(suite.ctx, digest2.EpochId)
+	_, found = suite.keeper.GetReportDigest(suite.ctx, digest2.EpochId)
 	suite.Require().True(found)
 	actualEmission2 := suite.keeper.GetEpochEmission(suite.ctx, epoch2)
 	suite.Require().Equal(expectEmission2, actualEmission2)
 
 	// Submit ReportBatches(2)
 	suite.Require().Equal(expectEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
 
 	expectedComputingPowerSum2 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
@@ -215,7 +215,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(2,i)
-		actualComputingPowerSum2 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2)
+		actualComputingPowerSum2 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2)
 		suite.Require().Equal(expectedComputingPowerSum2, actualComputingPowerSum2)
 	}
 
@@ -234,12 +234,12 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	suite.Require().NoError(err)
 	// After ReportEnd(2)
 	suite.Require().Equal(actualEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
 
 	suite.Commit()
 	// BeginBlocker
 	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
 
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 3                           //
@@ -267,20 +267,20 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	suite.Commit()
 
 	// AfterReportDigest(3)
-	_, found = suite.keeper.GetDigest(suite.ctx, digest3.EpochId)
+	_, found = suite.keeper.GetReportDigest(suite.ctx, digest3.EpochId)
 	suite.Require().True(found)
 	actualEmission3 := suite.keeper.GetEpochEmission(suite.ctx, epoch3)
 	suite.Require().Equal(expectEmission3, actualEmission3)
 
 	// Submit ReportBatches(3)
 	suite.Require().Equal(expectEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
 
 	expectedComputingPowerSum3 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(3,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().NotEmpty(suite.keeper.GetNodeHistoricalEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().NotEmpty(suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
 			suite.Require().NotEmpty(suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch2, node.NodeId))
 
 			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
@@ -307,11 +307,11 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 
 		// After Submit ReportBatches(2,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeHistoricalEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
 			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch1, node.NodeId))
 		}
 
-		actualComputingPowerSum3 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch3)
+		actualComputingPowerSum3 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch3)
 		suite.Require().Equal(expectedComputingPowerSum3, actualComputingPowerSum3)
 	}
 
@@ -330,12 +330,12 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	suite.Require().NoError(err)
 	// After ReportEnd(3)
 	suite.Require().Equal(actualEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
 
 	suite.Commit()
 	// BeginBlocker
 	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
 }
 
 // TestCompletedEpochesScenario1 tests the full epoch period but:
@@ -375,7 +375,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.Commit()
 
 	// AfterReportDigest(1)
-	_, found := suite.keeper.GetDigest(suite.ctx, digest1.EpochId)
+	_, found := suite.keeper.GetReportDigest(suite.ctx, digest1.EpochId)
 	suite.Require().True(found)
 	actualEmission1 := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
 	suite.Require().Equal(expectEmission1, actualEmission1)
@@ -408,7 +408,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(1,i)
-		actualComputingPowerSum1 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1)
+		actualComputingPowerSum1 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1)
 		suite.Require().Equal(expectedComputingPowerSum1, actualComputingPowerSum1)
 	}
 	suite.T().Logf("computing power sum at %d: %s", epoch1, expectedComputingPowerSum1)
@@ -463,7 +463,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.Commit()
 
 	// AfterReportDigest(2)
-	_, found = suite.keeper.GetDigest(suite.ctx, digest2.EpochId)
+	_, found = suite.keeper.GetReportDigest(suite.ctx, digest2.EpochId)
 	suite.Require().True(found)
 	actualEmission2 := suite.keeper.GetEpochEmission(suite.ctx, epoch2)
 	suite.Require().Equal(expectEmission2, actualEmission2)
@@ -471,7 +471,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 
 	// Submit ReportBatches(2)
 	suite.Require().Equal(expectEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
 
 	expectedComputingPowerSum2 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
@@ -499,7 +499,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(2,i)
-		actualComputingPowerSum2 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2)
+		actualComputingPowerSum2 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2)
 		suite.Require().Equal(expectedComputingPowerSum2, actualComputingPowerSum2)
 	}
 
@@ -518,12 +518,12 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.Require().NoError(err)
 	// After ReportEnd(2)
 	suite.Require().Equal(actualEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
 
 	suite.Commit()
 	// BeginBlocker
 	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
 
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 3                           //
@@ -551,7 +551,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.Commit()
 
 	// AfterReportDigest(3)
-	_, found = suite.keeper.GetDigest(suite.ctx, digest3.EpochId)
+	_, found = suite.keeper.GetReportDigest(suite.ctx, digest3.EpochId)
 	suite.Require().True(found)
 	actualEmission3 := suite.keeper.GetEpochEmission(suite.ctx, epoch3)
 	suite.Require().Equal(expectEmission3, actualEmission3)
@@ -559,13 +559,13 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 
 	// Submit ReportBatches(3)
 	suite.Require().Equal(expectEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
 
 	expectedComputingPowerSum3 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(3,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().NotEmpty(suite.keeper.GetNodeHistoricalEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().NotEmpty(suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
 			suite.Require().NotEmpty(suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch2, node.NodeId))
 
 			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
@@ -592,11 +592,11 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 
 		// After Submit ReportBatches(2,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeHistoricalEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
 			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch1, node.NodeId))
 		}
 
-		actualComputingPowerSum3 := suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch3)
+		actualComputingPowerSum3 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch3)
 		suite.Require().Equal(expectedComputingPowerSum3, actualComputingPowerSum3)
 	}
 
@@ -615,10 +615,10 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.Require().NoError(err)
 	// After ReportEnd(3)
 	suite.Require().Equal(actualEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
 
 	suite.Commit()
 	// BeginBlocker
 	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetComputingPowerSumOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
 }

@@ -17,20 +17,6 @@ func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
 
-// DefaultParams returns a default set of parameters.
-func DefaultParams() Params {
-	return Params{
-		CaptainsTotalCount:                 100000,
-		MinimumPowerOnPeriod:               6,
-		MaximumPowerOnPeriod:               24,
-		CaptainsConstant:                   sdk.NewDec(300000),
-		TechProgressCoefficientCardinality: sdk.NewDecWithPrec(16, 1),
-		HalvingEraCoefficient:              sdk.OneDec(),
-		CurrentSaleLevel:                   1,
-		AuthorizedMembers:                  nil,
-	}
-}
-
 // NewParams creates a Params.
 func NewParams(
 	captainsTotalCount uint64,
@@ -51,6 +37,20 @@ func NewParams(
 		HalvingEraCoefficient:              halvingEraCoefficient,
 		CurrentSaleLevel:                   currentSaleLevel,
 		AuthorizedMembers:                  authorizedMembers,
+	}
+}
+
+// DefaultParams returns a default set of parameters.
+func DefaultParams() Params {
+	return Params{
+		CaptainsTotalCount:                 100000,
+		MinimumPowerOnPeriod:               6,
+		MaximumPowerOnPeriod:               24,
+		CaptainsConstant:                   sdk.NewDec(300000),
+		TechProgressCoefficientCardinality: sdk.NewDecWithPrec(16, 1),
+		HalvingEraCoefficient:              sdk.OneDec(),
+		CurrentSaleLevel:                   1,
+		AuthorizedMembers:                  nil,
 	}
 }
 

@@ -64,73 +64,92 @@ message Node {
     uint64 computing_power = 4;
 }
 
-// EpochInfo defines the epoch information
-message EpochBase {
-    string emission_sum = 1[
-        (cosmos_proto.scalar)  = "cosmos.Dec",
-        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-        (gogoproto.nullable)   = false
-    ];
-    string  computing_power_sum = 2[
-        (cosmos_proto.scalar)  = "cosmos.Dec",
-        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-        (gogoproto.nullable)   = false
-    ];
-    string pledge_amount_sum = 3[
-        (cosmos_proto.scalar)  = "cosmos.Dec",
-        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-        (gogoproto.nullable)   = false
-    ];
-}
-
-// BatchBase defines the batch base
-message BatchBase {
-    uint64 id = 1;
-    uint64 count = 2;
-}
-
-// EpochState defines the epoch state
-message EpochState {
-    uint64 curr_epoch = 1;
-    bool is_end = 2;
-    ReportDigest digest = 3;
-    EpochBase current = 4 [(gogoproto.nullable) = false];
-    EpochBase previous = 5 [(gogoproto.nullable) = false];
-    string emission_claimed_sum = 6[
-        (cosmos_proto.scalar)  = "cosmos.Dec",
-        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-        (gogoproto.nullable)   = false
-    ];
-    repeated BatchBase batches = 7 [(gogoproto.nullable) = false];
-}
-
-message NodeExtraInfo {
-    string id = 1;
-    string last_claim_historical_emission = 2 [
-        (cosmos_proto.scalar)  = "cosmos.Dec",
-        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-        (gogoproto.nullable)   = false
-    ];
-    repeated NodeEpochInfo epochs = 3 [(gogoproto.nullable) = false];
-}
-
-// NodeEpochInfo defines the node info on epoch
-message NodeEpochInfo {
+// EpochState defines the state of the epoch
+message BaseState {
+    // id of the epoch
     uint64 epoch_id = 1;
-    string historical_emission = 2 [
+    // whether the epoch is ended
+    bool is_epoch_end = 2;
+    // the next node sequence
+    uint64 next_node_sequence = 3;
+    // global claimed emission
+    string global_claimed_emission = 4 [
         (cosmos_proto.scalar)  = "cosmos.Dec",
         (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
         (gogoproto.nullable)   = false
     ];
-    string computing_power = 3 [
+    // the digest of the report
+    ReportDigest report_digest = 5;
+}
+
+message EpochEmission {
+    uint64 epoch_id = 1;
+    string emission = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+
+}
+
+message NodeClaimedEmission {
+    string node_id = 1;
+    string emission = 2 [
         (cosmos_proto.scalar)  = "cosmos.Dec",
         (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
         (gogoproto.nullable)   = false
     ];
 }
 
-// ClaimableComputingPower defines claimable reward of computing power to the owner.
 message ClaimableComputingPower {
     uint64 amount = 1;
     string owner = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message NodeCumulativeEmission {
+    string node_id = 1;
+    uint64 epoch_id = 2;
+    string emission = 3 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message GlobalComputingPower {
+    uint64 epoch_id = 1;
+    string amount = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message NodesComputingPower {
+    string node_id = 1;
+    uint64 epoch_id = 2;
+    string amount = 3 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message GlobalPledge {
+    uint64 epoch_id = 1;
+    string amount = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message OwnerPledge {
+    string owner = 1;
+    uint64 epoch_id = 2;
+    string amount = 3 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
 }

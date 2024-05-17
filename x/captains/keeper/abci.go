@@ -8,10 +8,10 @@ func (k Keeper) BeginBlocker(ctx sdk.Context) {
 	if k.HasEndEpoch(ctx, epoch) {
 		// prune useless epoch data
 		k.delEpochEmission(ctx, epoch-1)
-		k.delComputingPowerSumOnEpoch(ctx, epoch-1)
+		k.delGlobalComputingPowerOnEpoch(ctx, epoch-1)
 
 		// current epoch's
-		k.delDigest(ctx, epoch)
+		k.delReportDigest(ctx, epoch)
 		k.delEndEpoch(ctx, epoch)
 		k.delReportBatches(ctx, epoch)
 
