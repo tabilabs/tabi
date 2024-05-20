@@ -41,6 +41,7 @@ func (cld CaptainsRestrictionDecorator) AnteHandle(
 func (cld CaptainsRestrictionDecorator) restrict(ctx sdk.Context, msgs []sdk.Msg) error {
 	for _, msg := range msgs {
 		switch msg := msg.(type) {
+		// TODO: claims reward +  claims power
 		case *captainstypes.MsgUpdateParams,
 			*captainstypes.MsgCreateCaptainNode,
 			*captainstypes.MsgUpdateSaleLevel,
