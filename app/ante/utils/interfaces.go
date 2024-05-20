@@ -36,3 +36,9 @@ type StakingKeeper interface {
 	BondDenom(ctx sdk.Context) string
 	IterateDelegations(ctx sdk.Context, delegator sdk.AccAddress, fn func(index int64, delegation stakingtypes.DelegationI) (stop bool))
 }
+
+// CaptainsKeeper defines the exposed interface for using functionality of the captains keeper
+// in the context of the AnteHandler utils package.
+type CaptainsKeeper interface {
+	IsStandByPhase(ctx sdk.Context) bool
+}

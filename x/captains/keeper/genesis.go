@@ -107,6 +107,10 @@ func (k Keeper) GetBaseState(ctx sdk.Context) types.BaseState {
 		baseState.ReportDigest = digest
 	}
 
+	if k.IsStandByPhase(ctx) {
+		baseState.IsStandBy = true
+	}
+
 	return baseState
 }
 
@@ -122,5 +126,8 @@ func (k Keeper) SetBaseState(ctx sdk.Context, bs *types.BaseState) {
 	}
 	if bs.ReportDigest != nil {
 		k.setReportDigest(ctx, bs.EpochId, bs.ReportDigest)
+	}
+	if !bs.IsStandBy {
+		k.setStandByOverFlag(ctx)
 	}
 }

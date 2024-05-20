@@ -22,30 +22,33 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+
 	ibcante "github.com/cosmos/ibc-go/v6/modules/core/ante"
 	ibckeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
 	anteutils "github.com/tabilabs/tabi/app/ante/utils"
 
 	cosmosante "github.com/tabilabs/tabi/app/ante/cosmos"
 	evmante "github.com/tabilabs/tabi/app/ante/evm"
+	tabiante "github.com/tabilabs/tabi/app/ante/tabi"
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
-
-	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 )
 
 // HandlerOptions defines the list of module keepers required to run the Tabi
 // AnteHandler decorators.
 type HandlerOptions struct {
-	Cdc                    codec.BinaryCodec
-	AccountKeeper          evmtypes.AccountKeeper
-	BankKeeper             evmtypes.BankKeeper
-	DistributionKeeper     anteutils.DistributionKeeper
-	IBCKeeper              *ibckeeper.Keeper
-	StakingKeeper          stakingkeeper.Keeper
-	FeeMarketKeeper        evmante.FeeMarketKeeper
-	EvmKeeper              evmante.EVMKeeper
-	FeegrantKeeper         ante.FeegrantKeeper
+	Cdc codec.BinaryCodec
+
+	AccountKeeper      evmtypes.AccountKeeper
+	BankKeeper         evmtypes.BankKeeper
+	DistributionKeeper anteutils.DistributionKeeper
+	IBCKeeper          *ibckeeper.Keeper
+	StakingKeeper      anteutils.StakingKeeper
+	FeeMarketKeeper    evmante.FeeMarketKeeper
+	EvmKeeper          evmante.EVMKeeper
+	FeegrantKeeper     ante.FeegrantKeeper
+	CaptainsKeeper     anteutils.CaptainsKeeper
+
 	ExtensionOptionChecker ante.ExtensionOptionChecker
 	SignModeHandler        authsigning.SignModeHandler
 	SigGasConsumer         func(meter sdk.GasMeter, sig signing.SignatureV2, params authtypes.Params) error
@@ -85,6 +88,10 @@ func (options HandlerOptions) Validate() error {
 	if options.TxFeeChecker == nil {
 		return errorsmod.Wrap(errortypes.ErrLogic, "tx fee checker is required for AnteHandler")
 	}
+	if options.CaptainsKeeper == nil {
+		return errorsmod.Wrap(errortypes.ErrLogic, "captains keeper is required for AnteHandler")
+	}
+
 	return nil
 }
 
@@ -121,6 +128,7 @@ func newCosmosAnteHandler(options HandlerOptions) sdk.AnteHandler {
 			sdk.MsgTypeURL(&evmtypes.MsgEthereumTx{}),
 			sdk.MsgTypeURL(&sdkvesting.MsgCreateVestingAccount{}),
 		),
+		tabiante.NewCaptainsRestrictionDecorator(options.CaptainsKeeper), // reject msgs as per captains epoch phase
 		ante.NewSetUpContextDecorator(),
 		ante.NewExtensionOptionsDecorator(options.ExtensionOptionChecker),
 		ante.NewValidateBasicDecorator(),
