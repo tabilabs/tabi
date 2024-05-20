@@ -118,7 +118,12 @@ func (k Keeper) HasNode(ctx sdk.Context, nodeID string) bool {
 
 // AuthorizeNode defines a method for checking if the sender is the owner of the given node
 func (k Keeper) AuthorizeNode(ctx sdk.Context, nodeID string, owner sdk.AccAddress) error {
-	if !owner.Equals(k.GetNodeOwner(ctx, nodeID)) {
+	addr, found := k.GetNodeOwner(ctx, nodeID)
+	if !found {
+		return errorsmod.Wrap(types.ErrNodeNotExists, nodeID)
+	}
+
+	if !owner.Equals(addr) {
 		return errorsmod.Wrap(types.ErrUnauthorized, owner.String())
 	}
 	return nil
@@ -177,13 +182,13 @@ func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []
 }
 
 // GetNodeOwner returns the owner of the specified node
-func (k Keeper) GetNodeOwner(ctx sdk.Context, nodeID string) sdk.AccAddress {
+func (k Keeper) GetNodeOwner(ctx sdk.Context, nodeID string) (sdk.AccAddress, bool) {
 	node, found := k.GetNode(ctx, nodeID)
 	if !found {
-		return nil
+		return nil, false
 	}
-	owner, _ := sdk.AccAddressFromBech32(node.Owner)
-	return owner
+	owner := sdk.MustAccAddressFromBech32(node.Owner)
+	return owner, true
 }
 
 // setNode defines a method for setting the node

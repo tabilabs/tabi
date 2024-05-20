@@ -33,7 +33,7 @@ func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 
 // CalcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t but also prune pledge 2 epochs before.
 func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
-	owner := k.GetNodeOwner(ctx, nodeID)
+	owner, _ := k.GetNodeOwner(ctx, nodeID)
 
 	claimed := k.GetOwnerClaimedEmission(ctx, owner)
 	if claimed.Equal(sdk.ZeroDec()) {

@@ -9,6 +9,7 @@ import (
 
 	anteutlis "github.com/tabilabs/tabi/app/ante/utils"
 	captainstypes "github.com/tabilabs/tabi/x/captains/types"
+	claimestypes "github.com/tabilabs/tabi/x/claims/types"
 )
 
 // CaptainsRestrictionDecorator restricts certain messages from being processed
@@ -41,11 +42,12 @@ func (cld CaptainsRestrictionDecorator) AnteHandle(
 func (cld CaptainsRestrictionDecorator) restrict(ctx sdk.Context, msgs []sdk.Msg) error {
 	for _, msg := range msgs {
 		switch msg := msg.(type) {
-		// TODO: claims reward +  claims power
 		case *captainstypes.MsgUpdateParams,
 			*captainstypes.MsgCreateCaptainNode,
 			*captainstypes.MsgUpdateSaleLevel,
-			*captainstypes.MsgClaimComputingPower:
+			*captainstypes.MsgClaimComputingPower,
+			*captainstypes.MsgCommitComputingPower,
+			*claimestypes.MsgClaims:
 			if !cld.captainsKeeper.IsStandByPhase(ctx) {
 				return fmt.Errorf("msg %s is not allowed in busy phrase", msg.String())
 			}

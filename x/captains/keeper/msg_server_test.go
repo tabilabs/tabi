@@ -217,6 +217,7 @@ func (suite *CaptainsTestSuite) TestCommitComputingPower() {
 
 func (suite *CaptainsTestSuite) TestClaimComputingPower() {
 	// prepare addresses
+	authority := accounts[0].String()
 	owner := accounts[1].String()
 
 	// create nodes & commit powers
@@ -237,7 +238,7 @@ func (suite *CaptainsTestSuite) TestClaimComputingPower() {
 			malleate: func() {
 			},
 			request: &types.MsgClaimComputingPower{
-				Sender:               owner,
+				Sender:               authority,
 				ComputingPowerAmount: 10000,
 				NodeId:               nodeID,
 			},
@@ -248,7 +249,7 @@ func (suite *CaptainsTestSuite) TestClaimComputingPower() {
 			malleate: func() {
 			},
 			request: &types.MsgClaimComputingPower{
-				Sender:               owner,
+				Sender:               authority,
 				ComputingPowerAmount: 100000,
 				NodeId:               nodeID,
 			},

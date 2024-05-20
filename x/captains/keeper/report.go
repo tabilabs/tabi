@@ -50,7 +50,10 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 	epochId := report.EpochId
 
 	for _, node := range report.Nodes {
-		owner := k.GetNodeOwner(ctx, node.NodeId)
+		owner, found := k.GetNodeOwner(ctx, node.NodeId)
+		if !found {
+			return errorsmod.Wrapf(types.ErrNodeNotExists, "node-%s not exists", node.NodeId)
+		}
 
 		// try to calculate historical emission
 		k.CalcAndSetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId)
