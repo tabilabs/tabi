@@ -84,26 +84,34 @@ func NewTxCmdCreateNode() *cobra.Command {
 }
 
 // NewTxCmdCommitReport returns a command to commit a report
-// FIXME: we need a json rather than bytes input.
 func NewTxCmdCommitReport() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "commit-report [type] [report.json] --from [sender]",
-		Args:  cobra.ExactArgs(2),
-		Short: "commit node info for an epoch",
+		Use:   "commit-report [report.json] --report-type [digest,batch,end] --from [sender]",
+		Args:  cobra.ExactArgs(1),
+		Short: "commit report for an epoch",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			var sender = clientCtx.GetFromAddress().String()
-
-			reportType, err := strconv.Atoi(args[0])
+			sender := clientCtx.GetFromAddress().String()
+			reportType, err := cmd.Flags().GetString(FlagReportType)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgCommitReport(sender, types.ReportType(reportType), args[1])
+			contents, err := os.ReadFile(args[0])
+			if err != nil {
+				return err
+			}
+
+			report, err := parseReport(contents, args[0])
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgCommitReport(sender, parseReportType(reportType), report)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -112,6 +120,7 @@ func NewTxCmdCommitReport() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(FlagReportType, "", "report type [digest,batch,end]")
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }

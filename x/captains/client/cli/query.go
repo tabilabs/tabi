@@ -15,10 +15,6 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-const (
-	FlagOwner = "owner"
-)
-
 // GetQueryCmd returns the cli query commands for the captains module.
 func GetQueryCmd() *cobra.Command {
 	captionNodeQueryCmd := &cobra.Command{

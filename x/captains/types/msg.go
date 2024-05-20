@@ -104,7 +104,6 @@ func NewMsgCommitReport(authority string, reportType ReportType, report any) *Ms
 	res := MsgCommitReport{
 		Authority:  authority,
 		ReportType: reportType,
-		Report:     nil,
 	}
 
 	switch v := report.(type) {
@@ -132,7 +131,7 @@ func (msg *MsgCommitReport) ValidateBasic() error {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "report cannot be nil")
 	}
 
-	if msg.ReportType > ReportType_REPORT_TYPE_END || msg.ReportType == ReportType_REPORT_TYPE_DIGEST {
+	if msg.ReportType > ReportType_REPORT_TYPE_END || msg.ReportType == ReportType_REPORT_TYPE_UNSPECIFIED {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "invalid report type")
 	}
 
