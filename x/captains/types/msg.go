@@ -26,6 +26,7 @@ func NewMsgUpdateParams(authority string, params Params) *MsgUpdateParams {
 	}
 }
 
+// ValidateBasic Implements Msg.
 func (msg *MsgUpdateParams) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
@@ -39,16 +40,20 @@ func (msg *MsgUpdateParams) ValidateBasic() error {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "minimum power on period cannot be greater than maximum power on period")
 	}
 
-	if msg.Params.HalvingEraCoefficient.IsZero() {
-		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "max node per batch cannot be zero")
+	if !msg.Params.HalvingEraCoefficient.IsPositive() {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "halving era coefficient must be greater than zero")
 	}
 
 	if !msg.Params.CaptainsConstant.IsPositive() {
-		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains constant cannot be zero")
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "captains constant must be greater than zero")
 	}
 
 	if !msg.Params.TechProgressCoefficientCardinality.IsPositive() {
-		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "tech progress coefficient cardinality cannot be zero")
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "tech progress coefficient cardinality must be greater than zero")
+	}
+
+	if msg.Params.CurrentSaleLevel == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "current sale level cannot be zero")
 	}
 
 	if len(msg.Params.AuthorizedMembers) == 0 {
@@ -64,6 +69,7 @@ func (msg *MsgUpdateParams) ValidateBasic() error {
 	return nil
 }
 
+// GetSigners Implements Msg.
 func (msg *MsgUpdateParams) GetSigners() []sdk.AccAddress {
 	fromAddress, _ := sdk.AccAddressFromBech32(msg.Authority)
 	return []sdk.AccAddress{fromAddress}
@@ -100,7 +106,7 @@ func (msg *MsgCreateCaptainNode) GetSigners() []sdk.AccAddress {
 }
 
 // NewMsgCommitReport creates a new MsgCommitReport instance
-func NewMsgCommitReport(authority string, reportType ReportType, report any) *MsgCommitReport {
+func NewMsgCommitReport(authority string, reportType ReportType, report any) (*MsgCommitReport, error) {
 	res := MsgCommitReport{
 		Authority:  authority,
 		ReportType: reportType,
@@ -108,17 +114,28 @@ func NewMsgCommitReport(authority string, reportType ReportType, report any) *Ms
 
 	switch v := report.(type) {
 	case *ReportDigest:
-		anyv, _ := types.NewAnyWithValue(v)
-		res.Report = anyv
+		anyV, err := types.NewAnyWithValue(v)
+		if err != nil {
+			return nil, err
+		}
+		res.Report = anyV
 	case *ReportBatch:
-		anyv, _ := types.NewAnyWithValue(v)
-		res.Report = anyv
+		anyV, err := types.NewAnyWithValue(v)
+		if err != nil {
+			return nil, err
+		}
+		res.Report = anyV
 	case *ReportEnd:
-		anyv, _ := types.NewAnyWithValue(v)
-		res.Report = anyv
+		anyV, err := types.NewAnyWithValue(v)
+		if err != nil {
+			return nil, err
+		}
+		res.Report = anyV
+	default:
+		return nil, errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "invalid report type")
 	}
 
-	return &res
+	return &res, nil
 }
 
 // ValidateBasic Implements Msg.
@@ -127,12 +144,12 @@ func (msg *MsgCommitReport) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	if msg.Report == nil {
-		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "report cannot be nil")
-	}
-
 	if msg.ReportType > ReportType_REPORT_TYPE_END || msg.ReportType == ReportType_REPORT_TYPE_UNSPECIFIED {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "invalid report type")
+	}
+
+	if msg.Report == nil {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "report cannot be nil")
 	}
 
 	bz := msg.Report.GetValue()
@@ -144,41 +161,20 @@ func (msg *MsgCommitReport) ValidateBasic() error {
 		if err != nil {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 		}
-		if digest.EpochId == 0 {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "epoch id is zero")
+		err = digest.ValidateBasic()
+		if err != nil {
+			return err
 		}
-		if digest.TotalBatchCount == 0 {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "total batch is zero")
-		}
-		if digest.TotalNodeCount == 0 {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "total node is zero")
-		}
-		if digest.MaximumNodeCountPerBatch == 0 {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "max node per batch id is zero")
-		}
-		if digest.GlobalOnOperationRatio.IsZero() {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "operation ratio is zero")
-		}
-
 	case ReportType_REPORT_TYPE_BATCH:
 		var batch ReportBatch
 		err := batch.Unmarshal(bz)
 		if err != nil {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 		}
-		if batch.EpochId == 0 {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "epoch id is zero")
+		err = batch.ValidateBasic()
+		if err != nil {
+			return err
 		}
-		if batch.BatchId == 0 {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "batch id is zero")
-		}
-		if batch.NodeCount == 0 {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node count is zero")
-		}
-		if uint64(len(batch.Nodes)) != batch.NodeCount {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node count node ids length unmatched")
-		}
-
 	case ReportType_REPORT_TYPE_END:
 		var end ReportEnd
 		err := end.Unmarshal(bz)
@@ -216,10 +212,15 @@ func (msg *MsgAddAuthorizedMembers) ValidateBasic() error {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "member cannot be empty")
 	}
 
+	seenMap := make(map[string]bool)
 	for _, member := range msg.Members {
+		if seenMap[member] {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "duplicate member")
+		}
 		if _, err := sdk.AccAddressFromBech32(member); err != nil {
 			return errorsmod.Wrap(err, "invalid member address")
 		}
+		seenMap[member] = true
 	}
 
 	return nil
@@ -249,12 +250,16 @@ func (msg *MsgRemoveAuthorizedMembers) ValidateBasic() error {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "member cannot be empty")
 	}
 
-	for _, caller := range msg.Members {
-		if _, err := sdk.AccAddressFromBech32(caller); err != nil {
+	seenMap := make(map[string]bool)
+	for _, member := range msg.Members {
+		if seenMap[member] {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "duplicate member")
+		}
+		if _, err := sdk.AccAddressFromBech32(member); err != nil {
 			return errorsmod.Wrap(err, "invalid member address")
 		}
+		seenMap[member] = true
 	}
-
 	return nil
 }
 
@@ -278,7 +283,7 @@ func (msg *MsgUpdateSaleLevel) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	if msg.SaleLevel <= 1 || msg.SaleLevel > 5 {
+	if msg.SaleLevel < 1 || msg.SaleLevel > 5 {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "sale level must be between 1 and 5")
 	}
 
@@ -311,13 +316,18 @@ func (msg *MsgCommitComputingPower) ValidateBasic() error {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "computing powers to commit cannot be empty")
 	}
 
+	seenMap := make(map[string]bool)
 	for _, reward := range msg.ComputingPowerRewards {
+		if seenMap[reward.Owner] {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "duplicate receiver")
+		}
 		if reward.Amount == 0 {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "computing power cannot be zero")
 		}
 		if _, err := sdk.AccAddressFromBech32(reward.Owner); err != nil {
 			return errorsmod.Wrap(err, "invalid receiver address")
 		}
+		seenMap[reward.Owner] = true
 	}
 
 	return nil
@@ -346,7 +356,7 @@ func (msg *MsgClaimComputingPower) ValidateBasic() error {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "node id cannot be empty")
 	}
 	if msg.ComputingPowerAmount == 0 {
-		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "experience cannot be zero")
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "computing power cannot be zero")
 	}
 
 	return nil
