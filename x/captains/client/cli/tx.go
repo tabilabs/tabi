@@ -111,7 +111,10 @@ func NewTxCmdCommitReport() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgCommitReport(sender, parseReportType(reportType), report)
+			msg, err := types.NewMsgCommitReport(sender, parseReportType(reportType), report)
+			if err != nil {
+				return err
+			}
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

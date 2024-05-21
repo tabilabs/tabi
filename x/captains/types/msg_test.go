@@ -3,21 +3,22 @@ package types
 import (
 	"testing"
 
+	"github.com/cosmos/cosmos-sdk/codec/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
 	"github.com/stretchr/testify/suite"
 )
 
-type MsgsTestSuite struct {
+type MsgTestSuite struct {
 	suite.Suite
 }
 
-func TestMsgsTestSuite(t *testing.T) {
-	suite.Run(t, new(MsgsTestSuite))
+func TestMsgTestSuite(t *testing.T) {
+	suite.Run(t, new(MsgTestSuite))
 }
 
-func (suite *MsgsTestSuite) TestMsgUpdateParamsValidateBasic() {
+func (suite *MsgTestSuite) TestMsgUpdateParamsValidateBasic() {
 	testCases := []struct {
 		name      string
 		msgUpdate *MsgUpdateParams
@@ -53,7 +54,7 @@ func (suite *MsgsTestSuite) TestMsgUpdateParamsValidateBasic() {
 	}
 }
 
-func (suite *MsgsTestSuite) TestMsgMintValidateBasic() {
+func (suite *MsgTestSuite) TestMsgCreateCaptainNodeValidateBasic() {
 	testCases := []struct {
 		name      string
 		msgUpdate *MsgCreateCaptainNode
@@ -110,7 +111,7 @@ func (suite *MsgsTestSuite) TestMsgMintValidateBasic() {
 }
 
 // TestMsgUpdateNodeInfoValidateBasic tests MsgUpdateNodeInfo ValidateBasic
-func (suite *MsgsTestSuite) TestMsgClaimComputingPowerValidateBasic() {
+func (suite *MsgTestSuite) TestMsgClaimComputingPowerValidateBasic() {
 	testCases := []struct {
 		name      string
 		msgUpdate *MsgClaimComputingPower
@@ -166,7 +167,7 @@ func (suite *MsgsTestSuite) TestMsgClaimComputingPowerValidateBasic() {
 	}
 }
 
-func (suite *MsgsTestSuite) TestMsgCommitComputingPowerValidateBasic() {
+func (suite *MsgTestSuite) TestMsgCommitComputingPowerValidateBasic() {
 	testCases := []struct {
 		name      string
 		msgUpdate *MsgCommitComputingPower
@@ -245,7 +246,7 @@ func (suite *MsgsTestSuite) TestMsgCommitComputingPowerValidateBasic() {
 	}
 }
 
-func (suite *MsgsTestSuite) TestMsgAddAuthorizedMembersValidateBasic() {
+func (suite *MsgTestSuite) TestMsgAddAuthorizedMembersValidateBasic() {
 	testCases := []struct {
 		name      string
 		msgUpdate *MsgAddAuthorizedMembers
@@ -302,7 +303,7 @@ func (suite *MsgsTestSuite) TestMsgAddAuthorizedMembersValidateBasic() {
 	}
 }
 
-func (suite *MsgsTestSuite) TestMsgRemoveAuthorizedMembersValidateBasic() {
+func (suite *MsgTestSuite) TestMsgRemoveAuthorizedMembersValidateBasic() {
 	testCases := []struct {
 		name      string
 		msgUpdate *MsgRemoveAuthorizedMembers
@@ -359,7 +360,7 @@ func (suite *MsgsTestSuite) TestMsgRemoveAuthorizedMembersValidateBasic() {
 	}
 }
 
-func (suite *MsgsTestSuite) TestMsgUpdateSaleLevelValidateBasic() {
+func (suite *MsgTestSuite) TestMsgUpdateSaleLevelValidateBasic() {
 	testCases := []struct {
 		name      string
 		msgUpdate *MsgUpdateSaleLevel
@@ -398,6 +399,104 @@ func (suite *MsgsTestSuite) TestMsgUpdateSaleLevelValidateBasic() {
 				suite.NoError(err)
 			} else {
 				suite.Error(err)
+			}
+		})
+	}
+}
+
+func (suite *MsgTestSuite) TestMsgCommitReportValidateBasic() {
+	authority := "cosmos1vewsdxxmeraett7ztsaym88jsrv85kzm8ekjsg"
+
+	testCases := []struct {
+		name      string
+		msg       *MsgCommitReport
+		melleate  func(*MsgCommitReport)
+		expectErr bool
+	}{
+		{
+			name: "fail - invalid type",
+			msg: &MsgCommitReport{
+				Authority:  authority,
+				ReportType: ReportType_REPORT_TYPE_UNSPECIFIED,
+			},
+			expectErr: true,
+		},
+		{
+			name: "fail - nil report",
+			msg: &MsgCommitReport{
+				Authority:  authority,
+				ReportType: ReportType_REPORT_TYPE_BATCH,
+			},
+			expectErr: true,
+		},
+		{
+			"fail - invalid report digest",
+			&MsgCommitReport{
+				Authority:  authority,
+				ReportType: ReportType_REPORT_TYPE_DIGEST,
+			},
+			func(msg *MsgCommitReport) {
+				report := &ReportDigest{
+					EpochId:         1,
+					TotalBatchCount: 0,
+				}
+				anyV, err := types.NewAnyWithValue(report)
+				if err != nil {
+					panic(err)
+				}
+				msg.Report = anyV
+			},
+			true,
+		},
+		{
+			"fail - invalid report batch",
+			&MsgCommitReport{
+				Authority:  authority,
+				ReportType: ReportType_REPORT_TYPE_BATCH,
+			},
+			func(msg *MsgCommitReport) {
+				report := &ReportBatch{
+					EpochId: 1,
+					BatchId: 0,
+				}
+				anyV, err := types.NewAnyWithValue(report)
+				if err != nil {
+					panic(err)
+				}
+				msg.Report = anyV
+			},
+			true,
+		},
+		{
+			"fail - invalid report end",
+			&MsgCommitReport{
+				Authority:  authority,
+				ReportType: ReportType_REPORT_TYPE_END,
+			},
+			func(msg *MsgCommitReport) {
+				digest := &ReportEnd{
+					EpochId: 0,
+				}
+				anyV, err := types.NewAnyWithValue(digest)
+				if err != nil {
+					panic(err)
+				}
+				msg.Report = anyV
+			},
+			true,
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.Run(tc.name, func() {
+			if tc.melleate != nil {
+				tc.melleate(tc.msg)
+			}
+			err := tc.msg.ValidateBasic()
+			if tc.expectErr {
+				suite.Error(err)
+			} else {
+				suite.NoError(err)
 			}
 		})
 	}

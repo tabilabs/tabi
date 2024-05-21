@@ -106,6 +106,7 @@ func (msg *MsgCreateCaptainNode) GetSigners() []sdk.AccAddress {
 }
 
 // NewMsgCommitReport creates a new MsgCommitReport instance
+// report: interface of *ReportDigest, *ReportBatch, *ReportEnd
 func NewMsgCommitReport(authority string, reportType ReportType, report any) (*MsgCommitReport, error) {
 	res := MsgCommitReport{
 		Authority:  authority,
