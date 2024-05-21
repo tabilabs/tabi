@@ -50,7 +50,7 @@ func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 	return cdc.MustMarshalJSON(types.DefaultGenesisState())
 }
 
-// ValidateGenesis performs genesis state validation for the mint module.
+// ValidateGenesis performs genesis state validation for the captains module.
 func (AppModuleBasic) ValidateGenesis(
 	cdc codec.JSONCodec,
 	config client.TxEncodingConfig,
@@ -64,29 +64,29 @@ func (AppModuleBasic) ValidateGenesis(
 	return genesisState.Validate()
 }
 
-// RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the mint module.
+// RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the captains module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
 	_ = types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx))
 }
 
-// GetTxCmd returns the root tx command for the mint module.
+// GetTxCmd returns the root tx command for the captains module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
 	return cli.GetTxCmd()
 }
 
-// GetQueryCmd returns no root query command for the mint module.
+// GetQueryCmd returns no root query command for the captains module.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 	return cli.GetQueryCmd()
 }
 
-// RegisterInterfaces registers interfaces and implementations of the mint module.
+// RegisterInterfaces registers interfaces and implementations of the captains module.
 func (AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {
 	types.RegisterInterfaces(registry)
 }
 
 // ____________________________________________________________________________
 
-// AppModule implements an application module for the mint module.
+// AppModule implements an application module for the captains module.
 type AppModule struct {
 	AppModuleBasic
 
@@ -104,28 +104,25 @@ func NewAppModule(
 	}
 }
 
-// Name returns the mint module's name.
-func (AppModule) Name() string { return types.ModuleName }
-
 // RegisterServices registers module services.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(&am.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQuerierImpl(&am.keeper))
 }
 
-// RegisterInvariants registers the mint module invariants.
+// RegisterInvariants registers the captains module invariants.
 func (am AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {
 }
 
-// Route returns the message routing key for the mint module.
+// Route returns the message routing key for the captains module.
 func (am AppModule) Route() sdk.Route {
 	return sdk.Route{}
 }
 
-// QuerierRoute returns the mint module's querier route name.
+// QuerierRoute returns the captains module's querier route name.
 func (AppModule) QuerierRoute() string { return "" }
 
-// LegacyQuerierHandler returns the mint module sdk.Querier.
+// LegacyQuerierHandler returns the captains module sdk.Querier.
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 	return nil
 }
@@ -138,18 +135,16 @@ func (am AppModule) ConsensusVersion() uint64 {
 	return 1
 }
 
-// InitGenesis performs genesis initialization for the mint module. It returns
+// InitGenesis performs genesis initialization for the captains module. It returns
 // no validator updates.
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
 	var genesisState types.GenesisState
-
 	cdc.MustUnmarshalJSON(data, &genesisState)
-
-	am.keeper.InitGenesis(ctx, genesisState)
+	am.keeper.InitGenesis(ctx, &genesisState)
 	return []abci.ValidatorUpdate{}
 }
 
-// ExportGenesis returns the exported genesis state as raw bytes for the mint
+// ExportGenesis returns the exported genesis state as raw bytes for the captains
 // module.
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
 	gs := am.keeper.ExportGenesis(ctx)
@@ -161,7 +156,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) {
 	BeginBlocker(ctx, req, am.keeper)
 }
 
-// EndBlock returns the end blocker for the mint module. It returns no validator
+// EndBlock returns the end blocker for the captains module. It returns no validator
 // updates.
 func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.ValidatorUpdate {
 	return EndBlocker(ctx, req, am.keeper)
@@ -171,7 +166,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) []abci.V
 
 // AppModuleSimulation functions
 
-// GenerateGenesisState creates a randomized GenState of the mint module.
+// GenerateGenesisState creates a randomized GenState of the captains module.
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 }
 
@@ -180,17 +175,17 @@ func (AppModule) ProposalContents(simState module.SimulationState) []simtypes.We
 	return nil
 }
 
-// RandomizedParams creates randomized mint param changes for the simulator.
+// RandomizedParams creates randomized captains param changes for the simulator.
 func (AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 	return nil
 }
 
-// RegisterStoreDecoder registers a decoder for mint module's types
+// RegisterStoreDecoder registers a decoder for captains module's types
 func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
 	// sdr[types.StoreKey] = simulation.NewDecodeStore(am.cdc)
 }
 
-// WeightedOperations returns the all the mint module operations with their respective weights.
+// WeightedOperations returns the all the captains module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	return []simtypes.WeightedOperation{}
 }

@@ -286,9 +286,6 @@ func (gs *GenesisState) ValidateEpochEmission() error {
 		if ee.EpochId == 0 {
 			return fmt.Errorf("epoch id should be greater than zero, is %d", ee.EpochId)
 		}
-		if ee.Emission.IsZero() {
-			return fmt.Errorf("emission is zero")
-		}
 		seenMap[ee.EpochId] = true
 	}
 	return nil

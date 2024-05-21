@@ -8,7 +8,7 @@ import (
 )
 
 // InitGenesis stores the NFT genesis.
-func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) {
+func (k Keeper) InitGenesis(ctx sdk.Context, data *types.GenesisState) {
 	if err := data.Validate(); err != nil {
 		panic(fmt.Errorf("failed to initialize mint genesis state: %s", err.Error()))
 	}

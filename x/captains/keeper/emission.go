@@ -79,6 +79,11 @@ func (k Keeper) incrGlobalClaimedEmission(ctx sdk.Context, amount sdk.Dec) sdk.D
 func (k Keeper) CalcAndSetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	res := k.CalcNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
 
+	// no need to set the emission for the first epoch
+	if epochID == 0 {
+		return res
+	}
+
 	k.setNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID, res)
 	k.delNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
 	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
@@ -192,7 +197,7 @@ func (k Keeper) GetEpochesEmission(ctx sdk.Context) []types.EpochEmission {
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var epochEmission types.EpochEmission
-		epochEmission.EpochId = sdk.BigEndianToUint64(iterator.Key())
+		epochEmission.EpochId = types.SplitEpochFromStoreKey(types.EpochEmissionKey, iterator.Key())
 		epochEmission.Emission = k.GetEpochEmission(ctx, epochEmission.EpochId)
 		epochesEmission = append(epochesEmission, epochEmission)
 	}
@@ -207,7 +212,7 @@ func (k Keeper) GetNodesClaimedEmission(ctx sdk.Context) []types.NodeClaimedEmis
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var nodeClaimedEmission types.NodeClaimedEmission
-		nodeClaimedEmission.NodeId = string(iterator.Key())
+		nodeClaimedEmission.NodeId = types.SplitStrFromStoreKey(types.NodeClaimedEmissionKey, iterator.Key())
 		nodeClaimedEmission.Emission = k.GetNodeClaimedEmission(ctx, nodeClaimedEmission.NodeId)
 		nodesClaimedEmission = append(nodesClaimedEmission, nodeClaimedEmission)
 	}
@@ -222,7 +227,7 @@ func (k Keeper) GetNodesCumulativeEmission(ctx sdk.Context) []types.NodeCumulati
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var nodeCumulativeEmission types.NodeCumulativeEmission
-		epochId, nodeId := types.ParseNodeCumulativeEmissionByEpochPrefixStoreKey(iterator.Key())
+		epochId, nodeId := types.SplitEpochAndStrFromStoreKey(types.NodeCumulativeEmissionByEpochKey, iterator.Key())
 		nodeCumulativeEmission.EpochId = epochId
 		nodeCumulativeEmission.NodeId = nodeId
 		nodeCumulativeEmission.Emission = sdk.MustNewDecFromStr(string(iterator.Value()))
