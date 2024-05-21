@@ -98,7 +98,7 @@ func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) 
 	suite.msgServer = captainskeeper.NewMsgServerImpl(&suite.app.CaptainsKeeper)
 	suite.claimsServer = claimskeeper.NewMsgServerImpl(&suite.app.ClaimsKeeper)
 	err := testutil.FundModuleAccount(suite.ctx, suite.app.BankKeeper, claimstypes.ModuleName,
-		sdk.NewCoins(sdk.NewCoin(tabitypes.AttoVeTabi, sdk.NewInt(4_000_000_000_000_000))))
+		sdk.NewCoins(sdk.NewCoin(tabitypes.AttoVeTabi, sdk.NewInt(4_000_000_000_000_000).Mul(sdk.NewInt(1e18)))))
 	require.NoError(t, err)
 
 	// setup query client

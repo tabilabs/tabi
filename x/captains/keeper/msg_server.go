@@ -24,6 +24,7 @@ func NewMsgServerImpl(keeper *Keeper) types.MsgServer {
 }
 
 // UpdateParams implement the interface of types.MsgServer
+// NOTE: currently doesn't support in-module params, use x/params instead.
 func (m msgServer) UpdateParams(
 	goCtx context.Context,
 	msg *types.MsgUpdateParams,

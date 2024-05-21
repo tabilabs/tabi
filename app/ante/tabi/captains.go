@@ -42,8 +42,9 @@ func (cld CaptainsRestrictionDecorator) AnteHandle(
 func (cld CaptainsRestrictionDecorator) restrict(ctx sdk.Context, msgs []sdk.Msg) error {
 	for _, msg := range msgs {
 		switch msg := msg.(type) {
-		case *captainstypes.MsgUpdateParams,
-			*captainstypes.MsgCreateCaptainNode,
+		case *captainstypes.MsgUpdateParams:
+			return fmt.Errorf("msg %s is not allowed currenlty", msg.String())
+		case *captainstypes.MsgCreateCaptainNode,
 			*captainstypes.MsgUpdateSaleLevel,
 			*captainstypes.MsgClaimComputingPower,
 			*captainstypes.MsgCommitComputingPower,

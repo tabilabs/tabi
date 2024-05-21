@@ -13,7 +13,7 @@ func (k Keeper) CalcBaseEpochEmission(ctx sdk.Context) sdk.Dec {
 	tech := k.CalcTechProgressCoefficient(ctx)
 	halving := k.GetHalvingEraCoefficient(ctx)
 	cc := k.GetCaptainsConstant(ctx)
-	return tech.Mul(halving).Mul(cc)
+	return tech.Mul(halving).Mul(cc).Mul(sdk.NewDec(1e18))
 }
 
 // GetEpochEmission returns the emission reward for an epoch.
