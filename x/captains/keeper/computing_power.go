@@ -133,8 +133,9 @@ func (k Keeper) GetClaimableComputingPowers(ctx sdk.Context) []types.ClaimableCo
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var power types.ClaimableComputingPower
+		accAddr := types.SplitStrFromStoreKey(types.ClaimableComputingPowerKey, iterator.Key())
+		power.Owner = sdk.AccAddress(accAddr).String()
 		power.Amount = sdk.BigEndianToUint64(iterator.Value())
-		power.Owner = string(iterator.Key())
 		powers = append(powers, power)
 	}
 
@@ -149,7 +150,7 @@ func (k Keeper) GetGlobalsComputingPower(ctx sdk.Context) []types.GlobalComputin
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var power types.GlobalComputingPower
-		power.EpochId = sdk.BigEndianToUint64(iterator.Key())
+		power.EpochId = types.SplitEpochFromStoreKey(types.GlobalComputingPowerOnEpochKey, iterator.Key())
 		power.Amount = k.GetGlobalComputingPowerOnEpoch(ctx, power.EpochId)
 		powers = append(powers, power)
 	}
@@ -164,7 +165,7 @@ func (k Keeper) GetNodesComputingPower(ctx sdk.Context) []types.NodesComputingPo
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var power types.NodesComputingPower
-		epochId, nodeId := types.ParseNodeComputingPowerOnEpochPrefixStoreKey(iterator.Key())
+		nodeId, epochId := types.SplitNodeAndEpochFromStoreKey(types.NodeComputingPowerOnEpochKey, iterator.Key())
 		power.EpochId = epochId
 		power.NodeId = nodeId
 		power.Amount = k.GetNodeComputingPowerOnEpoch(ctx, power.EpochId, nodeId)

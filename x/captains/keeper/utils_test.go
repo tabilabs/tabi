@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 
+	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
@@ -126,4 +127,93 @@ func (suite *CaptainsTestSuite) utilsFundToken(addr sdk.AccAddress, amt int64, d
 	}
 
 	return testutil.FundAccount(suite.ctx, suite.app.BankKeeper, addr, sdk.NewCoins(coins...))
+}
+
+func (suite *CaptainsTestSuite) afterEpochOne() {
+	// create 10 nodes for addr1
+	addr1 := accounts[1].String()
+	nodes := suite.utilsBatchCreateCaptainNode(addr1, 1, 100)
+	resp, err := suite.queryClient.Nodes(suite.ctx, &types.QueryNodesRequest{})
+	suite.Require().NoError(err)
+	suite.Require().Len(resp.Nodes, len(nodes))
+	nodeWithRatios := suite.utilsBatchAssignFixedPowerOnRatio(nodes, 1, 0)
+
+	//////////////////////////////////////////////////////////////////////
+	//                                epoch 1                           //
+	//////////////////////////////////////////////////////////////////////
+	epoch1 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	// BeforeReportDigest(1)
+	expectEmission1 := suite.keeper.CalcEpochEmission(suite.ctx, epoch1, sdk.NewDecWithPrec(1, 0))
+	// Submit ReportDigest(1)
+	digest1 := types.ReportDigest{
+		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
+		TotalBatchCount:          10,
+		TotalNodeCount:           100,
+		MaximumNodeCountPerBatch: 10,
+		GlobalOnOperationRatio:   sdk.NewDecWithPrec(1, 0),
+	}
+	anyVal, err := cdctypes.NewAnyWithValue(&digest1)
+	suite.Require().NoError(err)
+
+	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		Authority:  accounts[0].String(),
+		Report:     anyVal,
+		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
+	})
+	suite.Require().NoError(err)
+	suite.Commit()
+
+	// AfterReportDigest(1)
+	_, found := suite.keeper.GetReportDigest(suite.ctx, digest1.EpochId)
+	suite.Require().True(found)
+	actualEmission1 := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
+	suite.Require().Equal(expectEmission1, actualEmission1)
+	suite.T().Logf("emission at %d: %s", epoch1, actualEmission1)
+
+	// Submit ReportBatches(1)
+	expectedComputingPowerSum1 := sdk.NewDec(0)
+	for i := uint64(1); i <= digest1.TotalBatchCount; i++ {
+		// Before Submit ReportBatches(1,i)
+		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
+			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+				epoch1, node.NodeId, node.OnOperationRatio)
+			expectedComputingPowerSum1 = expectedComputingPowerSum1.Add(expectedNodeComputingPower)
+		}
+		// Submit ReportBatch(1, i)
+		batch := types.ReportBatch{
+			EpochId:   epoch1,
+			BatchId:   i,
+			NodeCount: 10,
+			Nodes:     nodeWithRatios[(i-1)*10 : i*10],
+		}
+		anyVal, err := cdctypes.NewAnyWithValue(&batch)
+		suite.Require().NoError(err)
+
+		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+			Authority:  accounts[0].String(),
+			Report:     anyVal,
+			ReportType: types.ReportType_REPORT_TYPE_BATCH,
+		})
+		suite.Require().NoError(err)
+		suite.Commit()
+		// After Submit ReportBatches(1,i)
+		actualComputingPowerSum1 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1)
+		suite.Require().Equal(expectedComputingPowerSum1, actualComputingPowerSum1)
+	}
+	suite.T().Logf("computing power sum at %d: %s", epoch1, expectedComputingPowerSum1)
+
+	// Submit ReportEnd(1)
+	end1 := types.ReportEnd{
+		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+	}
+	anyVal, err = cdctypes.NewAnyWithValue(&end1)
+	suite.Require().NoError(err)
+
+	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		Authority:  accounts[0].String(),
+		ReportType: types.ReportType_REPORT_TYPE_END,
+		Report:     anyVal,
+	})
+	suite.Require().NoError(err)
+	suite.Commit()
 }

@@ -1,6 +1,8 @@
 package keeper_test
 
-import "github.com/tabilabs/tabi/x/captains/types"
+import (
+	"github.com/tabilabs/tabi/x/captains/types"
+)
 
 func (suite *CaptainsTestSuite) TestQueryNode() {
 	testCases := []struct {
@@ -97,7 +99,35 @@ func (suite *CaptainsTestSuite) TestQueryNodes() {
 }
 
 func (suite *CaptainsTestSuite) TestNodeLastEpochInfo() {
-	// TODO: add tests
+	nodeId := suite.utilsCreateCaptainNode(accounts[0].String(), 1)
+
+	testCases := []struct {
+		name      string
+		req       *types.QueryNodeLastEpochInfoRequest
+		expectErr bool
+	}{
+		{
+			name: "success",
+			req: &types.QueryNodeLastEpochInfoRequest{
+				NodeId: nodeId,
+			},
+			expectErr: false,
+		},
+		{
+			name:      "failure",
+			req:       &types.QueryNodeLastEpochInfoRequest{},
+			expectErr: true,
+		},
+	}
+
+	for _, tc := range testCases {
+		resp, err := suite.queryClient.NodeLastEpochInfo(suite.ctx, tc.req)
+		if tc.expectErr {
+			suite.Require().Error(err)
+		} else {
+			suite.Require().NotNil(resp)
+		}
+	}
 }
 
 func (suite *CaptainsTestSuite) TestQueryDivision() {

@@ -33,7 +33,7 @@ func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 
 // CalcNodePledgeRatioOnEpoch calculates the pledge rate of the node on the epoch t but also prune pledge 2 epochs before.
 func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
-	owner := k.GetNodeOwner(ctx, nodeID)
+	owner, _ := k.GetNodeOwner(ctx, nodeID)
 
 	claimed := k.GetOwnerClaimedEmission(ctx, owner)
 	if claimed.Equal(sdk.ZeroDec()) {
@@ -145,7 +145,7 @@ func (k Keeper) GetGlobalsPledge(ctx sdk.Context) []types.GlobalPledge {
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var globalPledge types.GlobalPledge
-		globalPledge.EpochId = sdk.BigEndianToUint64(iterator.Key())
+		globalPledge.EpochId = types.SplitEpochFromStoreKey(types.GlobalPledgeOnEpochKey, iterator.Key())
 		globalPledge.Amount = k.GetGlobalPledge(ctx, globalPledge.EpochId)
 		globalsPledge = append(globalsPledge, globalPledge)
 	}
@@ -160,10 +160,10 @@ func (k Keeper) GetOwnersPledge(ctx sdk.Context) []types.OwnerPledge {
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var ownerPledge types.OwnerPledge
-		epochId, owner := types.ParseOwnerPledgeOnEpochPrefixStoreKey(iterator.Key())
+		epochId, owner := types.SplitEpochAndStrFromStoreKey(types.OwnerPledgeOnEpochKey, iterator.Key())
 		ownerPledge.EpochId = epochId
-		ownerPledge.Owner = owner
-		ownerPledge.Amount = k.GetOwnerPledge(ctx, sdk.MustAccAddressFromBech32(owner), epochId)
+		ownerPledge.Owner = sdk.AccAddress(owner).String()
+		ownerPledge.Amount = k.GetOwnerPledge(ctx, sdk.AccAddress(owner), epochId)
 		ownersPledge = append(ownersPledge, ownerPledge)
 	}
 	return ownersPledge

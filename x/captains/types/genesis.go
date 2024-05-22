@@ -69,52 +69,51 @@ func DefaultBaseState() BaseState {
 }
 
 // DefaultDivision returns a default Division
-// TODO: update default computing power bound.
 func DefaultDivision() []Division {
 	return []Division{
 		{
 			Id:                       GenDivisionsId(LevelOne),
 			Level:                    LevelOne,
-			InitialSupply:            20000,
+			InitialSupply:            40_000,
 			SoldCount:                0,
 			TotalCount:               0,
-			ComputingPowerLowerBound: 2000,
-			ComputingPowerUpperBound: 9999,
+			ComputingPowerLowerBound: 2_000,
+			ComputingPowerUpperBound: 9_999,
 		},
 		{
 			Id:                       GenDivisionsId(LevelTwo),
 			Level:                    LevelTwo,
-			InitialSupply:            30000,
+			InitialSupply:            60_000,
 			SoldCount:                0,
 			TotalCount:               0,
-			ComputingPowerLowerBound: 10000,
-			ComputingPowerUpperBound: 34999,
+			ComputingPowerLowerBound: 10_000,
+			ComputingPowerUpperBound: 39_999,
 		},
 		{
 			Id:                       GenDivisionsId(LevelThree),
 			Level:                    LevelThree,
-			InitialSupply:            35000,
+			InitialSupply:            70_000,
 			SoldCount:                0,
 			TotalCount:               0,
-			ComputingPowerLowerBound: 35000,
-			ComputingPowerUpperBound: 104999,
+			ComputingPowerLowerBound: 40_000,
+			ComputingPowerUpperBound: 159_999,
 		},
 		{
 			Id:                       GenDivisionsId(LevelFour),
 			Level:                    LevelFour,
-			InitialSupply:            10000,
+			InitialSupply:            20_000,
 			SoldCount:                0,
 			TotalCount:               0,
-			ComputingPowerLowerBound: 105000,
-			ComputingPowerUpperBound: 629999,
+			ComputingPowerLowerBound: 160_000,
+			ComputingPowerUpperBound: 959_999,
 		},
 		{
 			Id:                       GenDivisionsId(LevelFive),
 			Level:                    LevelFive,
-			InitialSupply:            5000,
+			InitialSupply:            10_000,
 			SoldCount:                0,
 			TotalCount:               0,
-			ComputingPowerLowerBound: 630000,
+			ComputingPowerLowerBound: 960_000,
 			ComputingPowerUpperBound: math.MaxUint64,
 		},
 	}
@@ -286,9 +285,6 @@ func (gs *GenesisState) ValidateEpochEmission() error {
 		}
 		if ee.EpochId == 0 {
 			return fmt.Errorf("epoch id should be greater than zero, is %d", ee.EpochId)
-		}
-		if ee.Emission.IsZero() {
-			return fmt.Errorf("emission is zero")
 		}
 		seenMap[ee.EpochId] = true
 	}

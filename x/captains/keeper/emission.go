@@ -13,7 +13,7 @@ func (k Keeper) CalcBaseEpochEmission(ctx sdk.Context) sdk.Dec {
 	tech := k.CalcTechProgressCoefficient(ctx)
 	halving := k.GetHalvingEraCoefficient(ctx)
 	cc := k.GetCaptainsConstant(ctx)
-	return tech.Mul(halving).Mul(cc)
+	return tech.Mul(halving).Mul(cc).Mul(sdk.NewDec(1e18))
 }
 
 // GetEpochEmission returns the emission reward for an epoch.
@@ -78,6 +78,11 @@ func (k Keeper) incrGlobalClaimedEmission(ctx sdk.Context, amount sdk.Dec) sdk.D
 // NOTE: this function set the historical emission by the end of epoch(t) and removes that of epoch(t-1).
 func (k Keeper) CalcAndSetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	res := k.CalcNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
+
+	// no need to set the emission for the first epoch
+	if epochID == 0 {
+		return res
+	}
 
 	k.setNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID, res)
 	k.delNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
@@ -192,7 +197,7 @@ func (k Keeper) GetEpochesEmission(ctx sdk.Context) []types.EpochEmission {
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var epochEmission types.EpochEmission
-		epochEmission.EpochId = sdk.BigEndianToUint64(iterator.Key())
+		epochEmission.EpochId = types.SplitEpochFromStoreKey(types.EpochEmissionKey, iterator.Key())
 		epochEmission.Emission = k.GetEpochEmission(ctx, epochEmission.EpochId)
 		epochesEmission = append(epochesEmission, epochEmission)
 	}
@@ -207,7 +212,7 @@ func (k Keeper) GetNodesClaimedEmission(ctx sdk.Context) []types.NodeClaimedEmis
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var nodeClaimedEmission types.NodeClaimedEmission
-		nodeClaimedEmission.NodeId = string(iterator.Key())
+		nodeClaimedEmission.NodeId = types.SplitStrFromStoreKey(types.NodeClaimedEmissionKey, iterator.Key())
 		nodeClaimedEmission.Emission = k.GetNodeClaimedEmission(ctx, nodeClaimedEmission.NodeId)
 		nodesClaimedEmission = append(nodesClaimedEmission, nodeClaimedEmission)
 	}
@@ -222,7 +227,7 @@ func (k Keeper) GetNodesCumulativeEmission(ctx sdk.Context) []types.NodeCumulati
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
 		var nodeCumulativeEmission types.NodeCumulativeEmission
-		epochId, nodeId := types.ParseNodeCumulativeEmissionByEpochPrefixStoreKey(iterator.Key())
+		epochId, nodeId := types.SplitEpochAndStrFromStoreKey(types.NodeCumulativeEmissionByEpochKey, iterator.Key())
 		nodeCumulativeEmission.EpochId = epochId
 		nodeCumulativeEmission.NodeId = nodeId
 		nodeCumulativeEmission.Emission = sdk.MustNewDecFromStr(string(iterator.Value()))

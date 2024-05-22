@@ -24,6 +24,7 @@ func NewMsgServerImpl(keeper *Keeper) types.MsgServer {
 }
 
 // UpdateParams implement the interface of types.MsgServer
+// NOTE: currently doesn't support in-module params, use x/params instead.
 func (m msgServer) UpdateParams(
 	goCtx context.Context,
 	msg *types.MsgUpdateParams,
@@ -296,12 +297,24 @@ func (m msgServer) ClaimComputingPower(
 ) (*types.MsgClaimComputingPowerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	authority, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := m.k.UpdateNode(ctx, msg.NodeId, msg.ComputingPowerAmount, sender); err != nil {
+	if !m.k.HasAuthorizedMember(ctx, authority) {
+		return nil, errorsmod.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"invalid sender; not in authorized members list",
+		)
+	}
+
+	owner, found := m.k.GetNodeOwner(ctx, msg.NodeId)
+	if !found {
+		return nil, errorsmod.Wrapf(types.ErrNodeNotExists, msg.NodeId)
+	}
+
+	if err := m.k.UpdateNode(ctx, msg.NodeId, msg.ComputingPowerAmount, owner); err != nil {
 		return nil, err
 	}
 

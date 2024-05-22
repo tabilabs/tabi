@@ -4,16 +4,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/codec"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	tabitypes "github.com/tabilabs/tabi/types"
-	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
-	claimstypes "github.com/tabilabs/tabi/x/claims/types"
+
+	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -23,8 +21,11 @@ import (
 	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
 	"github.com/tabilabs/tabi/testutil"
 	utiltx "github.com/tabilabs/tabi/testutil/tx"
+	tabitypes "github.com/tabilabs/tabi/types"
 	captainskeeper "github.com/tabilabs/tabi/x/captains/keeper"
 	"github.com/tabilabs/tabi/x/captains/types"
+	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
+	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 )
@@ -98,7 +99,7 @@ func (suite *CaptainsTestSuite) execSetupTest(checkTx bool, t require.TestingT) 
 	suite.msgServer = captainskeeper.NewMsgServerImpl(&suite.app.CaptainsKeeper)
 	suite.claimsServer = claimskeeper.NewMsgServerImpl(&suite.app.ClaimsKeeper)
 	err := testutil.FundModuleAccount(suite.ctx, suite.app.BankKeeper, claimstypes.ModuleName,
-		sdk.NewCoins(sdk.NewCoin(tabitypes.AttoVeTabi, sdk.NewInt(4_000_000_000_000_000))))
+		sdk.NewCoins(sdk.NewCoin(tabitypes.AttoVeTabi, sdk.NewInt(4_000_000_000_000_000).Mul(sdk.NewInt(1e18)))))
 	require.NoError(t, err)
 
 	// setup query client
