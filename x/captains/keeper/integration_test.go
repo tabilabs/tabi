@@ -68,11 +68,11 @@ import (
 // TestCompletedEpochesScenario1 tests the full epoch period but:
 // 1. no user claim their rewards: so pledge ratio is always 1
 // 2. no user stake their coins: so not historical claimed emissions
-func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
+func (suite *IntegrationTestSuite) TestCompletedEpochesScenario1() {
 	// create 100 nodes for addr1
 	addr1 := accounts[1].String()
 	nodes := suite.utilsBatchCreateCaptainNode(addr1, 1, 100)
-	resp, err := suite.queryClient.Nodes(suite.ctx, &types.QueryNodesRequest{})
+	resp, err := suite.QueryClient.Nodes(suite.Ctx, &types.QueryNodesRequest{})
 	suite.Require().NoError(err)
 	suite.Require().Len(resp.Nodes, len(nodes))
 	nodeWithRatios := suite.utilsBatchAssignFixedPowerOnRatio(nodes, 1, 0)
@@ -80,12 +80,12 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 1                           //
 	//////////////////////////////////////////////////////////////////////
-	epoch1 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	epoch1 := suite.Keeper.GetCurrentEpoch(suite.Ctx)
 	// BeforeReportDigest(1)
-	expectEmission1 := suite.keeper.CalcEpochEmission(suite.ctx, epoch1, sdk.NewDecWithPrec(1, 0))
+	expectEmission1 := suite.Keeper.CalcEpochEmission(suite.Ctx, epoch1, sdk.NewDecWithPrec(1, 0))
 	// Submit ReportDigest(1)
 	digest1 := types.ReportDigest{
-		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId:                  suite.Keeper.GetCurrentEpoch(suite.Ctx),
 		TotalBatchCount:          10,
 		TotalNodeCount:           100,
 		MaximumNodeCountPerBatch: 10,
@@ -94,7 +94,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	anyVal, err := cdctypes.NewAnyWithValue(&digest1)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		Report:     anyVal,
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
@@ -103,9 +103,9 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	suite.Commit()
 
 	// AfterReportDigest(1)
-	_, found := suite.keeper.GetReportDigest(suite.ctx, digest1.EpochId)
+	_, found := suite.Keeper.GetReportDigest(suite.Ctx, digest1.EpochId)
 	suite.Require().True(found)
-	actualEmission1 := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
+	actualEmission1 := suite.Keeper.GetEpochEmission(suite.Ctx, epoch1)
 	suite.Require().Equal(expectEmission1, actualEmission1)
 
 	// Submit ReportBatches(1)
@@ -113,7 +113,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	for i := uint64(1); i <= digest1.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(1,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+			expectedNodeComputingPower := suite.Keeper.CalcNodeComputingPowerOnEpoch(suite.Ctx,
 				epoch1, node.NodeId, node.OnOperationRatio)
 			expectedComputingPowerSum1 = expectedComputingPowerSum1.Add(expectedNodeComputingPower)
 		}
@@ -127,7 +127,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
@@ -135,18 +135,18 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(1,i)
-		actualComputingPowerSum1 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1)
+		actualComputingPowerSum1 := suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1)
 		suite.Require().Equal(expectedComputingPowerSum1, actualComputingPowerSum1)
 	}
 
 	// Submit ReportEnd(1)
 	end1 := types.ReportEnd{
-		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId: suite.Keeper.GetCurrentEpoch(suite.Ctx),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&end1)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		ReportType: types.ReportType_REPORT_TYPE_END,
 		Report:     anyVal,
@@ -157,12 +157,12 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 2                           //
 	//////////////////////////////////////////////////////////////////////
-	epoch2 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	epoch2 := suite.Keeper.GetCurrentEpoch(suite.Ctx)
 	// BeforeReportDigest(2)
-	expectEmission2 := suite.keeper.CalcEpochEmission(suite.ctx, epoch2, sdk.NewDecWithPrec(47, 1))
+	expectEmission2 := suite.Keeper.CalcEpochEmission(suite.Ctx, epoch2, sdk.NewDecWithPrec(47, 1))
 	// Submit ReportDigest(2)
 	digest2 := types.ReportDigest{
-		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId:                  suite.Keeper.GetCurrentEpoch(suite.Ctx),
 		TotalBatchCount:          10,
 		TotalNodeCount:           100,
 		MaximumNodeCountPerBatch: 10,
@@ -171,7 +171,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	anyVal, err = cdctypes.NewAnyWithValue(&digest2)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		Report:     anyVal,
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
@@ -180,20 +180,20 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	suite.Commit()
 
 	// AfterReportDigest(2)
-	_, found = suite.keeper.GetReportDigest(suite.ctx, digest2.EpochId)
+	_, found = suite.Keeper.GetReportDigest(suite.Ctx, digest2.EpochId)
 	suite.Require().True(found)
-	actualEmission2 := suite.keeper.GetEpochEmission(suite.ctx, epoch2)
+	actualEmission2 := suite.Keeper.GetEpochEmission(suite.Ctx, epoch2)
 	suite.Require().Equal(expectEmission2, actualEmission2)
 
 	// Submit ReportBatches(2)
-	suite.Require().Equal(expectEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(expectEmission1, suite.Keeper.GetEpochEmission(suite.Ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1))
 
 	expectedComputingPowerSum2 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(2,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+			expectedNodeComputingPower := suite.Keeper.CalcNodeComputingPowerOnEpoch(suite.Ctx,
 				epoch2, node.NodeId, node.OnOperationRatio)
 			expectedComputingPowerSum2 = expectedComputingPowerSum2.Add(expectedNodeComputingPower)
 		}
@@ -207,7 +207,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
@@ -215,38 +215,38 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(2,i)
-		actualComputingPowerSum2 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2)
+		actualComputingPowerSum2 := suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch2)
 		suite.Require().Equal(expectedComputingPowerSum2, actualComputingPowerSum2)
 	}
 
 	// Submit ReportEnd(2)
 	end2 := types.ReportEnd{
-		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId: suite.Keeper.GetCurrentEpoch(suite.Ctx),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&end2)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		ReportType: types.ReportType_REPORT_TYPE_END,
 		Report:     anyVal,
 	})
 	suite.Require().NoError(err)
 	// After ReportEnd(2)
-	suite.Require().Equal(actualEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(actualEmission1, suite.Keeper.GetEpochEmission(suite.Ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1))
 
 	suite.Commit()
 	// BeginBlocker
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetEpochEmission(suite.Ctx, epoch1))
+	suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1))
 
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 3                           //
 	//////////////////////////////////////////////////////////////////////
-	epoch3 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	epoch3 := suite.Keeper.GetCurrentEpoch(suite.Ctx)
 	// BeforeReportDigest(3)
-	expectEmission3 := suite.keeper.CalcEpochEmission(suite.ctx, epoch3, sdk.NewDecWithPrec(66, 1))
+	expectEmission3 := suite.Keeper.CalcEpochEmission(suite.Ctx, epoch3, sdk.NewDecWithPrec(66, 1))
 	// Submit ReportDigest(2)
 	digest3 := types.ReportDigest{
 		EpochId:                  epoch3,
@@ -258,7 +258,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	anyVal, err = cdctypes.NewAnyWithValue(&digest3)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		Report:     anyVal,
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
@@ -267,23 +267,23 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 	suite.Commit()
 
 	// AfterReportDigest(3)
-	_, found = suite.keeper.GetReportDigest(suite.ctx, digest3.EpochId)
+	_, found = suite.Keeper.GetReportDigest(suite.Ctx, digest3.EpochId)
 	suite.Require().True(found)
-	actualEmission3 := suite.keeper.GetEpochEmission(suite.ctx, epoch3)
+	actualEmission3 := suite.Keeper.GetEpochEmission(suite.Ctx, epoch3)
 	suite.Require().Equal(expectEmission3, actualEmission3)
 
 	// Submit ReportBatches(3)
-	suite.Require().Equal(expectEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(expectEmission2, suite.Keeper.GetEpochEmission(suite.Ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch2))
 
 	expectedComputingPowerSum3 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(3,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().NotEmpty(suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
-			suite.Require().NotEmpty(suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch2, node.NodeId))
+			suite.Require().NotEmpty(suite.Keeper.GetNodeCumulativeEmissionByEpoch(suite.Ctx, epoch1, node.NodeId))
+			suite.Require().NotEmpty(suite.Keeper.GetNodeComputingPowerOnEpoch(suite.Ctx, epoch2, node.NodeId))
 
-			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+			expectedNodeComputingPower := suite.Keeper.CalcNodeComputingPowerOnEpoch(suite.Ctx,
 				epoch3, node.NodeId, node.OnOperationRatio)
 			expectedComputingPowerSum3 = expectedComputingPowerSum3.Add(expectedNodeComputingPower)
 		}
@@ -297,7 +297,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
@@ -307,44 +307,44 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario1() {
 
 		// After Submit ReportBatches(2,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
-			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetNodeCumulativeEmissionByEpoch(suite.Ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetNodeComputingPowerOnEpoch(suite.Ctx, epoch1, node.NodeId))
 		}
 
-		actualComputingPowerSum3 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch3)
+		actualComputingPowerSum3 := suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch3)
 		suite.Require().Equal(expectedComputingPowerSum3, actualComputingPowerSum3)
 	}
 
 	// Submit ReportEnd(3)
 	end3 := types.ReportEnd{
-		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId: suite.Keeper.GetCurrentEpoch(suite.Ctx),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&end3)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		ReportType: types.ReportType_REPORT_TYPE_END,
 		Report:     anyVal,
 	})
 	suite.Require().NoError(err)
 	// After ReportEnd(3)
-	suite.Require().Equal(actualEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(actualEmission2, suite.Keeper.GetEpochEmission(suite.Ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch2))
 
 	suite.Commit()
 	// BeginBlocker
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetEpochEmission(suite.Ctx, epoch2))
+	suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch2))
 }
 
 // TestCompletedEpochesScenario1 tests the full epoch period but:
 // 1. user claim their rewards: so pledge ratio is calculated
-func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
+func (suite *IntegrationTestSuite) TestCompletedEpochesScenario2() {
 	// create 100 nodes for addr1
 	addr1 := accounts[1].String()
 	nodes := suite.utilsBatchCreateCaptainNode(addr1, 1, 100)
-	resp, err := suite.queryClient.Nodes(suite.ctx, &types.QueryNodesRequest{})
+	resp, err := suite.QueryClient.Nodes(suite.Ctx, &types.QueryNodesRequest{})
 	suite.Require().NoError(err)
 	suite.Require().Len(resp.Nodes, len(nodes))
 	nodeWithRatios := suite.utilsBatchAssignFixedPowerOnRatio(nodes, 1, 0)
@@ -352,12 +352,12 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 1                           //
 	//////////////////////////////////////////////////////////////////////
-	epoch1 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	epoch1 := suite.Keeper.GetCurrentEpoch(suite.Ctx)
 	// BeforeReportDigest(1)
-	expectEmission1 := suite.keeper.CalcEpochEmission(suite.ctx, epoch1, sdk.NewDecWithPrec(1, 0))
+	expectEmission1 := suite.Keeper.CalcEpochEmission(suite.Ctx, epoch1, sdk.NewDecWithPrec(1, 0))
 	// Submit ReportDigest(1)
 	digest1 := types.ReportDigest{
-		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId:                  suite.Keeper.GetCurrentEpoch(suite.Ctx),
 		TotalBatchCount:          10,
 		TotalNodeCount:           100,
 		MaximumNodeCountPerBatch: 10,
@@ -366,7 +366,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	anyVal, err := cdctypes.NewAnyWithValue(&digest1)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		Report:     anyVal,
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
@@ -375,9 +375,9 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.Commit()
 
 	// AfterReportDigest(1)
-	_, found := suite.keeper.GetReportDigest(suite.ctx, digest1.EpochId)
+	_, found := suite.Keeper.GetReportDigest(suite.Ctx, digest1.EpochId)
 	suite.Require().True(found)
-	actualEmission1 := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
+	actualEmission1 := suite.Keeper.GetEpochEmission(suite.Ctx, epoch1)
 	suite.Require().Equal(expectEmission1, actualEmission1)
 	suite.T().Logf("emission at %d: %s", epoch1, actualEmission1)
 
@@ -386,7 +386,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	for i := uint64(1); i <= digest1.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(1,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+			expectedNodeComputingPower := suite.Keeper.CalcNodeComputingPowerOnEpoch(suite.Ctx,
 				epoch1, node.NodeId, node.OnOperationRatio)
 			expectedComputingPowerSum1 = expectedComputingPowerSum1.Add(expectedNodeComputingPower)
 		}
@@ -400,7 +400,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
@@ -408,19 +408,19 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(1,i)
-		actualComputingPowerSum1 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1)
+		actualComputingPowerSum1 := suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1)
 		suite.Require().Equal(expectedComputingPowerSum1, actualComputingPowerSum1)
 	}
 	suite.T().Logf("computing power sum at %d: %s", epoch1, expectedComputingPowerSum1)
 
 	// Submit ReportEnd(1)
 	end1 := types.ReportEnd{
-		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId: suite.Keeper.GetCurrentEpoch(suite.Ctx),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&end1)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		ReportType: types.ReportType_REPORT_TYPE_END,
 		Report:     anyVal,
@@ -431,10 +431,10 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 2                           //
 	//////////////////////////////////////////////////////////////////////
-	epoch2 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	epoch2 := suite.Keeper.GetCurrentEpoch(suite.Ctx)
 
 	// NOTE: claim rewards
-	resp1, err := suite.claimsServer.Claims(suite.ctx, &claimstypes.MsgClaims{
+	resp1, err := suite.ClaimsServer.Claims(suite.Ctx, &claimstypes.MsgClaims{
 		Receiver: addr1,
 		Sender:   addr1,
 	})
@@ -442,10 +442,10 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.T().Logf("claimed rewards at %d: %s", epoch2, resp1.Amount)
 
 	// BeforeReportDigest(2)
-	expectEmission2 := suite.keeper.CalcEpochEmission(suite.ctx, epoch2, sdk.NewDecWithPrec(47, 1))
+	expectEmission2 := suite.Keeper.CalcEpochEmission(suite.Ctx, epoch2, sdk.NewDecWithPrec(47, 1))
 	// Submit ReportDigest(2)
 	digest2 := types.ReportDigest{
-		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId:                  suite.Keeper.GetCurrentEpoch(suite.Ctx),
 		TotalBatchCount:          10,
 		TotalNodeCount:           100,
 		MaximumNodeCountPerBatch: 10,
@@ -454,7 +454,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	anyVal, err = cdctypes.NewAnyWithValue(&digest2)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		Report:     anyVal,
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
@@ -463,21 +463,21 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.Commit()
 
 	// AfterReportDigest(2)
-	_, found = suite.keeper.GetReportDigest(suite.ctx, digest2.EpochId)
+	_, found = suite.Keeper.GetReportDigest(suite.Ctx, digest2.EpochId)
 	suite.Require().True(found)
-	actualEmission2 := suite.keeper.GetEpochEmission(suite.ctx, epoch2)
+	actualEmission2 := suite.Keeper.GetEpochEmission(suite.Ctx, epoch2)
 	suite.Require().Equal(expectEmission2, actualEmission2)
 	suite.T().Logf("emission at %d: %s", epoch2, actualEmission2)
 
 	// Submit ReportBatches(2)
-	suite.Require().Equal(expectEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(expectEmission1, suite.Keeper.GetEpochEmission(suite.Ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1))
 
 	expectedComputingPowerSum2 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(2,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+			expectedNodeComputingPower := suite.Keeper.CalcNodeComputingPowerOnEpoch(suite.Ctx,
 				epoch2, node.NodeId, node.OnOperationRatio)
 			expectedComputingPowerSum2 = expectedComputingPowerSum2.Add(expectedNodeComputingPower)
 		}
@@ -491,7 +491,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
@@ -499,38 +499,38 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(2,i)
-		actualComputingPowerSum2 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2)
+		actualComputingPowerSum2 := suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch2)
 		suite.Require().Equal(expectedComputingPowerSum2, actualComputingPowerSum2)
 	}
 
 	// Submit ReportEnd(2)
 	end2 := types.ReportEnd{
-		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId: suite.Keeper.GetCurrentEpoch(suite.Ctx),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&end2)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		ReportType: types.ReportType_REPORT_TYPE_END,
 		Report:     anyVal,
 	})
 	suite.Require().NoError(err)
 	// After ReportEnd(2)
-	suite.Require().Equal(actualEmission1, suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(expectedComputingPowerSum1, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(actualEmission1, suite.Keeper.GetEpochEmission(suite.Ctx, epoch1))
+	suite.Require().Equal(expectedComputingPowerSum1, suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1))
 
 	suite.Commit()
 	// BeginBlocker
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch1))
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1))
+	suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetEpochEmission(suite.Ctx, epoch1))
+	suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1))
 
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 3                           //
 	//////////////////////////////////////////////////////////////////////
-	epoch3 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	epoch3 := suite.Keeper.GetCurrentEpoch(suite.Ctx)
 	// BeforeReportDigest(3)
-	expectEmission3 := suite.keeper.CalcEpochEmission(suite.ctx, epoch3, sdk.NewDecWithPrec(66, 1))
+	expectEmission3 := suite.Keeper.CalcEpochEmission(suite.Ctx, epoch3, sdk.NewDecWithPrec(66, 1))
 	// Submit ReportDigest(2)
 	digest3 := types.ReportDigest{
 		EpochId:                  epoch3,
@@ -542,7 +542,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	anyVal, err = cdctypes.NewAnyWithValue(&digest3)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		Report:     anyVal,
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
@@ -551,24 +551,24 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 	suite.Commit()
 
 	// AfterReportDigest(3)
-	_, found = suite.keeper.GetReportDigest(suite.ctx, digest3.EpochId)
+	_, found = suite.Keeper.GetReportDigest(suite.Ctx, digest3.EpochId)
 	suite.Require().True(found)
-	actualEmission3 := suite.keeper.GetEpochEmission(suite.ctx, epoch3)
+	actualEmission3 := suite.Keeper.GetEpochEmission(suite.Ctx, epoch3)
 	suite.Require().Equal(expectEmission3, actualEmission3)
 	suite.T().Logf("emission at %d: %s", epoch3, actualEmission3)
 
 	// Submit ReportBatches(3)
-	suite.Require().Equal(expectEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(expectEmission2, suite.Keeper.GetEpochEmission(suite.Ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch2))
 
 	expectedComputingPowerSum3 := sdk.NewDec(0)
 	for i := uint64(1); i <= digest2.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(3,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().NotEmpty(suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
-			suite.Require().NotEmpty(suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch2, node.NodeId))
+			suite.Require().NotEmpty(suite.Keeper.GetNodeCumulativeEmissionByEpoch(suite.Ctx, epoch1, node.NodeId))
+			suite.Require().NotEmpty(suite.Keeper.GetNodeComputingPowerOnEpoch(suite.Ctx, epoch2, node.NodeId))
 
-			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+			expectedNodeComputingPower := suite.Keeper.CalcNodeComputingPowerOnEpoch(suite.Ctx,
 				epoch3, node.NodeId, node.OnOperationRatio)
 			expectedComputingPowerSum3 = expectedComputingPowerSum3.Add(expectedNodeComputingPower)
 		}
@@ -582,7 +582,7 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
@@ -592,33 +592,33 @@ func (suite *CaptainsTestSuite) TestCompletedEpochesScenario2() {
 
 		// After Submit ReportBatches(2,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeCumulativeEmissionByEpoch(suite.ctx, epoch1, node.NodeId))
-			suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetNodeComputingPowerOnEpoch(suite.ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetNodeCumulativeEmissionByEpoch(suite.Ctx, epoch1, node.NodeId))
+			suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetNodeComputingPowerOnEpoch(suite.Ctx, epoch1, node.NodeId))
 		}
 
-		actualComputingPowerSum3 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch3)
+		actualComputingPowerSum3 := suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch3)
 		suite.Require().Equal(expectedComputingPowerSum3, actualComputingPowerSum3)
 	}
 
 	// Submit ReportEnd(3)
 	end3 := types.ReportEnd{
-		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId: suite.Keeper.GetCurrentEpoch(suite.Ctx),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&end3)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		ReportType: types.ReportType_REPORT_TYPE_END,
 		Report:     anyVal,
 	})
 	suite.Require().NoError(err)
 	// After ReportEnd(3)
-	suite.Require().Equal(actualEmission2, suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(expectedComputingPowerSum2, suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(actualEmission2, suite.Keeper.GetEpochEmission(suite.Ctx, epoch2))
+	suite.Require().Equal(expectedComputingPowerSum2, suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch2))
 
 	suite.Commit()
 	// BeginBlocker
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetEpochEmission(suite.ctx, epoch2))
-	suite.Require().Equal(sdk.ZeroDec(), suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch2))
+	suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetEpochEmission(suite.Ctx, epoch2))
+	suite.Require().Equal(sdk.ZeroDec(), suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch2))
 }

@@ -173,6 +173,7 @@ func (k Keeper) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress) (nodes []
 	iterator := store.Iterator(nil, nil)
 	defer iterator.Close()
 	for ; iterator.Valid(); iterator.Next() {
+
 		node, has := k.GetNode(ctx, string(iterator.Key()))
 		if has {
 			nodes = append(nodes, node)

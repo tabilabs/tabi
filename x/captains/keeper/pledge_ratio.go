@@ -103,6 +103,12 @@ func (k Keeper) delOwnerPledge(ctx sdk.Context, owner sdk.AccAddress, epochID ui
 	store.Delete(key)
 }
 
+func (k Keeper) HasGlobalPledge(ctx sdk.Context, epochID uint64) bool {
+	store := ctx.KVStore(k.storeKey)
+	key := types.GlobalPledgeOnEpochStoreKey(epochID)
+	return store.Has(key)
+}
+
 // GetGlobalPledge returns the total pledge amount of one epoch end.
 func (k Keeper) GetGlobalPledge(ctx sdk.Context, epochID uint64) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)

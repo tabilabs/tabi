@@ -4,7 +4,7 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-func (suite *CaptainsTestSuite) TestQueryNode() {
+func (suite *IntegrationTestSuite) TestQueryNode() {
 	testCases := []struct {
 		name      string
 		req       *types.QueryNodeRequest
@@ -39,7 +39,7 @@ func (suite *CaptainsTestSuite) TestQueryNode() {
 		suite.Run(tc.name, func() {
 			nodeId := tc.prepareFn(tc.req)
 
-			resp, err := suite.queryClient.Node(suite.ctx, tc.req)
+			resp, err := suite.QueryClient.Node(suite.Ctx, tc.req)
 			if tc.expectErr {
 				suite.Require().Error(err)
 			} else {
@@ -52,7 +52,7 @@ func (suite *CaptainsTestSuite) TestQueryNode() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestQueryNodes() {
+func (suite *IntegrationTestSuite) TestQueryNodes() {
 	testCases := []struct {
 		name      string
 		req       *types.QueryNodesRequest
@@ -84,7 +84,7 @@ func (suite *CaptainsTestSuite) TestQueryNodes() {
 		suite.Run(tc.name, func() {
 			nodeIds := tc.prepareFn()
 
-			resp, err := suite.queryClient.Nodes(suite.ctx, tc.req)
+			resp, err := suite.QueryClient.Nodes(suite.Ctx, tc.req)
 			if tc.expectErr {
 				suite.Require().Error(err)
 			} else {
@@ -98,7 +98,7 @@ func (suite *CaptainsTestSuite) TestQueryNodes() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestNodeLastEpochInfo() {
+func (suite *IntegrationTestSuite) TestNodeLastEpochInfo() {
 	nodeId := suite.utilsCreateCaptainNode(accounts[0].String(), 1)
 
 	testCases := []struct {
@@ -121,7 +121,7 @@ func (suite *CaptainsTestSuite) TestNodeLastEpochInfo() {
 	}
 
 	for _, tc := range testCases {
-		resp, err := suite.queryClient.NodeLastEpochInfo(suite.ctx, tc.req)
+		resp, err := suite.QueryClient.NodeLastEpochInfo(suite.Ctx, tc.req)
 		if tc.expectErr {
 			suite.Require().Error(err)
 		} else {
@@ -130,7 +130,7 @@ func (suite *CaptainsTestSuite) TestNodeLastEpochInfo() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestQueryDivision() {
+func (suite *IntegrationTestSuite) TestQueryDivision() {
 	testCases := []struct {
 		name        string
 		req         *types.QueryDivisionRequest
@@ -188,7 +188,7 @@ func (suite *CaptainsTestSuite) TestQueryDivision() {
 
 	for _, tc := range testCases {
 		suite.Run(tc.name, func() {
-			resp, err := suite.queryClient.Division(suite.ctx, tc.req)
+			resp, err := suite.QueryClient.Division(suite.Ctx, tc.req)
 			if tc.expectErr {
 				suite.Require().Error(err)
 			} else {
@@ -199,7 +199,7 @@ func (suite *CaptainsTestSuite) TestQueryDivision() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestQueryDivisions() {
+func (suite *IntegrationTestSuite) TestQueryDivisions() {
 	testCases := []struct {
 		name      string
 		req       *types.QueryDivisionsRequest
@@ -214,14 +214,14 @@ func (suite *CaptainsTestSuite) TestQueryDivisions() {
 
 	for _, tc := range testCases {
 		suite.Run(tc.name, func() {
-			resp, err := suite.queryClient.Divisions(suite.ctx, tc.req)
+			resp, err := suite.QueryClient.Divisions(suite.Ctx, tc.req)
 			suite.Require().NoError(err)
 			suite.Require().Len(resp.Divisions, 5)
 		})
 	}
 }
 
-func (suite *CaptainsTestSuite) TestQuerySupply() {
+func (suite *IntegrationTestSuite) TestQuerySupply() {
 	testCases := []struct {
 		name         string
 		melleateFn   func()
@@ -298,7 +298,7 @@ func (suite *CaptainsTestSuite) TestQuerySupply() {
 		suite.Run(tc.name, func() {
 			tc.melleateFn()
 
-			resp, err := suite.queryClient.Supply(suite.ctx, tc.req)
+			resp, err := suite.QueryClient.Supply(suite.Ctx, tc.req)
 			if tc.expectErr {
 				suite.Require().Error(err)
 			} else {
@@ -311,7 +311,7 @@ func (suite *CaptainsTestSuite) TestQuerySupply() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestQuerySaleLevel() {
+func (suite *IntegrationTestSuite) TestQuerySaleLevel() {
 	testCases := []struct {
 		name        string
 		req         *types.QuerySaleLevelRequest
@@ -328,7 +328,7 @@ func (suite *CaptainsTestSuite) TestQuerySaleLevel() {
 
 	for _, tc := range testCases {
 		suite.Run(tc.name, func() {
-			resp, err := suite.queryClient.SaleLevel(suite.ctx, tc.req)
+			resp, err := suite.QueryClient.SaleLevel(suite.Ctx, tc.req)
 			if tc.expectErr {
 				suite.Require().Error(err)
 			} else {
@@ -338,7 +338,7 @@ func (suite *CaptainsTestSuite) TestQuerySaleLevel() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestAuthorizedMembers() {
+func (suite *IntegrationTestSuite) TestAuthorizedMembers() {
 	testCases := []struct {
 		name      string
 		req       *types.QueryAuthorizedMembersRequest
@@ -355,7 +355,7 @@ func (suite *CaptainsTestSuite) TestAuthorizedMembers() {
 
 	for _, tc := range testCases {
 		suite.Run(tc.name, func() {
-			resp, err := suite.queryClient.AuthorizedMembers(suite.ctx, tc.req)
+			resp, err := suite.QueryClient.AuthorizedMembers(suite.Ctx, tc.req)
 
 			if tc.expectErr {
 				suite.Require().Error(err)
@@ -367,7 +367,7 @@ func (suite *CaptainsTestSuite) TestAuthorizedMembers() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestCurrentEpoch() {
+func (suite *IntegrationTestSuite) TestCurrentEpoch() {
 	testCases := []struct {
 		name        string
 		req         *types.QueryCurrentEpochRequest
@@ -384,7 +384,7 @@ func (suite *CaptainsTestSuite) TestCurrentEpoch() {
 
 	for _, tc := range testCases {
 		suite.Run(tc.name, func() {
-			resp, err := suite.queryClient.CurrentEpoch(suite.ctx, tc.req)
+			resp, err := suite.QueryClient.CurrentEpoch(suite.Ctx, tc.req)
 
 			if tc.expectErr {
 				suite.Require().Error(err)

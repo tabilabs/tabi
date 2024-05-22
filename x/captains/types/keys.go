@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/address"
 )
 
 const (
@@ -90,7 +89,6 @@ func NodeByOwnerStoreKey(owner sdk.AccAddress, nodeID string) []byte {
 // Items are stored with the following key
 // <prefix_key><owner><delimiter>
 func NodeByOwnerPrefixStoreKey(owner sdk.AccAddress) []byte {
-	owner = address.MustLengthPrefix(owner)
 	key := make([]byte, len(NodeByOwnerKey)+len(owner)+len(Delimiter))
 	copy(key, NodeByOwnerKey)
 	copy(key[len(NodeByOwnerKey):], owner)

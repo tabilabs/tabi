@@ -4,7 +4,7 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-func (suite *CaptainsTestSuite) TestExportAndImportGenesis() {
+func (suite *IntegrationTestSuite) TestExportAndImportGenesis() {
 
 	testCases := []struct {
 		name      string
@@ -23,10 +23,10 @@ func (suite *CaptainsTestSuite) TestExportAndImportGenesis() {
 		suite.Run(tc.name, func() {
 			tc.prepare()
 
-			nodes, _ := suite.queryClient.Nodes(suite.ctx, &types.QueryNodesRequest{})
+			nodes, _ := suite.QueryClient.Nodes(suite.Ctx, &types.QueryNodesRequest{})
 
 			// export and validate
-			gs1 := suite.keeper.ExportGenesis(suite.ctx)
+			gs1 := suite.Keeper.ExportGenesis(suite.Ctx)
 			err := gs1.Validate()
 			suite.Require().NoError(err)
 
@@ -36,8 +36,8 @@ func (suite *CaptainsTestSuite) TestExportAndImportGenesis() {
 			suite.utilsPruneCaptainsStore()
 
 			// import and export again
-			suite.keeper.InitGenesis(suite.ctx, gs1)
-			gs2 := suite.keeper.ExportGenesis(suite.ctx)
+			suite.Keeper.InitGenesis(suite.Ctx, gs1)
+			gs2 := suite.Keeper.ExportGenesis(suite.Ctx)
 
 			suite.Require().Equal(gs1.Params, gs2.Params)
 			suite.Require().Equal(gs1.BaseState, gs2.BaseState)
@@ -58,9 +58,9 @@ func (suite *CaptainsTestSuite) TestExportAndImportGenesis() {
 
 }
 
-func (suite *CaptainsTestSuite) utilsPruneCaptainsStore() {
-	key := suite.app.GetKey(types.StoreKey)
-	store := suite.ctx.KVStore(key)
+func (suite *IntegrationTestSuite) utilsPruneCaptainsStore() {
+	key := suite.App.GetKey(types.StoreKey)
+	store := suite.Ctx.KVStore(key)
 
 	iter := store.Iterator(nil, nil)
 	defer iter.Close()
@@ -69,7 +69,7 @@ func (suite *CaptainsTestSuite) utilsPruneCaptainsStore() {
 	}
 }
 
-func (suite *CaptainsTestSuite) CompareGenesis(gs1, gs2 *types.GenesisState) {
+func (suite *IntegrationTestSuite) CompareGenesis(gs1, gs2 *types.GenesisState) {
 	suite.Require().Equal(gs1.BaseState, gs2.BaseState)
 	suite.Require().Equal(gs1.Params, gs2.Params)
 	suite.Require().Equal(gs1.Divisions, gs2.Divisions)

@@ -4,7 +4,7 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-func (suite *CaptainsTestSuite) TestSaveDivision() {
+func (suite *IntegrationTestSuite) TestSaveDivision() {
 	template := types.Division{
 		Id:                       "division-template",
 		Level:                    1,
@@ -25,7 +25,7 @@ func (suite *CaptainsTestSuite) TestSaveDivision() {
 			name:     "success - save division",
 			division: template,
 			execute: func(division types.Division) error {
-				err := suite.keeper.SaveDivision(suite.ctx, division)
+				err := suite.Keeper.SaveDivision(suite.Ctx, division)
 				suite.Require().NoError(err)
 
 				return err
@@ -35,10 +35,10 @@ func (suite *CaptainsTestSuite) TestSaveDivision() {
 		{
 			name: "fail - save division duplicated",
 			execute: func(division types.Division) error {
-				err := suite.keeper.SaveDivision(suite.ctx, division)
+				err := suite.Keeper.SaveDivision(suite.Ctx, division)
 				suite.Require().NoError(err)
 
-				err = suite.keeper.SaveDivision(suite.ctx, division)
+				err = suite.Keeper.SaveDivision(suite.Ctx, division)
 				suite.Require().Error(err)
 
 				return err
@@ -57,14 +57,14 @@ func (suite *CaptainsTestSuite) TestSaveDivision() {
 				suite.Require().NoError(err)
 			}
 
-			res, found := suite.keeper.GetDivision(suite.ctx, tc.division.Id)
+			res, found := suite.Keeper.GetDivision(suite.Ctx, tc.division.Id)
 			suite.Require().True(found)
 			suite.Require().Equal(tc.division, res)
 		})
 	}
 }
 
-func (suite *CaptainsTestSuite) TestDecideDivision() {
+func (suite *IntegrationTestSuite) TestDecideDivision() {
 	testCases := []struct {
 		name        string
 		power       uint64
@@ -105,7 +105,7 @@ func (suite *CaptainsTestSuite) TestDecideDivision() {
 
 	for _, tc := range testCases {
 		suite.Run(tc.name, func() {
-			division := suite.keeper.DecideDivision(suite.ctx, tc.power)
+			division := suite.Keeper.DecideDivision(suite.Ctx, tc.power)
 			suite.Require().Equal(tc.expectLevel, division.Level)
 		})
 	}

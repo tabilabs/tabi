@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func (suite *CaptainsTestSuite) TestTechCoefficient() {
+func (suite *IntegrationTestSuite) TestTechCoefficient() {
 	testCases := []struct {
 		name   string
 		level  uint64
@@ -43,7 +43,7 @@ func (suite *CaptainsTestSuite) TestTechCoefficient() {
 		suite.Run(fmt.Sprintf("TechCoefficient - %s", tc.name), func() {
 			suite.utilsUpdateLevel(tc.level)
 
-			tec := suite.keeper.CalcTechProgressCoefficient(suite.ctx)
+			tec := suite.Keeper.CalcTechProgressCoefficient(suite.Ctx)
 			expect, err := sdk.NewDecFromStr(tc.expect)
 
 			suite.Require().NoError(err)
