@@ -5,6 +5,7 @@ import (
 
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
@@ -40,7 +41,7 @@ func (cpr *CaptainsReporter) SubmitDigest(suite *IntegrationTestSuite, es *Epoch
 	}
 	anyVal, err := cdctypes.NewAnyWithValue(&digest)
 	suite.Require().NoError(err)
-	suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		Report:     anyVal,
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,

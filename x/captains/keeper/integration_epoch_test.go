@@ -75,7 +75,6 @@ func (etc *EpochTestCase) execute() {
 		execEpochPhaseAfterBatches(etc.currEpochState)
 	case EpochPhaseOnEnd:
 		execEpochPhaseOnEnd(etc.currEpochState, etc.reporter)
-
 	default:
 		panic("unknown epoch phase")
 	}
@@ -93,7 +92,6 @@ func (etc *EpochTestCase) Duplicate(es *EpochState) *EpochState {
 	nes.Owner = es.Owner
 	nes.Epoch = es.Epoch
 	nes.Phase = es.Phase
-	nes.StandByOverFlag = es.StandByOverFlag
 	nes.EndOnFlag = es.EndOnFlag
 
 	nes.GlobalClaimedEmission = es.GlobalClaimedEmission
@@ -115,7 +113,6 @@ func (etc *EpochTestCase) Duplicate(es *EpochState) *EpochState {
 	for k, v := range es.ClaimableComputingPower {
 		nes.ClaimableComputingPower[k] = v
 	}
-
 	for k, v := range es.NodeComputingPower {
 		nes.NodeComputingPower[k] = v
 	}
@@ -129,7 +126,7 @@ func (etc *EpochTestCase) Export() {
 func execEpochPhaseBeginEpoch(nes *EpochState) {
 	// update epoch
 	nes.Epoch = nes.suite.Keeper.GetCurrentEpoch(nes.suite.Ctx)
-
+	// check stand by over flag
 	found := nes.suite.Keeper.HasStandByOverFlag(nes.suite.Ctx)
 	nes.suite.Require().Equal(false, found)
 
@@ -168,7 +165,6 @@ func execEpochPhaseOnDigest(nes *EpochState, crp *CaptainsReporter) {
 func execEpochPhaseAfterDigest(nes *EpochState) {
 	found := nes.suite.Keeper.HasStandByOverFlag(nes.suite.Ctx)
 	nes.suite.Require().Equal(true, found)
-	nes.StandByOverFlag = true
 
 	ee := nes.suite.Keeper.GetEpochEmission(nes.suite.Ctx, nes.Epoch)
 	nes.suite.Require().Equal(ee, nes.EpochEmission)
@@ -270,8 +266,7 @@ type EpochState struct {
 	Owner string
 
 	// epoch flag
-	StandByOverFlag bool
-	EndOnFlag       bool
+	EndOnFlag bool
 
 	// nodes in the epoch
 	Nodes Nodes
