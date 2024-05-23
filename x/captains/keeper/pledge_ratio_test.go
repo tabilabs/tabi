@@ -5,24 +5,24 @@ import (
 	tabitypes "github.com/tabilabs/tabi/types"
 )
 
-func (suite *CaptainsTestSuite) TestSampleOwnerPledge() {
+func (suite *IntegrationTestSuite) TestSampleOwnerPledge() {
 	owner := accounts[1]
 	err := suite.utilsFundToken(owner, 10_000_000, tabitypes.AttoTabi)
 	suite.Require().NoError(err)
 
 	// staking tokens
 	ownerAddr := sdk.MustAccAddressFromBech32(owner.String())
-	for i := 0; i < len(suite.validators); i++ {
-		suite.utilsStakingTabiWithAmount(ownerAddr, 1_000_000, suite.validators[i])
+	for i := 0; i < len(suite.Validators); i++ {
+		suite.utilsStakingTabiWithAmount(ownerAddr, 1_000_000, suite.Validators[i])
 	}
 
-	val, err := suite.keeper.SampleOwnerPledge(suite.ctx, ownerAddr)
+	val, err := suite.Keeper.SampleOwnerPledge(suite.Ctx, ownerAddr)
 	suite.Require().NoError(err)
 	suite.Require().Equal(sdk.NewDec(10_000_000), val)
 	suite.T().Logf("SampleOwnerPledge: %s", val.String())
 }
 
-func (suite *CaptainsTestSuite) TestCalcGlobalPledgeRatio() {
+func (suite *IntegrationTestSuite) TestCalcGlobalPledgeRatio() {
 	testCases := []struct {
 		name      string
 		melleate  func()
@@ -36,31 +36,31 @@ func (suite *CaptainsTestSuite) TestCalcGlobalPledgeRatio() {
 		{
 			name: "claimed sum: 100, pledge sum: 0",
 			melleate: func() {
-				suite.keeper.SetGlobalClaimedEmission(suite.ctx, sdk.MustNewDecFromStr("100"))
+				suite.Keeper.SetGlobalClaimedEmission(suite.Ctx, sdk.MustNewDecFromStr("100"))
 			},
 			expectVal: sdk.MustNewDecFromStr("0.3"),
 		},
 		{
 			name: "claimed sum: 100, pledge sum: 1",
 			melleate: func() {
-				suite.keeper.SetGlobalClaimedEmission(suite.ctx, sdk.MustNewDecFromStr("100"))
-				suite.keeper.SetGlobalPledge(suite.ctx, 1, sdk.MustNewDecFromStr("1"))
+				suite.Keeper.SetGlobalClaimedEmission(suite.Ctx, sdk.MustNewDecFromStr("100"))
+				suite.Keeper.SetGlobalPledge(suite.Ctx, 1, sdk.MustNewDecFromStr("1"))
 			},
 			expectVal: sdk.MustNewDecFromStr("0.3"),
 		},
 		{
 			name: "claimed sum: 100, pledge sum: 50",
 			melleate: func() {
-				suite.keeper.SetGlobalClaimedEmission(suite.ctx, sdk.MustNewDecFromStr("100"))
-				suite.keeper.SetGlobalPledge(suite.ctx, 1, sdk.MustNewDecFromStr("50"))
+				suite.Keeper.SetGlobalClaimedEmission(suite.Ctx, sdk.MustNewDecFromStr("100"))
+				suite.Keeper.SetGlobalPledge(suite.Ctx, 1, sdk.MustNewDecFromStr("50"))
 			},
 			expectVal: sdk.MustNewDecFromStr("0.5"),
 		},
 		{
 			name: "claimed sum: 100, pledge sum: 120",
 			melleate: func() {
-				suite.keeper.SetGlobalClaimedEmission(suite.ctx, sdk.MustNewDecFromStr("100"))
-				suite.keeper.SetGlobalPledge(suite.ctx, 1, sdk.MustNewDecFromStr("120"))
+				suite.Keeper.SetGlobalClaimedEmission(suite.Ctx, sdk.MustNewDecFromStr("100"))
+				suite.Keeper.SetGlobalPledge(suite.Ctx, 1, sdk.MustNewDecFromStr("120"))
 			},
 			expectVal: sdk.MustNewDecFromStr("1.0"),
 		},
@@ -70,13 +70,13 @@ func (suite *CaptainsTestSuite) TestCalcGlobalPledgeRatio() {
 		suite.Run(tc.name, func() {
 			tc.melleate()
 
-			val := suite.keeper.CalcGlobalPledgeRatio(suite.ctx, 1)
+			val := suite.Keeper.CalcGlobalPledgeRatio(suite.Ctx, 1)
 			suite.Require().Equal(tc.expectVal, val)
 		})
 	}
 }
 
-func (suite *CaptainsTestSuite) TestCalcNodePledgeRatioOnEpoch() {
+func (suite *IntegrationTestSuite) TestCalcNodePledgeRatioOnEpoch() {
 	owner := accounts[1]
 	nodeId := suite.utilsCreateCaptainNode(owner.String(), 1)
 
@@ -93,32 +93,32 @@ func (suite *CaptainsTestSuite) TestCalcNodePledgeRatioOnEpoch() {
 		{
 			name: "claimed sum: 100, pledge sum: 0",
 			melleate: func() {
-				suite.keeper.SetNodeClaimedEmission(suite.ctx, nodeId, sdk.MustNewDecFromStr("100"))
-				suite.keeper.SetOwnerPledge(suite.ctx, owner, 1, sdk.MustNewDecFromStr("0"))
+				suite.Keeper.SetNodeClaimedEmission(suite.Ctx, nodeId, sdk.MustNewDecFromStr("100"))
+				suite.Keeper.SetOwnerPledge(suite.Ctx, owner, 1, sdk.MustNewDecFromStr("0"))
 			},
 			expectVal: sdk.MustNewDecFromStr("0"),
 		},
 		{
 			name: "claimed sum: 100, pledge sum: 1",
 			melleate: func() {
-				suite.keeper.SetNodeClaimedEmission(suite.ctx, nodeId, sdk.MustNewDecFromStr("100"))
-				suite.keeper.SetOwnerPledge(suite.ctx, owner, 1, sdk.MustNewDecFromStr("1"))
+				suite.Keeper.SetNodeClaimedEmission(suite.Ctx, nodeId, sdk.MustNewDecFromStr("100"))
+				suite.Keeper.SetOwnerPledge(suite.Ctx, owner, 1, sdk.MustNewDecFromStr("1"))
 			},
 			expectVal: sdk.MustNewDecFromStr("0.01"),
 		},
 		{
 			name: "claimed sum: 100, pledge sum: 50",
 			melleate: func() {
-				suite.keeper.SetNodeClaimedEmission(suite.ctx, nodeId, sdk.MustNewDecFromStr("100"))
-				suite.keeper.SetOwnerPledge(suite.ctx, owner, 1, sdk.MustNewDecFromStr("50"))
+				suite.Keeper.SetNodeClaimedEmission(suite.Ctx, nodeId, sdk.MustNewDecFromStr("100"))
+				suite.Keeper.SetOwnerPledge(suite.Ctx, owner, 1, sdk.MustNewDecFromStr("50"))
 			},
 			expectVal: sdk.MustNewDecFromStr("0.3"),
 		},
 		{
 			name: "claimed sum: 100, pledge sum: 120",
 			melleate: func() {
-				suite.keeper.SetNodeClaimedEmission(suite.ctx, nodeId, sdk.MustNewDecFromStr("100"))
-				suite.keeper.SetOwnerPledge(suite.ctx, owner, 1, sdk.MustNewDecFromStr("120"))
+				suite.Keeper.SetNodeClaimedEmission(suite.Ctx, nodeId, sdk.MustNewDecFromStr("100"))
+				suite.Keeper.SetOwnerPledge(suite.Ctx, owner, 1, sdk.MustNewDecFromStr("120"))
 			},
 			expectVal: sdk.MustNewDecFromStr("0.3"),
 		},
@@ -128,7 +128,7 @@ func (suite *CaptainsTestSuite) TestCalcNodePledgeRatioOnEpoch() {
 		suite.Run(tc.name, func() {
 			tc.melleate()
 
-			val := suite.keeper.CalcNodePledgeRatioOnEpoch(suite.ctx, 1, nodeId)
+			val := suite.Keeper.CalcNodePledgeRatioOnEpoch(suite.Ctx, 1, nodeId)
 			suite.Require().Equal(tc.expectVal, val)
 		})
 	}

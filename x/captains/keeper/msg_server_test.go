@@ -9,7 +9,7 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-func (suite *CaptainsTestSuite) TestCreateCaptainNode() {
+func (suite *IntegrationTestSuite) TestCreateCaptainNode() {
 	member := accounts[0].String()
 	owner := accounts[1].String()
 
@@ -34,7 +34,7 @@ func (suite *CaptainsTestSuite) TestCreateCaptainNode() {
 
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("MsgCreateCaptainNode - %s", tc.name), func() {
-			_, err := suite.msgServer.CreateCaptainNode(suite.ctx, tc.request)
+			_, err := suite.MsgServer.CreateCaptainNode(suite.Ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())
@@ -45,7 +45,7 @@ func (suite *CaptainsTestSuite) TestCreateCaptainNode() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestAddAuthorizedMembers() {
+func (suite *IntegrationTestSuite) TestAddAuthorizedMembers() {
 	member := accounts[0].String()
 	owner := accounts[1].String()
 
@@ -66,7 +66,7 @@ func (suite *CaptainsTestSuite) TestAddAuthorizedMembers() {
 
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("MsgAddAuthorizedMembers - %s", tc.name), func() {
-			_, err := suite.msgServer.AddAuthorizedMembers(suite.ctx, tc.request)
+			_, err := suite.MsgServer.AddAuthorizedMembers(suite.Ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())
@@ -77,7 +77,7 @@ func (suite *CaptainsTestSuite) TestAddAuthorizedMembers() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestRemoveAuthorizedMembers() {
+func (suite *IntegrationTestSuite) TestRemoveAuthorizedMembers() {
 	member := accounts[0].String()
 	toBeMember := accounts[1].String()
 	nonMember := accounts[2].String()
@@ -115,7 +115,7 @@ func (suite *CaptainsTestSuite) TestRemoveAuthorizedMembers() {
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("MsgRemoveAuthorizedMembers - %s", tc.name), func() {
 			tc.malleate()
-			_, err := suite.msgServer.RemoveAuthorizedMembers(suite.ctx, tc.request)
+			_, err := suite.MsgServer.RemoveAuthorizedMembers(suite.Ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())
@@ -126,7 +126,7 @@ func (suite *CaptainsTestSuite) TestRemoveAuthorizedMembers() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestUpdateSaleLevel() {
+func (suite *IntegrationTestSuite) TestUpdateSaleLevel() {
 	member := accounts[0].String()
 	nonMember := accounts[1].String()
 
@@ -155,7 +155,7 @@ func (suite *CaptainsTestSuite) TestUpdateSaleLevel() {
 
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("MsgUpdateSaleLevel - %s", tc.name), func() {
-			_, err := suite.msgServer.UpdateSaleLevel(suite.ctx, tc.request)
+			_, err := suite.MsgServer.UpdateSaleLevel(suite.Ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())
@@ -166,7 +166,7 @@ func (suite *CaptainsTestSuite) TestUpdateSaleLevel() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestCommitComputingPower() {
+func (suite *IntegrationTestSuite) TestCommitComputingPower() {
 	// NOTE: only test report validation here, the full commit logic is tested
 	// in epoch_test.go
 	member := accounts[0].String()
@@ -204,7 +204,7 @@ func (suite *CaptainsTestSuite) TestCommitComputingPower() {
 
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("MsgCommitComputingPower - %s", tc.name), func() {
-			_, err := suite.msgServer.CommitComputingPower(suite.ctx, tc.request)
+			_, err := suite.MsgServer.CommitComputingPower(suite.Ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())
@@ -215,7 +215,7 @@ func (suite *CaptainsTestSuite) TestCommitComputingPower() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestClaimComputingPower() {
+func (suite *IntegrationTestSuite) TestClaimComputingPower() {
 	// prepare addresses
 	authority := accounts[0].String()
 	owner := accounts[1].String()
@@ -224,7 +224,7 @@ func (suite *CaptainsTestSuite) TestClaimComputingPower() {
 	nodeID := suite.utilsCreateCaptainNode(owner, 1)
 	suite.utilsCommitPower(owner, 10000)
 
-	_, err := suite.queryClient.Node(suite.ctx, &types.QueryNodeRequest{NodeId: nodeID})
+	_, err := suite.QueryClient.Node(suite.Ctx, &types.QueryNodeRequest{NodeId: nodeID})
 	suite.Require().NoError(err)
 
 	testCases := []struct {
@@ -260,7 +260,7 @@ func (suite *CaptainsTestSuite) TestClaimComputingPower() {
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("MsgClaimComputingPower - %s", tc.name), func() {
 			tc.malleate()
-			_, err := suite.msgServer.ClaimComputingPower(suite.ctx, tc.request)
+			_, err := suite.MsgServer.ClaimComputingPower(suite.Ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())
@@ -271,7 +271,7 @@ func (suite *CaptainsTestSuite) TestClaimComputingPower() {
 	}
 }
 
-func (suite *CaptainsTestSuite) TestCommitReport() {
+func (suite *IntegrationTestSuite) TestCommitReport() {
 	member := accounts[0].String()
 	owner := accounts[1].String()
 
@@ -363,7 +363,7 @@ func (suite *CaptainsTestSuite) TestCommitReport() {
 		suite.Run(fmt.Sprintf("MsgCommitReport - %s", tc.name), func() {
 			tc.mellateReport(tc.request)
 
-			_, err := suite.msgServer.CommitReport(suite.ctx, tc.request)
+			_, err := suite.MsgServer.CommitReport(suite.Ctx, tc.request)
 
 			if tc.expectErr {
 				suite.Require().Errorf(err, "%s", err.Error())

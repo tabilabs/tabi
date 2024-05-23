@@ -14,19 +14,19 @@ import (
 	"github.com/tabilabs/tabi/x/captains/types"
 )
 
-func (suite *CaptainsTestSuite) utilsAddAuthorizedMember(member string) {
-	suite.msgServer.AddAuthorizedMembers(
-		suite.ctx,
+func (suite *IntegrationTestSuite) utilsAddAuthorizedMember(member string) {
+	suite.MsgServer.AddAuthorizedMembers(
+		suite.Ctx,
 		&types.MsgAddAuthorizedMembers{
 			Authority: accounts[0].String(),
 			Members:   []string{member},
 		})
 }
 
-func (suite *CaptainsTestSuite) utilsCreateCaptainNode(owner string, divisionLevel uint64) string {
+func (suite *IntegrationTestSuite) utilsCreateCaptainNode(owner string, divisionLevel uint64) string {
 	divisions := suite.utilsGetDivisions()
-	resp, _ := suite.msgServer.CreateCaptainNode(
-		suite.ctx,
+	resp, _ := suite.MsgServer.CreateCaptainNode(
+		suite.Ctx,
 		&types.MsgCreateCaptainNode{
 			Authority:  accounts[0].String(),
 			Owner:      owner,
@@ -36,7 +36,7 @@ func (suite *CaptainsTestSuite) utilsCreateCaptainNode(owner string, divisionLev
 	return resp.NodeId
 }
 
-func (suite *CaptainsTestSuite) utilsBatchCreateCaptainNode(owner string, divisionLevel, amount uint64) []string {
+func (suite *IntegrationTestSuite) utilsBatchCreateCaptainNode(owner string, divisionLevel, amount uint64) []string {
 	nodeIds := make([]string, amount)
 	for i := uint64(0); i < amount; i++ {
 		nodeIds[i] = suite.utilsCreateCaptainNode(owner, divisionLevel)
@@ -44,7 +44,7 @@ func (suite *CaptainsTestSuite) utilsBatchCreateCaptainNode(owner string, divisi
 	return nodeIds
 }
 
-func (suite *CaptainsTestSuite) utilsBatchAssignFixedPowerOnRatio(nodes []string, value int64, prec int64) []types.NodePowerOnRatio {
+func (suite *IntegrationTestSuite) utilsBatchAssignFixedPowerOnRatio(nodes []string, value int64, prec int64) []types.NodePowerOnRatio {
 	nodePowers := make([]types.NodePowerOnRatio, len(nodes))
 	for i, node := range nodes {
 		nodePowers[i] = types.NodePowerOnRatio{
@@ -55,8 +55,8 @@ func (suite *CaptainsTestSuite) utilsBatchAssignFixedPowerOnRatio(nodes []string
 	return nodePowers
 }
 
-func (suite *CaptainsTestSuite) utilsBatchAssignRandomPowerOnRatio(nodes []string) []types.NodePowerOnRatio {
-	rand.Seed(suite.ctx.BlockTime().Unix())
+func (suite *IntegrationTestSuite) utilsBatchAssignRandomPowerOnRatio(nodes []string) []types.NodePowerOnRatio {
+	rand.Seed(suite.Ctx.BlockTime().Unix())
 	nodePowers := make([]types.NodePowerOnRatio, len(nodes))
 	for i, node := range nodes {
 		power, _ := sdk.NewDecFromStr(fmt.Sprintf("%f", 0.47+rand.Float64()*0.53))
@@ -68,8 +68,8 @@ func (suite *CaptainsTestSuite) utilsBatchAssignRandomPowerOnRatio(nodes []strin
 	return nodePowers
 }
 
-func (suite *CaptainsTestSuite) utilsGetDivisions() map[uint64]string {
-	resp, err := suite.queryClient.Divisions(suite.ctx, &types.QueryDivisionsRequest{})
+func (suite *IntegrationTestSuite) utilsGetDivisions() map[uint64]string {
+	resp, err := suite.QueryClient.Divisions(suite.Ctx, &types.QueryDivisionsRequest{})
 	suite.NoError(err)
 
 	divisionMap := make(map[uint64]string)
@@ -80,8 +80,8 @@ func (suite *CaptainsTestSuite) utilsGetDivisions() map[uint64]string {
 	return divisionMap
 }
 
-func (suite *CaptainsTestSuite) utilsCommitPower(owner string, amount uint64) {
-	_, err := suite.msgServer.CommitComputingPower(suite.ctx, &types.MsgCommitComputingPower{
+func (suite *IntegrationTestSuite) utilsCommitPower(owner string, amount uint64) {
+	_, err := suite.MsgServer.CommitComputingPower(suite.Ctx, &types.MsgCommitComputingPower{
 		Authority: accounts[0].String(),
 		ComputingPowerRewards: []types.ClaimableComputingPower{
 			{amount, owner},
@@ -90,8 +90,8 @@ func (suite *CaptainsTestSuite) utilsCommitPower(owner string, amount uint64) {
 	suite.NoError(err)
 }
 
-func (suite *CaptainsTestSuite) utilsUpdateLevel(level uint64) {
-	_, err := suite.msgServer.UpdateSaleLevel(suite.ctx, &types.MsgUpdateSaleLevel{
+func (suite *IntegrationTestSuite) utilsUpdateLevel(level uint64) {
+	_, err := suite.MsgServer.UpdateSaleLevel(suite.Ctx, &types.MsgUpdateSaleLevel{
 		Authority: accounts[0].String(),
 		SaleLevel: level,
 	})
@@ -99,13 +99,13 @@ func (suite *CaptainsTestSuite) utilsUpdateLevel(level uint64) {
 }
 
 // utilsStakingTabiWithAmount delegates amount of atabi to a validator.
-func (suite *CaptainsTestSuite) utilsStakingTabiWithAmount(
+func (suite *IntegrationTestSuite) utilsStakingTabiWithAmount(
 	delegator sdk.AccAddress,
 	amount int64,
 	validator stakingtypes.Validator,
 ) {
-	_, err := suite.app.StakingKeeper.Delegate(
-		suite.ctx,
+	_, err := suite.App.StakingKeeper.Delegate(
+		suite.Ctx,
 		delegator,
 		sdk.NewInt(amount),
 		1,
@@ -114,7 +114,7 @@ func (suite *CaptainsTestSuite) utilsStakingTabiWithAmount(
 	suite.Require().NoError(err)
 }
 
-func (suite *CaptainsTestSuite) utilsFundToken(addr sdk.AccAddress, amt int64, denom string) error {
+func (suite *IntegrationTestSuite) utilsFundToken(addr sdk.AccAddress, amt int64, denom string) error {
 	coins := make([]sdk.Coin, 1)
 
 	switch denom {
@@ -126,14 +126,14 @@ func (suite *CaptainsTestSuite) utilsFundToken(addr sdk.AccAddress, amt int64, d
 		return errors.New("unsupported denom")
 	}
 
-	return testutil.FundAccount(suite.ctx, suite.app.BankKeeper, addr, sdk.NewCoins(coins...))
+	return testutil.FundAccount(suite.Ctx, suite.App.BankKeeper, addr, sdk.NewCoins(coins...))
 }
 
-func (suite *CaptainsTestSuite) afterEpochOne() {
+func (suite *IntegrationTestSuite) afterEpochOne() {
 	// create 10 nodes for addr1
 	addr1 := accounts[1].String()
 	nodes := suite.utilsBatchCreateCaptainNode(addr1, 1, 100)
-	resp, err := suite.queryClient.Nodes(suite.ctx, &types.QueryNodesRequest{})
+	resp, err := suite.QueryClient.Nodes(suite.Ctx, &types.QueryNodesRequest{})
 	suite.Require().NoError(err)
 	suite.Require().Len(resp.Nodes, len(nodes))
 	nodeWithRatios := suite.utilsBatchAssignFixedPowerOnRatio(nodes, 1, 0)
@@ -141,12 +141,12 @@ func (suite *CaptainsTestSuite) afterEpochOne() {
 	//////////////////////////////////////////////////////////////////////
 	//                                epoch 1                           //
 	//////////////////////////////////////////////////////////////////////
-	epoch1 := suite.keeper.GetCurrentEpoch(suite.ctx)
+	epoch1 := suite.Keeper.GetCurrentEpoch(suite.Ctx)
 	// BeforeReportDigest(1)
-	expectEmission1 := suite.keeper.CalcEpochEmission(suite.ctx, epoch1, sdk.NewDecWithPrec(1, 0))
+	expectEmission1 := suite.Keeper.CalcEpochEmission(suite.Ctx, epoch1, sdk.NewDecWithPrec(1, 0))
 	// Submit ReportDigest(1)
 	digest1 := types.ReportDigest{
-		EpochId:                  suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId:                  suite.Keeper.GetCurrentEpoch(suite.Ctx),
 		TotalBatchCount:          10,
 		TotalNodeCount:           100,
 		MaximumNodeCountPerBatch: 10,
@@ -155,7 +155,7 @@ func (suite *CaptainsTestSuite) afterEpochOne() {
 	anyVal, err := cdctypes.NewAnyWithValue(&digest1)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		Report:     anyVal,
 		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
@@ -164,9 +164,9 @@ func (suite *CaptainsTestSuite) afterEpochOne() {
 	suite.Commit()
 
 	// AfterReportDigest(1)
-	_, found := suite.keeper.GetReportDigest(suite.ctx, digest1.EpochId)
+	_, found := suite.Keeper.GetReportDigest(suite.Ctx, digest1.EpochId)
 	suite.Require().True(found)
-	actualEmission1 := suite.keeper.GetEpochEmission(suite.ctx, epoch1)
+	actualEmission1 := suite.Keeper.GetEpochEmission(suite.Ctx, epoch1)
 	suite.Require().Equal(expectEmission1, actualEmission1)
 	suite.T().Logf("emission at %d: %s", epoch1, actualEmission1)
 
@@ -175,7 +175,7 @@ func (suite *CaptainsTestSuite) afterEpochOne() {
 	for i := uint64(1); i <= digest1.TotalBatchCount; i++ {
 		// Before Submit ReportBatches(1,i)
 		for _, node := range nodeWithRatios[(i-1)*10 : i*10] {
-			expectedNodeComputingPower := suite.keeper.CalcNodeComputingPowerOnEpoch(suite.ctx,
+			expectedNodeComputingPower := suite.Keeper.CalcNodeComputingPowerOnEpoch(suite.Ctx,
 				epoch1, node.NodeId, node.OnOperationRatio)
 			expectedComputingPowerSum1 = expectedComputingPowerSum1.Add(expectedNodeComputingPower)
 		}
@@ -189,7 +189,7 @@ func (suite *CaptainsTestSuite) afterEpochOne() {
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
 
-		_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+		_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 			Authority:  accounts[0].String(),
 			Report:     anyVal,
 			ReportType: types.ReportType_REPORT_TYPE_BATCH,
@@ -197,19 +197,19 @@ func (suite *CaptainsTestSuite) afterEpochOne() {
 		suite.Require().NoError(err)
 		suite.Commit()
 		// After Submit ReportBatches(1,i)
-		actualComputingPowerSum1 := suite.keeper.GetGlobalComputingPowerOnEpoch(suite.ctx, epoch1)
+		actualComputingPowerSum1 := suite.Keeper.GetGlobalComputingPowerOnEpoch(suite.Ctx, epoch1)
 		suite.Require().Equal(expectedComputingPowerSum1, actualComputingPowerSum1)
 	}
 	suite.T().Logf("computing power sum at %d: %s", epoch1, expectedComputingPowerSum1)
 
 	// Submit ReportEnd(1)
 	end1 := types.ReportEnd{
-		EpochId: suite.keeper.GetCurrentEpoch(suite.ctx),
+		EpochId: suite.Keeper.GetCurrentEpoch(suite.Ctx),
 	}
 	anyVal, err = cdctypes.NewAnyWithValue(&end1)
 	suite.Require().NoError(err)
 
-	_, err = suite.msgServer.CommitReport(suite.ctx, &types.MsgCommitReport{
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
 		Authority:  accounts[0].String(),
 		ReportType: types.ReportType_REPORT_TYPE_END,
 		Report:     anyVal,

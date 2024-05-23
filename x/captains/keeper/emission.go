@@ -16,6 +16,13 @@ func (k Keeper) CalcBaseEpochEmission(ctx sdk.Context) sdk.Dec {
 	return tech.Mul(halving).Mul(cc).Mul(sdk.NewDec(1e18))
 }
 
+// HasEpochEmission returns if the emission reward for an epoch exists.
+func (k Keeper) HasEpochEmission(ctx sdk.Context, epochID uint64) bool {
+	store := ctx.KVStore(k.storeKey)
+	key := types.EpochEmissionStoreKey(epochID)
+	return store.Has(key)
+}
+
 // GetEpochEmission returns the emission reward for an epoch.
 func (k Keeper) GetEpochEmission(ctx sdk.Context, epochID uint64) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)
@@ -121,6 +128,13 @@ func (k Keeper) CalcNodeEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID 
 // CalcAndGetNodeCumulativeEmissionByEpoch returns the historical emission for a node at the end of an epoch.
 func (k Keeper) CalcAndGetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	return k.CalcNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
+}
+
+// HasNodeCumulativeEmissionByEpoch returns if the historical emission for a node at the end of an epoch exists.
+func (k Keeper) HasNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) bool {
+	store := ctx.KVStore(k.storeKey)
+	key := types.NodeCumulativeEmissionByEpochStoreKey(epochID, nodeID)
+	return store.Has(key)
 }
 
 // GetNodeCumulativeEmissionByEpoch returns the historical emission for a node at the end of an epoch.

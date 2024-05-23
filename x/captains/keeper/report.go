@@ -111,7 +111,7 @@ func (k Keeper) IsReportCompleted(ctx sdk.Context, epochId uint64) error {
 
 	digest, _ := k.GetReportDigest(ctx, epochId)
 	if digest.TotalBatchCount != batchCount || digest.TotalNodeCount != nodeCount {
-		return errorsmod.Wrapf(types.ErrInvalidReport, "commit end report too early!")
+		return errorsmod.Wrapf(types.ErrInvalidReport, "commit end report too early")
 	}
 
 	return nil
