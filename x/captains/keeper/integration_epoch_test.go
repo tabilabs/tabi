@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	// TODO: some phrases can be merged so we can reduce deep copy times.
-	EpochPhaseStandBy = iota + 1
+	EpochPhaseBeginEpoch = iota
+	EpochPhaseStandBy
 	EpochPhaseBeforeDigest
 	EpochPhaseOnDigest
 	EpochPhaseAfterDigest
@@ -18,72 +18,76 @@ const (
 	EpochPhaseOnBatches
 	EpochPhaseAfterBatches
 	EpochPhaseOnEnd
-	EpochPhaseNextEpoch
+	EpochPhaseUpperBound
 )
 
-// EpochPhase represents the phase of the epoch.
-type EpochPhase int
+// EpochTestCase represents a test case for the epoch state.
+type EpochTestCase struct {
+	name     string // test name
+	maxEpoch int    // number of epoches to run
 
-// Node represents a node in the captains module.
-type Node struct {
-	ID           string
-	PowerOnRatio sdk.Dec
+	currEpochState *EpochState
+	reporter       *CaptainsReporter
+
+	execStandByFn func(*EpochState) // test case specific stand by function
+
+	saveState bool                   // save state for each epoch-phase
+	stateMap  map[string]*EpochState // state map
 }
 
-type Nodes []Node
-
-// EpochState captures the state of the captains module on specific height and epoch.
-// NOTE: currently we set only one owner for all the nodes.
-type EpochState struct {
-	suite *IntegrationTestSuite
-
-	// epoch phase
-	Epoch uint64
-	Phase EpochPhase
-	Owner string
-
-	// epoch flag
-	StandByOverFlag bool
-	EndOnFlag       bool
-
-	// nodes in the epoch
-	Nodes Nodes
-
-	// emission
-	EpochEmission          sdk.Dec
-	GlobalClaimedEmission  sdk.Dec
-	NodeClaimedEmission    map[string]sdk.Dec
-	NodeCumulativeEmission map[string]sdk.Dec
-
-	// computing power
-	ClaimableComputingPower map[string]sdk.Dec // owner -> power
-	GlobalComputingPower    sdk.Dec
-	NodeComputingPower      map[string]sdk.Dec
-
-	// pledge
-	GlobalPledge sdk.Dec
-	OwnerPledge  sdk.Dec
-}
-
-func NewEpochState(suite *IntegrationTestSuite) *EpochState {
-	return &EpochState{
-		suite:                   suite,
-		Epoch:                   suite.Keeper.GetCurrentEpoch(suite.Ctx),
-		Phase:                   EpochPhaseStandBy,
-		EpochEmission:           sdk.ZeroDec(),
-		GlobalClaimedEmission:   sdk.ZeroDec(),
-		NodeClaimedEmission:     make(map[string]sdk.Dec),
-		NodeCumulativeEmission:  make(map[string]sdk.Dec),
-		GlobalComputingPower:    sdk.ZeroDec(),
-		ClaimableComputingPower: make(map[string]sdk.Dec),
-		NodeComputingPower:      make(map[string]sdk.Dec),
-		GlobalPledge:            sdk.ZeroDec(),
-		OwnerPledge:             sdk.ZeroDec(),
+func (etc *EpochTestCase) Execute() {
+	// execute as per epoch phase
+	for etc.currEpochState.Epoch <= uint64(etc.maxEpoch) {
+		// execute by phase
+		etc.execute()
+		// save state if needed
+		if etc.saveState {
+			etc.stateMap[etc.StateKey(etc.currEpochState.Epoch, etc.currEpochState.Phase)] = etc.currEpochState
+		}
+		etc.currEpochState.suite.T().Logf("execute epoch %d on phase %d", etc.currEpochState.Epoch, etc.currEpochState.Phase)
+		// commit height
+		etc.currEpochState.suite.Commit()
+		// prepare the epoch state for the next phase
+		etc.currEpochState = etc.Duplicate(etc.currEpochState)
+		etc.currEpochState.Phase = (etc.currEpochState.Phase + 1) % EpochPhaseUpperBound
 	}
 }
 
+func (etc *EpochTestCase) execute() {
+	switch etc.currEpochState.Phase {
+	case EpochPhaseBeginEpoch:
+		execEpochPhaseBeginEpoch(etc.currEpochState)
+	case EpochPhaseStandBy:
+		if etc.execStandByFn != nil {
+			etc.execStandByFn(etc.currEpochState)
+		}
+	case EpochPhaseBeforeDigest:
+		execEpochPhaseBeforeDigest(etc.currEpochState)
+	case EpochPhaseOnDigest:
+		execEpochPhaseOnDigest(etc.currEpochState, etc.reporter)
+	case EpochPhaseAfterDigest:
+		execEpochPhaseAfterDigest(etc.currEpochState)
+	case EpochPhaseBeforeBatches:
+		execEpochPhaseBeforeBatches(etc.currEpochState)
+	case EpochPhaseOnBatches:
+		execEpochPhaseOnBatches(etc.currEpochState, etc.reporter)
+	case EpochPhaseAfterBatches:
+		execEpochPhaseAfterBatches(etc.currEpochState)
+	case EpochPhaseOnEnd:
+		execEpochPhaseOnEnd(etc.currEpochState, etc.reporter)
+
+	default:
+		panic("unknown epoch phase")
+	}
+}
+
+// StateKey returns the mapping key for the epoch state.
+func (etc *EpochTestCase) StateKey(epoch, phase uint64) string {
+	return fmt.Sprintf("%d-%d", epoch, phase)
+}
+
 // Duplicate duplicates the epoch state.
-func (es *EpochState) Duplicate() *EpochState {
+func (etc *EpochTestCase) Duplicate(es *EpochState) *EpochState {
 	nes := NewEpochState(es.suite)
 
 	nes.Owner = es.Owner
@@ -118,51 +122,31 @@ func (es *EpochState) Duplicate() *EpochState {
 	return nes
 }
 
-// Execute runs the full epoch state.
-func ExecuteEpoch(oes *EpochState, cpr *CaptainsReporter) *EpochState {
-	// deep copy the epoch state
-	nes := oes.Duplicate()
-	nes.suite.T().Logf("execute epoch %d phase %d", nes.Epoch, nes.Phase)
-
-	switch nes.Phase {
-	case EpochPhaseStandBy:
-		// note: claim reward, commit power, reward power etc.
-		execEpochPhaseStandBy(nes)
-	case EpochPhaseBeforeDigest:
-		// note: check before digest
-		execEpochPhaseBeforeDigest(nes)
-	case EpochPhaseOnDigest:
-		execEpochPhaseOnDigest(nes, cpr)
-	case EpochPhaseAfterDigest:
-		execEpochPhaseAfterDigest(nes)
-	case EpochPhaseBeforeBatches:
-		execEpochPhaseBeforeBatches(nes)
-	case EpochPhaseOnBatches:
-		execEpochPhaseOnBatches(nes, cpr)
-	case EpochPhaseAfterBatches:
-		execEpochPhaseAfterBatches(nes)
-	case EpochPhaseOnEnd:
-		execEpochPhaseOnEnd(nes, cpr)
-	case EpochPhaseNextEpoch:
-		// into next epoch
-		nes.Epoch = nes.suite.Keeper.GetCurrentEpoch(nes.suite.Ctx)
-		nes.suite.Require().Equal(oes.Epoch+1, nes.Epoch)
-		execEpochNextEpoch(nes)
-		nes.suite.Commit()
-		nes.Phase = EpochPhaseStandBy
-		return nes
-	default:
-		panic("unknown epoch phase")
-	}
-
-	// go to next height and phase
-	nes.suite.Commit()
-	nes.Phase++
-
-	return nes
+func (etc *EpochTestCase) Export() {
+	// TODO: print states as we may want to export it to a csv file
 }
 
-func execEpochPhaseStandBy(es *EpochState) {}
+func execEpochPhaseBeginEpoch(nes *EpochState) {
+	// update epoch
+	nes.Epoch = nes.suite.Keeper.GetCurrentEpoch(nes.suite.Ctx)
+
+	found := nes.suite.Keeper.HasStandByOverFlag(nes.suite.Ctx)
+	nes.suite.Require().Equal(false, found)
+
+	if nes.Epoch <= 2 {
+		return
+	}
+
+	// NOTE: when we are able to check, we have already entered the next epoch.
+	// so, the expected epoch should be epoch-2.
+	found = nes.suite.Keeper.HasEpochEmission(nes.suite.Ctx, nes.Epoch-2)
+	nes.suite.Require().Equal(false, found)
+
+	found = nes.suite.Keeper.HasGlobalPledge(nes.suite.Ctx, nes.Epoch-2)
+	nes.suite.Require().Equal(false, found)
+
+	// TODO: has report digest, batch, end
+}
 
 func execEpochPhaseBeforeDigest(nes *EpochState) {
 	nes.EpochEmission = nes.suite.Keeper.CalcEpochEmission(nes.suite.Ctx, nes.Epoch, sdk.NewDecWithPrec(1, 0))
@@ -255,46 +239,14 @@ func execEpochPhaseOnEnd(nes *EpochState, crp *CaptainsReporter) {
 	crp.SubmitEnd(nes.suite, nes)
 }
 
-func execEpochNextEpoch(nes *EpochState) {
-	found := nes.suite.Keeper.HasStandByOverFlag(nes.suite.Ctx)
-	nes.suite.Require().Equal(false, found)
-
-	if nes.Epoch <= 2 {
-		return
-	}
-
-	// NOTE: when we are able to check, we have already entered the next epoch.
-	// so, the expected epoch should be epoch-2.
-	found = nes.suite.Keeper.HasEpochEmission(nes.suite.Ctx, nes.Epoch-2)
-	nes.suite.Require().Equal(false, found)
-
-	found = nes.suite.Keeper.HasGlobalPledge(nes.suite.Ctx, nes.Epoch-2)
-	nes.suite.Require().Equal(false, found)
-
-	// TODO: has report digest, batch, end
+// Node represents a node in the captains module.
+type Node struct {
+	ID           string
+	PowerOnRatio sdk.Dec
 }
 
-// InitNodes initializes the nodes in the epoch state.
-func (es *EpochState) InitNodes(suite *IntegrationTestSuite, owner string, divisionLevel, amount uint64) {
-	nodeIds := suite.utilsBatchCreateCaptainNode(owner, divisionLevel, amount)
-
-	nodes := make([]Node, len(nodeIds))
-	for i, id := range nodeIds {
-		nodes[i] = Node{
-			ID:           id,
-			PowerOnRatio: sdk.ZeroDec(),
-		}
-	}
-	es.Nodes = nodes
-	es.Owner = owner
-}
-
-func (es *EpochState) InitNodesPowerOnRatio() {
-	for i := range es.Nodes {
-		// TODO: though we want an zero ratio as well.
-		es.Nodes[i].PowerOnRatio = sdk.MustNewDecFromStr(fmt.Sprintf("%f", 0.47+rand.Float64()*0.53))
-	}
-}
+// Nodes represents a list of nodes.
+type Nodes []Node
 
 func (nds Nodes) PowerOnRatios(start, end int) []types.NodePowerOnRatio {
 	ratios := make([]types.NodePowerOnRatio, end-start)
@@ -305,4 +257,78 @@ func (nds Nodes) PowerOnRatios(start, end int) []types.NodePowerOnRatio {
 		}
 	}
 	return ratios
+}
+
+// EpochState captures the state of the captains module on specific height and epoch.
+// NOTE: currently we set only one owner for all the nodes.
+type EpochState struct {
+	suite *IntegrationTestSuite
+
+	// epoch phase
+	Epoch uint64
+	Phase uint64
+	Owner string
+
+	// epoch flag
+	StandByOverFlag bool
+	EndOnFlag       bool
+
+	// nodes in the epoch
+	Nodes Nodes
+
+	// emission
+	EpochEmission          sdk.Dec
+	GlobalClaimedEmission  sdk.Dec
+	NodeClaimedEmission    map[string]sdk.Dec
+	NodeCumulativeEmission map[string]sdk.Dec
+
+	// computing power
+	ClaimableComputingPower map[string]sdk.Dec // owner -> power
+	GlobalComputingPower    sdk.Dec
+	NodeComputingPower      map[string]sdk.Dec
+
+	// pledge
+	GlobalPledge sdk.Dec
+	OwnerPledge  sdk.Dec
+}
+
+func NewEpochState(suite *IntegrationTestSuite) *EpochState {
+	return &EpochState{
+		suite:                   suite,
+		EpochEmission:           sdk.ZeroDec(),
+		GlobalClaimedEmission:   sdk.ZeroDec(),
+		NodeClaimedEmission:     make(map[string]sdk.Dec),
+		NodeCumulativeEmission:  make(map[string]sdk.Dec),
+		GlobalComputingPower:    sdk.ZeroDec(),
+		ClaimableComputingPower: make(map[string]sdk.Dec),
+		NodeComputingPower:      make(map[string]sdk.Dec),
+		GlobalPledge:            sdk.ZeroDec(),
+		OwnerPledge:             sdk.ZeroDec(),
+	}
+}
+
+// WithNodes initializes the nodes in the epoch state.
+func (es *EpochState) WithNodes(owner string, divisionLevel, amount uint64) *EpochState {
+	nodeIds := es.suite.utilsBatchCreateCaptainNode(owner, divisionLevel, amount)
+
+	nodes := make([]Node, len(nodeIds))
+	for i, id := range nodeIds {
+		nodes[i] = Node{
+			ID:           id,
+			PowerOnRatio: sdk.ZeroDec(),
+		}
+	}
+	es.Nodes = nodes
+	es.Owner = owner
+
+	return es
+}
+
+// WithNodesPowerOnRatio initializes the power on ratio for the nodes in the epoch state.
+func (es *EpochState) WithNodesPowerOnRatio() *EpochState {
+	for i := range es.Nodes {
+		// TODO: though we want an zero ratio as well.
+		es.Nodes[i].PowerOnRatio = sdk.MustNewDecFromStr(fmt.Sprintf("%f", 0.47+rand.Float64()*0.53))
+	}
+	return es
 }

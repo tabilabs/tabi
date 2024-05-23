@@ -1,15 +1,27 @@
 package keeper_test
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import (
+	"testing"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
 
 func (suite *IntegrationTestSuite) TestEpochState() {
-	es := NewEpochState(suite)
-	es.InitNodes(suite, accounts[0].String(), 1, 100)
-	es.InitNodesPowerOnRatio()
 
-	crp := NewCaptainsReporter(sdk.OneDec(), 10)
+	testCases := []EpochTestCase{
+		{
+			name:     "no staking and claiming",
+			maxEpoch: 3,
+			reporter: NewCaptainsReporter(sdk.OneDec(), 10),
+			currEpochState: NewEpochState(suite).
+				WithNodes(accounts[0].String(), 1, 100).
+				WithNodesPowerOnRatio(),
+		},
+	}
 
-	for i := 0; i < 30; i++ {
-		es = ExecuteEpoch(es, crp)
+	for _, tc := range testCases {
+		suite.T().Run(tc.name, func(t *testing.T) {
+			tc.Execute()
+		})
 	}
 }
