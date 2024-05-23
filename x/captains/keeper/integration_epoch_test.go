@@ -67,6 +67,7 @@ type EpochState struct {
 
 func NewEpochState(suite *IntegrationTestSuite) *EpochState {
 	return &EpochState{
+		suite:                   suite,
 		Epoch:                   suite.Keeper.GetCurrentEpoch(suite.Ctx),
 		Phase:                   EpochPhaseStandBy,
 		EpochEmission:           sdk.ZeroDec(),
@@ -121,6 +122,7 @@ func (es *EpochState) Duplicate() *EpochState {
 func ExecuteEpoch(oes *EpochState, cpr *CaptainsReporter) *EpochState {
 	// deep copy the epoch state
 	nes := oes.Duplicate()
+	nes.suite.T().Logf("execute epoch %d phase %d", nes.Epoch, nes.Phase)
 
 	switch nes.Phase {
 	case EpochPhaseStandBy:
@@ -197,6 +199,7 @@ func execEpochPhaseAfterDigest(nes *EpochState) {
 }
 
 func execEpochPhaseBeforeBatches(nes *EpochState) {
+	nes.GlobalComputingPower = sdk.ZeroDec() // reset
 	for _, n := range nes.Nodes {
 		if nes.Epoch >= 2 {
 			nes.NodeCumulativeEmission[n.ID] = nes.suite.Keeper.CalcNodeCumulativeEmissionByEpoch(nes.suite.Ctx, nes.Epoch-1, n.ID)
@@ -216,29 +219,34 @@ func execEpochPhaseBeforeBatches(nes *EpochState) {
 }
 
 func execEpochPhaseOnBatches(nes *EpochState, crp *CaptainsReporter) {
-	crp.SubmitDigest(nes.suite, nes)
+	crp.SubmitBatches(nes.suite, nes)
 }
 
 func execEpochPhaseAfterBatches(nes *EpochState) {
-	scp := sdk.NewDec(0)
 	for _, n := range nes.Nodes {
 		if nes.Epoch > 1 {
+			// check node cumulative emission 1 epoch before
 			cee := nes.suite.Keeper.GetNodeCumulativeEmissionByEpoch(nes.suite.Ctx, nes.Epoch-1, n.ID)
 			nes.suite.Require().Equal(cee, nes.NodeCumulativeEmission[n.ID])
 		}
 		if nes.Epoch > 2 {
+			// check node accumulative epoch 2 epoch before is deleted
 			found := nes.suite.Keeper.HasNodeCumulativeEmissionByEpoch(nes.suite.Ctx, nes.Epoch-2, n.ID)
 			nes.suite.Require().Equal(false, found)
 		}
-		ncp := nes.suite.Keeper.GetNodeComputingPowerOnEpoch(nes.suite.Ctx, nes.Epoch, n.ID)
-		nes.suite.Require().Equal(ncp, nes.NodeComputingPower[n.ID])
-		scp = scp.Add(ncp)
-	}
+		// check node computing power
+		found := nes.suite.Keeper.HasNodeComputingPowerOnEpoch(nes.suite.Ctx, nes.Epoch, n.ID)
+		nes.suite.Require().Equal(true, found)
 
-	nes.suite.Require().Equal(scp, nes.GlobalComputingPower)
+		ncp := nes.suite.Keeper.GetNodeComputingPowerOnEpoch(nes.suite.Ctx, nes.Epoch, n.ID)
+		nes.suite.Require().Equal(nes.NodeComputingPower[n.ID], ncp)
+	}
+	// check global computing power
+	scp := nes.suite.Keeper.GetGlobalComputingPowerOnEpoch(nes.suite.Ctx, nes.Epoch)
+	nes.suite.Require().Equal(nes.GlobalComputingPower, scp)
 
 	if nes.Epoch > 2 {
-		found := nes.suite.Keeper.HasOwnerPledge(nes.suite.Ctx, sdk.MustAccAddressFromBech32(nes.Owner), nes.Epoch-1)
+		found := nes.suite.Keeper.HasOwnerPledge(nes.suite.Ctx, sdk.MustAccAddressFromBech32(nes.Owner), nes.Epoch-2)
 		nes.suite.Require().Equal(false, found)
 	}
 }
@@ -248,17 +256,19 @@ func execEpochPhaseOnEnd(nes *EpochState, crp *CaptainsReporter) {
 }
 
 func execEpochNextEpoch(nes *EpochState) {
-	if nes.Epoch <= 1 {
+	found := nes.suite.Keeper.HasStandByOverFlag(nes.suite.Ctx)
+	nes.suite.Require().Equal(false, found)
+
+	if nes.Epoch <= 2 {
 		return
 	}
 
-	found := nes.suite.Keeper.HasEpochEmission(nes.suite.Ctx, nes.Epoch-1)
+	// NOTE: when we are able to check, we have already entered the next epoch.
+	// so, the expected epoch should be epoch-2.
+	found = nes.suite.Keeper.HasEpochEmission(nes.suite.Ctx, nes.Epoch-2)
 	nes.suite.Require().Equal(false, found)
 
-	found = nes.suite.Keeper.HasGlobalPledge(nes.suite.Ctx, nes.Epoch-1)
-	nes.suite.Require().Equal(false, found)
-
-	found = nes.suite.Keeper.HasStandByOverFlag(nes.suite.Ctx)
+	found = nes.suite.Keeper.HasGlobalPledge(nes.suite.Ctx, nes.Epoch-2)
 	nes.suite.Require().Equal(false, found)
 
 	// TODO: has report digest, batch, end
@@ -289,7 +299,7 @@ func (es *EpochState) InitNodesPowerOnRatio() {
 func (nds Nodes) PowerOnRatios(start, end int) []types.NodePowerOnRatio {
 	ratios := make([]types.NodePowerOnRatio, end-start)
 	for i := start; i < end; i++ {
-		ratios[i] = types.NodePowerOnRatio{
+		ratios[i-start] = types.NodePowerOnRatio{
 			NodeId:           nds[i].ID,
 			OnOperationRatio: nds[i].PowerOnRatio,
 		}

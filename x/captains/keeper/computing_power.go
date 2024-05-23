@@ -68,6 +68,13 @@ func (k Keeper) delNodeComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, no
 	store.Delete(key)
 }
 
+// HasNodeComputingPowerOnEpoch checks if the node has computing power on the epoch.
+func (k Keeper) HasNodeComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) bool {
+	store := ctx.KVStore(k.storeKey)
+	key := types.NodeComputingPowerOnEpochStoreKey(epochID, nodeID)
+	return store.Has(key)
+}
+
 // GetNodeComputingPowerOnEpoch returns the computing power of a node as per its node info.
 func (k Keeper) GetNodeComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
 	store := ctx.KVStore(k.storeKey)

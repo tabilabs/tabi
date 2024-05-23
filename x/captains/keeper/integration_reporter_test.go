@@ -61,7 +61,7 @@ func (cpr *CaptainsReporter) SubmitBatches(suite *IntegrationTestSuite, es *Epoc
 			EpochId:   es.Epoch,
 			BatchId:   uint64(i),
 			NodeCount: cpr.MaximumNodeCountPerBatch,
-			Nodes:     es.Nodes.PowerOnRatios((i-1)*int(cpr.MaximumNodeCountPerBatch), i*10*int(cpr.MaximumNodeCountPerBatch)),
+			Nodes:     es.Nodes.PowerOnRatios((i-1)*int(cpr.MaximumNodeCountPerBatch), i*int(cpr.MaximumNodeCountPerBatch)),
 		}
 		anyVal, err := cdctypes.NewAnyWithValue(&batch)
 		suite.Require().NoError(err)
@@ -79,7 +79,7 @@ func (cpr *CaptainsReporter) SubmitBatches(suite *IntegrationTestSuite, es *Epoc
 	batch := types.ReportBatch{
 		EpochId:   es.Epoch,
 		BatchId:   cpr.TotalBatchCount,
-		NodeCount: cpr.TotalNodeCount % cpr.MaximumNodeCountPerBatch,
+		NodeCount: cpr.TotalNodeCount - (cpr.TotalBatchCount-1)*cpr.MaximumNodeCountPerBatch,
 		Nodes:     es.Nodes.PowerOnRatios((int(cpr.TotalBatchCount)-1)*int(cpr.MaximumNodeCountPerBatch), int(cpr.TotalNodeCount)),
 	}
 	anyVal, err := cdctypes.NewAnyWithValue(&batch)
