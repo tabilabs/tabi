@@ -17,7 +17,6 @@ func TestParseReport(t *testing.T) {
 		prepare    func() ([]byte, error)
 		contents   []byte
 		reportType string
-		expectErr  bool
 	}{
 		{
 			name: "digest",
@@ -63,9 +62,9 @@ func TestParseReport(t *testing.T) {
 			}
 			tc.contents = bz
 			_, err = parseReport(tc.contents, tc.reportType)
-			if tc.expectErr {
-				require.NoError(t, err)
-			}
+
+			require.NoError(t, err)
+
 		})
 	}
 }
