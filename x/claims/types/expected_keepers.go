@@ -59,8 +59,8 @@ type CaptainsKeeper interface {
 	// GetCurrentEpoch return the current epoch id.
 	GetCurrentEpoch(ctx sdk.Context) uint64
 
-	// CalcAndGetNodeCumulativeEmissionByEpoch returns the cumulative emission of the node by the end of epoch.
-	CalcAndGetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec
+	// CalcNodeCumulativeEmissionByEpoch returns the cumulative emission of the node by the end of epoch.
+	CalcNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec
 
 	// GetNodeClaimedEmission returns the historical emission the last time user claimed.
 	GetNodeClaimedEmission(ctx sdk.Context, nodeID string) sdk.Dec

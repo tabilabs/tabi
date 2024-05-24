@@ -72,7 +72,7 @@ func (k Keeper) CalculateRewardsByNodeId(ctx sdk.Context, nodeId string) (sdk.De
 	}
 
 	// all historical emission
-	historicalEmission := k.captainsKeeper.CalcAndGetNodeCumulativeEmissionByEpoch(ctx, epochSequence, nodeId)
+	historicalEmission := k.captainsKeeper.CalcNodeCumulativeEmissionByEpoch(ctx, epochSequence, nodeId)
 	// historical emission on last claim
 	historicalEmissionOnLastClaim := k.captainsKeeper.GetNodeClaimedEmission(ctx, nodeId)
 	reward := historicalEmission.Sub(historicalEmissionOnLastClaim)
