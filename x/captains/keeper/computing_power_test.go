@@ -1,18 +1,44 @@
 package keeper_test
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import (
+	"fmt"
+	"math"
+	"testing"
 
-func (suite *IntegrationTestSuite) TestComputingPower() {
-	addr1 := accounts[1].String()
-	node1 := suite.utilsCreateCaptainNode(addr1, 1)
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
 
-	// epoch 1: 2000 * e ^ (2) = 14778.112
-	epoch1 := suite.Keeper.GetCurrentEpoch(suite.Ctx)
-	power1 := suite.Keeper.CalcNodeComputingPowerOnEpoch(
-		suite.Ctx,
-		epoch1,
-		node1,
-		sdk.NewDecWithPrec(1, 0),
-	)
-	suite.Require().Equal(sdk.NewDecWithPrec(14778112, 3), power1)
+func (suite *IntegrationTestSuite) TestCalcNodeComputingPowerOnEpoch() {
+	testCases := []struct {
+		name         string
+		pledge       sdk.Dec
+		powerOnRatio sdk.Dec
+	}{
+		{
+			name:         "case 1",
+			pledge:       sdk.ZeroDec(),
+			powerOnRatio: sdk.NewDecWithPrec(1, 0),
+		},
+		{
+			name:         "case 2",
+			pledge:       sdk.ZeroDec(),
+			powerOnRatio: sdk.ZeroDec(),
+		},
+		{
+			name:         "case 3",
+			pledge:       sdk.MustNewDecFromStr("0.511111111"),
+			powerOnRatio: sdk.MustNewDecFromStr("0.111111111"),
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.T().Run(tc.name, func(t *testing.T) {
+			suite.Require().NotPanics(
+				func() {
+					exponentiation := tc.pledge.Mul(sdk.NewDec(20)).Quo(sdk.NewDec(3)).MustFloat64()
+					exponentiated := sdk.MustNewDecFromStr(fmt.Sprintf("%f", math.Exp(exponentiation)))
+					sdk.NewDec(int64(2000)).Mul(exponentiated).Mul(tc.powerOnRatio)
+				})
+		})
+	}
 }

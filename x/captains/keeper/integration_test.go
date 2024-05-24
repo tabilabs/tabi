@@ -4,8 +4,11 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	tabitypes "github.com/tabilabs/tabi/types"
 
+	tabiante "github.com/tabilabs/tabi/app/ante/tabi"
+	"github.com/tabilabs/tabi/testutil"
+	tabitypes "github.com/tabilabs/tabi/types"
+	captainstypes "github.com/tabilabs/tabi/x/captains/types"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
 )
 
@@ -63,9 +66,10 @@ func (suite *IntegrationTestSuite) TestEpochState() {
 	// todo: separate cases into [epoch-phase-a, epoch-phase-b] under the same context.
 	testCases := []EpochTestCase{
 		{
-			name:     "no staking and claiming",
-			maxEpoch: 3,
-			reporter: NewCaptainsReporter(sdk.OneDec(), 10),
+			name:      "no staking and claiming",
+			maxEpoch:  3,
+			reporter:  NewCaptainsReporter(sdk.OneDec(), 10),
+			saveState: true,
 		},
 		{
 			name:     "claiming",
@@ -80,6 +84,7 @@ func (suite *IntegrationTestSuite) TestEpochState() {
 					suite.Require().NoError(err)
 				}
 			},
+			saveState: true,
 		},
 		{
 			name:     "claiming and staking",
@@ -105,6 +110,7 @@ func (suite *IntegrationTestSuite) TestEpochState() {
 					suite.Require().NoError(err)
 				}
 			},
+			saveState: true,
 		},
 	}
 
@@ -112,6 +118,91 @@ func (suite *IntegrationTestSuite) TestEpochState() {
 		suite.T().Run(tc.name, func(t *testing.T) {
 			// NOTE: don't set this in the test case as for each test the suite will evaluate it before the test thus
 			// creating too much nodes.
+			tc.currEpochState = NewEpochState(suite).WithNodes(owner, 1, 100).WithNodesPowerOnRatio()
+			tc.WithStateMap()
+			tc.Execute()
+		})
+		suite.SetupTest()
+	}
+}
+
+// TestEpochBusy tests ante handler restrictions on certain messages during the busy phase.
+func (suite *IntegrationTestSuite) TestAnteWhenEpochBusy() {
+	owner := accounts[0].String()
+
+	testCases := []EpochTestCase{
+		{
+			name:     "fail to create note",
+			maxEpoch: 3,
+			reporter: NewCaptainsReporter(sdk.OneDec(), 10),
+			execBusyFn: func(es *EpochState) {
+				dec := tabiante.NewCaptainsRestrictionDecorator(suite.Keeper)
+				err := testutil.ValidateAnteForMsgs(suite.Ctx, dec, &captainstypes.MsgCreateCaptainNode{
+					Authority:  owner,
+					Owner:      owner,
+					DivisionId: "not-empty",
+				})
+				suite.Require().ErrorContains(err, "not allowed in busy phrase")
+			},
+		},
+		{
+			name:     "fail to update sale level",
+			maxEpoch: 3,
+			reporter: NewCaptainsReporter(sdk.OneDec(), 10),
+			execBusyFn: func(es *EpochState) {
+				dec := tabiante.NewCaptainsRestrictionDecorator(suite.Keeper)
+				err := testutil.ValidateAnteForMsgs(suite.Ctx, dec, &captainstypes.MsgUpdateSaleLevel{
+					Authority: owner,
+					SaleLevel: 2,
+				})
+				suite.Require().ErrorContains(err, "not allowed in busy phrase")
+			},
+		},
+		{
+			name:     "fail to commit computing power",
+			maxEpoch: 3,
+			reporter: NewCaptainsReporter(sdk.OneDec(), 10),
+			execBusyFn: func(es *EpochState) {
+				dec := tabiante.NewCaptainsRestrictionDecorator(suite.Keeper)
+				err := testutil.ValidateAnteForMsgs(suite.Ctx, dec, &captainstypes.MsgCommitComputingPower{
+					Authority:             owner,
+					ComputingPowerRewards: nil,
+				})
+				suite.Require().ErrorContains(err, "not allowed in busy phrase")
+			},
+		},
+		{
+			name:     "fail to claim computing power",
+			maxEpoch: 3,
+			reporter: NewCaptainsReporter(sdk.OneDec(), 10),
+			execBusyFn: func(es *EpochState) {
+				dec := tabiante.NewCaptainsRestrictionDecorator(suite.Keeper)
+				err := testutil.ValidateAnteForMsgs(suite.Ctx, dec, &captainstypes.MsgClaimComputingPower{
+					Sender:               owner,
+					ComputingPowerAmount: 100,
+					NodeId:               "not-empty",
+				})
+				suite.Require().ErrorContains(err, "not allowed in busy phrase")
+			},
+		},
+		{
+			name:     "fail to claim rewards",
+			maxEpoch: 3,
+			reporter: NewCaptainsReporter(sdk.OneDec(), 10),
+			execBusyFn: func(es *EpochState) {
+				dec := tabiante.NewCaptainsRestrictionDecorator(suite.Keeper)
+				err := testutil.ValidateAnteForMsgs(suite.Ctx, dec, &claimstypes.MsgClaims{
+					Receiver: owner,
+					Sender:   owner,
+				},
+				)
+				suite.Require().ErrorContains(err, "not allowed in busy phrase")
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			tc.currEpochState = NewEpochState(suite).WithNodes(owner, 1, 100).WithNodesPowerOnRatio()
 			tc.Execute()
 		})

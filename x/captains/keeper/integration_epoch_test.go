@@ -2,8 +2,10 @@ package keeper_test
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 
+	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/captains/types"
 )
@@ -30,7 +32,9 @@ type EpochTestCase struct {
 	reporter       *CaptainsReporter
 
 	execStandByFn func(*EpochState) // test case specific stand by function
+	execBusyFn    func(*EpochState) // test case specific busy function
 
+	phaseFlag bool                   // flag to indicate the phase
 	saveState bool                   // save state for each epoch-phase
 	stateMap  map[string]*EpochState // state map
 }
@@ -44,7 +48,9 @@ func (etc *EpochTestCase) Execute() {
 		if etc.saveState {
 			etc.stateMap[etc.StateKey(etc.currEpochState.Epoch, etc.currEpochState.Phase)] = etc.currEpochState
 		}
-		etc.currEpochState.suite.T().Logf("execute epoch %d on phase %d", etc.currEpochState.Epoch, etc.currEpochState.Phase)
+		if etc.phaseFlag {
+			etc.currEpochState.suite.T().Logf("execute epoch %d on phase %d", etc.currEpochState.Epoch, etc.currEpochState.Phase)
+		}
 		// commit height
 		etc.currEpochState.suite.Commit()
 		// prepare the epoch state for the next phase
@@ -67,6 +73,11 @@ func (etc *EpochTestCase) execute() {
 		execEpochPhaseOnDigest(etc.currEpochState, etc.reporter)
 	case EpochPhaseAfterDigest:
 		execEpochPhaseAfterDigest(etc.currEpochState)
+		// TODO: in fact we can place it in any phase as long as the epoch is busy.
+		// but we just want to test ante so it's enough to place it here.
+		if etc.execBusyFn != nil {
+			etc.execBusyFn(etc.currEpochState)
+		}
 	case EpochPhaseBeforeBatches:
 		execEpochPhaseBeforeBatches(etc.currEpochState)
 	case EpochPhaseOnBatches:
@@ -83,6 +94,13 @@ func (etc *EpochTestCase) execute() {
 // StateKey returns the mapping key for the epoch state.
 func (etc *EpochTestCase) StateKey(epoch, phase uint64) string {
 	return fmt.Sprintf("%d-%d", epoch, phase)
+}
+
+// WithStateMap initializes the state map.
+func (etc *EpochTestCase) WithStateMap() {
+	if etc.saveState {
+		etc.stateMap = make(map[string]*EpochState)
+	}
 }
 
 // Duplicate duplicates the epoch state.
@@ -326,4 +344,105 @@ func (es *EpochState) WithNodesPowerOnRatio() *EpochState {
 		es.Nodes[i].PowerOnRatio = sdk.MustNewDecFromStr(fmt.Sprintf("%f", 0.47+rand.Float64()*0.53))
 	}
 	return es
+}
+
+// Reporter submits the report as per epoch phase.
+type CaptainsReporter struct {
+	GlobalOnOperationRatio   sdk.Dec
+	MaximumNodeCountPerBatch uint64
+	TotalBatchCount          uint64
+	TotalNodeCount           uint64
+}
+
+func NewCaptainsReporter(gor sdk.Dec, mnc uint64) *CaptainsReporter {
+	return &CaptainsReporter{
+		GlobalOnOperationRatio:   gor,
+		MaximumNodeCountPerBatch: mnc,
+		TotalBatchCount:          0,
+		TotalNodeCount:           0,
+	}
+}
+
+// SubmitDigest submits the digest report for the epoch.
+func (cpr *CaptainsReporter) SubmitDigest(suite *IntegrationTestSuite, es *EpochState) {
+	nc := uint64(len(es.Nodes))
+	cpr.TotalNodeCount = nc
+	cpr.TotalBatchCount = uint64(math.Ceil(float64(nc) / float64(cpr.MaximumNodeCountPerBatch)))
+
+	digest := types.ReportDigest{
+		EpochId:                  es.Epoch,
+		TotalBatchCount:          cpr.TotalBatchCount,
+		TotalNodeCount:           cpr.TotalNodeCount,
+		MaximumNodeCountPerBatch: cpr.MaximumNodeCountPerBatch,
+		GlobalOnOperationRatio:   cpr.GlobalOnOperationRatio,
+	}
+	anyVal, err := cdctypes.NewAnyWithValue(&digest)
+	suite.Require().NoError(err)
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
+		Authority:  accounts[0].String(),
+		Report:     anyVal,
+		ReportType: types.ReportType_REPORT_TYPE_DIGEST,
+	})
+	suite.Require().NoError(err)
+}
+
+// SubmitBatches submits the batches for the epoch.
+// NOTE: this func causes height increment by TotalBatchCount-1.
+func (cpr *CaptainsReporter) SubmitBatches(suite *IntegrationTestSuite, es *EpochState) {
+	suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
+		Authority:  accounts[0].String(),
+		ReportType: types.ReportType_REPORT_TYPE_BATCH,
+	})
+
+	for i := 1; i < int(cpr.TotalBatchCount); i++ {
+		batch := types.ReportBatch{
+			EpochId:   es.Epoch,
+			BatchId:   uint64(i),
+			NodeCount: cpr.MaximumNodeCountPerBatch,
+			Nodes:     es.Nodes.PowerOnRatios((i-1)*int(cpr.MaximumNodeCountPerBatch), i*int(cpr.MaximumNodeCountPerBatch)),
+		}
+		anyVal, err := cdctypes.NewAnyWithValue(&batch)
+		suite.Require().NoError(err)
+
+		_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
+			Authority:  accounts[0].String(),
+			Report:     anyVal,
+			ReportType: types.ReportType_REPORT_TYPE_BATCH,
+		})
+		suite.Require().NoError(err)
+		suite.Commit()
+	}
+
+	//  the last batch
+	batch := types.ReportBatch{
+		EpochId:   es.Epoch,
+		BatchId:   cpr.TotalBatchCount,
+		NodeCount: cpr.TotalNodeCount - (cpr.TotalBatchCount-1)*cpr.MaximumNodeCountPerBatch,
+		Nodes:     es.Nodes.PowerOnRatios((int(cpr.TotalBatchCount)-1)*int(cpr.MaximumNodeCountPerBatch), int(cpr.TotalNodeCount)),
+	}
+	anyVal, err := cdctypes.NewAnyWithValue(&batch)
+	suite.Require().NoError(err)
+
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
+		Authority:  accounts[0].String(),
+		Report:     anyVal,
+		ReportType: types.ReportType_REPORT_TYPE_BATCH,
+	})
+	suite.Require().NoError(err)
+}
+
+// SubmitEnd submits the end report for the epoch.
+func (cpr *CaptainsReporter) SubmitEnd(suite *IntegrationTestSuite, es *EpochState) {
+	end1 := types.ReportEnd{
+		EpochId: es.Epoch,
+	}
+	anyVal, err := cdctypes.NewAnyWithValue(&end1)
+	suite.Require().NoError(err)
+
+	_, err = suite.MsgServer.CommitReport(suite.Ctx, &types.MsgCommitReport{
+		Authority:  accounts[0].String(),
+		ReportType: types.ReportType_REPORT_TYPE_END,
+		Report:     anyVal,
+	})
+	suite.Require().NoError(err)
 }

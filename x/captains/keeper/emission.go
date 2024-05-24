@@ -122,12 +122,8 @@ func (k Keeper) CalcNodeEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID 
 	emission := k.GetEpochEmission(ctx, epochID)
 	power := k.GetNodeComputingPowerOnEpoch(ctx, epochID, nodeID)
 	powerSum := k.GetGlobalComputingPowerOnEpoch(ctx, epochID)
+	// NOTE: zero power sum is never expected; it panics if it happens.
 	return emission.Mul(power).Quo(powerSum)
-}
-
-// CalcAndGetNodeCumulativeEmissionByEpoch returns the historical emission for a node at the end of an epoch.
-func (k Keeper) CalcAndGetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
-	return k.CalcNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
 }
 
 // HasNodeCumulativeEmissionByEpoch returns if the historical emission for a node at the end of an epoch exists.

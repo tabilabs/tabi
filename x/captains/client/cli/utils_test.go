@@ -2,7 +2,10 @@ package cli
 
 import (
 	"encoding/json"
+	"os"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/captains/types"
@@ -14,7 +17,6 @@ func TestParseReport(t *testing.T) {
 		prepare    func() ([]byte, error)
 		contents   []byte
 		reportType string
-		expectErr  bool
 	}{
 		{
 			name: "digest",
@@ -60,9 +62,48 @@ func TestParseReport(t *testing.T) {
 			}
 			tc.contents = bz
 			_, err = parseReport(tc.contents, tc.reportType)
-			if tc.expectErr {
-				t.Error(err)
-			}
+
+			require.NoError(t, err)
+
+		})
+	}
+}
+
+func TestDraftAndParseReport(t *testing.T) {
+	testCases := []struct {
+		name       string
+		reportType string
+		filename   string
+	}{
+		{
+			name:       "draft report digest",
+			reportType: ReportTypeDigest,
+			filename:   draftReportDigestFileName,
+		},
+		{
+			name:       "draft report batch",
+			reportType: ReportTypeBatch,
+			filename:   draftReportBatchFileName,
+		},
+		{
+			name:       "draft report end",
+			reportType: ReportTypeEnd,
+			filename:   draftReportEndFileName,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := draftReport(tc.reportType)
+			require.NoError(t, err)
+
+			contents, err := os.ReadFile(tc.filename)
+			require.NoError(t, err)
+
+			v, err := parseReport(contents, tc.reportType)
+			require.NoError(t, err)
+			require.NotNil(t, v)
+			os.Remove(tc.filename)
 		})
 	}
 }
