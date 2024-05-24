@@ -37,6 +37,7 @@ func GetTxCmd() *cobra.Command {
 		NewTxCmdUpdateSaleLevel(),
 		NewTxCmdCommitComputingPower(),
 		NewTxCmdClaimComputingPower(),
+		NewTxCmdDraftReport(),
 	)
 
 	return captionNodeTxCmd
@@ -318,5 +319,18 @@ func NewTxCmdClaimComputingPower() *cobra.Command {
 	}
 
 	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
+
+// NewTxCmdDraftReport returns a command to draft a report
+func NewTxCmdDraftReport() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "draft-report [digest,batch,end]",
+		Args:  cobra.ExactArgs(1),
+		Short: "Generate a draft report json file",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return draftReport(args[0])
+		},
+	}
 	return cmd
 }
