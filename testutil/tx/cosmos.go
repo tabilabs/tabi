@@ -1,16 +1,3 @@
-// Copyright 2022 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-
 package tx
 
 import (
@@ -30,7 +17,7 @@ import (
 
 var (
 	feeAmt     = math.Pow10(16)
-	DefaultFee = sdk.NewCoin(utils.BaseDenom, sdk.NewIntFromUint64(uint64(feeAmt))) // 0.01 TABI
+	DefaultFee = sdk.NewCoin(utils.BaseDenom, sdk.NewIntFromUint64(uint64(feeAmt))) // 0.01 EVMOS
 )
 
 // CosmosTxArgs contains the params to create a cosmos tx
@@ -39,7 +26,7 @@ type CosmosTxArgs struct {
 	TxCfg client.TxConfig
 	// Priv is the private key that will be used to sign the tx
 	Priv cryptotypes.PrivKey
-	// ChainID is the chain's id on cosmos format, e.g. 'tabi_9789-1'
+	// ChainID is the chain's id on cosmos format, e.g. 'evmos_9000-1'
 	ChainID string
 	// Gas to be used on the tx
 	Gas uint64
@@ -57,7 +44,7 @@ type CosmosTxArgs struct {
 // It returns the signed transaction and an error
 func PrepareCosmosTx(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	args CosmosTxArgs,
 ) (authsigning.Tx, error) {
 	txBuilder := args.TxCfg.NewTxBuilder()
@@ -80,7 +67,7 @@ func PrepareCosmosTx(
 
 	return signCosmosTx(
 		ctx,
-		appTabi,
+		appEvmos,
 		args,
 		txBuilder,
 	)
@@ -90,12 +77,12 @@ func PrepareCosmosTx(
 // the provided private key
 func signCosmosTx(
 	ctx sdk.Context,
-	appTabi *app.Tabi,
+	appEvmos *app.Tabi,
 	args CosmosTxArgs,
 	txBuilder client.TxBuilder,
 ) (authsigning.Tx, error) {
 	addr := sdk.AccAddress(args.Priv.PubKey().Address().Bytes())
-	seq, err := appTabi.AccountKeeper.GetSequence(ctx, addr)
+	seq, err := appEvmos.AccountKeeper.GetSequence(ctx, addr)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +105,7 @@ func signCosmosTx(
 	}
 
 	// Second round: all signer infos are set, so each signer can sign.
-	accNumber := appTabi.AccountKeeper.GetAccount(ctx, addr).GetAccountNumber()
+	accNumber := appEvmos.AccountKeeper.GetAccount(ctx, addr).GetAccountNumber()
 	signerData := authsigning.SignerData{
 		ChainID:       args.ChainID,
 		AccountNumber: accNumber,

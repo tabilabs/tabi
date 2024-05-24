@@ -1,0 +1,157 @@
+syntax = "proto3";
+package tabi.captains.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+import "tabi/captains/v1/report.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/captains/types";
+
+// Params defines captains module's parameters
+message Params {
+    // captains_total_count defines the total count of the captains
+    uint64 captains_total_count = 1;
+    // minimum_power_on_period defines the minimum period for a captain to be powered on
+    uint64 minimum_power_on_period = 2;
+    // maximum_power_on_period defines the maximum period for a captain to be powered on
+    uint64 maximum_power_on_period = 3;
+    // captains_constant is a fixed constant for reward calculation
+    string captains_constant = 4 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    // halving_era defines the halving era coefficient
+    string halving_era_coefficient = 5 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    // tech_progress_coefficient defines the tech progress coefficient cardinality.
+    string tech_progress_coefficient_cardinality = 6 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    // current_sale_level defines the current level for sale.
+    uint64 current_sale_level = 7;
+    // authorized members list
+    repeated string authorized_members = 8;
+}
+
+// Division defines the division a node belongs to.
+message Division {
+    string id = 1;
+    // level defines the level of the node.
+    uint64 level = 2;
+    // initial_supply defines the initial supply of the node in the division.
+    uint64 initial_supply = 3;
+    // sold_count defines the total count of the node in the division.
+    uint64 sold_count = 4;
+    // total_count defines the supply count of nodes in the division.
+    uint64 total_count = 5;
+    // computing_power_lower_bound defines the low bound of computing power in the division.
+    uint64 computing_power_lower_bound = 6;
+    // computing_power_upper_bound defines the upper bound of computing power in the division.
+    uint64 computing_power_upper_bound = 7;
+}
+
+// Node defines the node
+message Node {
+    string id = 1;
+    string division_id = 2;
+    string owner = 3;
+    uint64 computing_power = 4;
+}
+
+// EpochState defines the state of the epoch
+message BaseState {
+    // id of the epoch
+    uint64 epoch_id = 1;
+    // whether the epoch is ended
+    bool is_epoch_end = 2;
+    // the next node sequence
+    uint64 next_node_sequence = 3;
+    // global claimed emission
+    string global_claimed_emission = 4 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+    // the digest of the report
+    ReportDigest report_digest = 5;
+    // is in epoch stand_by phase
+    bool is_stand_by = 6;
+}
+
+message EpochEmission {
+    uint64 epoch_id = 1;
+    string emission = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+
+}
+
+message NodeClaimedEmission {
+    string node_id = 1;
+    string emission = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message ClaimableComputingPower {
+    uint64 amount = 1;
+    string owner = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+message NodeCumulativeEmission {
+    string node_id = 1;
+    uint64 epoch_id = 2;
+    string emission = 3 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message GlobalComputingPower {
+    uint64 epoch_id = 1;
+    string amount = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message NodesComputingPower {
+    string node_id = 1;
+    uint64 epoch_id = 2;
+    string amount = 3 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message GlobalPledge {
+    uint64 epoch_id = 1;
+    string amount = 2 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}
+
+message OwnerPledge {
+    string owner = 1;
+    uint64 epoch_id = 2;
+    string amount = 3 [
+        (cosmos_proto.scalar)  = "cosmos.Dec",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable)   = false
+    ];
+}

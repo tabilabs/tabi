@@ -1,12 +1,11 @@
 package ante_test
 
 import (
+	"github.com/tabilabs/tabi/app"
+	"github.com/tabilabs/tabi/app/ante"
 	ethante "github.com/tabilabs/tabi/app/ante/evm"
 	"github.com/tabilabs/tabi/encoding"
 	"github.com/tabilabs/tabi/types"
-
-	"github.com/tabilabs/tabi/app"
-	"github.com/tabilabs/tabi/app/ante"
 )
 
 func (suite *AnteTestSuite) TestValidateHandlerOptions() {
@@ -151,6 +150,26 @@ func (suite *AnteTestSuite) TestValidateHandlerOptions() {
 			false,
 		},
 		{
+			"fail - empty captains keeper",
+			ante.HandlerOptions{
+				Cdc:                    suite.app.AppCodec(),
+				AccountKeeper:          suite.app.AccountKeeper,
+				BankKeeper:             suite.app.BankKeeper,
+				DistributionKeeper:     suite.app.DistrKeeper,
+				ExtensionOptionChecker: types.HasDynamicFeeExtensionOption,
+				EvmKeeper:              suite.app.EvmKeeper,
+				StakingKeeper:          suite.app.StakingKeeper,
+				FeegrantKeeper:         suite.app.FeeGrantKeeper,
+				IBCKeeper:              suite.app.IBCKeeper,
+				FeeMarketKeeper:        suite.app.FeeMarketKeeper,
+				SignModeHandler:        encoding.MakeConfig(app.ModuleBasics).TxConfig.SignModeHandler(),
+				SigGasConsumer:         ante.SigVerificationGasConsumer,
+				MaxTxGasWanted:         40000000,
+				TxFeeChecker:           ethante.NewDynamicFeeChecker(suite.app.EvmKeeper),
+			},
+			false,
+		},
+		{
 			"success - default app options",
 			ante.HandlerOptions{
 				Cdc:                    suite.app.AppCodec(),
@@ -167,6 +186,7 @@ func (suite *AnteTestSuite) TestValidateHandlerOptions() {
 				SigGasConsumer:         ante.SigVerificationGasConsumer,
 				MaxTxGasWanted:         40000000,
 				TxFeeChecker:           ethante.NewDynamicFeeChecker(suite.app.EvmKeeper),
+				CaptainsKeeper:         suite.app.CaptainsKeeper,
 			},
 			true,
 		},

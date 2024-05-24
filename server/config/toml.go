@@ -1,15 +1,3 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 package config
 
 // DefaultConfigTemplate defines the configuration template for the EVM RPC configuration
@@ -103,4 +91,25 @@ certificate-path = "{{ .TLS.CertificatePath }}"
 
 # Key path defines the key.pem file path for the TLS configuration.
 key-path = "{{ .TLS.KeyPath }}"
+
+###############################################################################
+###                             Cache Configuration                         ###
+###############################################################################
+
+[cache]
+
+# Maximum number of cache blocks(0 to disable).
+block-max-size = {{ .CACHE.BlockMaxSize }}
+# Cache block lifetime(unit seconds).
+block-lifetime = {{ .CACHE.BlockLifetime }}
+
+# Maximum number of cache block results(0 to disable).
+block-results-max-size = {{ .CACHE.BlockResultsMaxSize }}
+# Cache block results lifetime(unit seconds).
+block-results-lifetime = {{ .CACHE.BlockResultsLifetime }}
+
+# Maximum number of cache fee history(0 to disable).
+fee-history-max-size = {{ .CACHE.FeeHistoryMaxSize }}
+# Cache fee history lifetime(unit seconds).
+fee-history-lifetime = {{ .CACHE.FeeHistoryLifetime }}
 `

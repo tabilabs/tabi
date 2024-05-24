@@ -3,16 +3,16 @@ package ante_test
 import (
 	"time"
 
-	sdkmath "cosmossdk.io/math"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	testutiltx "github.com/tabilabs/tabi/testutil/tx"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+
 	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
 	"github.com/tabilabs/tabi/testutil"
+	testutiltx "github.com/tabilabs/tabi/testutil/tx"
 	"github.com/tabilabs/tabi/utils"
 )
 

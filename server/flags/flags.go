@@ -1,15 +1,3 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 package flags
 
 import (
@@ -28,6 +16,18 @@ const (
 	CPUProfile     = "cpu-profile"
 	// The type of database for application and snapshots databases
 	AppDBBackend = "app-db-backend"
+)
+
+// Cache flags
+const (
+	CacheBlockMaxSize  = "cache.block-max-size"
+	CacheBlockLifetime = "cache.block-lifetime"
+
+	CacheBlockResultsMaxSize  = "cache.block-results-max-size"
+	CacheBlockResultsLifetime = "cache.block-results-lifetime"
+
+	CacheFeeHistoryMaxSize  = "cache.fee-history-max-size"
+	CacheFeeHistoryLifetime = "cache.fee-history-lifetime"
 )
 
 // GRPC-related flags.

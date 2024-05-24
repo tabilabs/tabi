@@ -1,0 +1,68 @@
+syntax = "proto3";
+package tabi.captains.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/captains/types";
+
+enum ReportType {
+  REPORT_TYPE_UNSPECIFIED = 0;
+  REPORT_TYPE_DIGEST = 1;
+  REPORT_TYPE_BATCH = 2;
+  REPORT_TYPE_END = 3;
+}
+
+message ReportDigest {
+  // epoch_id is the epoch id of the report
+  uint64 epoch_id = 1;
+  // total_node_count is the total number of batches in the report
+  uint64 total_batch_count = 2;
+  // total_node_count is the total number of nodes in the report
+  uint64 total_node_count = 3;
+  // maximum_node_count_per_batch is the maximum number of nodes per batch
+  uint64 maximum_node_count_per_batch = 4;
+  // global_on_operation_ratio is the operation ratio of global nodes
+  string global_on_operation_ratio = 5 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+// ReportBatch marks the a batch of nodes.
+message ReportBatch {
+  // epoch_id is the epoch id of the report
+  uint64 epoch_id = 1;
+  // batch_id is the batch id of the report
+  uint64 batch_id = 2;
+  // node_count is the number of nodes in the batch
+  uint64 node_count = 3;
+  // nodes is the list of node in the batch
+  repeated NodePowerOnRatio nodes = 4 [(gogoproto.nullable) = false];
+}
+
+// ReportEnd marks the end of commiting a report.
+message ReportEnd {
+  uint64 epoch_id = 1;
+}
+
+// NodePowerOnRatio is the power on ratio of a node.
+message NodePowerOnRatio {
+  // node_id is the id of the node
+  string node_id = 1;
+  // on_operation_ratio is the operation ratio of the node
+  string on_operation_ratio = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+// BaseBatch is the base batch message.
+message BatchBase {
+  // batch_id is the batch id of the report
+  uint64 batch_id = 1;
+  // node_count is the number of nodes in the batch
+  uint64 count = 2;
+}

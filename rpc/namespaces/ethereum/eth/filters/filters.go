@@ -1,15 +1,3 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 package filters
 
 import (
@@ -117,7 +105,7 @@ func (f *Filter) Logs(_ context.Context, logLimit int, blockLimit int64) ([]*eth
 
 		blockRes, err := f.backend.TendermintBlockResultByNumber(&resBlock.Block.Height)
 		if err != nil {
-			f.logger.Debug("failed to fetch block result from Tendermint", "height", resBlock.Block.Height, "error", err.Error())
+			f.logger.Info("failed to fetch block result from Tendermint", "height", resBlock.Block.Height, "error", err.Error())
 			return nil, nil
 		}
 
@@ -136,7 +124,7 @@ func (f *Filter) Logs(_ context.Context, logLimit int, blockLimit int64) ([]*eth
 	}
 
 	if header == nil || header.Number == nil {
-		f.logger.Debug("header not found or has no number")
+		f.logger.Info("header not found or has no number")
 		return nil, nil
 	}
 
@@ -169,7 +157,7 @@ func (f *Filter) Logs(_ context.Context, logLimit int, blockLimit int64) ([]*eth
 	for height := from; height <= to; height++ {
 		blockRes, err := f.backend.TendermintBlockResultByNumber(&height)
 		if err != nil {
-			f.logger.Debug("failed to fetch block result from Tendermint", "height", height, "error", err.Error())
+			f.logger.Error("failed to fetch block result from Tendermint", "height", height, "error", err.Error())
 			return nil, nil
 		}
 

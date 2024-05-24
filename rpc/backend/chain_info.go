@@ -1,18 +1,7 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 package backend
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/big"
 	"strconv"
@@ -195,30 +184,12 @@ func (b *Backend) FeeHistory(
 	// fetch block
 	for blockID := blockStart; blockID <= blockEnd; blockID++ {
 		index := int32(blockID - blockStart) // #nosec G701
-		// tendermint block
-		tendermintblock, err := b.TendermintBlockByNumber(rpctypes.BlockNumber(blockID))
-		if tendermintblock == nil {
-			return nil, err
-		}
 
-		// eth block
-		ethBlock, err := b.GetBlockByNumber(rpctypes.BlockNumber(blockID), true)
-		if ethBlock == nil {
-			return nil, err
-		}
-
-		// tendermint block result
-		tendermintBlockResult, err := b.TendermintBlockResultByNumber(&tendermintblock.Block.Height)
-		if tendermintBlockResult == nil {
-			b.logger.Debug("block result not found", "height", tendermintblock.Block.Height, "error", err.Error())
-			return nil, err
-		}
-
-		oneFeeHistory := rpctypes.OneFeeHistory{}
-		err = b.processBlock(tendermintblock, &ethBlock, rewardPercentiles, tendermintBlockResult, &oneFeeHistory)
+		oneFeeHistory, err := b.GetOneFeeHistory(blockID)
 		if err != nil {
 			return nil, err
 		}
+		feeReward := b.getFeeReward(oneFeeHistory, rewardPercentiles)
 
 		// copy
 		thisBaseFee[index] = (*hexutil.Big)(oneFeeHistory.BaseFee)
@@ -226,7 +197,7 @@ func (b *Backend) FeeHistory(
 		thisGasUsedRatio[index] = oneFeeHistory.GasUsedRatio
 		if calculateRewards {
 			for j := 0; j < rewardCount; j++ {
-				reward[index][j] = (*hexutil.Big)(oneFeeHistory.Reward[j])
+				reward[index][j] = (*hexutil.Big)(feeReward[j])
 				if reward[index][j] == nil {
 					reward[index][j] = (*hexutil.Big)(big.NewInt(0))
 				}
@@ -245,6 +216,55 @@ func (b *Backend) FeeHistory(
 	}
 
 	return &feeHistory, nil
+}
+
+func (b *Backend) GetOneFeeHistory(blockID int64) (*rpctypes.OneFeeHistory, error) {
+	// Get from feeHistory cache
+	value, err := b.feeHistory.Get(strconv.FormatInt(blockID, 10))
+	if err == nil && len(value) > 0 {
+		oneFeeHistory := rpctypes.OneFeeHistory{}
+		if err := json.Unmarshal(value, &oneFeeHistory); err == nil {
+			return &oneFeeHistory, nil
+		}
+	}
+
+	// tendermint block
+	tendermintblock, err := b.TendermintBlockByNumber(rpctypes.BlockNumber(blockID))
+	if tendermintblock == nil {
+		return nil, err
+	}
+
+	// eth block
+	ethBlock, err := b.GetBlockByNumber(rpctypes.BlockNumber(blockID), true)
+	if ethBlock == nil {
+		return nil, err
+	}
+
+	// tendermint block result
+	tendermintBlockResult, err := b.TendermintBlockResultByNumber(&tendermintblock.Block.Height)
+	if tendermintBlockResult == nil {
+		b.logger.Debug("block result not found", "height", tendermintblock.Block.Height, "error", err.Error())
+		return nil, err
+	}
+
+	oneFeeHistory := rpctypes.OneFeeHistory{}
+	err = b.processBlock(tendermintblock, &ethBlock, tendermintBlockResult, &oneFeeHistory)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonData, err := json.Marshal(oneFeeHistory)
+	if err != nil {
+		return nil, err
+	}
+
+	// Set to feeHistory cache
+	err = b.feeHistory.Set(strconv.FormatInt(blockID, 10), jsonData)
+	if err != nil {
+		b.logger.Info("feeHistory append", err, err)
+		return nil, err
+	}
+	return &oneFeeHistory, nil
 }
 
 // SuggestGasTipCap returns the suggested tip cap

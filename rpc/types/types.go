@@ -1,15 +1,3 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 package types
 
 import (
@@ -94,8 +82,15 @@ type SignTransactionResult struct {
 	Tx  *ethtypes.Transaction `json:"tx"`
 }
 
+type TxGasAndReward struct {
+	GasUsed uint64   `json:"gasUsed"`
+	Reward  *big.Int `json:"reward"`
+}
+
 type OneFeeHistory struct {
-	BaseFee, NextBaseFee *big.Int   // base fee for each block
-	Reward               []*big.Int // each element of the array will have the tip provided to miners for the percentile given
-	GasUsedRatio         float64    // the ratio of gas used to the gas limit for each block
+	BaseFee      *big.Int         `json:"baseFee"` // base fee for each block
+	NextBaseFee  *big.Int         `json:"nextBaseFee"`
+	GasUsedRatio float64          `json:"gasUsedRatio"` // the ratio of gas used to the gas limit for each block
+	BlockGasUsed float64          `json:"blockGasUsed"`
+	Sorter       []TxGasAndReward `json:"Sorter"`
 }

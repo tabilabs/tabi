@@ -1,15 +1,3 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 package server
 
 import (
@@ -216,6 +204,15 @@ which accepts a path for the resulting pprof file.
 
 	cmd.Flags().Uint64(server.FlagStateSyncSnapshotInterval, 0, "State sync snapshot interval")
 	cmd.Flags().Uint32(server.FlagStateSyncSnapshotKeepRecent, 2, "State sync snapshot to keep")
+
+	cmd.Flags().Uint32(srvflags.CacheBlockMaxSize, config.DefaultBlockMaxSize, "Maximum number of cache blocks")
+	cmd.Flags().Uint64(srvflags.CacheBlockLifetime, config.DefaultBlockLifetime, "Cache block lifetime")
+
+	cmd.Flags().Uint32(srvflags.CacheBlockResultsMaxSize, config.DefaultBlockResultsMaxSize, "Maximum number of cache block results")
+	cmd.Flags().Uint64(srvflags.CacheBlockResultsLifetime, config.DefaultBlockResultsLifetime, "Cache block results lifetime")
+
+	cmd.Flags().Uint32(srvflags.CacheFeeHistoryMaxSize, config.DefaultFeeHistoryMaxSize, "Maximum number of cache fee history")
+	cmd.Flags().Uint64(srvflags.CacheFeeHistoryLifetime, config.DefaultFeeHistoryLifetime, "Cache fee history lifetime")
 
 	// add support for all Tendermint-specific command line options
 	tcmd.AddNodeFlags(cmd)

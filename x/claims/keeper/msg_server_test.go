@@ -5,34 +5,20 @@ import (
 
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-
-	transfertypes "github.com/cosmos/ibc-go/v6/modules/apps/transfer/types"
-	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
-
 	"github.com/tabilabs/tabi/x/claims/types"
 )
 
-func (suite *KeeperTestSuite) TestUpdateParams() {
-	// Add open channels to the channel keeper (0 & 3 are the default channels, 2 is the default evm channel)
-	channel := channeltypes.Channel{State: channeltypes.OPEN}
-	suite.app.IBCKeeper.ChannelKeeper.SetChannel(suite.ctx, transfertypes.PortID, channeltypes.ChannelPrefix+"0", channel)
-	suite.app.IBCKeeper.ChannelKeeper.SetChannel(suite.ctx, transfertypes.PortID, channeltypes.ChannelPrefix+"3", channel)
-	suite.app.IBCKeeper.ChannelKeeper.SetChannel(suite.ctx, transfertypes.PortID, channeltypes.ChannelPrefix+"2", channel)
-	// Add closed channel to the channel keeper
-	closedChannel := channeltypes.Channel{State: channeltypes.CLOSED}
-	suite.app.IBCKeeper.ChannelKeeper.SetChannel(suite.ctx, transfertypes.PortID, channeltypes.ChannelPrefix+"4", closedChannel)
-
+func (suite *ClaimsTestSuite) TestUpdateParams() {
 	testCases := []struct {
-		name        string
-		request     *types.MsgUpdateParams
-		expectErr   bool
-		errContains string
+		name      string
+		request   *types.MsgUpdateParams
+		expectErr bool
 	}{
 		{
-			name:        "fail - invalid authority",
-			request:     &types.MsgUpdateParams{Authority: "foobar"},
-			expectErr:   true,
-			errContains: "invalid authority",
+			name: "fail - invalid authority",
+
+			request:   &types.MsgUpdateParams{Authority: "foobar"},
+			expectErr: true,
 		},
 		{
 			name: "pass - valid Update msg",
@@ -40,74 +26,130 @@ func (suite *KeeperTestSuite) TestUpdateParams() {
 				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 				Params:    types.DefaultParams(),
 			},
-			expectErr:   false,
-			errContains: "",
-		},
-		{
-			name: "fail - valid Update msg with unknown channel",
-			request: &types.MsgUpdateParams{
-				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-				Params: types.Params{
-					AuthorizedChannels: []string{"channel-0", "channel-1"},
-				},
-			},
-			expectErr:   true,
-			errContains: "it is not found in the app's IBCKeeper.ChannelKeeper: channel-1",
-		},
-		{
-			name: "fail - valid Update msg with closed channel",
-			request: &types.MsgUpdateParams{
-				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-				Params: types.Params{
-					AuthorizedChannels: []string{"channel-0", "channel-4"},
-				},
-			},
-			expectErr:   true,
-			errContains: "it is not in the OPEN state: channel-4",
-		},
-		{
-			name: "pass - valid Update msg with valid EVM channels",
-			request: &types.MsgUpdateParams{
-				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-				Params: types.Params{
-					EVMChannels: []string{"channel-0", "channel-2"},
-				},
-			},
-			expectErr:   false,
-			errContains: "",
-		},
-		{
-			name: "fail - valid Update msg with unknown EVM channel",
-			request: &types.MsgUpdateParams{
-				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-				Params: types.Params{
-					EVMChannels: []string{"channel-6"},
-				},
-			},
-			expectErr:   true,
-			errContains: "it is not found in the app's IBCKeeper.ChannelKeeper: channel-6",
-		},
-		{
-			name: "fail - valid Update msg with closed EVM channel",
-			request: &types.MsgUpdateParams{
-				Authority: authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-				Params: types.Params{
-					EVMChannels: []string{"channel-4"},
-				},
-			},
-			expectErr:   true,
-			errContains: "it is not in the OPEN state: channel-4",
+			expectErr: false,
 		},
 	}
-
 	for _, tc := range testCases {
 		suite.Run(fmt.Sprintf("MsgUpdateParams - %s", tc.name), func() {
-			_, err := suite.app.ClaimsKeeper.UpdateParams(suite.ctx, tc.request)
+			_, err := suite.msgServer.UpdateParams(suite.ctx, tc.request)
 			if tc.expectErr {
-				suite.Require().ErrorContains(err, tc.errContains)
+				suite.Require().Error(err)
 			} else {
 				suite.Require().NoError(err)
 			}
+		})
+	}
+}
+
+func (suite *ClaimsTestSuite) TestClaims() {
+	// setup bank keeper
+	testCases := []struct {
+		name      string
+		request   *types.MsgClaims
+		expectErr bool
+		setup     func() *MockCaptains
+	}{
+		{
+			name:      "fail - invalid sender",
+			request:   &types.MsgClaims{Sender: "foobar"},
+			expectErr: true,
+		},
+		{
+			name:      "fail - invalid receiver",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: "foobar"},
+			expectErr: true,
+		},
+		{
+			name:      "fail - nodes length is 0",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: true,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase01)
+			},
+		},
+		// has 1 node start
+		{
+			name:      "fail - owner has 1 node, epoch == 1 the node has no rewards to claim and has no historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: true,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase02)
+			},
+		},
+		{
+			name:      "success - owner has 1 node, epoch == 2 the node has rewards to claim and has no historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: false,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase03)
+			},
+		},
+		{
+			name:      "fail - owner has 1 node, epoch == 2 the node has no rewards to claim and has historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: true,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase04)
+			},
+		},
+		{
+			name:      "success - owner has 1 node, epoch == 3 the node has rewards to claim and has historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: false,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase05)
+			},
+		},
+		// has 1 node end
+		// has 5 node start
+		{
+			name:      "fail - owner has 5 node, epoch == 1 the node has no rewards to claim and has no historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: true,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase06)
+			},
+		},
+		{
+			name:      "success - owner has 5 node, epoch == 2 the node has rewards to claim and has no historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: false,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase07)
+			},
+		},
+		{
+			name:      "fail - owner has 5 node, epoch == 2 the node has no rewards to claim and has historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: true,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase08)
+			},
+		},
+		{
+			name:      "success - owner has 5 node, epoch == 3 the node has rewards to claim and has historical emission",
+			request:   &types.MsgClaims{Sender: suite.cosmosAddress.String(), Receiver: suite.cosmosAddress.String()},
+			expectErr: false,
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyCase09)
+			},
+		},
+		// has 5 node end
+
+	}
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("MsgClaims - %s", tc.name), func() {
+			if tc.setup != nil {
+				mockCaptains := tc.setup()
+				suite.app.ClaimsKeeper.SetCaptainsKeeper(mockCaptains)
+			}
+			_, err := suite.msgServer.Claims(suite.ctx, tc.request)
+			if tc.expectErr {
+				suite.Require().Error(err)
+			} else {
+				suite.Require().NoError(err)
+			}
+
 		})
 	}
 }

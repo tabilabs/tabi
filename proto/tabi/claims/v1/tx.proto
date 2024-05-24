@@ -1,30 +1,60 @@
 syntax = "proto3";
 package tabi.claims.v1;
 
+import "tabi/claims/v1/claims.proto";
+
+import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
-import "tabi/claims/v1/genesis.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/claims/types";
+option (gogoproto.goproto_getters_all) = false;
 
-// Msg defines the claims Msg service.
+// Msg defines the claims Msg service
 service Msg {
-  // UpdateParams defined a governance operation for updating the x/claims module parameters.
-  // The authority is hard-coded to the Cosmos SDK x/gov module account
+  // UpdateParams defines a governance operation for updating the x/claims
+  // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // Claims defines a method to withdraw the rewards
+  rpc Claims(MsgClaims) returns (MsgClaimsResponse);
+
 }
 
-// MsgUpdateParams defines a Msg for updating the x/claims module parameters.
+// MsgUpdateParams is the Msg/UpdateParams request type.
 message MsgUpdateParams {
   option (cosmos.msg.v1.signer) = "authority";
-  // authority is the address of the governance account.
-  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
   // params defines the x/claims parameters to update.
+  //
   // NOTE: All parameters must be supplied.
-  Params params = 2 [(gogoproto.nullable) = false];
+  Params params = 2 [ (gogoproto.nullable) = false ];
 }
 
 // MsgUpdateParamsResponse defines the response structure for executing a
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
+
+// MsgClaims
+message MsgClaims {
+  option (cosmos.msg.v1.signer) = "sender";
+
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string receiver = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgClaimsResponse defines the Msg/Claims response type.
+message MsgClaimsResponse {
+  // Since: cosmos-sdk 0.46
+  repeated cosmos.base.v1beta1.Coin amount = 1
+      [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}

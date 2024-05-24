@@ -1,22 +1,12 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 package backend
 
 import (
 	"context"
 	"math/big"
+	"sync"
 	"time"
 
+	"github.com/allegro/bigcache/v3"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/server"
@@ -143,14 +133,19 @@ var bAttributeKeyEthereumBloom = []byte(evmtypes.AttributeKeyEthereumBloom)
 
 // Backend implements the BackendI interface
 type Backend struct {
-	ctx                 context.Context
-	clientCtx           client.Context
-	queryClient         *rpctypes.QueryClient // gRPC query client
-	logger              log.Logger
-	chainID             *big.Int
-	cfg                 config.Config
-	allowUnprotectedTxs bool
-	indexer             tabitypes.EVMTxIndexer
+	ctx                     context.Context
+	clientCtx               client.Context
+	queryClient             *rpctypes.QueryClient // gRPC query client
+	logger                  log.Logger
+	chainID                 *big.Int
+	cfg                     config.Config
+	allowUnprotectedTxs     bool
+	indexer                 tabitypes.EVMTxIndexer
+	feeHistory              *bigcache.BigCache
+	blockResults            sync.Map
+	cleanTimeOfBlockResults int64
+	blockNumber             sync.Map
+	cleanTimeOfBlockNumber  int64
 }
 
 // NewBackend creates a new Backend instance for cosmos and ethereum namespaces
@@ -171,14 +166,24 @@ func NewBackend(
 		panic(err)
 	}
 
+	cacheConfig := bigcache.DefaultConfig(time.Duration(appConf.CACHE.FeeHistoryMaxSize) * time.Second)
+	cacheConfig.MaxEntrySize = int(appConf.CACHE.FeeHistoryMaxSize)
+	cache, err := bigcache.New(context.Background(), cacheConfig)
+	if err != nil {
+		panic(err)
+	}
+
 	return &Backend{
-		ctx:                 context.Background(),
-		clientCtx:           clientCtx,
-		queryClient:         rpctypes.NewQueryClient(clientCtx),
-		logger:              logger.With("module", "backend"),
-		chainID:             chainID,
-		cfg:                 appConf,
-		allowUnprotectedTxs: allowUnprotectedTxs,
-		indexer:             indexer,
+		ctx:                     context.Background(),
+		clientCtx:               clientCtx,
+		queryClient:             rpctypes.NewQueryClient(clientCtx),
+		logger:                  logger.With("module", "backend"),
+		chainID:                 chainID,
+		cfg:                     appConf,
+		allowUnprotectedTxs:     allowUnprotectedTxs,
+		indexer:                 indexer,
+		feeHistory:              cache,
+		cleanTimeOfBlockResults: 0,
+		cleanTimeOfBlockNumber:  0,
 	}
 }

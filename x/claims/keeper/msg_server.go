@@ -1,85 +1,92 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-
 package keeper
 
 import (
 	"context"
-	"fmt"
 
-	errorsmod "cosmossdk.io/errors"
+	"github.com/armon/go-metrics"
+	"github.com/cosmos/cosmos-sdk/telemetry"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-
-	transfertypes "github.com/cosmos/ibc-go/v6/modules/apps/transfer/types"
-	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tabilabs/tabi/x/claims/types"
 )
 
-// UpdateParams implements the gRPC MsgServer interface. When an UpdateParams
-// proposal passes, it updates the module parameters. The update can only be
-// performed if the requested authority is the Cosmos SDK governance module
-// account.
-func (k *Keeper) UpdateParams(goCtx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
-	if k.authority.String() != req.Authority {
-		return nil, errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority.String(), req.Authority)
+type msgServer struct {
+	k *Keeper
+}
+
+var _ types.MsgServer = msgServer{}
+
+// NewMsgServerImpl returns an implementation of the mint MsgServer interface
+// for the provided Keeper.
+func NewMsgServerImpl(keeper *Keeper) types.MsgServer {
+	return &msgServer{k: keeper}
+}
+
+// UpdateParams implement the interface of types.MsgServer
+func (m msgServer) UpdateParams(goCtx context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
+	if m.k.authority.String() != msg.Authority {
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrUnauthorized,
+			"invalid authority; expected %s, got %s",
+			m.k.authority.String(),
+			msg.Authority,
+		)
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// Validate the requested authorized channels
-	for _, channelID := range req.Params.AuthorizedChannels {
-		if err := checkIfChannelOpen(ctx, k.channelKeeper, channelID); err != nil {
-			return nil, errorsmod.Wrapf(err, "invalid authorized channel")
-		}
-	}
-
-	// Validate the requested EVM channels
-	for _, channelID := range req.Params.EVMChannels {
-		if err := checkIfChannelOpen(ctx, k.channelKeeper, channelID); err != nil {
-			return nil, errorsmod.Wrapf(err, "invalid evm channel")
-		}
-	}
-
-	if err := k.SetParams(ctx, req.Params); err != nil {
+	if err := m.k.SetParams(ctx, msg.Params); err != nil {
 		return nil, err
 	}
-
 	return &types.MsgUpdateParamsResponse{}, nil
 }
 
-// checkIfChannelOpen checks if an IBC channel with the given channel id is registered
-// in the channel keeper and is in the OPEN state. It also requires the channel id to
-// be in a valid format.
-//
-// NOTE: this function is looking for a channel with the default transfer port id and will fail
-// if no channel with the given channel id has an open connection to this port.
-func checkIfChannelOpen(ctx sdk.Context, ck types.ChannelKeeper, channelID string) error {
-	channel, found := ck.GetChannel(ctx, transfertypes.PortID, channelID)
-	if !found {
-		return fmt.Errorf(
-			"trying to add a channel to the claims module's available channels parameters, when it is not found in the app's IBCKeeper.ChannelKeeper: %s",
-			channelID,
-		)
+// WithdrawNodeReward implement the interface of types.MsgServer
+func (m msgServer) Claims(goCtx context.Context, msg *types.MsgClaims) (*types.MsgClaimsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// if receiver is empty, set receiver to sender
+	if len(msg.Receiver) == 0 {
+		msg.Receiver = msg.Sender
+	}
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, err
 	}
 
-	if channel.State != channeltypes.OPEN {
-		return fmt.Errorf(
-			"trying to add a channel to the claims module's available channels parameters, when it is not in the OPEN state: %s",
-			channelID,
-		)
+	receiver, err := sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	amount, err := m.k.WithdrawRewards(ctx, sender, receiver)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		for _, a := range amount {
+			if a.Amount.IsInt64() {
+				telemetry.SetGaugeWithLabels(
+					[]string{"tx", "msg", "claims"},
+					float32(a.Amount.Int64()),
+					[]metrics.Label{telemetry.NewLabel("denom", a.Denom)},
+				)
+			}
+		}
+	}()
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.Sender),
+			sdk.NewAttribute(types.AttributeValueReceiver, msg.Receiver),
+		),
+	)
+
+	return &types.MsgClaimsResponse{
+		Amount: amount,
+	}, nil
 }

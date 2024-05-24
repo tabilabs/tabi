@@ -1,234 +1,173 @@
 package keeper_test
 
 import (
-	"time"
+	"fmt"
 
-	"cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	"github.com/tabilabs/tabi/testutil"
-	utiltx "github.com/tabilabs/tabi/testutil/tx"
 	"github.com/tabilabs/tabi/x/claims/types"
 )
 
-func (suite *KeeperTestSuite) TestTotalUnclaimed() {
-	ctx := sdk.WrapSDKContext(suite.ctx)
-	coins := sdk.NewCoins(sdk.NewCoin("atabi", sdk.NewInt(1000)))
-
+func (suite *ClaimsTestSuite) TestQueryParams() {
 	testCases := []struct {
-		name       string
-		malleate   func()
-		expBalance sdk.Coins
+		name    string
+		expPass bool
 	}{
 		{
-			"empty balance", func() {}, sdk.Coins(nil),
-		},
-		{
-			"non-empty balance",
-			func() {
-				err := testutil.FundModuleAccount(suite.ctx, suite.app.BankKeeper, types.ModuleName, coins)
-				suite.Require().NoError(err)
-			}, coins,
-		},
-	}
-
-	for _, tc := range testCases {
-
-		tc.malleate()
-
-		res, err := suite.queryClient.TotalUnclaimed(ctx, &types.QueryTotalUnclaimedRequest{})
-		suite.Require().NoError(err)
-		suite.Require().Equal(tc.expBalance, res.Coins)
-	}
-}
-
-func (suite *KeeperTestSuite) TestQueryParams() {
-	ctx := sdk.WrapSDKContext(suite.ctx)
-	expParams := types.DefaultParams()
-	expParams.AirdropStartTime = suite.ctx.BlockTime()
-
-	res, err := suite.queryClient.Params(ctx, &types.QueryParamsRequest{})
-	suite.Require().NoError(err)
-	suite.Require().Equal(expParams, res.Params)
-}
-
-func (suite *KeeperTestSuite) TestClaimsRecords() {
-	ctx := sdk.WrapSDKContext(suite.ctx)
-
-	addr := sdk.AccAddress(utiltx.GenerateAddress().Bytes())
-
-	testCases := []struct {
-		name          string
-		malleate      func()
-		expErr        bool
-		recordsAmount int
-		initialAmount math.Int
-		actions       []bool
-	}{
-		{
-			"no values", func() {}, false, 0, sdk.ZeroInt(), []bool{},
-		},
-		{
-			"valid, all zero",
-			func() {
-				claimsRecord := types.NewClaimsRecord(sdk.ZeroInt())
-				suite.app.ClaimsKeeper.SetClaimsRecord(suite.ctx, addr, claimsRecord)
-			},
-			false,
-			1,
-			sdk.ZeroInt(),
-			[]bool{false, false, false, false},
-		},
-		{
-			"valid, non empty claimable amounts",
-			func() {
-				claimsRecord := types.NewClaimsRecord(sdk.NewInt(1_000_000_000_000))
-				suite.app.ClaimsKeeper.SetClaimsRecord(suite.ctx, addr, claimsRecord)
-			},
-			false,
-			1,
-			sdk.NewInt(1_000_000_000_000),
-			[]bool{false, false, false, false},
-		},
-		{
-			"valid, half complete half incomplete",
-			func() {
-				claimsRecord := types.NewClaimsRecord(sdk.NewInt(1_000_000_000_000))
-				claimsRecord.ActionsCompleted = []bool{false, false, true, true}
-				suite.app.ClaimsKeeper.SetClaimsRecord(suite.ctx, addr, claimsRecord)
-			},
-			false,
-			1,
-			sdk.NewInt(1_000_000_000_000),
-			[]bool{false, false, true, true},
-		},
-	}
-
-	for _, tc := range testCases {
-
-		tc.malleate()
-
-		res, err := suite.queryClient.ClaimsRecords(ctx, &types.QueryClaimsRecordsRequest{})
-		if tc.expErr {
-			suite.Require().Error(err)
-		} else {
-			if tc.recordsAmount == 0 { //nolint:gocritic
-				suite.Require().NoError(err)
-			} else if tc.recordsAmount == 1 {
-				suite.Require().NoError(err)
-				suite.Require().Len(res.Claims, 1)
-				suite.Require().Equal(res.Claims[0].Address, addr.String())
-				suite.Require().Len(res.Claims[0].ActionsCompleted, 4)
-				for i, claim := range res.Claims[0].ActionsCompleted {
-					suite.Require().Equal(claim, tc.actions[i])
-				}
-				suite.Require().Equal(res.Claims[0].InitialClaimableAmount.String(), tc.initialAmount.String())
-			} else {
-				// The test should never reach here
-				suite.Require().Equal(true, false)
-			}
-		}
-	}
-}
-
-func (suite *KeeperTestSuite) TestClaimsRecord() {
-	ctx := sdk.WrapSDKContext(suite.ctx)
-
-	req := &types.QueryClaimsRecordRequest{}
-	addr := sdk.AccAddress(utiltx.GenerateAddress().Bytes())
-
-	testCases := []struct {
-		name     string
-		malleate func()
-		expErr   bool
-	}{
-		{
-			"empty req", func() {}, true,
-		},
-		{
-			"invalid address",
-			func() {
-				req = &types.QueryClaimsRecordRequest{
-					Address: "tabi1",
-				}
-			},
+			"pass",
 			true,
 		},
-		{
-			"claims record not found for address",
-			func() {
-				req = &types.QueryClaimsRecordRequest{
-					Address: addr.String(),
-				}
-			},
-			true,
-		},
-		{
-			"valid, all zero",
-			func() {
-				claimsRecord := types.NewClaimsRecord(sdk.ZeroInt())
-				suite.app.ClaimsKeeper.SetClaimsRecord(suite.ctx, addr, claimsRecord)
-				req = &types.QueryClaimsRecordRequest{
-					Address: addr.String(),
-				}
-			},
-			false,
-		},
-		{
-			"valid, non empty claimable amounts",
-			func() {
-				claimsRecord := types.NewClaimsRecord(sdk.NewInt(1_000_000_000_000))
-				suite.app.ClaimsKeeper.SetClaimsRecord(suite.ctx, addr, claimsRecord)
-				req = &types.QueryClaimsRecordRequest{
-					Address: addr.String(),
-				}
-			},
-			false,
-		},
-		{
-			"valid, non empty claimable amounts if Claims disabled",
-			func() {
-				params := suite.app.ClaimsKeeper.GetParams(suite.ctx)
-				params.EnableClaims = false
-				suite.app.ClaimsKeeper.SetParams(suite.ctx, params) //nolint:errcheck
-				claimsRecord := types.NewClaimsRecord(sdk.NewInt(1_000_000_000_000))
-				suite.app.ClaimsKeeper.SetClaimsRecord(suite.ctx, addr, claimsRecord)
-				req = &types.QueryClaimsRecordRequest{
-					Address: addr.String(),
-				}
-			},
-			false,
-		},
-		{
-			"valid, non empty claimable amounts if Claims didnt start",
-			func() {
-				params := suite.app.ClaimsKeeper.GetParams(suite.ctx)
-				params.AirdropStartTime = time.Now().Add(time.Hour * 24)
-				err := suite.app.ClaimsKeeper.SetParams(suite.ctx, params)
-				suite.Require().NoError(err)
-				claimsRecord := types.NewClaimsRecord(sdk.NewInt(1_000_000_000_000))
-				suite.app.ClaimsKeeper.SetClaimsRecord(suite.ctx, addr, claimsRecord)
-				req = &types.QueryClaimsRecordRequest{
-					Address: addr.String(),
-				}
-			},
-			false,
-		},
 	}
-
 	for _, tc := range testCases {
+		params := suite.app.ClaimsKeeper.GetParams(suite.ctx)
+		exp := &types.QueryParamsResponse{Params: params}
 
-		tc.malleate()
-
-		res, err := suite.queryClient.ClaimsRecord(ctx, req)
-		if tc.expErr {
-			suite.Require().Error(err)
-		} else {
+		res, err := suite.queryClient.Params(suite.ctx.Context(), &types.QueryParamsRequest{})
+		if tc.expPass {
+			suite.Require().Equal(exp, res, tc.name)
 			suite.Require().NoError(err)
-			suite.Require().Len(res.Claims, 4)
-			for _, claim := range res.Claims {
-				suite.Require().Equal(res.InitialClaimableAmount.QuoRaw(4).String(), claim.ClaimableAmount.String())
-			}
+		} else {
+			suite.Require().Error(err)
 		}
 	}
+}
+
+func (suite *ClaimsTestSuite) TestQueryNodeTotalRewards() {
+	testCases := []struct {
+		name    string
+		expPass bool
+		req     *types.QueryNodeTotalRewardsRequest
+		setup   func() *MockCaptains
+	}{
+		{
+			name:    "fail - empty node id",
+			expPass: false,
+			req:     &types.QueryNodeTotalRewardsRequest{},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryNodeTotalRewards01)
+			},
+		},
+		{
+			name:    "fail - epoch == 1 epoch equal to 1",
+			expPass: false,
+			req:     &types.QueryNodeTotalRewardsRequest{NodeId: "node1"},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryNodeTotalRewards02)
+			},
+		},
+		{
+			name:    "pass - epoch == 2 and node with 0 rewards",
+			expPass: true,
+			req:     &types.QueryNodeTotalRewardsRequest{NodeId: "node1"},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryNodeTotalRewards03)
+			},
+		},
+		{
+			name:    "pass - epoch == 2 and node with 100 rewards",
+			expPass: true,
+			req:     &types.QueryNodeTotalRewardsRequest{NodeId: "node1"},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryNodeTotalRewards04)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("QueryNodeTotalRewards - %s", tc.name), func() {
+			if tc.setup != nil {
+				mockCaptains := tc.setup()
+				suite.app.ClaimsKeeper.SetCaptainsKeeper(mockCaptains)
+			}
+			res, err := suite.queryClient.NodeTotalRewards(suite.ctx.Context(), tc.req)
+			if tc.expPass {
+				suite.Require().NotNil(res)
+				suite.Require().NoError(err)
+			} else {
+				suite.Require().Error(err)
+			}
+		})
+
+	}
+}
+
+func (suite *ClaimsTestSuite) TestQueryHolderTotalRewards() {
+	testCases := []struct {
+		name    string
+		expPass bool
+		req     *types.QueryHolderTotalRewardsRequest
+		setup   func() *MockCaptains
+	}{
+		{
+			name:    "fail - empty owner address",
+			expPass: false,
+			req:     &types.QueryHolderTotalRewardsRequest{},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryHolderTotalRewards01)
+			},
+		},
+		{
+			name:    "fail - invalid owner address",
+			expPass: false,
+			req:     &types.QueryHolderTotalRewardsRequest{Owner: "bob"},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryHolderTotalRewards02)
+			},
+		},
+		{
+			name:    "fail - holder not found",
+			expPass: false,
+			req:     &types.QueryHolderTotalRewardsRequest{Owner: suite.cosmosAddress.String()},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryHolderTotalRewards03)
+			},
+		},
+		{
+			name:    "pass - epoch == 2 and owner has 1 node with 0 rewards",
+			expPass: true,
+			req:     &types.QueryHolderTotalRewardsRequest{Owner: suite.cosmosAddress.String()},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryHolderTotalRewards04)
+			},
+		},
+		{
+			name:    "pass - epoch == 2 and  owner has 1 node with 100 rewards",
+			expPass: true,
+			req:     &types.QueryHolderTotalRewardsRequest{Owner: suite.cosmosAddress.String()},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryHolderTotalRewards05)
+			},
+		},
+		{
+			name:    "pass - epoch == 2 and owner has 5 node with 0 rewards",
+			expPass: true,
+			req:     &types.QueryHolderTotalRewardsRequest{Owner: suite.cosmosAddress.String()},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryHolderTotalRewards06)
+			},
+		},
+		{
+			name:    "pass - epoch == 2 and owner has 5 node with 100 rewards",
+			expPass: true,
+			req:     &types.QueryHolderTotalRewardsRequest{Owner: suite.cosmosAddress.String()},
+			setup: func() *MockCaptains {
+				return NewMockCaptains(KeyQueryHolderTotalRewards07)
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("QueryHolderTotalRewards - %s", tc.name), func() {
+			if tc.setup != nil {
+				mockCaptains := tc.setup()
+				suite.app.ClaimsKeeper.SetCaptainsKeeper(mockCaptains)
+			}
+			res, err := suite.queryClient.HolderTotalRewards(suite.ctx.Context(), tc.req)
+			if tc.expPass {
+				suite.Require().NotNil(res)
+				suite.Require().NoError(err)
+			} else {
+				suite.Require().Error(err)
+			}
+		})
+
+	}
+
 }

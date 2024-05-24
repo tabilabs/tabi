@@ -1,16 +1,3 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-
 package keeper
 
 import (
@@ -21,82 +8,54 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	porttypes "github.com/cosmos/ibc-go/v6/modules/core/05-port/types"
+	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
 	"github.com/tabilabs/tabi/x/claims/types"
 )
 
-// Keeper struct
 type Keeper struct {
-	cdc      codec.Codec
-	storeKey storetypes.StoreKey
+	cdc        codec.Codec
+	storeKey   storetypes.StoreKey
+	paramSpace paramtypes.Subspace
+
+	// cosmos keepers
+	authKeeper types.AccountKeeper
+	bankKeeper types.BankKeeper
+
+	// self module keepers
+	captainsKeeper types.CaptainsKeeper
+
 	// the address capable of executing a MsgUpdateParams message. Typically, this should be the x/gov module account.
-	authority     sdk.AccAddress
-	accountKeeper types.AccountKeeper
-	bankKeeper    types.BankKeeper
-	stakingKeeper types.StakingKeeper
-	distrKeeper   types.DistrKeeper
-	channelKeeper types.ChannelKeeper
-	ics4Wrapper   porttypes.ICS4Wrapper
+	authority sdk.AccAddress
 }
 
-// NewKeeper returns keeper
-func NewKeeper(
-	cdc codec.Codec,
-	storeKey storetypes.StoreKey,
-	authority sdk.AccAddress,
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
-	sk types.StakingKeeper,
-	dk types.DistrKeeper,
-	ck types.ChannelKeeper,
-) *Keeper {
-	// ensure gov module account is set and is not nil
-	if err := sdk.VerifyAddressFormat(authority); err != nil {
-		panic(err)
+// NewKeeper returns a mint keeper
+func NewKeeper(cdc codec.Codec, authority sdk.AccAddress,
+	key storetypes.StoreKey, paramSpace paramtypes.Subspace,
+	ak types.AccountKeeper, bk types.BankKeeper, ck types.CaptainsKeeper) Keeper {
+	// ensure mint module account is set
+	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
+		panic("the climas collector account has not been set")
 	}
 
-	return &Keeper{
-		cdc:           cdc,
-		storeKey:      storeKey,
-		authority:     authority,
-		accountKeeper: ak,
-		bankKeeper:    bk,
-		stakingKeeper: sk,
-		distrKeeper:   dk,
-		channelKeeper: ck,
+	keeper := Keeper{
+		storeKey:       key,
+		cdc:            cdc,
+		paramSpace:     paramSpace.WithKeyTable(types.ParamKeyTable()),
+		authKeeper:     ak,
+		bankKeeper:     bk,
+		captainsKeeper: ck,
+		authority:      authority,
 	}
+	return keeper
 }
 
-// SetICS4Wrapper sets the ICS4 wrapper to the keeper.
-// It panics if already set
-func (k *Keeper) SetICS4Wrapper(ics4Wrapper porttypes.ICS4Wrapper) {
-	if k.ics4Wrapper != nil {
-		panic("ICS4 wrapper already set")
-	}
-
-	k.ics4Wrapper = ics4Wrapper
-}
-
-// Logger returns logger
+// Logger returns a module-specific logger.
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
-	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+	return ctx.Logger().With("module", fmt.Sprintf("%s", types.ModuleName))
 }
 
-// GetModuleAccount returns the module account for the claim module
-func (k Keeper) GetModuleAccount(ctx sdk.Context) authtypes.ModuleAccountI {
-	return k.accountKeeper.GetModuleAccount(ctx, types.ModuleName)
-}
-
-// GetModuleAccountAddress gets the airdrop coin balance of module account
-func (k Keeper) GetModuleAccountAddress() sdk.AccAddress {
-	return k.accountKeeper.GetModuleAddress(types.ModuleName)
-}
-
-// GetModuleAccountBalances gets the balances of module account that escrows the
-// airdrop tokens
-func (k Keeper) GetModuleAccountBalances(ctx sdk.Context) sdk.Coins {
-	moduleAccAddr := k.GetModuleAccountAddress()
-	return k.bankKeeper.GetAllBalances(ctx, moduleAccAddr)
+// SetCaptainsKeeper
+func (k *Keeper) SetCaptainsKeeper(ck types.CaptainsKeeper) {
+	k.captainsKeeper = ck
 }

@@ -4,17 +4,12 @@
 package network_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/tabilabs/tabi/server/config"
 	"github.com/tabilabs/tabi/testutil/network"
-
-	tabinetwork "github.com/tabilabs/tabi/testutil/network"
 )
 
 type IntegrationTestSuite struct {
@@ -27,22 +22,11 @@ func (s *IntegrationTestSuite) SetupSuite() {
 	s.T().Log("setting up integration test suite")
 
 	var err error
-	cfg := tabinetwork.DefaultConfig()
-	cfg.JSONRPCAddress = config.DefaultJSONRPCAddress
-	cfg.NumValidators = 1
-
-	s.network, err = network.New(s.T(), s.T().TempDir(), cfg)
-	s.Require().NoError(err)
-	s.Require().NotNil(s.network)
-
-	_, err = s.network.WaitForHeight(2)
+	s.network, err = network.New(s.T(), s.T().TempDir(), network.DefaultConfig())
 	s.Require().NoError(err)
 
-	if s.network.Validators[0].JSONRPCClient == nil {
-		address := fmt.Sprintf("http://%s", s.network.Validators[0].AppConfig.JSONRPC.Address)
-		s.network.Validators[0].JSONRPCClient, err = ethclient.Dial(address)
-		s.Require().NoError(err)
-	}
+	_, err = s.network.WaitForHeight(1)
+	s.Require().NoError(err)
 }
 
 func (s *IntegrationTestSuite) TearDownSuite() {

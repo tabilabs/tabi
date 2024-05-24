@@ -1,15 +1,3 @@
-// Copyright 2024 Tabi Foundation
-// This file is part of the Tabi Network packages.
-//
-// Tabi is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Tabi packages are distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
 package types
 
 import (
@@ -36,6 +24,8 @@ const (
 
 	// DefaultGasPrice is default gas price for evm transactions
 	DefaultGasPrice = 20
+
+	AttoVeTabi string = "avetabi"
 )
 
 // PowerReduction defines the default power reduction value for staking
@@ -58,3 +48,7 @@ func NewTabiDecCoin(amount sdkmath.Int) sdk.DecCoin {
 func NewTabiCoinInt64(amount int64) sdk.Coin {
 	return sdk.NewInt64Coin(AttoTabi, amount)
 }
+
+// NewVeTabiCoinInt64 is a utility function that returns an "avetabi" coin with the given sdkmath.Int amount.
+// The function will panic if the provided amount is negative.
+func NewVeTabiCoinInt64(amount int64) sdk.Coin { return sdk.NewInt64Coin(AttoVeTabi, amount) }
