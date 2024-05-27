@@ -1,0 +1,14 @@
+syntax = "proto3";
+package tabi.limiter.v1;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/limiter/types";
+
+// Params defines the parameters for the limiter.
+message Params {
+  // enable or disable the limiter
+  bool enabled = 1;
+  // white list of deployer addresses when the limiter is enabled
+  repeated string white_list = 2;
+}
