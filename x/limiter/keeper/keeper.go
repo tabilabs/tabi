@@ -16,7 +16,17 @@ type Keeper struct {
 	storeKey   storetypes.StoreKey
 	paramSpace paramtypes.Subspace
 
-	authority string
+	authority sdk.AccAddress
+}
+
+// NewKeeper creates a new limiter Keeper instance
+func NewKeeper(cdc codec.Codec, key storetypes.StoreKey, paramSpace paramtypes.Subspace, authority sdk.AccAddress) Keeper {
+	return Keeper{
+		cdc:        cdc,
+		storeKey:   key,
+		paramSpace: paramSpace,
+		authority:  authority,
+	}
 }
 
 // SetParams sets the parameters of the limiter module
@@ -29,6 +39,23 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	var params types.Params
 	k.paramSpace.GetParamSet(ctx, &params)
 	return params
+}
+
+// IsEnabled returns the enabled status of the limiter module
+func (k Keeper) IsEnabled(ctx sdk.Context) bool {
+	params := k.GetParams(ctx)
+	return params.Enabled
+}
+
+// IsAuthorized checks if the addr is in white list.
+func (k Keeper) IsAuthorized(ctx sdk.Context, addr sdk.AccAddress) bool {
+	params := k.GetParams(ctx)
+	for _, member := range params.WhiteList {
+		if member == addr.String() {
+			return true
+		}
+	}
+	return false
 }
 
 // SetParamsInModule sets the parameters of the limiter module

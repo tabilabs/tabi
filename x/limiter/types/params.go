@@ -14,7 +14,7 @@ var (
 	KeyWhiteList = []byte("WhiteList")
 )
 
-// ParamKeyTable for bank module.
+// ParamKeyTable for limiter module.
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
@@ -28,8 +28,8 @@ func NewParams(enabled bool, whiteList []string) Params {
 }
 
 // DefaultParams is the default parameter configuration for the bank module
-func DefaultParams() Params {
-	return Params{
+func DefaultParams() *Params {
+	return &Params{
 		Enabled:   false,
 		WhiteList: []string{},
 	}

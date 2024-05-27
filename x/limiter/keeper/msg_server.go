@@ -24,7 +24,7 @@ func NewMsgServerImpl(keeper *Keeper) msgServer {
 // UpdateParams defines a method that allows to update the parameters of the module
 // NOTE: use x/params instead before sdk v0.47.
 func (m msgServer) UpdateParams(goCtx context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
-	if m.k.authority != msg.Authority {
+	if m.k.authority.String() != msg.Authority {
 		return nil, errorsmod.Wrapf(sdkerrors.ErrUnauthorized,
 			"invalid authority: expected %s, got %s", m.k.authority, msg.Authority)
 	}

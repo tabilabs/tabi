@@ -187,6 +187,7 @@ func (suite *AnteTestSuite) TestValidateHandlerOptions() {
 				MaxTxGasWanted:         40000000,
 				TxFeeChecker:           ethante.NewDynamicFeeChecker(suite.app.EvmKeeper),
 				CaptainsKeeper:         suite.app.CaptainsKeeper,
+				LimiterKeeper:          suite.app.LimiterKeeper,
 			},
 			true,
 		},

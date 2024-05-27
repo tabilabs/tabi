@@ -2,7 +2,9 @@ package types
 
 // DefaultGenesisState returns the default genesis state.
 func DefaultGenesisState() *GenesisState {
-	return &GenesisState{}
+	return &GenesisState{
+		Params: DefaultParams(),
+	}
 }
 
 // ValidateGenesis performs basic validation of genesis data returning an
