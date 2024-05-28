@@ -23,7 +23,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(enabled bool, whiteList []string) Params {
 	return Params{
 		Enabled:   enabled,
-		WhiteList: whiteList,
+		AllowList: whiteList,
 	}
 }
 
@@ -31,7 +31,7 @@ func NewParams(enabled bool, whiteList []string) Params {
 func DefaultParams() *Params {
 	return &Params{
 		Enabled:   false,
-		WhiteList: []string{},
+		AllowList: []string{},
 	}
 }
 
@@ -39,7 +39,7 @@ func DefaultParams() *Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyEnabled, &p.Enabled, validateIsBool),
-		paramtypes.NewParamSetPair(KeyWhiteList, &p.WhiteList, validateWhiteList),
+		paramtypes.NewParamSetPair(KeyWhiteList, &p.AllowList, validateWhiteList),
 	}
 }
 

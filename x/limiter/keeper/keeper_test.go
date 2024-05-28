@@ -7,7 +7,7 @@ import (
 func (suite *IntegrationTestSuite) TestSetParams() {
 	params := types.Params{
 		Enabled:   true,
-		WhiteList: []string{accounts[0].String(), accounts[1].String()},
+		AllowList: []string{accounts[0].String(), accounts[1].String()},
 	}
 
 	// test set and get

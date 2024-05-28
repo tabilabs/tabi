@@ -25,7 +25,7 @@ func (msg *MsgUpdateParams) ValidateBasic() error {
 	}
 
 	seenMap := make(map[string]bool)
-	for _, addr := range msg.Params.WhiteList {
+	for _, addr := range msg.Params.AllowList {
 		if _, ok := seenMap[addr]; ok {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "duplicate whitelist address")
 		}

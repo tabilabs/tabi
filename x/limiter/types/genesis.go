@@ -10,5 +10,5 @@ func DefaultGenesisState() *GenesisState {
 // ValidateGenesis performs basic validation of genesis data returning an
 func ValidateGenesis(data GenesisState) error {
 	params := data.Params
-	return validateWhiteList(params.WhiteList)
+	return validateWhiteList(params.AllowList)
 }

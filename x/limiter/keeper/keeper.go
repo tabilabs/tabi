@@ -50,7 +50,7 @@ func (k Keeper) IsEnabled(ctx sdk.Context) bool {
 // IsAuthorized checks if the addr is in white list.
 func (k Keeper) IsAuthorized(ctx sdk.Context, addr sdk.AccAddress) bool {
 	params := k.GetParams(ctx)
-	for _, member := range params.WhiteList {
+	for _, member := range params.AllowList {
 		if member == addr.String() {
 			return true
 		}
