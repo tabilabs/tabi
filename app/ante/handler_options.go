@@ -35,6 +35,7 @@ type HandlerOptions struct {
 	EvmKeeper          evmante.EVMKeeper
 	FeegrantKeeper     ante.FeegrantKeeper
 	CaptainsKeeper     anteutils.CaptainsKeeper
+	LimiterKeeper      evmante.LimiterKeeper
 
 	ExtensionOptionChecker ante.ExtensionOptionChecker
 	SignModeHandler        authsigning.SignModeHandler
@@ -78,6 +79,9 @@ func (options HandlerOptions) Validate() error {
 	if options.CaptainsKeeper == nil {
 		return errorsmod.Wrap(errortypes.ErrLogic, "captains keeper is required for AnteHandler")
 	}
+	if options.LimiterKeeper == nil {
+		return errorsmod.Wrap(errortypes.ErrLogic, "limiter keeper is required for AnteHandler")
+	}
 
 	return nil
 }
@@ -95,7 +99,7 @@ func newEVMAnteHandler(options HandlerOptions) sdk.AnteHandler {
 		evmante.NewEthSigVerificationDecorator(options.EvmKeeper),
 		// Check if the sender is allowed to send transactions
 		// start: only in testnet
-		evmante.NewEthAllowListVerificationDecorator(options.AccountKeeper, options.EvmKeeper),
+		evmante.NewEthAllowListVerificationDecorator(options.AccountKeeper, options.EvmKeeper, options.LimiterKeeper),
 		// end: only in testnet
 		evmante.NewEthAccountVerificationDecorator(options.AccountKeeper, options.EvmKeeper),
 		evmante.NewCanTransferDecorator(options.EvmKeeper),

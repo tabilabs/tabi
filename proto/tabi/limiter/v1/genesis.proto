@@ -1,0 +1,11 @@
+syntax = "proto3";
+package tabi.limiter.v1;
+
+import "tabi/limiter/v1/limiter.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/limiter/types";
+
+// GenesisState defines the limiter module's genesis state.
+message GenesisState {
+  Params params = 1;
+}

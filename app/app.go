@@ -100,6 +100,8 @@ import (
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	feemarketkeeper "github.com/tabilabs/tabi/x/feemarket/keeper"
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
+	limiterkeeper "github.com/tabilabs/tabi/x/limiter/keeper"
+	limitertypes "github.com/tabilabs/tabi/x/limiter/types"
 	mintkeeper "github.com/tabilabs/tabi/x/mint/keeper"
 	minttypes "github.com/tabilabs/tabi/x/mint/types"
 	tokenconvertkeeper "github.com/tabilabs/tabi/x/token-convert/keeper"
@@ -186,6 +188,7 @@ type Tabi struct {
 	ClaimsKeeper       claimskeeper.Keeper
 	CaptainsKeeper     captainskeeper.Keeper
 	TokenConvertKeeper tokenconvertkeeper.Keeper
+	LimiterKeeper      limiterkeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -245,6 +248,7 @@ func NewTabi(
 		claimstypes.StoreKey,
 		captainnodetypes.StoreKey,
 		tokenconverttypes.StoreKey,
+		limitertypes.StoreKey,
 	)
 
 	// Add the EVM transient store key
@@ -402,6 +406,13 @@ func NewTabi(
 		app.AccountKeeper,
 		app.BankKeeper,
 		tokenconverttypes.StrategyInstant,
+	)
+
+	app.LimiterKeeper = limiterkeeper.NewKeeper(
+		appCodec,
+		keys[limitertypes.StoreKey],
+		app.GetSubspace(limitertypes.ModuleName),
+		authtypes.NewModuleAddress(govtypes.ModuleName),
 	)
 
 	// Create IBC Keeper
@@ -565,6 +576,7 @@ func NewTabi(
 // Name returns the name of the App
 func (app *Tabi) Name() string { return app.BaseApp.Name() }
 
+// setAnteHandler sets the AnteHandler for the app.
 func (app *Tabi) setAnteHandler(txConfig client.TxConfig, maxGasWanted uint64) {
 	options := ante.HandlerOptions{
 		Cdc:                    app.appCodec,
@@ -582,6 +594,7 @@ func (app *Tabi) setAnteHandler(txConfig client.TxConfig, maxGasWanted uint64) {
 		MaxTxGasWanted:         maxGasWanted,
 		TxFeeChecker:           ethante.NewDynamicFeeChecker(app.EvmKeeper),
 		CaptainsKeeper:         app.CaptainsKeeper,
+		LimiterKeeper:          app.LimiterKeeper,
 	}
 
 	if err := options.Validate(); err != nil {
@@ -591,6 +604,7 @@ func (app *Tabi) setAnteHandler(txConfig client.TxConfig, maxGasWanted uint64) {
 	app.SetAnteHandler(ante.NewAnteHandler(options))
 }
 
+// setPostHandler sets the PostHandler for the app.
 func (app *Tabi) setPostHandler() {
 	postHandler, err := posthandler.NewPostHandler(
 		posthandler.HandlerOptions{},
@@ -846,6 +860,7 @@ func initParamsKeeper(
 	// tabi subspaces
 	paramsKeeper.Subspace(claimstypes.ModuleName)
 	paramsKeeper.Subspace(captainnodetypes.ModuleName)
+	paramsKeeper.Subspace(limitertypes.ModuleName).WithKeyTable(limitertypes.ParamKeyTable())
 
 	return paramsKeeper
 }

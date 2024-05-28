@@ -3,6 +3,7 @@ package app
 import (
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	"github.com/cosmos/cosmos-sdk/types/module"
+
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
@@ -38,13 +39,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
 	ibctransfer "github.com/cosmos/ibc-go/v6/modules/apps/transfer"
 	ibctransfertypes "github.com/cosmos/ibc-go/v6/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v6/modules/core"
 	ibcclientclient "github.com/cosmos/ibc-go/v6/modules/core/02-client/client"
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 
-	captainnode "github.com/tabilabs/tabi/x/captains"
+	"github.com/tabilabs/tabi/x/captains"
 	captainstypes "github.com/tabilabs/tabi/x/captains/types"
 	"github.com/tabilabs/tabi/x/claims"
 	claimstypes "github.com/tabilabs/tabi/x/claims/types"
@@ -52,6 +54,8 @@ import (
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	"github.com/tabilabs/tabi/x/feemarket"
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
+	"github.com/tabilabs/tabi/x/limiter"
+	limitertypes "github.com/tabilabs/tabi/x/limiter/types"
 	"github.com/tabilabs/tabi/x/mint"
 	minttypes "github.com/tabilabs/tabi/x/mint/types"
 	tokenconvert "github.com/tabilabs/tabi/x/token-convert"
@@ -109,8 +113,9 @@ var (
 
 		// tabi modules
 		claims.AppModuleBasic{},
-		captainnode.AppModule{},
+		captains.AppModule{},
 		tokenconvert.AppModuleBasic{},
+		limiter.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -168,8 +173,9 @@ func appModules(
 		feemarket.NewAppModule(app.FeeMarketKeeper, app.GetSubspace(feemarkettypes.ModuleName)),
 		// Tabi app modules
 		claims.NewAppModule(appCodec, app.ClaimsKeeper),
-		captainnode.NewAppModule(appCodec, app.CaptainsKeeper),
+		captains.NewAppModule(appCodec, app.CaptainsKeeper),
 		tokenconvert.NewAppModule(appCodec, app.TokenConvertKeeper, app.AccountKeeper, app.BankKeeper),
+		limiter.NewAppModule(appCodec, app.LimiterKeeper),
 	}
 }
 
@@ -211,6 +217,7 @@ func orderBeginBlockers() []string {
 		claimstypes.ModuleName,
 		captainstypes.ModuleName,
 		tokenconverttypes.ModuleName,
+		limitertypes.ModuleName,
 	}
 }
 
@@ -249,6 +256,7 @@ func orderEndBlockers() []string {
 		claimstypes.ModuleName,
 		captainstypes.ModuleName,
 		tokenconverttypes.ModuleName,
+		limitertypes.ModuleName,
 	}
 }
 
@@ -288,6 +296,7 @@ func orderInitBlockers() []string {
 		claimstypes.ModuleName,
 		captainstypes.ModuleName,
 		tokenconverttypes.ModuleName,
+		limitertypes.ModuleName,
 
 		// NOTE: crisis module must go at the end to check for invariants on each module
 		crisistypes.ModuleName,

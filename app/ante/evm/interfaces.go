@@ -44,3 +44,8 @@ type DynamicFeeEVMKeeper interface {
 type protoTxProvider interface {
 	GetProtoTx() *tx.Tx
 }
+
+type LimiterKeeper interface {
+	IsEnabled(ctx sdk.Context) bool
+	IsAuthorized(ctx sdk.Context, addr sdk.AccAddress) bool
+}

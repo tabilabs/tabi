@@ -55,6 +55,7 @@ func DefaultParams() Params {
 }
 
 // ParamSetPairs implements params.ParamSet
+// FIXME: we need this!
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return nil
 }

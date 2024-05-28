@@ -1,0 +1,25 @@
+syntax = "proto3";
+package tabi.limiter.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "tabi/limiter/v1/limiter.proto";
+
+option go_package = "github.com/tabilabs/tabi/x/limiter/types";
+
+// Query defines the gRPC querier service for limiter module
+service Query {
+  // Params queries a set of parameters of the limiter module
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/x/limiter/v1/params";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method
+message QueryParamsRequest {
+}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
