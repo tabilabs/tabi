@@ -22,7 +22,6 @@ func NewMsgServerImpl(keeper *Keeper) msgServer {
 }
 
 // UpdateParams defines a method that allows to update the parameters of the module
-// NOTE: use x/params instead before sdk v0.47.
 func (m msgServer) UpdateParams(goCtx context.Context, msg *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
 	if m.k.authority.String() != msg.Authority {
 		return nil, errorsmod.Wrapf(sdkerrors.ErrUnauthorized,
@@ -30,7 +29,7 @@ func (m msgServer) UpdateParams(goCtx context.Context, msg *types.MsgUpdateParam
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	if err := m.k.SetParamsInModule(ctx, msg.Params); err != nil {
+	if err := m.k.SetParams(ctx, msg.Params); err != nil {
 		return nil, errorsmod.Wrap(err, "failed to set params")
 	}
 

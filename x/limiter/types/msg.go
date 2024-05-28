@@ -3,7 +3,6 @@ package types
 import (
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 var (
@@ -24,18 +23,7 @@ func (msg *MsgUpdateParams) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	seenMap := make(map[string]bool)
-	for _, addr := range msg.Params.AllowList {
-		if _, ok := seenMap[addr]; ok {
-			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "duplicate whitelist address")
-		}
-		if _, err := sdk.AccAddressFromBech32(addr); err != nil {
-			return errorsmod.Wrap(err, "invalid whitelist address")
-		}
-		seenMap[addr] = true
-	}
-
-	return nil
+	return ValidateParams(&msg.Params)
 }
 
 // GetSigners implements sdk.Msg

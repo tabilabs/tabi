@@ -14,8 +14,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+
 	"github.com/ethereum/go-ethereum/core/types"
 	ethparams "github.com/ethereum/go-ethereum/params"
+
 	utiltx "github.com/tabilabs/tabi/testutil/tx"
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
 	limitertypes "github.com/tabilabs/tabi/x/limiter/types"
@@ -937,7 +939,7 @@ func (suite *AnteTestSuite) TestAnteHandler() {
 				// enable limiter
 				suite.app.LimiterKeeper.SetParams(suite.ctx, limitertypes.Params{
 					Enabled:   true,
-					WhiteList: nil,
+					AllowList: nil,
 				})
 
 				signedContractTx := evmtypes.NewTx(ethContractCreationTxParams)
@@ -954,7 +956,7 @@ func (suite *AnteTestSuite) TestAnteHandler() {
 				// enable limiter and allow the address
 				suite.app.LimiterKeeper.SetParams(suite.ctx, limitertypes.Params{
 					Enabled:   true,
-					WhiteList: []string{sdk.AccAddress(addr.Bytes()).String()},
+					AllowList: []string{sdk.AccAddress(addr.Bytes()).String()},
 				})
 
 				signedContractTx := evmtypes.NewTx(ethContractCreationTxParams)
@@ -971,7 +973,7 @@ func (suite *AnteTestSuite) TestAnteHandler() {
 				// enable limiter
 				suite.app.LimiterKeeper.SetParams(suite.ctx, limitertypes.Params{
 					Enabled:   true,
-					WhiteList: nil,
+					AllowList: nil,
 				})
 
 				signedContractTx := evmtypes.NewTx(ethContractCreationTxParams)
@@ -988,7 +990,7 @@ func (suite *AnteTestSuite) TestAnteHandler() {
 				// enable limiter and allow the address
 				suite.app.LimiterKeeper.SetParams(suite.ctx, limitertypes.Params{
 					Enabled:   true,
-					WhiteList: []string{sdk.AccAddress(addr.Bytes()).String()},
+					AllowList: []string{sdk.AccAddress(addr.Bytes()).String()},
 				})
 
 				signedTx := evmtypes.NewTx(ethTxParams)
@@ -1005,7 +1007,7 @@ func (suite *AnteTestSuite) TestAnteHandler() {
 				// enable limiter and allow the address
 				suite.app.LimiterKeeper.SetParams(suite.ctx, limitertypes.Params{
 					Enabled:   true,
-					WhiteList: []string{sdk.AccAddress(addr.Bytes()).String()},
+					AllowList: []string{sdk.AccAddress(addr.Bytes()).String()},
 				})
 
 				signedTx := evmtypes.NewTx(ethTxParams)
