@@ -67,6 +67,8 @@ func (suite *IntegrationTestSuite) execSetup(checkTx bool, t require.TestingT) {
 	)
 	suite.Ctx = suite.App.NewContext(checkTx, header)
 
+	suite.MsgServer = limiterkeeper.NewMsgServerImpl(&suite.App.LimiterKeeper)
+
 	queryHelper := baseapp.NewQueryServerTestHelper(suite.Ctx, suite.App.InterfaceRegistry())
 	types.RegisterQueryServer(queryHelper, limiterkeeper.NewQuerierImpl(&suite.App.LimiterKeeper))
 	suite.QueryClient = types.NewQueryClient(queryHelper)
