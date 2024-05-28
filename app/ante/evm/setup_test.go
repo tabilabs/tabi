@@ -16,7 +16,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/tabilabs/tabi/app"
-	ante "github.com/tabilabs/tabi/app/ante"
+	"github.com/tabilabs/tabi/app/ante"
 	"github.com/tabilabs/tabi/encoding"
 	"github.com/tabilabs/tabi/ethereum/eip712"
 	"github.com/tabilabs/tabi/utils"
@@ -105,6 +105,8 @@ func (suite *AnteTestSuite) SetupTest() {
 		IBCKeeper:          suite.app.IBCKeeper,
 		StakingKeeper:      suite.app.StakingKeeper,
 		FeeMarketKeeper:    suite.app.FeeMarketKeeper,
+		CaptainsKeeper:     suite.app.CaptainsKeeper,
+		LimiterKeeper:      suite.app.LimiterKeeper,
 		SignModeHandler:    encodingConfig.TxConfig.SignModeHandler(),
 		SigGasConsumer:     ante.SigVerificationGasConsumer,
 	})

@@ -32,10 +32,6 @@ func (alvd EthAllowListVerificationDecorator) AnteHandle(
 	simulate bool,
 	next sdk.AnteHandler,
 ) (newCtx sdk.Context, err error) {
-	if !ctx.IsCheckTx() {
-		return next(ctx, tx, simulate)
-	}
-
 	// skip if limiter is disabled
 	if !alvd.limiterKeeper.IsEnabled(ctx) {
 		return next(ctx, tx, simulate)
