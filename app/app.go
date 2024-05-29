@@ -411,7 +411,6 @@ func NewTabi(
 	app.LimiterKeeper = limiterkeeper.NewKeeper(
 		appCodec,
 		keys[limitertypes.StoreKey],
-		app.GetSubspace(limitertypes.ModuleName),
 		authtypes.NewModuleAddress(govtypes.ModuleName),
 	)
 
@@ -860,7 +859,6 @@ func initParamsKeeper(
 	// tabi subspaces
 	paramsKeeper.Subspace(claimstypes.ModuleName)
 	paramsKeeper.Subspace(captainnodetypes.ModuleName)
-	paramsKeeper.Subspace(limitertypes.ModuleName).WithKeyTable(limitertypes.ParamKeyTable())
 
 	return paramsKeeper
 }

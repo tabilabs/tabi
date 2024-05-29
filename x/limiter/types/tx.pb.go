@@ -125,35 +125,331 @@ func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+type MsgLimiterSwitch struct {
+	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// enabled is the flag to enable or disable the limiter.
+	Enabled bool `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
+}
+
+func (m *MsgLimiterSwitch) Reset()         { *m = MsgLimiterSwitch{} }
+func (m *MsgLimiterSwitch) String() string { return proto.CompactTextString(m) }
+func (*MsgLimiterSwitch) ProtoMessage()    {}
+func (*MsgLimiterSwitch) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70801c01c09703dd, []int{2}
+}
+func (m *MsgLimiterSwitch) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgLimiterSwitch) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgLimiterSwitch.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgLimiterSwitch) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgLimiterSwitch.Merge(m, src)
+}
+func (m *MsgLimiterSwitch) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgLimiterSwitch) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgLimiterSwitch.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgLimiterSwitch proto.InternalMessageInfo
+
+func (m *MsgLimiterSwitch) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgLimiterSwitch) GetEnabled() bool {
+	if m != nil {
+		return m.Enabled
+	}
+	return false
+}
+
+// MsgLimiterSwitchResponse defines the response structure for executing a
+// MsgLimiterSwitch message.
+type MsgLimiterSwitchResponse struct {
+}
+
+func (m *MsgLimiterSwitchResponse) Reset()         { *m = MsgLimiterSwitchResponse{} }
+func (m *MsgLimiterSwitchResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgLimiterSwitchResponse) ProtoMessage()    {}
+func (*MsgLimiterSwitchResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70801c01c09703dd, []int{3}
+}
+func (m *MsgLimiterSwitchResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgLimiterSwitchResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgLimiterSwitchResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgLimiterSwitchResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgLimiterSwitchResponse.Merge(m, src)
+}
+func (m *MsgLimiterSwitchResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgLimiterSwitchResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgLimiterSwitchResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgLimiterSwitchResponse proto.InternalMessageInfo
+
+// MsgAddAllowListMember is the Msg/AddAllowListMember request type.
+type MsgAddAllowListMember struct {
+	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// address is the address to add to the allow list.
+	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *MsgAddAllowListMember) Reset()         { *m = MsgAddAllowListMember{} }
+func (m *MsgAddAllowListMember) String() string { return proto.CompactTextString(m) }
+func (*MsgAddAllowListMember) ProtoMessage()    {}
+func (*MsgAddAllowListMember) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70801c01c09703dd, []int{4}
+}
+func (m *MsgAddAllowListMember) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddAllowListMember) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddAllowListMember.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddAllowListMember) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddAllowListMember.Merge(m, src)
+}
+func (m *MsgAddAllowListMember) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddAllowListMember) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddAllowListMember.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddAllowListMember proto.InternalMessageInfo
+
+func (m *MsgAddAllowListMember) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgAddAllowListMember) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// MsgAddAllowListMemberResponse defines the response structure for executing a
+// MsgAddAllowListMember message.
+type MsgAddAllowListMemberResponse struct {
+}
+
+func (m *MsgAddAllowListMemberResponse) Reset()         { *m = MsgAddAllowListMemberResponse{} }
+func (m *MsgAddAllowListMemberResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddAllowListMemberResponse) ProtoMessage()    {}
+func (*MsgAddAllowListMemberResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70801c01c09703dd, []int{5}
+}
+func (m *MsgAddAllowListMemberResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddAllowListMemberResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddAllowListMemberResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddAllowListMemberResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddAllowListMemberResponse.Merge(m, src)
+}
+func (m *MsgAddAllowListMemberResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddAllowListMemberResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddAllowListMemberResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddAllowListMemberResponse proto.InternalMessageInfo
+
+// MsgRemoveAllowListMember is the Msg/RemoveAllowListMember request type.
+type MsgRemoveAllowListMember struct {
+	// authority is the address that controls the module (defaults to x/gov unless overwritten).
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// address is the address to remove from the allow list.
+	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *MsgRemoveAllowListMember) Reset()         { *m = MsgRemoveAllowListMember{} }
+func (m *MsgRemoveAllowListMember) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveAllowListMember) ProtoMessage()    {}
+func (*MsgRemoveAllowListMember) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70801c01c09703dd, []int{6}
+}
+func (m *MsgRemoveAllowListMember) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveAllowListMember) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveAllowListMember.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveAllowListMember) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveAllowListMember.Merge(m, src)
+}
+func (m *MsgRemoveAllowListMember) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveAllowListMember) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveAllowListMember.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveAllowListMember proto.InternalMessageInfo
+
+func (m *MsgRemoveAllowListMember) GetAuthority() string {
+	if m != nil {
+		return m.Authority
+	}
+	return ""
+}
+
+func (m *MsgRemoveAllowListMember) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+// MsgRemoveAllowListMemberResponse defines the response structure for executing a
+// MsgRemoveAllowListMember message.
+type MsgRemoveAllowListMemberResponse struct {
+}
+
+func (m *MsgRemoveAllowListMemberResponse) Reset()         { *m = MsgRemoveAllowListMemberResponse{} }
+func (m *MsgRemoveAllowListMemberResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveAllowListMemberResponse) ProtoMessage()    {}
+func (*MsgRemoveAllowListMemberResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_70801c01c09703dd, []int{7}
+}
+func (m *MsgRemoveAllowListMemberResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveAllowListMemberResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveAllowListMemberResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveAllowListMemberResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveAllowListMemberResponse.Merge(m, src)
+}
+func (m *MsgRemoveAllowListMemberResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveAllowListMemberResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveAllowListMemberResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveAllowListMemberResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgUpdateParams)(nil), "tabi.limiter.v1.MsgUpdateParams")
 	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "tabi.limiter.v1.MsgUpdateParamsResponse")
+	proto.RegisterType((*MsgLimiterSwitch)(nil), "tabi.limiter.v1.MsgLimiterSwitch")
+	proto.RegisterType((*MsgLimiterSwitchResponse)(nil), "tabi.limiter.v1.MsgLimiterSwitchResponse")
+	proto.RegisterType((*MsgAddAllowListMember)(nil), "tabi.limiter.v1.MsgAddAllowListMember")
+	proto.RegisterType((*MsgAddAllowListMemberResponse)(nil), "tabi.limiter.v1.MsgAddAllowListMemberResponse")
+	proto.RegisterType((*MsgRemoveAllowListMember)(nil), "tabi.limiter.v1.MsgRemoveAllowListMember")
+	proto.RegisterType((*MsgRemoveAllowListMemberResponse)(nil), "tabi.limiter.v1.MsgRemoveAllowListMemberResponse")
 }
 
 func init() { proto.RegisterFile("tabi/limiter/v1/tx.proto", fileDescriptor_70801c01c09703dd) }
 
 var fileDescriptor_70801c01c09703dd = []byte{
-	// 314 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0x28, 0x49, 0x4c, 0xca,
-	0xd4, 0xcf, 0xc9, 0xcc, 0xcd, 0x2c, 0x49, 0x2d, 0xd2, 0x2f, 0x33, 0xd4, 0x2f, 0xa9, 0xd0, 0x2b,
-	0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x07, 0xc9, 0xe8, 0x41, 0x65, 0xf4, 0xca, 0x0c, 0xa5, 0x44,
-	0xd2, 0xf3, 0xd3, 0xf3, 0xc1, 0x72, 0xfa, 0x20, 0x16, 0x44, 0x99, 0x94, 0x78, 0x72, 0x7e, 0x71,
-	0x6e, 0x7e, 0xb1, 0x7e, 0x6e, 0x71, 0x3a, 0x48, 0x7b, 0x6e, 0x71, 0x3a, 0x54, 0x42, 0x12, 0x22,
-	0x11, 0x0f, 0xd1, 0x01, 0xe1, 0x40, 0xa5, 0x64, 0xd1, 0x2d, 0x85, 0xd9, 0x02, 0x96, 0x56, 0x9a,
-	0xc0, 0xc8, 0xc5, 0xef, 0x5b, 0x9c, 0x1e, 0x5a, 0x90, 0x92, 0x58, 0x92, 0x1a, 0x90, 0x58, 0x94,
-	0x98, 0x5b, 0x2c, 0x64, 0xc6, 0xc5, 0x99, 0x58, 0x5a, 0x92, 0x91, 0x5f, 0x94, 0x59, 0x52, 0x29,
-	0xc1, 0xa8, 0xc0, 0xa8, 0xc1, 0xe9, 0x24, 0x71, 0x69, 0x8b, 0xae, 0x08, 0xd4, 0x5c, 0xc7, 0x94,
-	0x94, 0xa2, 0xd4, 0xe2, 0xe2, 0xe0, 0x92, 0xa2, 0xcc, 0xbc, 0xf4, 0x20, 0x84, 0x52, 0x21, 0x53,
-	0x2e, 0xb6, 0x02, 0xb0, 0x09, 0x12, 0x4c, 0x0a, 0x8c, 0x1a, 0xdc, 0x46, 0xe2, 0x7a, 0x68, 0xde,
-	0xd2, 0x83, 0x58, 0xe0, 0xc4, 0x72, 0xe2, 0x9e, 0x3c, 0x43, 0x10, 0x54, 0xb1, 0x15, 0x5f, 0xd3,
-	0xf3, 0x0d, 0x5a, 0x08, 0x63, 0x94, 0x24, 0xb9, 0xc4, 0xd1, 0x5c, 0x14, 0x94, 0x5a, 0x5c, 0x90,
-	0x9f, 0x57, 0x9c, 0x6a, 0x94, 0xc8, 0xc5, 0xec, 0x5b, 0x9c, 0x2e, 0x14, 0xc5, 0xc5, 0x83, 0xe2,
-	0x60, 0x05, 0x0c, 0x8b, 0xd0, 0x0c, 0x90, 0xd2, 0x20, 0xa4, 0x02, 0x66, 0x85, 0x93, 0xd3, 0x89,
-	0x47, 0x72, 0x8c, 0x17, 0x1e, 0xc9, 0x31, 0x3e, 0x78, 0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c, 0xc3,
-	0x85, 0xc7, 0x72, 0x0c, 0x37, 0x1e, 0xcb, 0x31, 0x44, 0x69, 0xa4, 0x67, 0x96, 0x64, 0x94, 0x26,
-	0xe9, 0x25, 0xe7, 0xe7, 0xea, 0x83, 0x4c, 0xcb, 0x49, 0x4c, 0x2a, 0x06, 0x33, 0xf4, 0x2b, 0xe0,
-	0xe1, 0x5b, 0x52, 0x59, 0x90, 0x5a, 0x9c, 0xc4, 0x06, 0x0e, 0x5b, 0x63, 0x40, 0x00, 0x00, 0x00,
-	0xff, 0xff, 0x2a, 0x8b, 0xe4, 0x94, 0xf1, 0x01, 0x00, 0x00,
+	// 479 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x94, 0xcd, 0x6a, 0xdb, 0x40,
+	0x14, 0x85, 0x3d, 0x4d, 0x49, 0x9a, 0xdb, 0x9f, 0x14, 0x91, 0x60, 0x45, 0x10, 0xc5, 0xf5, 0xa2,
+	0xb8, 0x85, 0x4a, 0xd8, 0xa5, 0x5d, 0x74, 0x67, 0xaf, 0x23, 0x28, 0x0a, 0xdd, 0x04, 0x4a, 0x91,
+	0xac, 0x61, 0x3c, 0xa0, 0xf1, 0x08, 0xdd, 0xb1, 0x93, 0x6c, 0xfb, 0x04, 0x81, 0x42, 0xdf, 0xa0,
+	0xfb, 0x2e, 0xfa, 0x10, 0x59, 0x86, 0xae, 0xba, 0x2a, 0xc5, 0x5e, 0xf4, 0x35, 0x8a, 0x47, 0x3f,
+	0xc1, 0xb2, 0xda, 0x04, 0xaf, 0xba, 0xd3, 0x70, 0xce, 0x3d, 0xe7, 0x1b, 0x74, 0x19, 0x30, 0x55,
+	0x10, 0x72, 0x37, 0xe6, 0x82, 0x2b, 0x9a, 0xba, 0xd3, 0xae, 0xab, 0xce, 0x9c, 0x24, 0x95, 0x4a,
+	0x1a, 0x3b, 0x0b, 0xc5, 0xc9, 0x15, 0x67, 0xda, 0xb5, 0x76, 0x99, 0x64, 0x52, 0x6b, 0xee, 0xe2,
+	0x2b, 0xb3, 0x59, 0xcd, 0xa1, 0x44, 0x21, 0xd1, 0x15, 0xc8, 0x16, 0xe3, 0x02, 0x59, 0x2e, 0xec,
+	0x67, 0xc2, 0x87, 0x6c, 0x22, 0x3b, 0xe4, 0xd2, 0x41, 0xb5, 0xb4, 0x68, 0xd1, 0x72, 0xfb, 0x82,
+	0xc0, 0x8e, 0x87, 0xec, 0x5d, 0x12, 0x05, 0x8a, 0xbe, 0x0d, 0xd2, 0x40, 0xa0, 0xf1, 0x1a, 0xb6,
+	0x83, 0x89, 0x1a, 0xc9, 0x94, 0xab, 0x73, 0x93, 0xb4, 0x48, 0x67, 0x7b, 0x60, 0x7e, 0xff, 0xf6,
+	0x62, 0x37, 0xcf, 0xed, 0x47, 0x51, 0x4a, 0x11, 0x8f, 0x55, 0xca, 0xc7, 0xcc, 0xbf, 0xb6, 0x1a,
+	0xaf, 0x60, 0x33, 0xd1, 0x09, 0xe6, 0x9d, 0x16, 0xe9, 0xdc, 0xef, 0x35, 0x9d, 0xca, 0xb5, 0x9c,
+	0xac, 0x60, 0x70, 0xf7, 0xf2, 0xe7, 0x61, 0xc3, 0xcf, 0xcd, 0x6f, 0x1e, 0x7d, 0xfc, 0xfd, 0xf5,
+	0xf9, 0x75, 0x4c, 0x7b, 0x1f, 0x9a, 0x15, 0x22, 0x9f, 0x62, 0x22, 0xc7, 0x48, 0xdb, 0x0a, 0x1e,
+	0x7b, 0xc8, 0x8e, 0xb2, 0xc0, 0xe3, 0x53, 0xae, 0x86, 0xa3, 0xb5, 0x69, 0x4d, 0xd8, 0xa2, 0xe3,
+	0x20, 0x8c, 0x69, 0xa4, 0x71, 0xef, 0xf9, 0xc5, 0x71, 0x05, 0xc8, 0x02, 0xb3, 0xda, 0x5a, 0x12,
+	0x7d, 0x22, 0xb0, 0xe7, 0x21, 0xeb, 0x47, 0x51, 0x3f, 0x8e, 0xe5, 0xe9, 0x11, 0x47, 0xe5, 0x51,
+	0x11, 0xd2, 0x74, 0x6d, 0xae, 0x1e, 0x6c, 0x05, 0x99, 0xa6, 0xb9, 0xfe, 0x35, 0x55, 0x18, 0x57,
+	0x88, 0x0f, 0xe1, 0xa0, 0x16, 0xaa, 0xc4, 0xfe, 0x4c, 0xf4, 0x9d, 0x7c, 0x2a, 0xe4, 0x94, 0xfe,
+	0x4f, 0xe4, 0x6d, 0x68, 0xfd, 0x8d, 0xab, 0x80, 0xef, 0x7d, 0xd9, 0x80, 0x0d, 0x0f, 0x99, 0x71,
+	0x02, 0x0f, 0x96, 0xf6, 0xb6, 0xb5, 0xb2, 0x6f, 0x95, 0x3d, 0xb2, 0x3a, 0x37, 0x39, 0x8a, 0x0e,
+	0xe3, 0x3d, 0x3c, 0x5c, 0x5e, 0xb3, 0x27, 0x75, 0xa3, 0x4b, 0x16, 0xeb, 0xd9, 0x8d, 0x96, 0x32,
+	0x3e, 0x06, 0xa3, 0x66, 0x65, 0x9e, 0xd6, 0x05, 0xac, 0xfa, 0x2c, 0xe7, 0x76, 0xbe, 0xb2, 0x6d,
+	0x02, 0x7b, 0xf5, 0x7f, 0xba, 0x96, 0xb8, 0xd6, 0x6a, 0x75, 0x6f, 0x6d, 0x2d, 0x6a, 0x07, 0x83,
+	0xcb, 0x99, 0x4d, 0xae, 0x66, 0x36, 0xf9, 0x35, 0xb3, 0xc9, 0xc5, 0xdc, 0x6e, 0x5c, 0xcd, 0xed,
+	0xc6, 0x8f, 0xb9, 0xdd, 0x38, 0xe9, 0x30, 0xae, 0x46, 0x93, 0xd0, 0x19, 0x4a, 0xe1, 0x2e, 0x62,
+	0xe3, 0x20, 0x44, 0xfd, 0xe1, 0x9e, 0x95, 0x4f, 0x95, 0x3a, 0x4f, 0x28, 0x86, 0x9b, 0xfa, 0x99,
+	0x7a, 0xf9, 0x27, 0x00, 0x00, 0xff, 0xff, 0x2c, 0x89, 0x28, 0xd7, 0x3c, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -171,6 +467,14 @@ type MsgClient interface {
 	// UpdateParams defines a governance operation for updating the limiter module
 	// parameters. The authority is defined in the keeper.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
+	// LimiterSwitch defines a governance operation for enabling or disabling the limiter.
+	LimiterSwitch(ctx context.Context, in *MsgLimiterSwitch, opts ...grpc.CallOption) (*MsgLimiterSwitchResponse, error)
+	// AddAllowListMember defines a governance operation for adding an address to the
+	// allow list.
+	AddAllowListMember(ctx context.Context, in *MsgAddAllowListMember, opts ...grpc.CallOption) (*MsgAddAllowListMemberResponse, error)
+	// RemoveAllowListMember defines a governance operation for removing an address from the
+	// allow list.
+	RemoveAllowListMember(ctx context.Context, in *MsgRemoveAllowListMember, opts ...grpc.CallOption) (*MsgRemoveAllowListMemberResponse, error)
 }
 
 type msgClient struct {
@@ -190,11 +494,46 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
+func (c *msgClient) LimiterSwitch(ctx context.Context, in *MsgLimiterSwitch, opts ...grpc.CallOption) (*MsgLimiterSwitchResponse, error) {
+	out := new(MsgLimiterSwitchResponse)
+	err := c.cc.Invoke(ctx, "/tabi.limiter.v1.Msg/LimiterSwitch", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) AddAllowListMember(ctx context.Context, in *MsgAddAllowListMember, opts ...grpc.CallOption) (*MsgAddAllowListMemberResponse, error) {
+	out := new(MsgAddAllowListMemberResponse)
+	err := c.cc.Invoke(ctx, "/tabi.limiter.v1.Msg/AddAllowListMember", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RemoveAllowListMember(ctx context.Context, in *MsgRemoveAllowListMember, opts ...grpc.CallOption) (*MsgRemoveAllowListMemberResponse, error) {
+	out := new(MsgRemoveAllowListMemberResponse)
+	err := c.cc.Invoke(ctx, "/tabi.limiter.v1.Msg/RemoveAllowListMember", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// UpdateParams defines a governance operation for updating the limiter module
 	// parameters. The authority is defined in the keeper.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
+	// LimiterSwitch defines a governance operation for enabling or disabling the limiter.
+	LimiterSwitch(context.Context, *MsgLimiterSwitch) (*MsgLimiterSwitchResponse, error)
+	// AddAllowListMember defines a governance operation for adding an address to the
+	// allow list.
+	AddAllowListMember(context.Context, *MsgAddAllowListMember) (*MsgAddAllowListMemberResponse, error)
+	// RemoveAllowListMember defines a governance operation for removing an address from the
+	// allow list.
+	RemoveAllowListMember(context.Context, *MsgRemoveAllowListMember) (*MsgRemoveAllowListMemberResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -203,6 +542,15 @@ type UnimplementedMsgServer struct {
 
 func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
+func (*UnimplementedMsgServer) LimiterSwitch(ctx context.Context, req *MsgLimiterSwitch) (*MsgLimiterSwitchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LimiterSwitch not implemented")
+}
+func (*UnimplementedMsgServer) AddAllowListMember(ctx context.Context, req *MsgAddAllowListMember) (*MsgAddAllowListMemberResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAllowListMember not implemented")
+}
+func (*UnimplementedMsgServer) RemoveAllowListMember(ctx context.Context, req *MsgRemoveAllowListMember) (*MsgRemoveAllowListMemberResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveAllowListMember not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -227,6 +575,60 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_LimiterSwitch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgLimiterSwitch)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).LimiterSwitch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tabi.limiter.v1.Msg/LimiterSwitch",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).LimiterSwitch(ctx, req.(*MsgLimiterSwitch))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_AddAllowListMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddAllowListMember)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).AddAllowListMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tabi.limiter.v1.Msg/AddAllowListMember",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).AddAllowListMember(ctx, req.(*MsgAddAllowListMember))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RemoveAllowListMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRemoveAllowListMember)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RemoveAllowListMember(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tabi.limiter.v1.Msg/RemoveAllowListMember",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RemoveAllowListMember(ctx, req.(*MsgRemoveAllowListMember))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "tabi.limiter.v1.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -234,6 +636,18 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
+			MethodName: "LimiterSwitch",
+			Handler:    _Msg_LimiterSwitch_Handler,
+		},
+		{
+			MethodName: "AddAllowListMember",
+			Handler:    _Msg_AddAllowListMember_Handler,
+		},
+		{
+			MethodName: "RemoveAllowListMember",
+			Handler:    _Msg_RemoveAllowListMember_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -303,6 +717,189 @@ func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgLimiterSwitch) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgLimiterSwitch) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgLimiterSwitch) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Enabled {
+		i--
+		if m.Enabled {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgLimiterSwitchResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgLimiterSwitchResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgLimiterSwitchResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAddAllowListMember) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddAllowListMember) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddAllowListMember) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAddAllowListMemberResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddAllowListMemberResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddAllowListMemberResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveAllowListMember) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveAllowListMember) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveAllowListMember) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Authority) > 0 {
+		i -= len(m.Authority)
+		copy(dAtA[i:], m.Authority)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Authority)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveAllowListMemberResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveAllowListMemberResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveAllowListMemberResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -330,6 +927,83 @@ func (m *MsgUpdateParams) Size() (n int) {
 }
 
 func (m *MsgUpdateParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgLimiterSwitch) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Enabled {
+		n += 2
+	}
+	return n
+}
+
+func (m *MsgLimiterSwitchResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgAddAllowListMember) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgAddAllowListMemberResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgRemoveAllowListMember) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Authority)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgRemoveAllowListMemberResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -486,6 +1160,486 @@ func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgUpdateParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgLimiterSwitch) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgLimiterSwitch: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgLimiterSwitch: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Enabled", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Enabled = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgLimiterSwitchResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgLimiterSwitchResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgLimiterSwitchResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddAllowListMember) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddAllowListMember: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddAllowListMember: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddAllowListMemberResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddAllowListMemberResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddAllowListMemberResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveAllowListMember) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveAllowListMember: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveAllowListMember: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Authority", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Authority = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveAllowListMemberResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveAllowListMemberResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveAllowListMemberResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

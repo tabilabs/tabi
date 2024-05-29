@@ -1,23 +1,10 @@
 package types
 
 import (
-	"fmt"
-
+	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
-
-var (
-	// KeyEnabled is store's key for SendEnabled Params
-	KeyEnabled = []byte("Enabled")
-	// KeyWhiteList is store's key for the DefaultSendEnabled option
-	KeyWhiteList = []byte("WhiteList")
-)
-
-// ParamKeyTable for limiter module.
-func ParamKeyTable() paramtypes.KeyTable {
-	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
-}
 
 // NewParams returns a new Params object
 func NewParams(enabled bool, whiteList []string) Params {
@@ -35,39 +22,21 @@ func DefaultParams() *Params {
 	}
 }
 
-// ParamSetPairs for limiter module
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyEnabled, &p.Enabled, validateIsBool),
-		paramtypes.NewParamSetPair(KeyWhiteList, &p.AllowList, validateWhiteList),
-	}
-}
-
-// validateWhiteList validates a list of addresses
-func validateWhiteList(i any) error {
-	list, ok := i.([]string)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
+// ValidateParams validates the parameters
+func ValidateParams(params *Params) error {
+	if params == nil {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "nil params")
 	}
 
 	seenMap := make(map[string]bool)
-	for _, addr := range list {
+	for _, addr := range params.AllowList {
 		if _, ok := seenMap[addr]; ok {
-			return fmt.Errorf("duplicate whitelist address on %s", addr)
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "duplicate whitelist address")
 		}
 		if _, err := sdk.AccAddressFromBech32(addr); err != nil {
-			return err
+			return errorsmod.Wrap(err, "invalid whitelist address")
 		}
 		seenMap[addr] = true
-	}
-	return nil
-}
-
-// validateIsBool validates if the parameter is a boolean
-func validateIsBool(i interface{}) error {
-	_, ok := i.(bool)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 	return nil
 }

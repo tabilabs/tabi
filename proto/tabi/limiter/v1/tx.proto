@@ -13,6 +13,17 @@ service Msg {
   // UpdateParams defines a governance operation for updating the limiter module
   // parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // LimiterSwitch defines a governance operation for enabling or disabling the limiter.
+  rpc LimiterSwitch(MsgLimiterSwitch) returns (MsgLimiterSwitchResponse);
+
+  // AddAllowListMember defines a governance operation for adding an address to the
+  // allow list.
+  rpc AddAllowListMember(MsgAddAllowListMember) returns (MsgAddAllowListMemberResponse);
+
+  // RemoveAllowListMember defines a governance operation for removing an address from the
+  // allow list.
+  rpc RemoveAllowListMember(MsgRemoveAllowListMember) returns (MsgRemoveAllowListMemberResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -31,3 +42,49 @@ message MsgUpdateParams {
 // MsgUpdateParamsResponse defines the response structure for executing a
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+message MsgLimiterSwitch {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // enabled is the flag to enable or disable the limiter.
+  bool enabled = 2;
+}
+
+// MsgLimiterSwitchResponse defines the response structure for executing a
+// MsgLimiterSwitch message.
+message MsgLimiterSwitchResponse {}
+
+// MsgAddAllowListMember is the Msg/AddAllowListMember request type.
+message MsgAddAllowListMember {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // address is the address to add to the allow list.
+  string address = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgAddAllowListMemberResponse defines the response structure for executing a
+// MsgAddAllowListMember message.
+message MsgAddAllowListMemberResponse {}
+
+// MsgRemoveAllowListMember is the Msg/RemoveAllowListMember request type.
+message MsgRemoveAllowListMember {
+  option (cosmos.msg.v1.signer) = "authority";
+
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // address is the address to remove from the allow list.
+  string address = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+// MsgRemoveAllowListMemberResponse defines the response structure for executing a
+// MsgRemoveAllowListMember message.
+message MsgRemoveAllowListMemberResponse {}

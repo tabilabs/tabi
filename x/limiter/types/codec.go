@@ -9,6 +9,9 @@ import (
 func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateParams{},
+		&MsgLimiterSwitch{},
+		&MsgAddAllowListMember{},
+		&MsgRemoveAllowListMember{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
