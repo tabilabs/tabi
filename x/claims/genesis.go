@@ -3,9 +3,10 @@ package claims
 import (
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/claims/keeper"
 	"github.com/tabilabs/tabi/x/claims/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // InitGenesis new mint genesis

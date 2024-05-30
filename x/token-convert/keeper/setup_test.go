@@ -4,14 +4,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/crypto/keyring"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -30,13 +31,11 @@ import (
 	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
 )
 
-var (
-	accounts = []sdk.AccAddress{
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
-	}
-)
+var accounts = []sdk.AccAddress{
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+}
 
 type TokenConvertTestSuite struct {
 	suite.Suite

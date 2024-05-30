@@ -7,8 +7,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/captains/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func TestParseReport(t *testing.T) {
@@ -64,7 +65,6 @@ func TestParseReport(t *testing.T) {
 			_, err = parseReport(tc.contents, tc.reportType)
 
 			require.NoError(t, err)
-
 		})
 	}
 }

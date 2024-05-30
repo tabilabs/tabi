@@ -1,12 +1,12 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/captains/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func (suite *IntegrationTestSuite) TestHandleReportDigest() {
-
 	testCases := []struct {
 		name      string
 		report    *types.ReportDigest
@@ -95,5 +95,4 @@ func (suite *IntegrationTestSuite) TestHandleReportBatch() {
 		Nodes:     ratios[8:],
 	})
 	suite.Require().NoError(err)
-
 }

@@ -6,25 +6,30 @@ import (
 
 	tabitypes "github.com/tabilabs/tabi/types"
 
-	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
 	utiltx "github.com/tabilabs/tabi/testutil/tx"
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
+	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+
 	"github.com/stretchr/testify/require"
+
 	"github.com/tabilabs/tabi/testutil"
+
+	"github.com/cosmos/cosmos-sdk/baseapp"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	"github.com/ethereum/go-ethereum/common"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/stretchr/testify/suite"
+
 	"github.com/tabilabs/tabi/app"
 	claimskeeper "github.com/tabilabs/tabi/x/claims/keeper"
 	"github.com/tabilabs/tabi/x/claims/types"

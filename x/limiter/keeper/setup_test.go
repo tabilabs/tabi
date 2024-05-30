@@ -13,6 +13,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/stretchr/testify/suite"
+
 	"github.com/tabilabs/tabi/app"
 	"github.com/tabilabs/tabi/crypto/ethsecp256k1"
 	"github.com/tabilabs/tabi/testutil"

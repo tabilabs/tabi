@@ -5,9 +5,10 @@ import (
 
 	utiltx "github.com/tabilabs/tabi/testutil/tx"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/testutil"
 	tabitypes "github.com/tabilabs/tabi/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const (
@@ -39,13 +40,11 @@ const (
 	KeyQueryHolderTotalRewards07
 )
 
-var (
-	accounts = []sdk.AccAddress{
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
-	}
-)
+var accounts = []sdk.AccAddress{
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+}
 
 func (suite *ClaimsTestSuite) utilsFundToken(addr sdk.AccAddress, amt int64, denom string) error {
 	coins := make([]sdk.Coin, 1)

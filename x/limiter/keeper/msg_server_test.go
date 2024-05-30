@@ -1,8 +1,9 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/limiter/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func (suite *IntegrationTestSuite) TestLimiterSwitch() {
@@ -98,7 +99,6 @@ func (suite *IntegrationTestSuite) TestAddAllowListMember() {
 }
 
 func (suite *IntegrationTestSuite) TestRemoveAllowListMember() {
-
 	testCases := []struct {
 		name      string
 		melleate  func()

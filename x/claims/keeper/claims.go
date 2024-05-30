@@ -1,11 +1,13 @@
 package keeper
 
 import (
-	errorsmod "cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	tabitypes "github.com/tabilabs/tabi/types"
 	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
 	"github.com/tabilabs/tabi/x/claims/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	errorsmod "cosmossdk.io/errors"
 )
 
 func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (sdk.Coins, error) {

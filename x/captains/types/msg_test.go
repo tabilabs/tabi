@@ -107,7 +107,6 @@ func (suite *MsgTestSuite) TestMsgCreateCaptainNodeValidateBasic() {
 			}
 		})
 	}
-
 }
 
 // TestMsgUpdateNodeInfoValidateBasic tests MsgUpdateNodeInfo ValidateBasic

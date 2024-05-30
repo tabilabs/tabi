@@ -3,9 +3,10 @@ package keeper_test
 import (
 	"fmt"
 
+	"github.com/tabilabs/tabi/x/claims/types"
+
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/tabilabs/tabi/x/claims/types"
 )
 
 func (suite *ClaimsTestSuite) TestUpdateParams() {
@@ -149,7 +150,6 @@ func (suite *ClaimsTestSuite) TestClaims() {
 			} else {
 				suite.Require().NoError(err)
 			}
-
 		})
 	}
 }

@@ -4,9 +4,10 @@ import (
 	"crypto/sha256"
 	"fmt"
 
-	errorsmod "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	errorsmod "cosmossdk.io/errors"
 
 	"github.com/tabilabs/tabi/x/captains/types"
 )

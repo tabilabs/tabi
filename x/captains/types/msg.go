@@ -1,10 +1,11 @@
 package types
 
 import (
-	errorsmod "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
+	errorsmod "cosmossdk.io/errors"
 )
 
 var (
@@ -311,7 +312,6 @@ func NewMsgCommitComputingPower(
 func (msg *MsgCommitComputingPower) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Authority); err != nil {
 		return errorsmod.Wrap(err, "invalid authority address")
-
 	}
 	if len(msg.ComputingPowerRewards) == 0 {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "computing powers to commit cannot be empty")

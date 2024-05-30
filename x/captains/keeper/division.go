@@ -1,8 +1,9 @@
 package keeper
 
 import (
-	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	errorsmod "cosmossdk.io/errors"
 
 	"github.com/tabilabs/tabi/x/captains/types"
 )

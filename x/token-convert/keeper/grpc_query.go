@@ -141,7 +141,6 @@ func (q Querier) vouchersByOwner(goCtx context.Context, owner sdk.AccAddress, pa
 		vouchers = append(vouchers, voucher)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "paginate: %v", err)
 	}

@@ -151,7 +151,6 @@ func NewQueryCmdVouchers() *cobra.Command {
 
 			_, err = sdk.AccAddressFromBech32(owner)
 			if err != nil {
-
 			}
 
 			queryClient := types.NewQueryClient(clientCtx)

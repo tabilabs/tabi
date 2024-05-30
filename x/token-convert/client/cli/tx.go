@@ -2,13 +2,15 @@ package cli
 
 import (
 	"github.com/spf13/cobra"
+
 	tabitypes "github.com/tabilabs/tabi/types"
 
-	errorsmod "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	errorsmod "cosmossdk.io/errors"
 
 	"github.com/tabilabs/tabi/x/token-convert/types"
 )

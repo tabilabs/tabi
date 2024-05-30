@@ -1,8 +1,9 @@
 package keeper
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/captains/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 var (

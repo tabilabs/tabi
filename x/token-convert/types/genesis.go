@@ -1,8 +1,9 @@
 package types
 
 import (
-	"cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"cosmossdk.io/errors"
 )
 
 const (
@@ -44,7 +45,6 @@ func defaultStrategies() []Strategy {
 			ConversionRate: sdk.NewDec(1),
 		},
 	}
-
 }
 
 // ValidateGenesis performs basic validation of genesis data returning an

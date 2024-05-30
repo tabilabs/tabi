@@ -55,7 +55,7 @@ func NewTxCmdCreateNode() *cobra.Command {
 				return err
 			}
 
-			var sender = clientCtx.GetFromAddress().String()
+			sender := clientCtx.GetFromAddress().String()
 			divisionID := strings.TrimSpace(args[0])
 			if len(divisionID) == 0 {
 				panic("division-id cannot be empty")
@@ -141,7 +141,7 @@ func NewTxCmdAddAuthorizedMembers() *cobra.Command {
 				return err
 			}
 
-			var sender = clientCtx.GetFromAddress().String()
+			sender := clientCtx.GetFromAddress().String()
 			members := strings.Split(args[0], ",")
 			if len(members) == 0 {
 				panic("members cannot be empty")
@@ -167,7 +167,7 @@ func NewTxCmdRemoveAuthorizedMembers() *cobra.Command {
 				return err
 			}
 
-			var sender = clientCtx.GetFromAddress().String()
+			sender := clientCtx.GetFromAddress().String()
 			members := strings.Split(args[0], ",")
 			if len(members) == 0 {
 				panic("members cannot be empty")
@@ -193,7 +193,7 @@ func NewTxCmdUpdateSaleLevel() *cobra.Command {
 				return err
 			}
 
-			var sender = clientCtx.GetFromAddress().String()
+			sender := clientCtx.GetFromAddress().String()
 
 			levelStr := strings.TrimSpace(args[1])
 			if len(levelStr) == 0 {
@@ -244,7 +244,7 @@ Where update_power_on_period.json contains:
 				return err
 			}
 
-			var sender = clientCtx.GetFromAddress().String()
+			sender := clientCtx.GetFromAddress().String()
 			messages := args[0]
 			if !json.Valid([]byte(messages)) {
 				messagesContent, err := os.ReadFile(messages)
@@ -292,7 +292,7 @@ func NewTxCmdClaimComputingPower() *cobra.Command {
 				return err
 			}
 
-			var sender = clientCtx.GetFromAddress().String()
+			sender := clientCtx.GetFromAddress().String()
 
 			nodeID := strings.TrimSpace(args[0])
 			if len(nodeID) == 0 {

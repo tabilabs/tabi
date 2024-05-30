@@ -7,12 +7,14 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	sdkmath "cosmossdk.io/math"
+
 	"github.com/tabilabs/tabi/x/mint/simulation"
 	"github.com/tabilabs/tabi/x/mint/types"
+
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 )
 
 func TestDecodeStore(t *testing.T) {

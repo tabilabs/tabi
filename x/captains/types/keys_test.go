@@ -5,9 +5,10 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	utiltx "github.com/tabilabs/tabi/testutil/tx"
 	"github.com/tabilabs/tabi/x/captains/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 func TestSplitEpochPrefixStoreKey(t *testing.T) {

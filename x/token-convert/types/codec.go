@@ -1,11 +1,12 @@
 package types
 
 import (
+	cryptocodec "github.com/tabilabs/tabi/crypto/codec"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
-	cryptocodec "github.com/tabilabs/tabi/crypto/codec"
 )
 
 var (

@@ -1,9 +1,11 @@
 package types
 
 import (
-	errorsmod "cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	tabitypes "github.com/tabilabs/tabi/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	errorsmod "cosmossdk.io/errors"
 )
 
 // token-convert module message types
