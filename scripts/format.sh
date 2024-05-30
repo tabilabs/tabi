@@ -6,5 +6,5 @@ for file in $(find . -name '*.go' -type f -path "./x/*" -not -path "./x/evm/*" -
     for prefix in "${LOCAL_PREFIXES[@]}"; do
         goimports --local "$prefix" -w "$file"
     done
-    gofumpt -w $file
+    gofumpt -w "$file"
 done
