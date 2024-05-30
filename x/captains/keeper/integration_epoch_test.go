@@ -5,9 +5,10 @@ import (
 	"math"
 	"math/rand"
 
+	"github.com/tabilabs/tabi/x/captains/types"
+
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 const (

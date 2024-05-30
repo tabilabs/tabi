@@ -1,8 +1,9 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type MockCaptains struct {
@@ -277,7 +278,6 @@ func (mock *MockCaptains) GetNodesByOwner(ctx sdk.Context, owner sdk.AccAddress)
 	default:
 		return []captainnodetypes.Node{}
 	}
-
 }
 
 // GetCurrentEpoch return the current epoch id.

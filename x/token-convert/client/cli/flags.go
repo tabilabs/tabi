@@ -8,9 +8,7 @@ const (
 	FlagOwner = "owner"
 )
 
-var (
-	FlagSetVouchers = flag.NewFlagSet("", flag.ContinueOnError)
-)
+var FlagSetVouchers = flag.NewFlagSet("", flag.ContinueOnError)
 
 func init() {
 	FlagSetVouchers.String(FlagOwner, "", "The owner of the vouchers")

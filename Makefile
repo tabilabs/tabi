@@ -369,7 +369,10 @@ lint-fix-contracts:
 format:
 	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/docs/statik/statik.go" -not -name '*.pb.go' | xargs gofumpt -w -l
 
-.PHONY: format
+format-modules:
+	./scripts/format.sh
+
+.PHONY: format format-modules
 
 ###############################################################################
 ###                                Protobuf                                 ###

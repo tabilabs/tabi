@@ -1,11 +1,12 @@
 package types // noalias
 
 import (
+	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
+	minttypes "github.com/tabilabs/tabi/x/mint/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
-	minttypes "github.com/tabilabs/tabi/x/mint/types"
 )
 
 // AccountKeeper defines the contract required for account APIs.

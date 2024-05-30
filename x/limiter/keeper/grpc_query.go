@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/limiter/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type Querier struct {

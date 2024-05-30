@@ -1,8 +1,9 @@
 package keeper
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tabilabs/tabi/x/captains/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // GetParams sets the captains module parameters.
@@ -51,6 +52,5 @@ func (k Keeper) UpdateSaleLevel(ctx sdk.Context, newSaleLevel uint64) (uint64, e
 
 // GetSaleLevel returns the current sale level.
 func (k Keeper) GetSaleLevel(ctx sdk.Context) uint64 {
-
 	return k.GetParams(ctx).CurrentSaleLevel
 }

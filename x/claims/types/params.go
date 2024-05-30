@@ -1,8 +1,9 @@
 package types
 
 import (
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	tabitypes "github.com/tabilabs/tabi/types"
+
+	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
 // default paramspace for params keeper

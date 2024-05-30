@@ -169,7 +169,6 @@ func (gs *GenesisState) Validate() error {
 	err = gs.ValidateOwnersClaimableComputingPower()
 	if err != nil {
 		return err
-
 	}
 
 	err = gs.ValidateGlobalsComputingPower()

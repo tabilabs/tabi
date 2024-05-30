@@ -5,7 +5,6 @@ import (
 )
 
 func (suite *IntegrationTestSuite) TestExportAndImportGenesis() {
-
 	testCases := []struct {
 		name      string
 		prepare   func()
@@ -55,7 +54,6 @@ func (suite *IntegrationTestSuite) TestExportAndImportGenesis() {
 			suite.Require().Equal(gs1.NodesComputingPower, gs2.NodesComputingPower)
 		})
 	}
-
 }
 
 func (suite *IntegrationTestSuite) utilsPruneCaptainsStore() {

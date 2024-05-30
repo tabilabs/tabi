@@ -11,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 
 	"github.com/spf13/cobra"
+
 	"github.com/tabilabs/tabi/x/claims/types"
 )
 
@@ -33,7 +34,6 @@ func NewTxCmd() *cobra.Command {
 
 // NewClaimsCmd returns a CLI command handler for creating a MsgWithdrawDelegatorReward transaction.
 func NewClaimsCmd() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "claims [receiver]",
 		Short: "claims rewards",

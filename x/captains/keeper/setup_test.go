@@ -30,13 +30,11 @@ import (
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 )
 
-var (
-	accounts = []sdk.AccAddress{
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()), // default member
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
-		sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
-	}
-)
+var accounts = []sdk.AccAddress{
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()), // default member
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+	sdk.AccAddress(utiltx.GenerateAddress().Bytes()),
+}
 
 type ValOperator struct {
 	accAddress  common.Address

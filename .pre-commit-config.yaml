@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: make-format-modules
+        name: Make Format Modules
+        entry: make format-modules
+        language: system
+        stages: [commit]
+        always_run: true

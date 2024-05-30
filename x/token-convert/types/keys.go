@@ -40,7 +40,6 @@ func StrategyStoreKey(strategy []byte) []byte {
 // Items are stored with key as follows:
 // 0x02<voucherID>
 func VoucherStoreKey(voucherID string) []byte {
-
 	bz := make([]byte, len(VoucherKey)+len(voucherID))
 
 	copy(bz, VoucherKey)

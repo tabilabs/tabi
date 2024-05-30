@@ -138,7 +138,6 @@ func (q Querier) Division(
 	division, found := q.GetDivision(ctx, request.DivisionId)
 	if !found {
 		return nil, types.ErrDivisionNotExists.Wrapf("division not found: %s", request.DivisionId)
-
 	}
 	return &types.QueryDivisionResponse{Division: &division}, nil
 }

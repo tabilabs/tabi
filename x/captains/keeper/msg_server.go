@@ -6,9 +6,10 @@ import (
 
 	errorsmod "cosmossdk.io/errors"
 
+	"github.com/tabilabs/tabi/x/captains/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 type msgServer struct {

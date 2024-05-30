@@ -29,7 +29,7 @@ var (
 
 var (
 	DefaultMintDenom = evm.DefaultEVMDenom
-	DefaultInflation = sdk.NewDecWithPrec(20, 2) //20%
+	DefaultInflation = sdk.NewDecWithPrec(20, 2) // 20%
 )
 
 // ParamTable for mint module
@@ -76,7 +76,6 @@ func (p *Params) GetParamSpace() string {
 
 // Validate returns err if the Params is invalid
 func (p Params) Validate() error {
-
 	if err := validateInflation(p.Inflation); err != nil {
 		return err
 	}

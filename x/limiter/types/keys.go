@@ -12,6 +12,4 @@ const (
 	prefixParams = 1
 )
 
-var (
-	ParamsKey = []byte{prefixParams}
-)
+var ParamsKey = []byte{prefixParams}

@@ -94,7 +94,6 @@ func (suite *IntegrationTestSuite) TestQueryNodes() {
 
 			suite.SetupTest()
 		})
-
 	}
 }
 

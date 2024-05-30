@@ -1,11 +1,13 @@
 package keeper
 
 import (
-	errorsmod "cosmossdk.io/errors"
+	"github.com/cosmos/gogoproto/proto"
+
 	sdkcdc "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/gogoproto/proto"
+
+	errorsmod "cosmossdk.io/errors"
 
 	"github.com/tabilabs/tabi/x/captains/types"
 )

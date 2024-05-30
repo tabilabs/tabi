@@ -4,8 +4,9 @@ import (
 	fmt "fmt"
 	time "time"
 
-	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	sdkmath "cosmossdk.io/math"
 )
 
 const (

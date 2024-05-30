@@ -84,7 +84,6 @@ func (suite *ClaimsTestSuite) TestQueryNodeTotalRewards() {
 				suite.Require().Error(err)
 			}
 		})
-
 	}
 }
 
@@ -167,7 +166,5 @@ func (suite *ClaimsTestSuite) TestQueryHolderTotalRewards() {
 				suite.Require().Error(err)
 			}
 		})
-
 	}
-
 }
