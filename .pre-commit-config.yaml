@@ -7,3 +7,9 @@ repos:
         language: system
         stages: [commit]
         always_run: true
+      - id: build-packages
+        name: Build Packages
+        entry: make build
+        language: system
+        stages: [ commit ]
+        always_run: true
