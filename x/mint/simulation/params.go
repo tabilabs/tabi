@@ -18,7 +18,7 @@ func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(
 			types.ModuleName,
-			string(types.KeyInflation),
+			"Inflation",
 			func(r *rand.Rand) string {
 				return fmt.Sprintf("\"%s\"", GenInflation(r))
 			},

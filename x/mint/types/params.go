@@ -1,41 +1,21 @@
 package types
 
 import (
-	fmt "fmt"
+	"fmt"
 	"strings"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"gopkg.in/yaml.v2"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	evm "github.com/tabilabs/tabi/x/evm/types"
-
-	"gopkg.in/yaml.v2"
-)
-
-// default paramspace for params keeper
-const (
-	DefaultParamSpace = "mint"
-)
-
-// Parameter store key
-var (
-	// params store for inflation params
-	KeyInflation             = []byte("Inflation")
-	KeyMintDenom             = []byte("MintDenom")
-	KeyInflationDistribution = []byte("InflationDistribution")
 )
 
 var (
 	DefaultMintDenom = evm.DefaultEVMDenom
 	DefaultInflation = sdk.NewDecWithPrec(20, 2) // 20%
 )
-
-// ParamTable for mint module
-func ParamKeyTable() paramtypes.KeyTable {
-	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
-}
 
 func NewParams(
 	mintDenom string,
@@ -59,19 +39,6 @@ func DefaultParams() Params {
 func (p Params) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
-}
-
-// ParamSetPairs implements params.ParamSet
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyInflation, &p.Inflation, validateInflation),
-		paramtypes.NewParamSetPair(KeyMintDenom, &p.MintDenom, validateMintDenom),
-	}
-}
-
-// GetParamSpace implements params.ParamStruct
-func (p *Params) GetParamSpace() string {
-	return DefaultParamSpace
 }
 
 // Validate returns err if the Params is invalid

@@ -325,7 +325,6 @@ func NewTabi(
 		appCodec,
 		authtypes.NewModuleAddress(govtypes.ModuleName),
 		keys[minttypes.StoreKey],
-		app.GetSubspace(minttypes.ModuleName),
 		app.AccountKeeper,
 		app.BankKeeper,
 		app.DistrKeeper,
@@ -845,7 +844,6 @@ func initParamsKeeper(
 	paramsKeeper.Subspace(authtypes.ModuleName)
 	paramsKeeper.Subspace(banktypes.ModuleName)
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
-	paramsKeeper.Subspace(minttypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govv1.ParamKeyTable())
@@ -856,6 +854,7 @@ func initParamsKeeper(
 	paramsKeeper.Subspace(evmtypes.ModuleName).WithKeyTable(evmtypes.ParamKeyTable()) //nolint: staticcheck
 	paramsKeeper.Subspace(feemarkettypes.ModuleName).WithKeyTable(feemarkettypes.ParamKeyTable())
 	// tabi subspaces
+	paramsKeeper.Subspace(minttypes.ModuleName)
 	paramsKeeper.Subspace(claimstypes.ModuleName)
 	paramsKeeper.Subspace(captainnodetypes.ModuleName)
 
