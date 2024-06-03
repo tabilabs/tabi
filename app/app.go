@@ -394,7 +394,6 @@ func NewTabi(
 		appCodec,
 		authtypes.NewModuleAddress(govtypes.ModuleName),
 		keys[claimstypes.StoreKey],
-		app.GetSubspace(claimstypes.ModuleName),
 		app.AccountKeeper,
 		app.BankKeeper,
 		app.CaptainsKeeper,
