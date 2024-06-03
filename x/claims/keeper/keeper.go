@@ -5,18 +5,16 @@ import (
 
 	"github.com/tendermint/tendermint/libs/log"
 
+	"github.com/tabilabs/tabi/x/claims/types"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-
-	"github.com/tabilabs/tabi/x/claims/types"
 )
 
 type Keeper struct {
-	cdc        codec.Codec
-	storeKey   storetypes.StoreKey
-	paramSpace paramtypes.Subspace
+	cdc      codec.Codec
+	storeKey storetypes.StoreKey
 
 	// cosmos keepers
 	authKeeper types.AccountKeeper
@@ -31,8 +29,8 @@ type Keeper struct {
 
 // NewKeeper returns a mint keeper
 func NewKeeper(cdc codec.Codec, authority sdk.AccAddress,
-	key storetypes.StoreKey, paramSpace paramtypes.Subspace,
-	ak types.AccountKeeper, bk types.BankKeeper, ck types.CaptainsKeeper,
+	key storetypes.StoreKey, ak types.AccountKeeper,
+	bk types.BankKeeper, ck types.CaptainsKeeper,
 ) Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -42,7 +40,6 @@ func NewKeeper(cdc codec.Codec, authority sdk.AccAddress,
 	keeper := Keeper{
 		storeKey:       key,
 		cdc:            cdc,
-		paramSpace:     paramSpace.WithKeyTable(types.ParamKeyTable()),
 		authKeeper:     ak,
 		bankKeeper:     bk,
 		captainsKeeper: ck,

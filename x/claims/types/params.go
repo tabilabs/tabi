@@ -2,19 +2,7 @@ package types
 
 import (
 	tabitypes "github.com/tabilabs/tabi/types"
-
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
-
-// default paramspace for params keeper
-const (
-	DefaultParamSpace = ModuleName
-)
-
-// ParamTable for mint module
-func ParamKeyTable() paramtypes.KeyTable {
-	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
-}
 
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
@@ -22,16 +10,6 @@ func DefaultParams() Params {
 		EnableClaims: true,
 		ClaimsDenom:  tabitypes.AttoVeTabi,
 	}
-}
-
-// ParamSetPairs implements params.ParamSet
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return nil
-}
-
-// GetParamSpace implements params.ParamStruct
-func (p *Params) GetParamSpace() string {
-	return DefaultParamSpace
 }
 
 // Validate returns err if the Params is invalid

@@ -4,18 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
-
-const (
-	DefaultParamSpace = ModuleName
-)
-
-// ParamKeyTable for captains node
-func ParamKeyTable() paramtypes.KeyTable {
-	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
-}
 
 // NewParams creates a Params.
 func NewParams(
@@ -52,17 +41,6 @@ func DefaultParams() Params {
 		CurrentSaleLevel:                   1,
 		AuthorizedMembers:                  nil,
 	}
-}
-
-// ParamSetPairs implements params.ParamSet
-// FIXME: we need this!
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return nil
-}
-
-// GetParamSpace implements params.ParamStruct
-func (p *Params) GetParamSpace() string {
-	return DefaultParamSpace
 }
 
 // Validate returns err if the Params is invalid
