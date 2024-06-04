@@ -42,12 +42,17 @@ Here is the corrected version of the changelog with proper grammar and typo corr
 
 ### Features
 
-- (x/token-convert) [#18](https://github.com/tabilabs/tabi/pull/18) Token-convert module implements the token conversion between Tabi and VeTabi.
-- (x/captains) [#20](https://github.com/tabilabs/tabi/pull/20) Captains module manages captain nodes and calculates rewards for captain nodes in epochs.
-- (x/claims) [#23](https://github.com/tabilabs/tabi/pull/23) Claims module allows users to claim rewards accrued from the Captains module.
-- (x/mint) [#31](https://github.com/tabilabs/tabi/pull/31) Mint module mints inflation rewards for network participants.
+- (x/token-convert) [\#18](https://github.com/tabilabs/tabi/pull/18) Token-convert module implements the token conversion between Tabi and VeTabi.
+- (x/captains) [\#20](https://github.com/tabilabs/tabi/pull/20) Captains module manages captain nodes and calculates rewards for captain nodes in epochs.
+- (x/claims) [\#23](https://github.com/tabilabs/tabi/pull/23) Claims module allows users to claim rewards accrued from the Captains module.
+- (x/mint) [\#31](https://github.com/tabilabs/tabi/pull/31) Mint module mints inflation rewards for network participants.
+- (x/limiter) [\#48](https://github.com/tabilabs/tabi/pull/48) Limiter module limits the contract deployer.
 
 ### Improvements
 
-- (ante) [#22](https://github.com/tabilabs/tabi/pull/28) Add an allowlist ante handler restricting EVM transactions.
+- (ante) [\#22](https://github.com/tabilabs/tabi/pull/28) Add an allowlist ante handler restricting EVM transactions.
+- (params) [\#52](https://github.com/tabilabs/tabi/pull/52) Remove useless params code from the module.
 
+### Bug Fixes
+
+- (x/captains) [\#53](https://github.com/tabilabs/tabi/pull/53) Register report content type.
