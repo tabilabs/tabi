@@ -1,15 +1,13 @@
 package keeper
 
 import (
-	"github.com/cosmos/gogoproto/proto"
+	"github.com/tabilabs/tabi/x/captains/types"
 
 	sdkcdc "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	errorsmod "cosmossdk.io/errors"
-
-	"github.com/tabilabs/tabi/x/captains/types"
 )
 
 // CommitReport processes a report
@@ -121,7 +119,7 @@ func (k Keeper) IsReportCompleted(ctx sdk.Context, epochId uint64) error {
 
 // ValidateReport checks if the report is valid
 func (k Keeper) ValidateReport(ctx sdk.Context, reportType types.ReportType, report *sdkcdc.Any) (any, error) {
-	var message proto.Message
+	var message types.ReportContent
 	if report == nil {
 		return nil, errorsmod.Wrapf(types.ErrInvalidReport, "report is nil")
 	}

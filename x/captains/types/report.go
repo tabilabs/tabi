@@ -6,6 +6,10 @@ import (
 	errorsmod "cosmossdk.io/errors"
 )
 
+type ReportContent interface {
+	ValidateBasic() error
+}
+
 // ValidateBasic validate a report digest
 func (digest *ReportDigest) ValidateBasic() error {
 	if digest.EpochId == 0 {
@@ -55,5 +59,13 @@ func (batch *ReportBatch) ValidateBasic() error {
 		seenMap[node.NodeId] = true
 	}
 
+	return nil
+}
+
+// ValidateBasic validate a report end
+func (end *ReportEnd) ValidateBasic() error {
+	if end.EpochId == 0 {
+		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "epoch id is zero")
+	}
 	return nil
 }
