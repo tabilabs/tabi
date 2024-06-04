@@ -41,7 +41,7 @@ func (cld CaptainsRestrictionDecorator) AnteHandle(
 // restrict checks if the given messages are restricted
 func (cld CaptainsRestrictionDecorator) restrict(ctx sdk.Context, msgs []sdk.Msg) error {
 	for _, msg := range msgs {
-		switch msg := msg.(type) {
+		switch msg.(type) {
 		case *captainstypes.MsgCreateCaptainNode,
 			*captainstypes.MsgUpdateSaleLevel,
 			*captainstypes.MsgClaimComputingPower,
@@ -49,11 +49,6 @@ func (cld CaptainsRestrictionDecorator) restrict(ctx sdk.Context, msgs []sdk.Msg
 			*claimestypes.MsgClaims:
 			if !cld.captainsKeeper.IsStandByPhase(ctx) {
 				return fmt.Errorf("msg %s is not allowed in busy phrase", msg.String())
-			}
-		case
-			*captainstypes.MsgCommitReport:
-			if cld.captainsKeeper.IsStandByPhase(ctx) {
-				return fmt.Errorf("msg %s is not allowed in stand-by phrase", msg.String())
 			}
 		}
 	}

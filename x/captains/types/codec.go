@@ -17,5 +17,12 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		&MsgClaimComputingPower{},
 		&MsgUpdateParams{},
 	)
+
+	registry.RegisterImplementations((*ReportContent)(nil),
+		&ReportDigest{},
+		&ReportBatch{},
+		&ReportEnd{},
+	)
+
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
