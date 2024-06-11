@@ -234,9 +234,12 @@ func (q Querier) EpochStatus(
 		digestStr = digest.String()
 	}
 
+	emission := q.Keeper.GetEpochEmission(ctx, request.Epoch)
+
 	return &types.QueryEpochStatusResponse{
 		Epoch:                request.Epoch,
 		GlobalComputingPower: gpower.String(),
 		ReportDigest:         digestStr,
+		EpochEmission:        emission.String(),
 	}, nil
 }

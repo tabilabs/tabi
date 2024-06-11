@@ -181,4 +181,5 @@ message QueryEpochStatusResponse {
   uint64 epoch = 1;
   string global_computing_power = 2;
   string report_digest = 3;
+  string epoch_emission = 4;
 }
