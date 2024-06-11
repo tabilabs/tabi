@@ -32,10 +32,10 @@ func NewParams(
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return Params{
-		CaptainsTotalCount:                 100000,
+		CaptainsTotalCount:                 200000,
 		MinimumPowerOnPeriod:               6,
 		MaximumPowerOnPeriod:               24,
-		CaptainsConstant:                   sdk.NewDec(300000),
+		CaptainsConstant:                   sdk.NewDec(9000000),
 		TechProgressCoefficientCardinality: sdk.NewDecWithPrec(16, 1),
 		HalvingEraCoefficient:              sdk.OneDec(),
 		CurrentSaleLevel:                   1,

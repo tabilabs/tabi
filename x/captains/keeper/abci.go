@@ -63,6 +63,8 @@ func (k Keeper) EndBlocker(ctx sdk.Context) {
 
 		// TODO: once we enter in busy phrase, we won't go back until
 		// report ends. Considering if we need way to go back manually.
+		// FIXME: this should exec only once in each report though executing
+		// multiple times won't affect the result currently.
 		k.execReportDigestEndBlock(ctx, digest)
 		ctx.EventManager().EmitEvents(sdk.Events{
 			sdk.NewEvent(
