@@ -118,7 +118,7 @@ func (suite *IntegrationTestSuite) TestEpochState() {
 		suite.T().Run(tc.name, func(t *testing.T) {
 			// NOTE: don't set this in the test case as for each test the suite will evaluate it before the test thus
 			// creating too much nodes.
-			tc.currEpochState = NewEpochState(suite).WithNodes(owner, 1, 100).WithNodesPowerOnRatio()
+			tc.currEpochState = NewEpochState(suite, tc.reporter).WithNodes(owner, 1, 100).WithNodesPowerOnRatio("")
 			tc.WithStateMap()
 			tc.Execute()
 		})
@@ -203,7 +203,46 @@ func (suite *IntegrationTestSuite) TestAnteWhenEpochBusy() {
 
 	for _, tc := range testCases {
 		suite.T().Run(tc.name, func(t *testing.T) {
-			tc.currEpochState = NewEpochState(suite).WithNodes(owner, 1, 100).WithNodesPowerOnRatio()
+			tc.currEpochState = NewEpochState(suite, tc.reporter).WithNodes(owner, 1, 100).WithNodesPowerOnRatio("")
+			tc.Execute()
+		})
+		suite.SetupTest()
+	}
+}
+
+// TestEpochStateScenarioA tests the epoch state transitions as follows:
+// global pledge ratio: ?
+// owner pledge ratio: 0.3
+
+func (suite *IntegrationTestSuite) TestEpochStateScenarioA() {
+	owner := accounts[0].String()
+	testCases := []EpochTestCase{
+		{
+			name:              "test epoch state scenario A",
+			maxEpoch:          2,
+			reporter:          NewCaptainsReporter(sdk.MustNewDecFromStr("0.47"), 100),
+			saveState:         true,
+			globalPledgeRatio: sdk.MustNewDecFromStr("0.8"),
+			execStandByFn: func(es *EpochState) {
+				if es.Epoch >= 2 {
+					resp, err := suite.ClaimsServer.Claims(suite.Ctx, &claimstypes.MsgClaims{
+						Receiver: owner,
+						Sender:   owner,
+					})
+					suite.Require().NoError(err)
+					suite.T().Logf("claimed: %s", resp.Amount.String())
+				}
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.T().Run(tc.name, func(t *testing.T) {
+			tc.currEpochState = NewEpochState(suite, tc.reporter).
+				WithNodes(owner, 1, 100).
+				WithNodesPowerOnRatio("1.0")
+
+			tc.WithStateMap()
 			tc.Execute()
 		})
 		suite.SetupTest()
