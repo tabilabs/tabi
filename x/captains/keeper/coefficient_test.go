@@ -51,3 +51,22 @@ func (suite *IntegrationTestSuite) TestTechCoefficient() {
 		})
 	}
 }
+
+func (suite *IntegrationTestSuite) TestEpochEmission() {
+	testCases := []struct {
+		name string
+	}{
+		{
+			name: "test emission",
+		},
+	}
+
+	for _, tc := range testCases {
+		suite.Run(fmt.Sprintf("TechCoefficient - %s", tc.name), func() {
+			res := suite.Keeper.CalcBaseEpochEmission(suite.Ctx).Quo(sdk.NewDec(1e18))
+			suite.T().Log("BaseEmission: ", res.String())
+			res = suite.Keeper.CalcEpochEmission(suite.Ctx, 1, sdk.MustNewDecFromStr("0.47")).Quo(sdk.NewDec(1e18))
+			suite.T().Log("Emission: ", res.String())
+		})
+	}
+}

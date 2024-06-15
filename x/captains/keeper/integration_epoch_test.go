@@ -29,6 +29,9 @@ type EpochTestCase struct {
 	name     string // test name
 	maxEpoch int    // number of epoches to run
 
+	// settable
+	globalPledgeRatio sdk.Dec
+
 	currEpochState *EpochState
 	reporter       *CaptainsReporter
 
@@ -69,10 +72,18 @@ func (etc *EpochTestCase) execute() {
 			etc.execStandByFn(etc.currEpochState)
 		}
 	case EpochPhaseBeforeDigest:
+		//// NOTE: control pledge ratio as needed, only for testing purpose.
+		//if !etc.globalPledgeRatio.IsZero() {
+		//	etc.ManipulateGlobalPledgeRatio()
+		//}
 		execEpochPhaseBeforeDigest(etc.currEpochState)
 	case EpochPhaseOnDigest:
 		execEpochPhaseOnDigest(etc.currEpochState, etc.reporter)
 	case EpochPhaseAfterDigest:
+		//// NOTE: recover pledge ratio as needed, only when we manipulated it.s
+		//if !etc.globalPledgeRatio.IsZero() {
+		//	etc.RecoverGlobalPledgeRatio()
+		//}
 		execEpochPhaseAfterDigest(etc.currEpochState)
 		// TODO: in fact we can place it in any phase as long as the epoch is busy.
 		// but we just want to test ante so it's enough to place it here.
@@ -106,7 +117,7 @@ func (etc *EpochTestCase) WithStateMap() {
 
 // Duplicate duplicates the epoch state.
 func (etc *EpochTestCase) Duplicate(es *EpochState) *EpochState {
-	nes := NewEpochState(es.suite)
+	nes := NewEpochState(es.suite, es.Reporter)
 
 	nes.Owner = es.Owner
 	nes.Epoch = es.Epoch
@@ -142,6 +153,20 @@ func (etc *EpochTestCase) Export() {
 	// TODO: print states as we may want to export it to a csv file
 }
 
+// ManipulateGlobalPledgeRatio manipulates the global pledge ratio.
+func (etc *EpochTestCase) ManipulateGlobalPledgeRatio() {
+	base := sdk.NewDec(1000)
+	gpr := etc.globalPledgeRatio.Mul(base)
+
+	etc.currEpochState.suite.Keeper.SetGlobalPledge(etc.currEpochState.suite.Ctx, etc.currEpochState.Epoch, gpr)
+	etc.currEpochState.suite.Keeper.SetGlobalClaimedEmission(etc.currEpochState.suite.Ctx, base)
+}
+
+func (etc *EpochTestCase) RecoverGlobalPledgeRatio() {
+	etc.currEpochState.suite.Keeper.SetGlobalPledge(etc.currEpochState.suite.Ctx, etc.currEpochState.Epoch, etc.currEpochState.GlobalPledge)
+	etc.currEpochState.suite.Keeper.SetGlobalClaimedEmission(etc.currEpochState.suite.Ctx, etc.currEpochState.GlobalClaimedEmission)
+}
+
 func execEpochPhaseBeginEpoch(nes *EpochState) {
 	// update epoch
 	nes.Epoch = nes.suite.Keeper.GetCurrentEpoch(nes.suite.Ctx)
@@ -165,7 +190,7 @@ func execEpochPhaseBeginEpoch(nes *EpochState) {
 }
 
 func execEpochPhaseBeforeDigest(nes *EpochState) {
-	nes.EpochEmission = nes.suite.Keeper.CalcEpochEmission(nes.suite.Ctx, nes.Epoch, sdk.NewDecWithPrec(1, 0))
+	nes.EpochEmission = nes.suite.Keeper.CalcEpochEmission(nes.suite.Ctx, nes.Epoch, nes.Reporter.GlobalOnOperationRatio)
 
 	if nes.Epoch <= 1 {
 		return
@@ -175,6 +200,8 @@ func execEpochPhaseBeforeDigest(nes *EpochState) {
 	exist := nes.suite.Keeper.HasGlobalPledge(nes.suite.Ctx, nes.Epoch)
 	nes.suite.Require().Equal(true, exist)
 	nes.GlobalPledge = nes.suite.Keeper.GetGlobalPledge(nes.suite.Ctx, nes.Epoch)
+	// note: set this in case we want to recover from manipulating.
+	nes.GlobalClaimedEmission = nes.suite.Keeper.GetGlobalClaimedEmission(nes.suite.Ctx)
 }
 
 func execEpochPhaseOnDigest(nes *EpochState, crp *CaptainsReporter) {
@@ -187,6 +214,7 @@ func execEpochPhaseAfterDigest(nes *EpochState) {
 
 	ee := nes.suite.Keeper.GetEpochEmission(nes.suite.Ctx, nes.Epoch)
 	nes.suite.Require().Equal(ee, nes.EpochEmission)
+	nes.suite.T().Logf("epoch emission: %s", ee.String())
 
 	if nes.Epoch <= 1 {
 		return
@@ -277,7 +305,8 @@ func (nds Nodes) PowerOnRatios(start, end int) []types.NodePowerOnRatio {
 // EpochState captures the state of the captains module on specific height and epoch.
 // NOTE: currently we set only one owner for all the nodes.
 type EpochState struct {
-	suite *IntegrationTestSuite
+	suite    *IntegrationTestSuite
+	Reporter *CaptainsReporter
 
 	// epoch phase
 	Epoch uint64
@@ -306,9 +335,10 @@ type EpochState struct {
 	OwnerPledge  sdk.Dec
 }
 
-func NewEpochState(suite *IntegrationTestSuite) *EpochState {
+func NewEpochState(suite *IntegrationTestSuite, reporter *CaptainsReporter) *EpochState {
 	return &EpochState{
 		suite:                   suite,
+		Reporter:                reporter,
 		EpochEmission:           sdk.ZeroDec(),
 		GlobalClaimedEmission:   sdk.ZeroDec(),
 		NodeClaimedEmission:     make(map[string]sdk.Dec),
@@ -339,7 +369,13 @@ func (es *EpochState) WithNodes(owner string, divisionLevel, amount uint64) *Epo
 }
 
 // WithNodesPowerOnRatio initializes the power on ratio for the nodes in the epoch state.
-func (es *EpochState) WithNodesPowerOnRatio() *EpochState {
+func (es *EpochState) WithNodesPowerOnRatio(ratio string) *EpochState {
+	if len(ratio) != 0 {
+		for i := range es.Nodes {
+			es.Nodes[i].PowerOnRatio = sdk.MustNewDecFromStr(ratio)
+		}
+	}
+
 	for i := range es.Nodes {
 		// TODO: though we want an zero ratio as well.
 		es.Nodes[i].PowerOnRatio = sdk.MustNewDecFromStr(fmt.Sprintf("%f", 0.47+rand.Float64()*0.53))

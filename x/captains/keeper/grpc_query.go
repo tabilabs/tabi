@@ -218,3 +218,28 @@ func (q Querier) CurrentEpoch(
 		Height: uint64(height),
 	}, nil
 }
+
+// EpochStatus queries the status of an epoch.
+func (q Querier) EpochStatus(
+	goCtx context.Context,
+	request *types.QueryEpochStatusRequest,
+) (*types.QueryEpochStatusResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	gpower := q.Keeper.GetGlobalComputingPowerOnEpoch(ctx, request.Epoch)
+
+	var digestStr string
+	digest, found := q.Keeper.GetReportDigest(ctx, request.Epoch)
+	if found {
+		digestStr = digest.String()
+	}
+
+	emission := q.Keeper.GetEpochEmission(ctx, request.Epoch)
+
+	return &types.QueryEpochStatusResponse{
+		Epoch:                request.Epoch,
+		GlobalComputingPower: gpower.String(),
+		ReportDigest:         digestStr,
+		EpochEmission:        emission.String(),
+	}, nil
+}

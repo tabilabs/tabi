@@ -60,6 +60,11 @@ service Query {
   rpc CurrentEpoch(QueryCurrentEpochRequest) returns (QueryCurrentEpochResponse) {
     option (google.api.http).get = "/x/captains/v1/current-epoch";
   }
+
+  // EpochStatus queries the current epoch status
+  rpc EpochStatus(QueryEpochStatusRequest) returns (QueryEpochStatusResponse) {
+    option (google.api.http).get = "/x/captains/v1/epoch-status";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Parameters RPC method
@@ -164,4 +169,17 @@ message QueryNodeLastEpochInfoResponse {
   string last_epoch_emission = 3;
   string historical_emission = 4;
   string pledge_ratio = 5;
+}
+
+// QueryEpochStatusRequest is the request type for the Query/EpochStatus RPC method
+message QueryEpochStatusRequest {
+  uint64 epoch = 1;
+}
+
+// QueryEpochStatusResponse is the response type for the Query/EpochStatus RPC method
+message QueryEpochStatusResponse {
+  uint64 epoch = 1;
+  string global_computing_power = 2;
+  string report_digest = 3;
+  string epoch_emission = 4;
 }
