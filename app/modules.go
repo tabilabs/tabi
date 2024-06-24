@@ -29,6 +29,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	"github.com/cosmos/cosmos-sdk/x/mint"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -56,8 +58,6 @@ import (
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 	"github.com/tabilabs/tabi/x/limiter"
 	limitertypes "github.com/tabilabs/tabi/x/limiter/types"
-	"github.com/tabilabs/tabi/x/mint"
-	minttypes "github.com/tabilabs/tabi/x/mint/types"
 	tokenconvert "github.com/tabilabs/tabi/x/token-convert"
 	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
 )
@@ -155,7 +155,7 @@ func appModules(
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
 		crisis.NewAppModule(&app.CrisisKeeper, skipGenesisInvariants),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
-		mint.NewAppModule(appCodec, app.MintKeeper),
+		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),

@@ -59,6 +59,8 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	mintkeeper "github.com/cosmos/cosmos-sdk/x/mint/keeper"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -102,8 +104,6 @@ import (
 	feemarkettypes "github.com/tabilabs/tabi/x/feemarket/types"
 	limiterkeeper "github.com/tabilabs/tabi/x/limiter/keeper"
 	limitertypes "github.com/tabilabs/tabi/x/limiter/types"
-	mintkeeper "github.com/tabilabs/tabi/x/mint/keeper"
-	minttypes "github.com/tabilabs/tabi/x/mint/types"
 	tokenconvertkeeper "github.com/tabilabs/tabi/x/token-convert/keeper"
 	tokenconverttypes "github.com/tabilabs/tabi/x/token-convert/types"
 
@@ -323,11 +323,11 @@ func NewTabi(
 
 	app.MintKeeper = mintkeeper.NewKeeper(
 		appCodec,
-		authtypes.NewModuleAddress(govtypes.ModuleName),
 		keys[minttypes.StoreKey],
+		app.GetSubspace(minttypes.ModuleName),
+		app.StakingKeeper,
 		app.AccountKeeper,
 		app.BankKeeper,
-		app.DistrKeeper,
 		authtypes.FeeCollectorName,
 	)
 
@@ -845,6 +845,7 @@ func initParamsKeeper(
 	paramsKeeper.Subspace(banktypes.ModuleName)
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
+	paramsKeeper.Subspace(minttypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govv1.ParamKeyTable())
 	paramsKeeper.Subspace(crisistypes.ModuleName)
@@ -854,7 +855,6 @@ func initParamsKeeper(
 	paramsKeeper.Subspace(evmtypes.ModuleName).WithKeyTable(evmtypes.ParamKeyTable()) //nolint: staticcheck
 	paramsKeeper.Subspace(feemarkettypes.ModuleName).WithKeyTable(feemarkettypes.ParamKeyTable())
 	// tabi subspaces
-	paramsKeeper.Subspace(minttypes.ModuleName)
 	paramsKeeper.Subspace(claimstypes.ModuleName)
 	paramsKeeper.Subspace(captainnodetypes.ModuleName)
 
