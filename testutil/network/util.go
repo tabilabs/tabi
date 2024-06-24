@@ -26,9 +26,8 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	mintypes "github.com/tabilabs/tabi/x/mint/types"
 
 	"github.com/tabilabs/tabi/server"
 	evmtypes "github.com/tabilabs/tabi/x/evm/types"
@@ -215,11 +214,11 @@ func initGenFiles(cfg Config, genAccounts []authtypes.GenesisAccount, genBalance
 	govGenState.DepositParams.MinDeposit[0].Denom = cfg.BondDenom
 	cfg.GenesisState[govtypes.ModuleName] = cfg.Codec.MustMarshalJSON(&govGenState)
 
-	var mintGenState mintypes.GenesisState
-	cfg.Codec.MustUnmarshalJSON(cfg.GenesisState[mintypes.ModuleName], &mintGenState)
+	var mintGenState minttypes.GenesisState
+	cfg.Codec.MustUnmarshalJSON(cfg.GenesisState[minttypes.ModuleName], &mintGenState)
 
 	mintGenState.Params.MintDenom = cfg.BondDenom
-	cfg.GenesisState[mintypes.ModuleName] = cfg.Codec.MustMarshalJSON(&mintGenState)
+	cfg.GenesisState[minttypes.ModuleName] = cfg.Codec.MustMarshalJSON(&mintGenState)
 
 	var crisisGenState crisistypes.GenesisState
 	cfg.Codec.MustUnmarshalJSON(cfg.GenesisState[crisistypes.ModuleName], &crisisGenState)

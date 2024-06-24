@@ -2,7 +2,8 @@ package types // noalias
 
 import (
 	captainnodetypes "github.com/tabilabs/tabi/x/captains/types"
-	minttypes "github.com/tabilabs/tabi/x/mint/types"
+
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
