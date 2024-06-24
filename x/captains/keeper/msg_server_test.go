@@ -255,6 +255,17 @@ func (suite *IntegrationTestSuite) TestClaimComputingPower() {
 			},
 			expectErr: true,
 		},
+		{
+			name: "failure - no authority",
+			malleate: func() {
+			},
+			request: &types.MsgClaimComputingPower{
+				Sender:               owner,
+				ComputingPowerAmount: 100000,
+				NodeId:               nodeID,
+			},
+			expectErr: true,
+		},
 	}
 
 	for _, tc := range testCases {
