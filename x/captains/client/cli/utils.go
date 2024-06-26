@@ -13,7 +13,7 @@ import (
 
 const (
 	FlagOwner      = "owner"
-	FlagReportType = "report_type"
+	FlagReportType = "report-type"
 
 	ReportTypeDigest = "digest"
 	ReportTypeBatch  = "batch"
