@@ -70,7 +70,7 @@ func NewTxCmdCreateNode() *cobra.Command {
 				panic("receiver cannot be empty")
 			}
 
-			msg := types.NewMsgCreateCaptainNode(divisionID, receiver, sender)
+			msg := types.NewMsgCreateCaptainNode(sender, receiver, divisionID)
 
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -107,7 +107,7 @@ func NewTxCmdCommitReport() *cobra.Command {
 				return err
 			}
 
-			report, err := parseReport(contents, args[0])
+			report, err := parseReport(contents, reportType)
 			if err != nil {
 				return err
 			}
