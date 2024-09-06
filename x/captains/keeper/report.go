@@ -49,6 +49,13 @@ func (k Keeper) execReportDigestEndBlock(ctx sdk.Context, digest *types.ReportDi
 func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) error {
 	epochId := report.EpochId
 
+	deltaAddGlobalPower := sdk.ZeroDec()
+	deltaDelGlobalPower := sdk.ZeroDec()
+	deltaGlobalPledge := sdk.ZeroDec()
+
+	lastEpochGlobalEmission := k.GetEpochEmission(ctx, epochId-1)
+	lastEpochGlobalPower := k.GetGlobalComputingPowerOnEpoch(ctx, epochId-1)
+
 	for _, node := range report.Nodes {
 		owner, found := k.GetNodeOwner(ctx, node.NodeId)
 		if !found {
@@ -56,12 +63,16 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 		}
 
 		// try to calculate historical emission
-		k.CalcAndSetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId)
+		k.CalcAndSetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId, lastEpochGlobalEmission, lastEpochGlobalPower)
 		power := k.CalcNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, node.OnOperationRatio)
+		oldPower := k.GetNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId)
 
 		k.setNodeComputingPowerOnEpoch(ctx, epochId, node.NodeId, power)
 		k.delOwnerPledge(ctx, owner, epochId-2) // it's fine to delete epoch(-1) which doesn't exist at all.
-		k.incrGlobalComputingPowerOnEpoch(ctx, epochId, power)
+		if oldPower.GT(sdk.ZeroDec()) {
+			deltaDelGlobalPower = deltaDelGlobalPower.Add(oldPower)
+		}
+		deltaAddGlobalPower = deltaAddGlobalPower.Add(power)
 
 		// sample owner pledge once for next epoch
 		if !k.HasOwnerPledge(ctx, owner, epochId+1) {
@@ -71,9 +82,12 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 			}
 
 			k.SetOwnerPledge(ctx, owner, epochId+1, pledge)
-			k.IncrGlobalPledge(ctx, epochId+1, pledge)
+			deltaGlobalPledge = deltaGlobalPledge.Add(pledge)
 		}
 	}
+	k.IncrGlobalPledge(ctx, epochId+1, deltaGlobalPledge)
+	k.decrGlobalComputingPowerOnEpoch(ctx, epochId, deltaDelGlobalPower)
+	k.incrGlobalComputingPowerOnEpoch(ctx, epochId, deltaAddGlobalPower)
 
 	// mark we have handle this batch.
 	k.setReportBatch(ctx, epochId, report.BatchId, report.NodeCount)
@@ -175,6 +189,10 @@ func (k Keeper) ValidateReportDigest(ctx sdk.Context, report *types.ReportDigest
 		return err
 	}
 
+	if report.TotalNodeCount > report.MaximumNodeCountPerBatch*report.TotalBatchCount {
+		return errorsmod.Wrapf(types.ErrInvalidReport, "totalNodeCount greater than totalBatchCount * maximumNodeCountPerBatch")
+	}
+
 	_, found := k.GetReportDigest(ctx, report.EpochId)
 	if found {
 		return errorsmod.Wrapf(types.ErrInvalidReport, "digest already exists")
@@ -203,9 +221,13 @@ func (k Keeper) ValidateReportBatch(ctx sdk.Context, report *types.ReportBatch) 
 		return errorsmod.Wrapf(types.ErrInvalidReport, "node count exceeded")
 	}
 
-	if k.HasReportBatch(ctx, report.EpochId, report.BatchId) {
-		return errorsmod.Wrapf(types.ErrInvalidReport, "batch already precessed")
+	if report.BatchId > digest.TotalBatchCount || report.BatchId < 1 {
+		return errorsmod.Wrapf(types.ErrInvalidReport, "batch id error")
 	}
+
+	//if k.HasReportBatch(ctx, report.EpochId, report.BatchId) {
+	//	return errorsmod.Wrapf(types.ErrInvalidReport, "batch already precessed")
+	//}
 
 	for _, node := range report.Nodes {
 		if !k.HasNode(ctx, node.NodeId) {

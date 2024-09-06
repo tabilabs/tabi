@@ -83,8 +83,8 @@ func (k Keeper) incrGlobalClaimedEmission(ctx sdk.Context, amount sdk.Dec) sdk.D
 
 // CalcAndSetNodeCumulativeEmissionByEpoch returns the historical emission for a node at the end of an epoch.
 // NOTE: this function set the historical emission by the end of epoch(t) and removes that of epoch(t-1).
-func (k Keeper) CalcAndSetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
-	res := k.CalcNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
+func (k Keeper) CalcAndSetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string, epochGlobalEmission sdk.Dec, epochGlobalPower sdk.Dec) sdk.Dec {
+	res := k.CalcNodeCumulativeEmissionByEpochNew(ctx, epochID, nodeID, epochGlobalEmission, epochGlobalPower)
 
 	// no need to set the emission for the first epoch
 	if epochID == 0 {
@@ -113,8 +113,23 @@ func (k Keeper) CalcNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint6
 
 	prevHistoryEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
 	epochEmission := k.CalcNodeEmissionOnEpoch(ctx, epochID, nodeID)
-
 	return epochEmission.Add(prevHistoryEmission)
+}
+
+func (k Keeper) CalcNodeCumulativeEmissionByEpochNew(ctx sdk.Context, epochID uint64, nodeID string, epochGlobalEmission sdk.Dec, epochGlobalPower sdk.Dec) sdk.Dec {
+	if epochID == 0 {
+		return sdk.ZeroDec()
+	}
+
+	// NOTE: we may have already set this value when user claimed the rewards before report handles it.
+	historyEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
+	if !historyEmission.Equal(sdk.ZeroDec()) {
+		return historyEmission
+	}
+
+	prevHistoryEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
+	epochNodeEmission := k.CalcNodeEmissionOnEpochNew(ctx, epochID, nodeID, epochGlobalEmission, epochGlobalPower)
+	return epochNodeEmission.Add(prevHistoryEmission)
 }
 
 // CalcNodeEmissionOnEpoch returns the emission for a node at the end of an epoch.
@@ -124,6 +139,13 @@ func (k Keeper) CalcNodeEmissionOnEpoch(ctx sdk.Context, epochID uint64, nodeID 
 	powerSum := k.GetGlobalComputingPowerOnEpoch(ctx, epochID)
 	// NOTE: zero power sum is never expected; it panics if it happens.
 	return emission.Mul(power).Quo(powerSum)
+}
+
+// CalcNodeEmissionOnEpochNew returns the emission for a node at the end of an epoch.
+func (k Keeper) CalcNodeEmissionOnEpochNew(ctx sdk.Context, epochID uint64, nodeID string, epochGlobalEmission sdk.Dec, epochGlobalPower sdk.Dec) sdk.Dec {
+	power := k.GetNodeComputingPowerOnEpoch(ctx, epochID, nodeID)
+	// NOTE: zero power sum is never expected; it panics if it happens.
+	return epochGlobalEmission.Mul(power).Quo(epochGlobalPower)
 }
 
 // HasNodeCumulativeEmissionByEpoch returns if the historical emission for a node at the end of an epoch exists.

@@ -100,7 +100,7 @@ func (k Keeper) UpdateNode(
 func (k Keeper) GenerateNodeID(ctx sdk.Context) string {
 	sequence := k.GetNodeSequence(ctx)
 	nodeID := fmt.Sprintf(nodeIdPrefix, sequence)
-	hash := fmt.Sprintf("%x", sha256.Sum256([]byte(nodeID)))
+	hash := fmt.Sprintf("%x", sha256.Sum256([]byte(nodeID)))[0:20]
 	k.SetNodeSequence(ctx, sequence+1)
 	return hash
 }

@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	globalPledgeRatioUpperBound = sdk.OneDec()
-	globalPledgeRatioLowerBound = sdk.NewDecWithPrec(3, 1)
-	ownerPledgeRatioUpperBound  = sdk.NewDecWithPrec(3, 1)
+	pledgeRatioUpperBound                   = sdk.OneDec()
+	globalPledgeRatioLowerBound             = sdk.NewDecWithPrec(3, 1)
+	ownerPledgeRatioUpperBoundWhenCalcPower = sdk.NewDecWithPrec(3, 1)
 )
 
 // CalcGlobalPledgeRatio calculates the pledge rate of the global on the epoch t.
@@ -22,8 +22,8 @@ func (k Keeper) CalcGlobalPledgeRatio(ctx sdk.Context, epochID uint64) sdk.Dec {
 	pledgeSum := k.GetGlobalPledge(ctx, epochID)
 	ratio := pledgeSum.Quo(sum)
 	// no more than 1.0
-	if ratio.GT(globalPledgeRatioUpperBound) {
-		ratio = globalPledgeRatioUpperBound
+	if ratio.GT(pledgeRatioUpperBound) {
+		ratio = pledgeRatioUpperBound
 	}
 	// no less than 0.3
 	if ratio.LT(globalPledgeRatioLowerBound) {
@@ -38,15 +38,15 @@ func (k Keeper) CalcNodePledgeRatioOnEpoch(ctx sdk.Context, epochID uint64, node
 
 	claimed := k.GetOwnerClaimedEmission(ctx, owner)
 	if claimed.Equal(sdk.ZeroDec()) {
-		return ownerPledgeRatioUpperBound
+		return pledgeRatioUpperBound
 	}
 
 	ownerPledge := k.GetOwnerPledge(ctx, owner, epochID)
 	nodePledgeRatio := ownerPledge.Quo(claimed)
 
-	// no more than 0.3
-	if nodePledgeRatio.GT(ownerPledgeRatioUpperBound) {
-		nodePledgeRatio = ownerPledgeRatioUpperBound
+	// no more than 1
+	if nodePledgeRatio.GT(pledgeRatioUpperBound) {
+		nodePledgeRatio = pledgeRatioUpperBound
 	}
 
 	return nodePledgeRatio

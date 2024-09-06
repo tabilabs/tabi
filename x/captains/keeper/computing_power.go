@@ -34,6 +34,18 @@ func (k Keeper) incrGlobalComputingPowerOnEpoch(ctx sdk.Context, epochID uint64,
 	k.setGlobalComputingPowerOnEpoch(ctx, epochID, sum)
 }
 
+func (k Keeper) decrGlobalComputingPowerOnEpoch(ctx sdk.Context, epochID uint64, amount sdk.Dec) {
+	sum := k.GetGlobalComputingPowerOnEpoch(ctx, epochID)
+	if sum.Equal(sdk.ZeroDec()) {
+		return
+	}
+	sum = sum.Sub(amount)
+	if sum.LT(sdk.ZeroDec()) {
+		sum = sdk.ZeroDec()
+	}
+	k.setGlobalComputingPowerOnEpoch(ctx, epochID, sum)
+}
+
 // delGlobalComputingPowerOnEpoch deletes the sum of computing power of all nodes.
 func (k Keeper) delGlobalComputingPowerOnEpoch(ctx sdk.Context, epochID uint64) {
 	store := ctx.KVStore(k.storeKey)
@@ -50,6 +62,9 @@ func (k Keeper) CalcNodeComputingPowerOnEpoch(
 ) sdk.Dec {
 	basePower := sdk.NewDec(int64(k.GetNodeBaseComputingPower(ctx, nodeID)))
 	pledgeRatio := k.CalcNodePledgeRatioOnEpoch(ctx, epochID, nodeID)
+	if pledgeRatio.GT(ownerPledgeRatioUpperBoundWhenCalcPower) {
+		pledgeRatio = ownerPledgeRatioUpperBoundWhenCalcPower
+	}
 	exponentiation := pledgeRatio.Mul(sdk.NewDec(20)).Quo(sdk.NewDec(3)).MustFloat64()
 	exponentiated := sdk.MustNewDecFromStr(fmt.Sprintf("%f", math.Exp(exponentiation)))
 	return basePower.Mul(exponentiated).Mul(powerOnRatio)
