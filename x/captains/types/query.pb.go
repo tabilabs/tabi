@@ -70,6 +70,7 @@ var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
 // QueryParamsResponse is response type for the Query/Parameters RPC method
 type QueryParamsResponse struct {
+	// params
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -115,6 +116,7 @@ func (m *QueryParamsResponse) GetParams() Params {
 
 // QueryNodeRequest is the request type for the Query/Node RPC method
 type QueryNodeRequest struct {
+	// node_id
 	NodeId string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 }
 
@@ -160,6 +162,7 @@ func (m *QueryNodeRequest) GetNodeId() string {
 
 // QueryNodeResponse is the response type for the Query/Node RPC method
 type QueryNodeResponse struct {
+	// node
 	Node *Node `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
 }
 
@@ -205,7 +208,9 @@ func (m *QueryNodeResponse) GetNode() *Node {
 
 // QueryNodesRequest is the request type for the Query/Nodes RPC method
 type QueryNodesRequest struct {
-	Owner      string             `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	// owner
+	Owner string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	// pagination
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -258,7 +263,9 @@ func (m *QueryNodesRequest) GetPagination() *query.PageRequest {
 
 // QueryNodesResponse is the response type for the Query/Nodes RPC methods
 type QueryNodesResponse struct {
-	Nodes      []Node              `protobuf:"bytes,1,rep,name=nodes,proto3" json:"nodes"`
+	// nodes
+	Nodes []Node `protobuf:"bytes,1,rep,name=nodes,proto3" json:"nodes"`
+	// pagination
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -311,6 +318,7 @@ func (m *QueryNodesResponse) GetPagination() *query.PageResponse {
 
 // QueryDivisionRequest is the request type for the Query/Division RPC method
 type QueryDivisionRequest struct {
+	// division_id
 	DivisionId string `protobuf:"bytes,1,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
 }
 
@@ -356,6 +364,7 @@ func (m *QueryDivisionRequest) GetDivisionId() string {
 
 // QueryDivisionResponse is the response type for the Query/Division RPC method
 type QueryDivisionResponse struct {
+	// division
 	Division *Division `protobuf:"bytes,1,opt,name=division,proto3" json:"division,omitempty"`
 }
 
@@ -401,6 +410,7 @@ func (m *QueryDivisionResponse) GetDivision() *Division {
 
 // QueryDivisionsRequest is the request type for the Query/Divisions RPC method
 type QueryDivisionsRequest struct {
+	// pagination
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -446,7 +456,9 @@ func (m *QueryDivisionsRequest) GetPagination() *query.PageRequest {
 
 // QueryDivisionsResponse is the response type for the Query/Divisions RPC method
 type QueryDivisionsResponse struct {
-	Divisions  []Division          `protobuf:"bytes,1,rep,name=divisions,proto3" json:"divisions"`
+	// divisions
+	Divisions []Division `protobuf:"bytes,1,rep,name=divisions,proto3" json:"divisions"`
+	// pagination
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -499,6 +511,7 @@ func (m *QueryDivisionsResponse) GetPagination() *query.PageResponse {
 
 // QuerySupplyRequest is the request type for the Query/Supply RPC method
 type QuerySupplyRequest struct {
+	// division_id
 	DivisionId string `protobuf:"bytes,1,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
 }
 
@@ -544,6 +557,7 @@ func (m *QuerySupplyRequest) GetDivisionId() string {
 
 // QuerySupplyResponse is the response type for the Query/Supply RPC method
 type QuerySupplyResponse struct {
+	// amount
 	Amount uint64 `protobuf:"varint,1,opt,name=amount,proto3" json:"amount,omitempty"`
 }
 
@@ -626,6 +640,7 @@ var xxx_messageInfo_QuerySaleLevelRequest proto.InternalMessageInfo
 
 // QuerySaleLevelResponse is the response type for the Query/SaleLevel RPC method
 type QuerySaleLevelResponse struct {
+	// sale_level
 	SaleLevel uint64 `protobuf:"varint,1,opt,name=sale_level,json=saleLevel,proto3" json:"sale_level,omitempty"`
 }
 
@@ -708,6 +723,7 @@ var xxx_messageInfo_QueryAuthorizedMembersRequest proto.InternalMessageInfo
 
 // QueryAuthorizedMembersResponse is the response type for the Query/AuthorizedMembers RPC method
 type QueryAuthorizedMembersResponse struct {
+	// members
 	Members []string `protobuf:"bytes,1,rep,name=members,proto3" json:"members,omitempty"`
 }
 
@@ -790,7 +806,9 @@ var xxx_messageInfo_QueryCurrentEpochRequest proto.InternalMessageInfo
 
 // QueryCurrentEpochResponse is the response type for the Query/CurrentEpoch RPC method
 type QueryCurrentEpochResponse struct {
-	Epoch  uint64 `protobuf:"varint,1,opt,name=epoch,proto3" json:"epoch,omitempty"`
+	// epoch
+	Epoch uint64 `protobuf:"varint,1,opt,name=epoch,proto3" json:"epoch,omitempty"`
+	// height
 	Height uint64 `protobuf:"varint,2,opt,name=height,proto3" json:"height,omitempty"`
 }
 
@@ -843,6 +861,7 @@ func (m *QueryCurrentEpochResponse) GetHeight() uint64 {
 
 // QueryNodeLastEpochInfoRequest is the request type for the Query/NodeLastEpochInfo RPC method
 type QueryNodeLastEpochInfoRequest struct {
+	// node_id
 	NodeId string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 }
 
@@ -888,11 +907,16 @@ func (m *QueryNodeLastEpochInfoRequest) GetNodeId() string {
 
 // QueryNodeLastEpochInfoResponse is the response type for the Query/NodeLastEpochInfo RPC method
 type QueryNodeLastEpochInfoResponse struct {
-	Epoch              uint64 `protobuf:"varint,1,opt,name=epoch,proto3" json:"epoch,omitempty"`
-	Height             uint64 `protobuf:"varint,2,opt,name=height,proto3" json:"height,omitempty"`
-	LastEpochEmission  string `protobuf:"bytes,3,opt,name=last_epoch_emission,json=lastEpochEmission,proto3" json:"last_epoch_emission,omitempty"`
+	// epoch
+	Epoch uint64 `protobuf:"varint,1,opt,name=epoch,proto3" json:"epoch,omitempty"`
+	// height
+	Height uint64 `protobuf:"varint,2,opt,name=height,proto3" json:"height,omitempty"`
+	// last_epoch_emission
+	LastEpochEmission string `protobuf:"bytes,3,opt,name=last_epoch_emission,json=lastEpochEmission,proto3" json:"last_epoch_emission,omitempty"`
+	// historical_emission
 	HistoricalEmission string `protobuf:"bytes,4,opt,name=historical_emission,json=historicalEmission,proto3" json:"historical_emission,omitempty"`
-	PledgeRatio        string `protobuf:"bytes,5,opt,name=pledge_ratio,json=pledgeRatio,proto3" json:"pledge_ratio,omitempty"`
+	// pledge_ratio
+	PledgeRatio string `protobuf:"bytes,5,opt,name=pledge_ratio,json=pledgeRatio,proto3" json:"pledge_ratio,omitempty"`
 }
 
 func (m *QueryNodeLastEpochInfoResponse) Reset()         { *m = QueryNodeLastEpochInfoResponse{} }
@@ -965,6 +989,7 @@ func (m *QueryNodeLastEpochInfoResponse) GetPledgeRatio() string {
 
 // QueryEpochStatusRequest is the request type for the Query/EpochStatus RPC method
 type QueryEpochStatusRequest struct {
+	// epoch
 	Epoch uint64 `protobuf:"varint,1,opt,name=epoch,proto3" json:"epoch,omitempty"`
 }
 
@@ -1010,10 +1035,14 @@ func (m *QueryEpochStatusRequest) GetEpoch() uint64 {
 
 // QueryEpochStatusResponse is the response type for the Query/EpochStatus RPC method
 type QueryEpochStatusResponse struct {
-	Epoch                uint64 `protobuf:"varint,1,opt,name=epoch,proto3" json:"epoch,omitempty"`
+	// epoch
+	Epoch uint64 `protobuf:"varint,1,opt,name=epoch,proto3" json:"epoch,omitempty"`
+	// global_computing_power
 	GlobalComputingPower string `protobuf:"bytes,2,opt,name=global_computing_power,json=globalComputingPower,proto3" json:"global_computing_power,omitempty"`
-	ReportDigest         string `protobuf:"bytes,3,opt,name=report_digest,json=reportDigest,proto3" json:"report_digest,omitempty"`
-	EpochEmission        string `protobuf:"bytes,4,opt,name=epoch_emission,json=epochEmission,proto3" json:"epoch_emission,omitempty"`
+	// report_digest
+	ReportDigest string `protobuf:"bytes,3,opt,name=report_digest,json=reportDigest,proto3" json:"report_digest,omitempty"`
+	// epoch_emission
+	EpochEmission string `protobuf:"bytes,4,opt,name=epoch_emission,json=epochEmission,proto3" json:"epoch_emission,omitempty"`
 }
 
 func (m *QueryEpochStatusResponse) Reset()         { *m = QueryEpochStatusResponse{} }

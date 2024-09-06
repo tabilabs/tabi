@@ -19,20 +19,25 @@ message GenesisState {
   repeated Division divisions = 3 [(gogoproto.nullable) = false];
 
   // nodes stores all nodes base info.
-  repeated Node  nodes = 4 [(gogoproto.nullable) = false];
+  repeated Node nodes = 4 [(gogoproto.nullable) = false];
 
-  // emission
+  // epoches_emission
   repeated EpochEmission epoches_emission = 5 [(gogoproto.nullable) = false];
+  // nodes_claimed_emission
   repeated NodeClaimedEmission nodes_claimed_emission = 6 [(gogoproto.nullable) = false];
+  // nodes_cumulative_emission
   repeated NodeCumulativeEmission nodes_cumulative_emission = 7 [(gogoproto.nullable) = false];
 
-  // pledge
+  // globals_pledge
   repeated GlobalPledge globals_pledge = 8 [(gogoproto.nullable) = false];
+  // owners_pledge
   repeated OwnerPledge owners_pledge = 9 [(gogoproto.nullable) = false];
 
-  // computing powers infos.
+  // owners_claimable_computing_power computing powers infos.
   repeated ClaimableComputingPower owners_claimable_computing_power = 10 [(gogoproto.nullable) = false];
+  // globals_computing_power
   repeated GlobalComputingPower globals_computing_power = 11 [(gogoproto.nullable) = false];
+  // nodes_computing_power
   repeated NodesComputingPower nodes_computing_power = 12 [(gogoproto.nullable) = false];
 
   // batches

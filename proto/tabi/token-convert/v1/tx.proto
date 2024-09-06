@@ -26,7 +26,9 @@ service Msg {
 
 // MsgConvertTabi represents a message to convert Tabi to Vetabi.
 message MsgConvertTabi {
-  cosmos.base.v1beta1.Coin coin = 1  [(gogoproto.nullable) = false];
+  // coin
+  cosmos.base.v1beta1.Coin coin = 1 [(gogoproto.nullable) = false];
+  // sender
   string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
@@ -35,36 +37,48 @@ message MsgConvertTabiResponse {}
 
 // MsgConvertVetabi represents a message to convert Vetabi to Tabi.
 message MsgConvertVetabi {
-  cosmos.base.v1beta1.Coin coin = 1  [(gogoproto.nullable) = false];
+  // coin
+  cosmos.base.v1beta1.Coin coin = 1 [(gogoproto.nullable) = false];
+  // strategy
   string strategy = 2;
+  // sender
   string sender = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // MsgConvertVetabiResponse defines the Msg/ConvertVetabi response type.
 message MsgConvertVetabiResponse {
+  // voucher_id
   string voucher_id = 1;
+  // expiry_time
   string expiry_time = 2;
 }
 
 // MsgWithdrawTabi represents a message to withdraw Tabi as per voucher.
 message MsgWithdrawTabi {
+  // voucher_id
   string voucher_id = 1;
+  // sender
   string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // MsgWithdrawTabiResponse defines the Msg/WithdrawTabi response type.
 message MsgWithdrawTabiResponse {
-  cosmos.base.v1beta1.Coin tabi_withdrawn = 1  [(gogoproto.nullable) = false];
+  // tabi_withdrawn
+  cosmos.base.v1beta1.Coin tabi_withdrawn = 1 [(gogoproto.nullable) = false];
+  // vetabi_returned
   cosmos.base.v1beta1.Coin vetabi_returned = 2 [(gogoproto.nullable) = false];
 }
 
 // MsgCancelConvert represents a message to cancel the conversion of Vetabi to Tabi.
 message MsgCancelConvert {
+  // voucher_id
   string voucher_id = 1;
+  // sender
   string sender = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 // MsgCancelConvertResponse defines the Msg/CancelConvert response type.
 message MsgCancelConvertResponse {
+  // vetabi_unlocked
   cosmos.base.v1beta1.Coin vetabi_unlocked = 1 [(gogoproto.nullable) = false];
 }

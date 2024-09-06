@@ -20,4 +20,3 @@ done
 
 # move proto files to the right places
 cp -r github.com/tabilabs/tabi/* ./
-rm -rf github.com

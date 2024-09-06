@@ -42,8 +42,10 @@ service Msg {
 message MsgUpdateParams {
   option (cosmos.msg.v1.signer) = "authority";
 
+  // authority
   string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
+  // params
   Params params = 2 [(gogoproto.nullable) = false];
 }
 
@@ -54,15 +56,17 @@ message MsgUpdateParamsResponse {}
 message MsgCreateCaptainNode {
   option (cosmos.msg.v1.signer) = "authority";
 
-  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-
-  string owner = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-
+  // authority
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // owner
+  string owner = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // division_id
   string division_id = 3;
 }
 
 // MsgCreateCaptainNodeResponse defines the Msg/CreateCaptainNode response type.
-message MsgCreateCaptainNodeResponse{
+message MsgCreateCaptainNodeResponse {
+  // node_id
   string node_id = 1;
 }
 
@@ -70,34 +74,41 @@ message MsgCreateCaptainNodeResponse{
 message MsgCommitReport {
   option (cosmos.msg.v1.signer) = "authority";
 
-  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // authority
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
+  // report_type
   ReportType report_type = 2;
 
+  // report
   google.protobuf.Any report = 3;
 }
 
 // MsgCommitReportResponse defines the Msg/CommitReportResponse response type.
-message MsgCommitReportResponse{}
+message MsgCommitReportResponse {}
 
 // MsgAddAuthorizedMembers defines the Msg/AddAuthorizedMembers request type.
 message MsgAddAuthorizedMembers {
   option (cosmos.msg.v1.signer) = "authority";
 
-  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // authority
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
+  // members
   repeated string members = 2;
 }
 
-// MsgAddAuthorizedMemberResponse defines the Msg/AddAuthorizedMemberResponse response type.
+// MsgAddAuthorizedMembersResponse defines the Msg/AddAuthorizedMemberResponse response type.
 message MsgAddAuthorizedMembersResponse {}
 
 // MsgRemoveAuthorizedMembers defines the Msg/RemoveAuthorizedMembers request type.
 message MsgRemoveAuthorizedMembers {
   option (cosmos.msg.v1.signer) = "authority";
 
-  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // authority
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
+  // members
   repeated string members = 2;
 }
 
@@ -107,46 +118,42 @@ message MsgRemoveAuthorizedMembersResponse {}
 // MsgUpdateSaleLevel defines the Msg/UpdateSaleLevel request type.
 message MsgUpdateSaleLevel {
   option (cosmos.msg.v1.signer) = "authority";
-  // sender is the address of the owner of nft
-  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // authority
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // sale_level is the sale levels to update.
   uint64 sale_level = 2;
 }
 
 // MsgUpdateSaleLevelResponse defines the Msg/UpdateSaleLevelResponse response type.
-message MsgUpdateSaleLevelResponse{}
+message MsgUpdateSaleLevelResponse {}
 
 // MsgCommitComputingPower defines the Msg/CommitComputingPowerResponse request type.
 message MsgCommitComputingPower {
   option (cosmos.msg.v1.signer) = "authority";
-  // sender is the address of the owner of nft
-  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // authority
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   // computing_power_rewards is the extractable computing powers to reward.
   repeated ClaimableComputingPower computing_power_rewards = 2 [(gogoproto.nullable) = false];
 }
 
 // MsgCommitComputingPowerResponse defines the Msg/CommitComputingPowerResponse response type.
-message MsgCommitComputingPowerResponse {
-}
+message MsgCommitComputingPowerResponse {}
 
 // MsgClaimComputingPower defines the Msg/ClaimComputingPower request type.
 message MsgClaimComputingPower {
   option (cosmos.msg.v1.signer) = "sender";
 
-  string sender = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // sender
+  string sender = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
+  // computing_power_amount
   uint64 computing_power_amount = 2;
 
+  // node_id
   string node_id = 3;
 }
 
 // MsgClaimComputingPowerResponse defines the Msg/ClaimComputingPowerResponse response type.
-message MsgClaimComputingPowerResponse{}
-
-
-
-
-
-
+message MsgClaimComputingPowerResponse {}

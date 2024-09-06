@@ -43,8 +43,7 @@ message MsgUpdateParams {
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
 
-// MsgUpdateParamsResponse defines the response structure for executing a
-// MsgUpdateParams message.
+// MsgLimiterSwitch
 message MsgLimiterSwitch {
   option (cosmos.msg.v1.signer) = "authority";
 

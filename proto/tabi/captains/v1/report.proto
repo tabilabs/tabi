@@ -6,17 +6,23 @@ import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/captains/types";
 
+// ReportType
 enum ReportType {
+  // REPORT_TYPE_UNSPECIFIED
   REPORT_TYPE_UNSPECIFIED = 0;
+  // REPORT_TYPE_DIGEST
   REPORT_TYPE_DIGEST = 1;
+  // REPORT_TYPE_BATCH
   REPORT_TYPE_BATCH = 2;
+  // REPORT_TYPE_END
   REPORT_TYPE_END = 3;
 }
 
+// ReportDigest
 message ReportDigest {
   // epoch_id is the epoch id of the report
   uint64 epoch_id = 1;
-  // total_node_count is the total number of batches in the report
+  // total_batch_count is the total number of batches in the report
   uint64 total_batch_count = 2;
   // total_node_count is the total number of nodes in the report
   uint64 total_node_count = 3;
@@ -24,9 +30,9 @@ message ReportDigest {
   uint64 maximum_node_count_per_batch = 4;
   // global_on_operation_ratio is the operation ratio of global nodes
   string global_on_operation_ratio = 5 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
 }
 
@@ -44,6 +50,7 @@ message ReportBatch {
 
 // ReportEnd marks the end of commiting a report.
 message ReportEnd {
+  // epoch_id
   uint64 epoch_id = 1;
 }
 
@@ -53,16 +60,16 @@ message NodePowerOnRatio {
   string node_id = 1;
   // on_operation_ratio is the operation ratio of the node
   string on_operation_ratio = 2 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
 }
 
-// BaseBatch is the base batch message.
+// BatchBase is the base batch message.
 message BatchBase {
   // batch_id is the batch id of the report
   uint64 batch_id = 1;
-  // node_count is the number of nodes in the batch
+  // count is the number of nodes in the batch
   uint64 count = 2;
 }

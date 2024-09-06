@@ -5,9 +5,9 @@ package types
 
 import (
 	fmt "fmt"
-	_ "github.com/cosmos/cosmos-proto"
+	cosmos_proto "github.com/cosmos/cosmos-proto"
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
-	_ "github.com/cosmos/gogoproto/gogoproto"
+	gogoproto "github.com/cosmos/gogoproto/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -25,6 +25,186 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+var E_GoprotoEnumPrefix = gogoproto.E_GoprotoEnumPrefix
+
+var E_GoprotoEnumStringer = gogoproto.E_GoprotoEnumStringer
+
+var E_EnumStringer = gogoproto.E_EnumStringer
+
+var E_EnumCustomname = gogoproto.E_EnumCustomname
+
+var E_Enumdecl = gogoproto.E_Enumdecl
+
+var E_EnumvalueCustomname = gogoproto.E_EnumvalueCustomname
+
+var E_GoprotoGettersAll = gogoproto.E_GoprotoGettersAll
+
+var E_GoprotoEnumPrefixAll = gogoproto.E_GoprotoEnumPrefixAll
+
+var E_GoprotoStringerAll = gogoproto.E_GoprotoStringerAll
+
+var E_VerboseEqualAll = gogoproto.E_VerboseEqualAll
+
+var E_FaceAll = gogoproto.E_FaceAll
+
+var E_GostringAll = gogoproto.E_GostringAll
+
+var E_PopulateAll = gogoproto.E_PopulateAll
+
+var E_StringerAll = gogoproto.E_StringerAll
+
+var E_OnlyoneAll = gogoproto.E_OnlyoneAll
+
+var E_EqualAll = gogoproto.E_EqualAll
+
+var E_DescriptionAll = gogoproto.E_DescriptionAll
+
+var E_TestgenAll = gogoproto.E_TestgenAll
+
+var E_BenchgenAll = gogoproto.E_BenchgenAll
+
+var E_MarshalerAll = gogoproto.E_MarshalerAll
+
+var E_UnmarshalerAll = gogoproto.E_UnmarshalerAll
+
+var E_StableMarshalerAll = gogoproto.E_StableMarshalerAll
+
+var E_SizerAll = gogoproto.E_SizerAll
+
+var E_GoprotoEnumStringerAll = gogoproto.E_GoprotoEnumStringerAll
+
+var E_EnumStringerAll = gogoproto.E_EnumStringerAll
+
+var E_UnsafeMarshalerAll = gogoproto.E_UnsafeMarshalerAll
+
+var E_UnsafeUnmarshalerAll = gogoproto.E_UnsafeUnmarshalerAll
+
+var E_GoprotoExtensionsMapAll = gogoproto.E_GoprotoExtensionsMapAll
+
+var E_GoprotoUnrecognizedAll = gogoproto.E_GoprotoUnrecognizedAll
+
+var E_GogoprotoImport = gogoproto.E_GogoprotoImport
+
+var E_ProtosizerAll = gogoproto.E_ProtosizerAll
+
+var E_CompareAll = gogoproto.E_CompareAll
+
+var E_TypedeclAll = gogoproto.E_TypedeclAll
+
+var E_EnumdeclAll = gogoproto.E_EnumdeclAll
+
+var E_GoprotoRegistration = gogoproto.E_GoprotoRegistration
+
+var E_MessagenameAll = gogoproto.E_MessagenameAll
+
+var E_GoprotoSizecacheAll = gogoproto.E_GoprotoSizecacheAll
+
+var E_GoprotoUnkeyedAll = gogoproto.E_GoprotoUnkeyedAll
+
+var E_GoprotoGetters = gogoproto.E_GoprotoGetters
+
+var E_GoprotoStringer = gogoproto.E_GoprotoStringer
+
+var E_VerboseEqual = gogoproto.E_VerboseEqual
+
+var E_Face = gogoproto.E_Face
+
+var E_Gostring = gogoproto.E_Gostring
+
+var E_Populate = gogoproto.E_Populate
+
+var E_Stringer = gogoproto.E_Stringer
+
+var E_Onlyone = gogoproto.E_Onlyone
+
+var E_Equal = gogoproto.E_Equal
+
+var E_Description = gogoproto.E_Description
+
+var E_Testgen = gogoproto.E_Testgen
+
+var E_Benchgen = gogoproto.E_Benchgen
+
+var E_Marshaler = gogoproto.E_Marshaler
+
+var E_Unmarshaler = gogoproto.E_Unmarshaler
+
+var E_StableMarshaler = gogoproto.E_StableMarshaler
+
+var E_Sizer = gogoproto.E_Sizer
+
+var E_UnsafeMarshaler = gogoproto.E_UnsafeMarshaler
+
+var E_UnsafeUnmarshaler = gogoproto.E_UnsafeUnmarshaler
+
+var E_GoprotoExtensionsMap = gogoproto.E_GoprotoExtensionsMap
+
+var E_GoprotoUnrecognized = gogoproto.E_GoprotoUnrecognized
+
+var E_Protosizer = gogoproto.E_Protosizer
+
+var E_Compare = gogoproto.E_Compare
+
+var E_Typedecl = gogoproto.E_Typedecl
+
+var E_Messagename = gogoproto.E_Messagename
+
+var E_GoprotoSizecache = gogoproto.E_GoprotoSizecache
+
+var E_GoprotoUnkeyed = gogoproto.E_GoprotoUnkeyed
+
+var E_Nullable = gogoproto.E_Nullable
+
+var E_Embed = gogoproto.E_Embed
+
+var E_Customtype = gogoproto.E_Customtype
+
+var E_Customname = gogoproto.E_Customname
+
+var E_Jsontag = gogoproto.E_Jsontag
+
+var E_Moretags = gogoproto.E_Moretags
+
+var E_Casttype = gogoproto.E_Casttype
+
+var E_Castkey = gogoproto.E_Castkey
+
+var E_Castvalue = gogoproto.E_Castvalue
+
+var E_Stdtime = gogoproto.E_Stdtime
+
+var E_Stdduration = gogoproto.E_Stdduration
+
+var E_Wktpointer = gogoproto.E_Wktpointer
+
+var E_Castrepeated = gogoproto.E_Castrepeated
+
+// InterfaceDescriptor from public import cosmos_proto/cosmos.proto
+type InterfaceDescriptor = cosmos_proto.InterfaceDescriptor
+
+// ScalarDescriptor from public import cosmos_proto/cosmos.proto
+type ScalarDescriptor = cosmos_proto.ScalarDescriptor
+
+// ScalarType from public import cosmos_proto/cosmos.proto
+type ScalarType = cosmos_proto.ScalarType
+
+var ScalarType_name = cosmos_proto.ScalarType_name
+var ScalarType_value = cosmos_proto.ScalarType_value
+
+const ScalarType_SCALAR_TYPE_UNSPECIFIED = ScalarType(cosmos_proto.ScalarType_SCALAR_TYPE_UNSPECIFIED)
+const ScalarType_SCALAR_TYPE_STRING = ScalarType(cosmos_proto.ScalarType_SCALAR_TYPE_STRING)
+const ScalarType_SCALAR_TYPE_BYTES = ScalarType(cosmos_proto.ScalarType_SCALAR_TYPE_BYTES)
+
+var E_ImplementsInterface = cosmos_proto.E_ImplementsInterface
+
+var E_AcceptsInterface = cosmos_proto.E_AcceptsInterface
+
+var E_Scalar = cosmos_proto.E_Scalar
+
+var E_DeclareInterface = cosmos_proto.E_DeclareInterface
+
+var E_DeclareScalar = cosmos_proto.E_DeclareScalar
+
 // Params defines captains module's parameters
 type Params struct {
 	// captains_total_count defines the total count of the captains
@@ -35,13 +215,13 @@ type Params struct {
 	MaximumPowerOnPeriod uint64 `protobuf:"varint,3,opt,name=maximum_power_on_period,json=maximumPowerOnPeriod,proto3" json:"maximum_power_on_period,omitempty"`
 	// captains_constant is a fixed constant for reward calculation
 	CaptainsConstant github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,4,opt,name=captains_constant,json=captainsConstant,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"captains_constant"`
-	// halving_era defines the halving era coefficient
+	// halving_era_coefficient defines the halving era coefficient
 	HalvingEraCoefficient github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,5,opt,name=halving_era_coefficient,json=halvingEraCoefficient,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"halving_era_coefficient"`
-	// tech_progress_coefficient defines the tech progress coefficient cardinality.
+	// tech_progress_coefficient_cardinality defines the tech progress coefficient cardinality.
 	TechProgressCoefficientCardinality github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,6,opt,name=tech_progress_coefficient_cardinality,json=techProgressCoefficientCardinality,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"tech_progress_coefficient_cardinality"`
 	// current_sale_level defines the current level for sale.
 	CurrentSaleLevel uint64 `protobuf:"varint,7,opt,name=current_sale_level,json=currentSaleLevel,proto3" json:"current_sale_level,omitempty"`
-	// authorized members list
+	// authorized_members authorized members list
 	AuthorizedMembers []string `protobuf:"bytes,8,rep,name=authorized_members,json=authorizedMembers,proto3" json:"authorized_members,omitempty"`
 }
 
@@ -115,6 +295,7 @@ func (m *Params) GetAuthorizedMembers() []string {
 
 // Division defines the division a node belongs to.
 type Division struct {
+	// id
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// level defines the level of the node.
 	Level uint64 `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
@@ -214,9 +395,13 @@ func (m *Division) GetComputingPowerUpperBound() uint64 {
 
 // Node defines the node
 type Node struct {
-	Id             string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	DivisionId     string `protobuf:"bytes,2,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
-	Owner          string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
+	// id
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// division_id
+	DivisionId string `protobuf:"bytes,2,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
+	// owner
+	Owner string `protobuf:"bytes,3,opt,name=owner,proto3" json:"owner,omitempty"`
+	// computing_power
 	ComputingPower uint64 `protobuf:"varint,4,opt,name=computing_power,json=computingPower,proto3" json:"computing_power,omitempty"`
 }
 
@@ -281,19 +466,19 @@ func (m *Node) GetComputingPower() uint64 {
 	return 0
 }
 
-// EpochState defines the state of the epoch
+// BaseState defines the state of the epoch
 type BaseState struct {
-	// id of the epoch
+	// epoch_id id of the epoch
 	EpochId uint64 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
-	// whether the epoch is ended
+	// is_epoch_end whether the epoch is ended
 	IsEpochEnd bool `protobuf:"varint,2,opt,name=is_epoch_end,json=isEpochEnd,proto3" json:"is_epoch_end,omitempty"`
-	// the next node sequence
+	// next_node_sequence the next node sequence
 	NextNodeSequence uint64 `protobuf:"varint,3,opt,name=next_node_sequence,json=nextNodeSequence,proto3" json:"next_node_sequence,omitempty"`
-	// global claimed emission
+	// global_claimed_emission global claimed emission
 	GlobalClaimedEmission github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,4,opt,name=global_claimed_emission,json=globalClaimedEmission,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"global_claimed_emission"`
-	// the digest of the report
+	// report_digest the digest of the report
 	ReportDigest *ReportDigest `protobuf:"bytes,5,opt,name=report_digest,json=reportDigest,proto3" json:"report_digest,omitempty"`
-	// is in epoch stand_by phase
+	// is_stand_by is in epoch stand_by phase
 	IsStandBy bool `protobuf:"varint,6,opt,name=is_stand_by,json=isStandBy,proto3" json:"is_stand_by,omitempty"`
 }
 
@@ -365,8 +550,11 @@ func (m *BaseState) GetIsStandBy() bool {
 	return false
 }
 
+// EpochEmission
 type EpochEmission struct {
-	EpochId  uint64                                 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
+	// epoch_id
+	EpochId uint64 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
+	// emission
 	Emission github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=emission,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"emission"`
 }
 
@@ -410,8 +598,11 @@ func (m *EpochEmission) GetEpochId() uint64 {
 	return 0
 }
 
+// NodeClaimedEmission
 type NodeClaimedEmission struct {
-	NodeId   string                                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	// node_id
+	NodeId string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	// emission
 	Emission github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=emission,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"emission"`
 }
 
@@ -455,9 +646,12 @@ func (m *NodeClaimedEmission) GetNodeId() string {
 	return ""
 }
 
+// ClaimableComputingPower
 type ClaimableComputingPower struct {
+	// amount
 	Amount uint64 `protobuf:"varint,1,opt,name=amount,proto3" json:"amount,omitempty"`
-	Owner  string `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	// owner
+	Owner string `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
 }
 
 func (m *ClaimableComputingPower) Reset()         { *m = ClaimableComputingPower{} }
@@ -507,9 +701,13 @@ func (m *ClaimableComputingPower) GetOwner() string {
 	return ""
 }
 
+// NodeCumulativeEmission
 type NodeCumulativeEmission struct {
-	NodeId   string                                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
-	EpochId  uint64                                 `protobuf:"varint,2,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
+	// node_id
+	NodeId string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	// epoch_id
+	EpochId uint64 `protobuf:"varint,2,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
+	// emission
 	Emission github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=emission,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"emission"`
 }
 
@@ -560,9 +758,12 @@ func (m *NodeCumulativeEmission) GetEpochId() uint64 {
 	return 0
 }
 
+// GlobalComputingPower
 type GlobalComputingPower struct {
-	EpochId uint64                                 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
-	Amount  github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"amount"`
+	// epoch_id
+	EpochId uint64 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
+	// amount
+	Amount github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"amount"`
 }
 
 func (m *GlobalComputingPower) Reset()         { *m = GlobalComputingPower{} }
@@ -605,10 +806,14 @@ func (m *GlobalComputingPower) GetEpochId() uint64 {
 	return 0
 }
 
+// NodesComputingPower
 type NodesComputingPower struct {
-	NodeId  string                                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
-	EpochId uint64                                 `protobuf:"varint,2,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
-	Amount  github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"amount"`
+	// node_id
+	NodeId string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	// epoch_id
+	EpochId uint64 `protobuf:"varint,2,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
+	// amount
+	Amount github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"amount"`
 }
 
 func (m *NodesComputingPower) Reset()         { *m = NodesComputingPower{} }
@@ -658,9 +863,12 @@ func (m *NodesComputingPower) GetEpochId() uint64 {
 	return 0
 }
 
+// GlobalPledge
 type GlobalPledge struct {
-	EpochId uint64                                 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
-	Amount  github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"amount"`
+	// epoch_id
+	EpochId uint64 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
+	// amount
+	Amount github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"amount"`
 }
 
 func (m *GlobalPledge) Reset()         { *m = GlobalPledge{} }
@@ -703,10 +911,14 @@ func (m *GlobalPledge) GetEpochId() uint64 {
 	return 0
 }
 
+// OwnerPledge
 type OwnerPledge struct {
-	Owner   string                                 `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
-	EpochId uint64                                 `protobuf:"varint,2,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
-	Amount  github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"amount"`
+	// owner
+	Owner string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	// epoch_id
+	EpochId uint64 `protobuf:"varint,2,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
+	// amount
+	Amount github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"amount"`
 }
 
 func (m *OwnerPledge) Reset()         { *m = OwnerPledge{} }
@@ -774,7 +986,7 @@ func init() {
 func init() { proto.RegisterFile("tabi/captains/v1/captains.proto", fileDescriptor_35d5085f64c624e4) }
 
 var fileDescriptor_35d5085f64c624e4 = []byte{
-	// 964 bytes of a gzipped FileDescriptorProto
+	// 967 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x56, 0x4d, 0x6f, 0x1b, 0x45,
 	0x18, 0xce, 0x3a, 0x4e, 0x62, 0xbf, 0x4e, 0x42, 0x3a, 0xb8, 0x8d, 0x5b, 0x54, 0x3b, 0xb2, 0x54,
 	0x08, 0x12, 0xb1, 0x29, 0x88, 0x1b, 0x1c, 0xb0, 0x13, 0xa1, 0x4a, 0x85, 0x5a, 0xeb, 0x22, 0x21,
@@ -834,8 +1046,8 @@ var fileDescriptor_35d5085f64c624e4 = []byte{
 	0xb7, 0xed, 0xab, 0xe6, 0xa5, 0xd7, 0x7f, 0x7c, 0xda, 0x0c, 0x9e, 0x9c, 0x36, 0x83, 0xbf, 0x4e,
 	0x9b, 0xc1, 0x4f, 0x67, 0xcd, 0x95, 0x27, 0x67, 0xcd, 0x95, 0x3f, 0xce, 0x9a, 0x2b, 0x5f, 0xbe,
 	0xbd, 0x90, 0xd7, 0xdc, 0x69, 0x31, 0x19, 0x29, 0xfb, 0xd2, 0x3d, 0x9e, 0x7f, 0x0f, 0xda, 0xf4,
-	0xa3, 0x75, 0xfb, 0x31, 0xf8, 0xfe, 0x3f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xed, 0xcf, 0x33, 0x0e,
-	0x91, 0x0a, 0x00, 0x00,
+	0x83, 0x95, 0x41, 0x30, 0x5a, 0xb7, 0x1f, 0x84, 0xef, 0xff, 0x13, 0x00, 0x00, 0xff, 0xff, 0x68,
+	0x65, 0x4c, 0x00, 0x95, 0x0a, 0x00, 0x00,
 }
 
 func (m *Params) Marshal() (dAtA []byte, err error) {

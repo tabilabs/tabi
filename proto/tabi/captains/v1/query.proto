@@ -68,118 +68,143 @@ service Query {
 }
 
 // QueryParamsRequest is request type for the Query/Parameters RPC method
-message QueryParamsRequest {
-}
+message QueryParamsRequest {}
 
 // QueryParamsResponse is response type for the Query/Parameters RPC method
 message QueryParamsResponse {
-  Params params = 1 [ (gogoproto.nullable) = false ];
+  // params
+  Params params = 1 [(gogoproto.nullable) = false];
 }
 
 // QueryNodeRequest is the request type for the Query/Node RPC method
 message QueryNodeRequest {
+  // node_id
   string node_id = 1;
 }
 
 // QueryNodeResponse is the response type for the Query/Node RPC method
 message QueryNodeResponse {
+  // node
   Node node = 1;
 }
 
 // QueryNodesRequest is the request type for the Query/Nodes RPC method
 message QueryNodesRequest {
-  string                                owner      = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  // owner
+  string owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // pagination
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 // QueryNodesResponse is the response type for the Query/Nodes RPC methods
 message QueryNodesResponse {
+  // nodes
   repeated Node nodes = 1 [(gogoproto.nullable) = false];
+  // pagination
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // QueryDivisionRequest is the request type for the Query/Division RPC method
 message QueryDivisionRequest {
+  // division_id
   string division_id = 1;
 }
 
 // QueryDivisionResponse is the response type for the Query/Division RPC method
 message QueryDivisionResponse {
+  // division
   Division division = 1;
 }
 
 // QueryDivisionsRequest is the request type for the Query/Divisions RPC method
 message QueryDivisionsRequest {
+  // pagination
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 // QueryDivisionsResponse is the response type for the Query/Divisions RPC method
 message QueryDivisionsResponse {
-  repeated Division      divisions    = 1 [(gogoproto.nullable) = false];
+  // divisions
+  repeated Division divisions = 1 [(gogoproto.nullable) = false];
+  // pagination
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // QuerySupplyRequest is the request type for the Query/Supply RPC method
 message QuerySupplyRequest {
+  // division_id
   string division_id = 1;
 }
 
 // QuerySupplyResponse is the response type for the Query/Supply RPC method
 message QuerySupplyResponse {
+  // amount
   uint64 amount = 1;
 }
 
 // QuerySaleLevelRequest is the request type for the Query/SaleLevel RPC method
-message QuerySaleLevelRequest {
-}
+message QuerySaleLevelRequest {}
 
 // QuerySaleLevelResponse is the response type for the Query/SaleLevel RPC method
 message QuerySaleLevelResponse {
+  // sale_level
   uint64 sale_level = 1;
 }
 
 // QueryAuthorizedMembersRequest is the request type for the Query/AuthorizedMembers RPC method
-message QueryAuthorizedMembersRequest {
-}
+message QueryAuthorizedMembersRequest {}
 
 // QueryAuthorizedMembersResponse is the response type for the Query/AuthorizedMembers RPC method
 message QueryAuthorizedMembersResponse {
+  // members
   repeated string members = 1;
 }
 
 // QueryCurrentEpochRequest is the request type for the Query/CurrentEpoch RPC method
-message QueryCurrentEpochRequest {
-}
+message QueryCurrentEpochRequest {}
 
 // QueryCurrentEpochResponse is the response type for the Query/CurrentEpoch RPC method
 message QueryCurrentEpochResponse {
+  // epoch
   uint64 epoch = 1;
+  // height
   uint64 height = 2;
 }
 
 // QueryNodeLastEpochInfoRequest is the request type for the Query/NodeLastEpochInfo RPC method
 message QueryNodeLastEpochInfoRequest {
+  // node_id
   string node_id = 1;
 }
 
 // QueryNodeLastEpochInfoResponse is the response type for the Query/NodeLastEpochInfo RPC method
 message QueryNodeLastEpochInfoResponse {
+  // epoch
   uint64 epoch = 1;
+  // height
   uint64 height = 2;
+  // last_epoch_emission
   string last_epoch_emission = 3;
+  // historical_emission
   string historical_emission = 4;
+  // pledge_ratio
   string pledge_ratio = 5;
 }
 
 // QueryEpochStatusRequest is the request type for the Query/EpochStatus RPC method
 message QueryEpochStatusRequest {
+  // epoch
   uint64 epoch = 1;
 }
 
 // QueryEpochStatusResponse is the response type for the Query/EpochStatus RPC method
 message QueryEpochStatusResponse {
+  // epoch
   uint64 epoch = 1;
+  // global_computing_power
   string global_computing_power = 2;
+  // report_digest
   string report_digest = 3;
+  // epoch_emission
   string epoch_emission = 4;
 }

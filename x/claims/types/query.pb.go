@@ -71,8 +71,10 @@ var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
 // QueryParamsResponse is response type for the Query/Parameters RPC method
 type QueryParamsResponse struct {
-	Params Params              `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	Res    *query.PageResponse `protobuf:"bytes,2,opt,name=res,proto3" json:"res,omitempty"`
+	// params
+	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	// res
+	Res *query.PageResponse `protobuf:"bytes,2,opt,name=res,proto3" json:"res,omitempty"`
 }
 
 func (m *QueryParamsResponse) Reset()         { *m = QueryParamsResponse{} }
@@ -124,6 +126,7 @@ func (m *QueryParamsResponse) GetRes() *query.PageResponse {
 
 // QueryNodeTotalRewardsRequest is request type for the Query/NodeTotalRewards RPC method
 type QueryNodeTotalRewardsRequest struct {
+	// node_id
 	NodeId string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 }
 
@@ -215,6 +218,7 @@ func (m *QueryNodeTotalRewardsResponse) GetRewards() github_com_cosmos_cosmos_sd
 
 // QueryHolderTotalRewardsRequest is request type for the Query/HolderTotalRewards RPC method
 type QueryHolderTotalRewardsRequest struct {
+	// owner
 	Owner string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
 }
 

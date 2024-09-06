@@ -25,6 +25,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// Params
 type Params struct {
 	// enable_claims is the parameter to enable the claiming process
 	EnableClaims bool `protobuf:"varint,1,opt,name=enable_claims,json=enableClaims,proto3" json:"enable_claims,omitempty"`
