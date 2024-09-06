@@ -25,9 +25,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Params defines the parameters for the limiter.
 type Params struct {
-	// enable or disable the limiter
+	// enabled enable or disable the limiter
 	Enabled bool `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	// allow list of deployer addresses when the limiter is enabled
+	// allow_list allow list of deployer addresses when the limiter is enabled
 	AllowList []string `protobuf:"bytes,2,rep,name=allow_list,json=allowList,proto3" json:"allow_list,omitempty"`
 }
 

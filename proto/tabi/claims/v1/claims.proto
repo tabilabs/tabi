@@ -7,6 +7,7 @@ import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/claims/types";
 
+// Params
 message Params {
     // enable_claims is the parameter to enable the claiming process
     bool enable_claims = 1;

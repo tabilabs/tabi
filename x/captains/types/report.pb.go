@@ -25,13 +25,18 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// ReportType
 type ReportType int32
 
 const (
+	// REPORT_TYPE_UNSPECIFIED
 	ReportType_REPORT_TYPE_UNSPECIFIED ReportType = 0
-	ReportType_REPORT_TYPE_DIGEST      ReportType = 1
-	ReportType_REPORT_TYPE_BATCH       ReportType = 2
-	ReportType_REPORT_TYPE_END         ReportType = 3
+	// REPORT_TYPE_DIGEST
+	ReportType_REPORT_TYPE_DIGEST ReportType = 1
+	// REPORT_TYPE_BATCH
+	ReportType_REPORT_TYPE_BATCH ReportType = 2
+	// REPORT_TYPE_END
+	ReportType_REPORT_TYPE_END ReportType = 3
 )
 
 var ReportType_name = map[int32]string{
@@ -56,10 +61,11 @@ func (ReportType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_2b04da73fb1305c0, []int{0}
 }
 
+// ReportDigest
 type ReportDigest struct {
 	// epoch_id is the epoch id of the report
 	EpochId uint64 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
-	// total_node_count is the total number of batches in the report
+	// total_batch_count is the total number of batches in the report
 	TotalBatchCount uint64 `protobuf:"varint,2,opt,name=total_batch_count,json=totalBatchCount,proto3" json:"total_batch_count,omitempty"`
 	// total_node_count is the total number of nodes in the report
 	TotalNodeCount uint64 `protobuf:"varint,3,opt,name=total_node_count,json=totalNodeCount,proto3" json:"total_node_count,omitempty"`
@@ -205,6 +211,7 @@ func (m *ReportBatch) GetNodes() []NodePowerOnRatio {
 
 // ReportEnd marks the end of commiting a report.
 type ReportEnd struct {
+	// epoch_id
 	EpochId uint64 `protobuf:"varint,1,opt,name=epoch_id,json=epochId,proto3" json:"epoch_id,omitempty"`
 }
 
@@ -296,11 +303,11 @@ func (m *NodePowerOnRatio) GetNodeId() string {
 	return ""
 }
 
-// BaseBatch is the base batch message.
+// BatchBase is the base batch message.
 type BatchBase struct {
 	// batch_id is the batch id of the report
 	BatchId uint64 `protobuf:"varint,1,opt,name=batch_id,json=batchId,proto3" json:"batch_id,omitempty"`
-	// node_count is the number of nodes in the batch
+	// count is the number of nodes in the batch
 	Count uint64 `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
 }
 

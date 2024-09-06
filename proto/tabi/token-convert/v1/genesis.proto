@@ -2,7 +2,7 @@ syntax = "proto3";
 package tabi.token_convert.v1;
 
 import "gogoproto/gogo.proto";
-import "tabi/token-convert/v1/token-convert.proto";
+import "tabi/token-convert/v1/token_convert.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/token-convert/types";
 

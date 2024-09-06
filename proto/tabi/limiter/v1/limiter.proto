@@ -7,8 +7,8 @@ option go_package = "github.com/tabilabs/tabi/x/limiter/types";
 
 // Params defines the parameters for the limiter.
 message Params {
-  // enable or disable the limiter
+  // enabled enable or disable the limiter
   bool enabled = 1;
-  // allow list of deployer addresses when the limiter is enabled
+  // allow_list allow list of deployer addresses when the limiter is enabled
   repeated string allow_list = 2;
 }

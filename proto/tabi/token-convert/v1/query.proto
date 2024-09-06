@@ -6,15 +6,17 @@ import "google/api/annotations.proto";
 import "cosmos_proto/cosmos.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "tabi/token-convert/v1/token-convert.proto";
+import "tabi/token-convert/v1/token_convert.proto";
 
 option go_package = "github.com/tabilabs/tabi/x/token-convert/types";
-
+// Query
 service Query {
+  // Strategy
   rpc Strategy(QueryStrategyRequest) returns (QueryStrategyResponse) {
     option (google.api.http).get = "/x/token-convert/v1/strategies/{name}";
   }
 
+  // Strategies
   rpc Strategies(QueryStrategiesRequest) returns (QueryStrategiesResponse) {
     option (google.api.http).get = "/x/token-convert/v1/strategies";
   }
@@ -29,7 +31,7 @@ service Query {
     option (google.api.http).get = "/x/token-convert/v1/vouchers";
   }
 
-  // Voucher returns the info about the amount of tabi withdrawable and vetabi returnable
+  // VoucherStatus returns the info about the amount of tabi withdrawable and vetabi returnable
   rpc VoucherStatus(QueryVoucherStatusRequest) returns (QueryVoucherStatusResponse) {
     option (google.api.http).get = "/x/token-convert/v1/voucher-status/{voucher_id}";
   }
@@ -37,61 +39,81 @@ service Query {
 
 // QueryStrategyRequest is the request type for the Query/Voucher RPC
 message QueryStrategyRequest {
+  // name
   string name = 1;
 }
 
-// QueryVoucherResponse is the response type for the Query/Voucher RPC
+// QueryStrategyResponse is the response type for the Query/Voucher RPC
 message QueryStrategyResponse {
+  // name
   string name = 1;
+  // period
   int64 period = 2;
+  // conversion_rate
   string conversion_rate = 3;
 }
 
-// QueryVoucherRequest is the request type for the Query/Voucher RPC
+// QueryStrategiesRequest is the request type for the Query/Voucher RPC
 message QueryStrategiesRequest {
+  // pagination
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-// QueryVoucherResponse is the response type for the Query/Voucher RPC
+// QueryStrategiesResponse is the response type for the Query/Voucher RPC
 message QueryStrategiesResponse {
-  repeated Strategy strategies = 1  [(gogoproto.nullable) = false];
+  // strategies
+  repeated Strategy strategies = 1 [(gogoproto.nullable) = false];
+  // pagination
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // QueryVoucherRequest is the request type for the Query/Voucher RPC
 message QueryVoucherRequest {
+  // voucher_id
   string voucher_id = 1;
 }
 
 // QueryVoucherResponse is the response type for the Query/Voucher RPC
 message QueryVoucherResponse {
+  // id
   string id = 1;
+  // owner
   string owner = 2;
 
+  // created_time
   int64 created_time = 3;
+  // strategy
   string strategy = 4;
 }
 
 // QueryVouchersRequest is the request type for the Query/Vouchers RPC
 message QueryVouchersRequest {
+  // owner
   string owner = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  // pagination
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 // QueryVouchersResponse is the response type for the Query/Vouchers RPC
 message QueryVouchersResponse {
-  repeated Voucher vouchers = 1  [(gogoproto.nullable) = false];
+  // vouchers
+  repeated Voucher vouchers = 1 [(gogoproto.nullable) = false];
+  // pagination
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // QueryVoucherStatusRequest is the request type for the Query/VoucherStatus RPC
 message QueryVoucherStatusRequest {
+  // voucher_id
   string voucher_id = 1;
 }
 
 // QueryVoucherStatusResponse is the response type for the Query/VoucherStatus RPC
 message QueryVoucherStatusResponse {
+  // current_time
   string current_time = 1;
+  // tabi_withdrawable
   cosmos.base.v1beta1.Coin tabi_withdrawable = 2 [(gogoproto.nullable) = false];
+  // vetabi_returnable
   cosmos.base.v1beta1.Coin vetabi_returnable = 3 [(gogoproto.nullable) = false];
 }

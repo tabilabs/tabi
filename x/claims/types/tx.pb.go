@@ -34,12 +34,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
 type MsgUpdateParams struct {
-	// authority is the address that controls the module (defaults to x/gov unless
-	// overwritten).
+	// authority is the address that controls the module (defaults to x/gov unless overwritten).
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
-	// params defines the x/claims parameters to update.
-	//
-	// NOTE: All parameters must be supplied.
+	// params defines the x/claims parameters to update. NOTE: All parameters must be supplied.
 	Params Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
 }
 
@@ -77,7 +74,6 @@ func (m *MsgUpdateParams) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgUpdateParams proto.InternalMessageInfo
 
 // MsgUpdateParamsResponse defines the response structure for executing a
-// MsgUpdateParams message.
 type MsgUpdateParamsResponse struct {
 }
 
@@ -116,8 +112,10 @@ var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
 // MsgClaims
 type MsgClaims struct {
+	// receiver
 	Receiver string `protobuf:"bytes,1,opt,name=receiver,proto3" json:"receiver,omitempty"`
-	Sender   string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	// sender
+	Sender string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
 func (m *MsgClaims) Reset()         { *m = MsgClaims{} }
@@ -155,7 +153,7 @@ var xxx_messageInfo_MsgClaims proto.InternalMessageInfo
 
 // MsgClaimsResponse defines the Msg/Claims response type.
 type MsgClaimsResponse struct {
-	// Since: cosmos-sdk 0.46
+	// amount Since: cosmos-sdk 0.46
 	Amount github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,1,rep,name=amount,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"amount"`
 }
 

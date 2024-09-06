@@ -33,17 +33,22 @@ type GenesisState struct {
 	Divisions []Division `protobuf:"bytes,3,rep,name=divisions,proto3" json:"divisions"`
 	// nodes stores all nodes base info.
 	Nodes []Node `protobuf:"bytes,4,rep,name=nodes,proto3" json:"nodes"`
-	// emission
-	EpochesEmission         []EpochEmission          `protobuf:"bytes,5,rep,name=epoches_emission,json=epochesEmission,proto3" json:"epoches_emission"`
-	NodesClaimedEmission    []NodeClaimedEmission    `protobuf:"bytes,6,rep,name=nodes_claimed_emission,json=nodesClaimedEmission,proto3" json:"nodes_claimed_emission"`
+	// epoches_emission
+	EpochesEmission []EpochEmission `protobuf:"bytes,5,rep,name=epoches_emission,json=epochesEmission,proto3" json:"epoches_emission"`
+	// nodes_claimed_emission
+	NodesClaimedEmission []NodeClaimedEmission `protobuf:"bytes,6,rep,name=nodes_claimed_emission,json=nodesClaimedEmission,proto3" json:"nodes_claimed_emission"`
+	// nodes_cumulative_emission
 	NodesCumulativeEmission []NodeCumulativeEmission `protobuf:"bytes,7,rep,name=nodes_cumulative_emission,json=nodesCumulativeEmission,proto3" json:"nodes_cumulative_emission"`
-	// pledge
+	// globals_pledge
 	GlobalsPledge []GlobalPledge `protobuf:"bytes,8,rep,name=globals_pledge,json=globalsPledge,proto3" json:"globals_pledge"`
-	OwnersPledge  []OwnerPledge  `protobuf:"bytes,9,rep,name=owners_pledge,json=ownersPledge,proto3" json:"owners_pledge"`
-	// computing powers infos.
+	// owners_pledge
+	OwnersPledge []OwnerPledge `protobuf:"bytes,9,rep,name=owners_pledge,json=ownersPledge,proto3" json:"owners_pledge"`
+	// owners_claimable_computing_power computing powers infos.
 	OwnersClaimableComputingPower []ClaimableComputingPower `protobuf:"bytes,10,rep,name=owners_claimable_computing_power,json=ownersClaimableComputingPower,proto3" json:"owners_claimable_computing_power"`
-	GlobalsComputingPower         []GlobalComputingPower    `protobuf:"bytes,11,rep,name=globals_computing_power,json=globalsComputingPower,proto3" json:"globals_computing_power"`
-	NodesComputingPower           []NodesComputingPower     `protobuf:"bytes,12,rep,name=nodes_computing_power,json=nodesComputingPower,proto3" json:"nodes_computing_power"`
+	// globals_computing_power
+	GlobalsComputingPower []GlobalComputingPower `protobuf:"bytes,11,rep,name=globals_computing_power,json=globalsComputingPower,proto3" json:"globals_computing_power"`
+	// nodes_computing_power
+	NodesComputingPower []NodesComputingPower `protobuf:"bytes,12,rep,name=nodes_computing_power,json=nodesComputingPower,proto3" json:"nodes_computing_power"`
 	// batches
 	Batches []BatchBase `protobuf:"bytes,13,rep,name=batches,proto3" json:"batches"`
 }

@@ -11,7 +11,7 @@ TABI_DIR = tabi
 BUILDDIR ?= $(CURDIR)/build
 HTTPS_GIT := https://github.com/tabilabs/tabi.git
 DOCKER := $(shell which docker)
-NAMESPACE := tharsishq
+NAMESPACE := facjas
 PROJECT := tabi
 DOCKER_IMAGE := $(NAMESPACE)/$(PROJECT)
 COMMIT_HASH := $(shell git rev-parse --short=7 HEAD)
@@ -243,7 +243,7 @@ else
 endif
 
 tools: tools-stamp
-tools-stamp: contract-tools docs-tools statik runsim
+tools-stamp: contract-tools  statik runsim
 	# Create dummy file to satisfy dependency and avoid
 	# rebuilding when this Makefile target is hit twice
 	# in a row.
@@ -415,7 +415,6 @@ proto-gen:
 
 proto-swagger-gen:
 	@echo "Downloading Protobuf dependencies"
-	@make proto-download-deps
 	@echo "Generating Protobuf Swagger"
 	$(protoCosmosImage) sh ./scripts/protoc-swagger-gen.sh
 

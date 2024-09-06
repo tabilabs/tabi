@@ -33,8 +33,10 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgUpdateParams defines the Msg/UpdateParams request type.
 type MsgUpdateParams struct {
+	// authority
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
-	Params    Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
+	// params
+	Params Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
 }
 
 func (m *MsgUpdateParams) Reset()         { *m = MsgUpdateParams{} }
@@ -109,8 +111,11 @@ var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
 // MsgCreateCaptainNode defines the Msg/CreateCaptainNode request type.
 type MsgCreateCaptainNode struct {
-	Authority  string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
-	Owner      string `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	// authority
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// owner
+	Owner string `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	// division_id
 	DivisionId string `protobuf:"bytes,3,opt,name=division_id,json=divisionId,proto3" json:"division_id,omitempty"`
 }
 
@@ -149,6 +154,7 @@ var xxx_messageInfo_MsgCreateCaptainNode proto.InternalMessageInfo
 
 // MsgCreateCaptainNodeResponse defines the Msg/CreateCaptainNode response type.
 type MsgCreateCaptainNodeResponse struct {
+	// node_id
 	NodeId string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 }
 
@@ -187,9 +193,12 @@ var xxx_messageInfo_MsgCreateCaptainNodeResponse proto.InternalMessageInfo
 
 // MsgCommitReport is the Msg/CommitReport request type.
 type MsgCommitReport struct {
-	Authority  string     `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// authority
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// report_type
 	ReportType ReportType `protobuf:"varint,2,opt,name=report_type,json=reportType,proto3,enum=tabi.captains.v1.ReportType" json:"report_type,omitempty"`
-	Report     *types.Any `protobuf:"bytes,3,opt,name=report,proto3" json:"report,omitempty"`
+	// report
+	Report *types.Any `protobuf:"bytes,3,opt,name=report,proto3" json:"report,omitempty"`
 }
 
 func (m *MsgCommitReport) Reset()         { *m = MsgCommitReport{} }
@@ -264,8 +273,10 @@ var xxx_messageInfo_MsgCommitReportResponse proto.InternalMessageInfo
 
 // MsgAddAuthorizedMembers defines the Msg/AddAuthorizedMembers request type.
 type MsgAddAuthorizedMembers struct {
-	Authority string   `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
-	Members   []string `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
+	// authority
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// members
+	Members []string `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
 }
 
 func (m *MsgAddAuthorizedMembers) Reset()         { *m = MsgAddAuthorizedMembers{} }
@@ -301,7 +312,7 @@ func (m *MsgAddAuthorizedMembers) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgAddAuthorizedMembers proto.InternalMessageInfo
 
-// MsgAddAuthorizedMemberResponse defines the Msg/AddAuthorizedMemberResponse response type.
+// MsgAddAuthorizedMembersResponse defines the Msg/AddAuthorizedMemberResponse response type.
 type MsgAddAuthorizedMembersResponse struct {
 }
 
@@ -340,8 +351,10 @@ var xxx_messageInfo_MsgAddAuthorizedMembersResponse proto.InternalMessageInfo
 
 // MsgRemoveAuthorizedMembers defines the Msg/RemoveAuthorizedMembers request type.
 type MsgRemoveAuthorizedMembers struct {
-	Authority string   `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
-	Members   []string `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
+	// authority
+	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
+	// members
+	Members []string `protobuf:"bytes,2,rep,name=members,proto3" json:"members,omitempty"`
 }
 
 func (m *MsgRemoveAuthorizedMembers) Reset()         { *m = MsgRemoveAuthorizedMembers{} }
@@ -416,7 +429,7 @@ var xxx_messageInfo_MsgRemoveAuthorizedMembersResponse proto.InternalMessageInfo
 
 // MsgUpdateSaleLevel defines the Msg/UpdateSaleLevel request type.
 type MsgUpdateSaleLevel struct {
-	// sender is the address of the owner of nft
+	// authority
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
 	// sale_level is the sale levels to update.
 	SaleLevel uint64 `protobuf:"varint,2,opt,name=sale_level,json=saleLevel,proto3" json:"sale_level,omitempty"`
@@ -494,7 +507,7 @@ var xxx_messageInfo_MsgUpdateSaleLevelResponse proto.InternalMessageInfo
 
 // MsgCommitComputingPower defines the Msg/CommitComputingPowerResponse request type.
 type MsgCommitComputingPower struct {
-	// sender is the address of the owner of nft
+	// authority
 	Authority string `protobuf:"bytes,1,opt,name=authority,proto3" json:"authority,omitempty"`
 	// computing_power_rewards is the extractable computing powers to reward.
 	ComputingPowerRewards []ClaimableComputingPower `protobuf:"bytes,2,rep,name=computing_power_rewards,json=computingPowerRewards,proto3" json:"computing_power_rewards"`
@@ -572,9 +585,12 @@ var xxx_messageInfo_MsgCommitComputingPowerResponse proto.InternalMessageInfo
 
 // MsgClaimComputingPower defines the Msg/ClaimComputingPower request type.
 type MsgClaimComputingPower struct {
-	Sender               string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
+	// sender
+	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
+	// computing_power_amount
 	ComputingPowerAmount uint64 `protobuf:"varint,2,opt,name=computing_power_amount,json=computingPowerAmount,proto3" json:"computing_power_amount,omitempty"`
-	NodeId               string `protobuf:"bytes,3,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	// node_id
+	NodeId string `protobuf:"bytes,3,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 }
 
 func (m *MsgClaimComputingPower) Reset()         { *m = MsgClaimComputingPower{} }

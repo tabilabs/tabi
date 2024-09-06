@@ -32,8 +32,10 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgConvertTabi represents a message to convert Tabi to Vetabi.
 type MsgConvertTabi struct {
-	Coin   types.Coin `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin"`
-	Sender string     `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	// coin
+	Coin types.Coin `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin"`
+	// sender
+	Sender string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
 func (m *MsgConvertTabi) Reset()         { *m = MsgConvertTabi{} }
@@ -122,9 +124,12 @@ var xxx_messageInfo_MsgConvertTabiResponse proto.InternalMessageInfo
 
 // MsgConvertVetabi represents a message to convert Vetabi to Tabi.
 type MsgConvertVetabi struct {
-	Coin     types.Coin `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin"`
-	Strategy string     `protobuf:"bytes,2,opt,name=strategy,proto3" json:"strategy,omitempty"`
-	Sender   string     `protobuf:"bytes,3,opt,name=sender,proto3" json:"sender,omitempty"`
+	// coin
+	Coin types.Coin `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin"`
+	// strategy
+	Strategy string `protobuf:"bytes,2,opt,name=strategy,proto3" json:"strategy,omitempty"`
+	// sender
+	Sender string `protobuf:"bytes,3,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
 func (m *MsgConvertVetabi) Reset()         { *m = MsgConvertVetabi{} }
@@ -183,7 +188,9 @@ func (m *MsgConvertVetabi) GetSender() string {
 
 // MsgConvertVetabiResponse defines the Msg/ConvertVetabi response type.
 type MsgConvertVetabiResponse struct {
-	VoucherId  string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
+	// voucher_id
+	VoucherId string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
+	// expiry_time
 	ExpiryTime string `protobuf:"bytes,2,opt,name=expiry_time,json=expiryTime,proto3" json:"expiry_time,omitempty"`
 }
 
@@ -236,8 +243,10 @@ func (m *MsgConvertVetabiResponse) GetExpiryTime() string {
 
 // MsgWithdrawTabi represents a message to withdraw Tabi as per voucher.
 type MsgWithdrawTabi struct {
+	// voucher_id
 	VoucherId string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
-	Sender    string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	// sender
+	Sender string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
 func (m *MsgWithdrawTabi) Reset()         { *m = MsgWithdrawTabi{} }
@@ -289,7 +298,9 @@ func (m *MsgWithdrawTabi) GetSender() string {
 
 // MsgWithdrawTabiResponse defines the Msg/WithdrawTabi response type.
 type MsgWithdrawTabiResponse struct {
-	TabiWithdrawn  types.Coin `protobuf:"bytes,1,opt,name=tabi_withdrawn,json=tabiWithdrawn,proto3" json:"tabi_withdrawn"`
+	// tabi_withdrawn
+	TabiWithdrawn types.Coin `protobuf:"bytes,1,opt,name=tabi_withdrawn,json=tabiWithdrawn,proto3" json:"tabi_withdrawn"`
+	// vetabi_returned
 	VetabiReturned types.Coin `protobuf:"bytes,2,opt,name=vetabi_returned,json=vetabiReturned,proto3" json:"vetabi_returned"`
 }
 
@@ -342,8 +353,10 @@ func (m *MsgWithdrawTabiResponse) GetVetabiReturned() types.Coin {
 
 // MsgCancelConvert represents a message to cancel the conversion of Vetabi to Tabi.
 type MsgCancelConvert struct {
+	// voucher_id
 	VoucherId string `protobuf:"bytes,1,opt,name=voucher_id,json=voucherId,proto3" json:"voucher_id,omitempty"`
-	Sender    string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	// sender
+	Sender string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
 func (m *MsgCancelConvert) Reset()         { *m = MsgCancelConvert{} }
@@ -395,6 +408,7 @@ func (m *MsgCancelConvert) GetSender() string {
 
 // MsgCancelConvertResponse defines the Msg/CancelConvert response type.
 type MsgCancelConvertResponse struct {
+	// vetabi_unlocked
 	VetabiUnlocked types.Coin `protobuf:"bytes,1,opt,name=vetabi_unlocked,json=vetabiUnlocked,proto3" json:"vetabi_unlocked"`
 }
 
