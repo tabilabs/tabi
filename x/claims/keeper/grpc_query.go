@@ -73,3 +73,24 @@ func (k Keeper) HolderTotalRewards(goCtx context.Context, request *types.QueryHo
 
 	return &types.QueryHolderTotalRewardsResponse{Rewards: rewards}, nil
 }
+
+func (k Keeper) HolderClaimedRewards(goCtx context.Context, request *types.QueryHolderClaimedRewardsRequest) (*types.QueryHolderClaimedRewardsResponse, error) {
+	if request == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	if request.Owner == "" {
+		return nil, status.Error(codes.InvalidArgument, "empty holder address")
+	}
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	owner, err := sdk.AccAddressFromBech32(request.Owner)
+	if err != nil {
+		return nil, err
+	}
+
+	claimedRewards, err := k.ClaimedRewards(ctx, owner)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryHolderClaimedRewardsResponse{Rewards: claimedRewards}, nil
+}

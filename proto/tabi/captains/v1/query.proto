@@ -48,7 +48,7 @@ service Query {
 
   // SaleLevel queries current sale level
   rpc SaleLevel(QuerySaleLevelRequest) returns (QuerySaleLevelResponse) {
-    option (google.api.http).get = "/x/captains/v1/sale_level";
+    option (google.api.http).get = "/x/captains/v1/sale-level";
   }
 
   // AuthorizedMembers queries all the callers
@@ -64,6 +64,11 @@ service Query {
   // EpochStatus queries the current epoch status
   rpc EpochStatus(QueryEpochStatusRequest) returns (QueryEpochStatusResponse) {
     option (google.api.http).get = "/x/captains/v1/epoch-status";
+  }
+
+  // ClaimableComputingPower queries the claimable computing power of an address
+  rpc ClaimableComputingPower(QueryClaimableComputingPowerRequest) returns (QueryClaimableComputingPowerResponse) {
+    option (google.api.http).get = "/x/captains/v1/claimable-computing-power";
   }
 }
 
@@ -189,6 +194,9 @@ message QueryNodeLastEpochInfoResponse {
   string historical_emission = 4;
   // pledge_ratio
   string pledge_ratio = 5;
+
+  // computing_power
+  string computing_power = 6;
 }
 
 // QueryEpochStatusRequest is the request type for the Query/EpochStatus RPC method
@@ -207,4 +215,15 @@ message QueryEpochStatusResponse {
   string report_digest = 3;
   // epoch_emission
   string epoch_emission = 4;
+}
+// QueryClaimableComputingPowerRequest
+message QueryClaimableComputingPowerRequest {
+  // owner
+  string owner = 1;
+}
+
+// QueryClaimableComputingPowerResponse
+message QueryClaimableComputingPowerResponse {
+  // claimable_computing_power
+  uint64 claimable_computing_power = 1;
 }

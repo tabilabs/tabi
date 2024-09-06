@@ -81,3 +81,21 @@ func (k Keeper) CalculateRewardsByNodeId(ctx sdk.Context, nodeId string) (sdk.De
 
 	return sdk.NewDecCoins(sdk.NewDecCoinFromDec(tabitypes.AttoVeTabi, reward)), nil
 }
+
+func (k Keeper) ClaimedRewards(ctx sdk.Context, owner sdk.Address) (sdk.DecCoins, error) {
+	// Calculate the rewards for each node
+	totalClaimedRewards := sdk.ZeroDec()
+	nodes := k.captainsKeeper.GetNodesByOwner(ctx, owner.Bytes())
+	// check if the sender has not held node
+	if len(nodes) == 0 {
+		return sdk.DecCoins{}, types.ErrHolderNotFound
+	}
+
+	for _, node := range nodes {
+		claimedReward := k.captainsKeeper.GetNodeClaimedEmission(ctx, node.Id)
+		// Sum the rewards
+		totalClaimedRewards = totalClaimedRewards.Add(claimedReward)
+	}
+
+	return sdk.NewDecCoins(sdk.NewDecCoinFromDec(tabitypes.AttoVeTabi, totalClaimedRewards)), nil
+}
