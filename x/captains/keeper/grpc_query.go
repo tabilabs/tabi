@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 
@@ -120,12 +122,14 @@ func (q Querier) NodeLastEpochInfo(
 	emission := q.Keeper.CalcNodeEmissionOnEpoch(ctx, prevEpoch, node.Id).String()
 	historical := q.Keeper.CalcNodeCumulativeEmissionByEpoch(ctx, prevEpoch, node.Id).String()
 	ratio := q.Keeper.CalcNodePledgeRatioOnEpoch(ctx, prevEpoch, node.Id).String()
+	computingPower := q.Keeper.GetNodeComputingPowerOnEpoch(ctx, prevEpoch, node.Id).String()
 
 	return &types.QueryNodeLastEpochInfoResponse{
 		Epoch:              prevEpoch,
 		LastEpochEmission:  emission,
 		HistoricalEmission: historical,
 		PledgeRatio:        ratio,
+		ComputingPower:     computingPower,
 	}, nil
 }
 
@@ -242,4 +246,27 @@ func (q Querier) EpochStatus(
 		ReportDigest:         digestStr,
 		EpochEmission:        emission.String(),
 	}, nil
+}
+
+func (q Querier) ClaimableComputingPower(
+	goCtx context.Context,
+	request *types.QueryClaimableComputingPowerRequest,
+) (*types.QueryClaimableComputingPowerResponse, error) {
+	if request == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	if request.Owner == "" {
+		return nil, status.Error(codes.InvalidArgument, "empty owner address")
+	}
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	owner, err := sdk.AccAddressFromBech32(request.Owner)
+	if err != nil {
+		return nil, err
+	}
+
+	claimableComputingPower := q.Keeper.GetClaimableComputingPower(ctx, owner.Bytes())
+
+	return &types.QueryClaimableComputingPowerResponse{ClaimableComputingPower: claimableComputingPower}, nil
 }

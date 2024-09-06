@@ -20,12 +20,17 @@ service Query {
 
   // NodeTotalRewards queries the total rewards accrued by a delegation.
   rpc NodeTotalRewards(QueryNodeTotalRewardsRequest) returns (QueryNodeTotalRewardsResponse) {
-    option (google.api.http).get = "/x/claims/v1/nodes/{node_id}/total_rewards";
+    option (google.api.http).get = "/x/claims/v1/nodes/{node_id}/total-rewards";
   }
 
   // HolderTotalRewards queries the total rewards accrued by a delegation.
   rpc HolderTotalRewards(QueryHolderTotalRewardsRequest) returns (QueryHolderTotalRewardsResponse) {
-    option (google.api.http).get = "/x/claims/v1/holders/{owner}/total_rewards";
+    option (google.api.http).get = "/x/claims/v1/holders/{owner}/total-rewards";
+  }
+
+  // HolderClaimedRewards queries the claim rewards accrued by a delegation.
+  rpc HolderClaimedRewards(QueryHolderClaimedRewardsRequest) returns (QueryHolderClaimedRewardsResponse) {
+    option (google.api.http).get = "/x/claims/v1/holders/{owner}/claimed-rewards";
   }
 }
 
@@ -61,6 +66,19 @@ message QueryHolderTotalRewardsRequest {
 
 // QueryHolderTotalRewardsResponse is response type for the Query/HolderTotalRewards RPC method
 message QueryHolderTotalRewardsResponse {
+  // rewards defines the rewards accrued by a delegation.
+  repeated cosmos.base.v1beta1.DecCoin rewards = 1
+  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"];
+}
+
+// QueryHolderClaimedRewardsRequest is request type for the Query/HolderClaimedRewards RPC method
+message QueryHolderClaimedRewardsRequest {
+  // owner
+  string owner = 1;
+}
+
+// QueryHolderClaimedRewardsResponse is response type for the Query/HolderClaimedRewards RPC method
+message QueryHolderClaimedRewardsResponse {
   // rewards defines the rewards accrued by a delegation.
   repeated cosmos.base.v1beta1.DecCoin rewards = 1
   [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins"];

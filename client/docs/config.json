@@ -15,6 +15,9 @@
       }
     },
     {
+      "url": "./tmp-swagger-gen/tabi/claims/v1/tx.swagger.json",
+    },
+    {
       "url": "./tmp-swagger-gen/tabi/captains/v1/query.swagger.json",
       "operationIds": {
         "rename": {
@@ -23,12 +26,18 @@
       }
     },
     {
+      "url": "./tmp-swagger-gen/tabi/captains/v1/tx.swagger.json",
+    },
+    {
       "url": "./tmp-swagger-gen/tabi/token-convert/v1/query.swagger.json",
       "operationIds": {
         "rename": {
           "Params": "ConvertParams"
         }
       }
+    },
+    {
+      "url": "./tmp-swagger-gen/tabi/token-convert/v1/tx.swagger.json",
     },
     {
       "url": "./tmp-swagger-gen/ethermint/evm/v1/query.swagger.json",
@@ -74,7 +83,86 @@
     {
       "url": "./tmp-swagger-gen/ibc/core/channel/v1/query.swagger.json"
     },
-
+    {
+      "url": "./tmp-swagger-gen/cosmos/auth/v1beta1/query.swagger.json",
+      "operationIds": {
+        "rename": {
+          "Account": "AuthAccount",
+          "Params": "AuthParams"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/authz/v1beta1/query.swagger.json"
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/bank/v1beta1/query.swagger.json",
+      "operationIds": {
+        "rename": {
+          "Balance": "BankBalance",
+          "Params": "BankParams"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/distribution/v1beta1/query.swagger.json",
+      "operationIds": {
+        "rename": {
+          "Params": "DistributionParams",
+          "DelegatorValidators": "DistDelegatorValidators"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/feegrant/v1beta1/query.swagger.json"
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/evidence/v1beta1/query.swagger.json",
+      "operationIds": {
+        "rename": {
+          "Params": "EvidenceParams"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/gov/v1beta1/query.swagger.json",
+      "operationIds": {
+        "rename": {
+          "Params": "GovParams"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/gov/v1/query.swagger.json",
+      "operationIds": {
+        "rename": {
+          "Params": "GovV1Params",
+          "Proposal": "GovV1Proposal",
+          "Proposals": "GovV1Proposal",
+          "Vote": "GovV1Vote",
+          "Votes": "GovV1Votes",
+          "Deposit": "GovV1Deposit",
+          "Deposits": "GovV1Deposit",
+          "TallyResult": "GovV1TallyResult"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/slashing/v1beta1/query.swagger.json",
+      "operationIds": {
+        "rename": {
+          "Params": "SlashingParams"
+        }
+      }
+    },
+    {
+      "url": "./tmp-swagger-gen/cosmos/staking/v1beta1/query.swagger.json",
+      "operationIds": {
+        "rename": {
+          "Params": "StakingParams"
+        }
+      }
+    },
     {
       "url": "./tmp-swagger-gen/cosmos/tx/v1beta1/service.swagger.json",
       "dereference": {
