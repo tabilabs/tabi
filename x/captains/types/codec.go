@@ -21,6 +21,7 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 	registry.RegisterImplementations((*ReportContent)(nil),
 		&ReportDigest{},
 		&ReportBatch{},
+		&ReportEmission{},
 		&ReportEnd{},
 	)
 

@@ -35,6 +35,7 @@ const (
 	prefixReportBatchOnEpoch
 	prefixEndOnEpoch
 	prefixStandByOver
+	prefixNodeEpochEmission
 )
 
 var (
@@ -58,9 +59,9 @@ var (
 	ReportBatchOnEpochKey            = []byte{prefixReportBatchOnEpoch}
 	EndOnEpochKey                    = []byte{prefixEndOnEpoch}
 	StandByOverKey                   = []byte{prefixStandByOver}
-
-	Delimiter   = []byte{0x00}
-	PlaceHolder = []byte{0x01}
+	NodeEpochEmissionKey             = []byte{prefixNodeEpochEmission}
+	Delimiter                        = []byte{0x00}
+	PlaceHolder                      = []byte{0x01}
 )
 
 // NodeStoreKey returns the byte representation of the node key
@@ -135,6 +136,16 @@ func EpochEmissionStoreKey(epochID uint64) []byte {
 func NodeCumulativeEmissionByEpochStoreKey(epochID uint64, nodeID string) []byte {
 	epochBz := sdk.Uint64ToBigEndian(epochID)
 	key := make([]byte, len(NodeCumulativeEmissionByEpochKey)+len(epochBz)+len(Delimiter)+len(nodeID))
+	copy(key, NodeCumulativeEmissionByEpochKey)
+	copy(key[len(NodeCumulativeEmissionByEpochKey):], epochBz)
+	copy(key[len(NodeCumulativeEmissionByEpochKey)+len(epochBz):], Delimiter)
+	copy(key[len(NodeCumulativeEmissionByEpochKey)+len(epochBz)+len(Delimiter):], nodeID)
+	return key
+}
+
+func NodeEpochEmissionByEpochStoreKey(epochID uint64, nodeID string) []byte {
+	epochBz := sdk.Uint64ToBigEndian(epochID)
+	key := make([]byte, len(NodeEpochEmissionKey)+len(epochBz)+len(Delimiter)+len(nodeID))
 	copy(key, NodeCumulativeEmissionByEpochKey)
 	copy(key[len(NodeCumulativeEmissionByEpochKey):], epochBz)
 	copy(key[len(NodeCumulativeEmissionByEpochKey)+len(epochBz):], Delimiter)

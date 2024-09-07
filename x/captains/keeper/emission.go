@@ -98,6 +98,37 @@ func (k Keeper) CalcAndSetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID
 	return res
 }
 
+func (k Keeper) CalcNodeCumulativeEmissionByEpochNew(ctx sdk.Context, epochID uint64, nodeID string, epochGlobalEmission sdk.Dec, epochGlobalPower sdk.Dec) sdk.Dec {
+	if epochID == 0 {
+		return sdk.ZeroDec()
+	}
+
+	// NOTE: we may have already set this value when user claimed the rewards before report handles it.
+	historyEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
+	if !historyEmission.Equal(sdk.ZeroDec()) {
+		return historyEmission
+	}
+
+	prevHistoryEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
+	epochNodeEmission := k.CalcNodeEmissionOnEpochNew(ctx, epochID, nodeID, epochGlobalEmission, epochGlobalPower)
+	return epochNodeEmission.Add(prevHistoryEmission)
+}
+
+func (k Keeper) SetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string, nodeEpochEmission sdk.Dec) sdk.Dec {
+	res := k.SetNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID, nodeEpochEmission)
+
+	// no need to set the emission for the first epoch
+	if epochID == 0 {
+		return res
+	}
+
+	k.setNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID, res)
+	k.delNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
+	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
+
+	return res
+}
+
 // CalcNodeCumulativeEmissionByEpoch returns the historical emission for a node at the end of an epoch.
 // NOTE: this func is only used to query and it won't set or prune state data.
 func (k Keeper) CalcNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
@@ -116,7 +147,7 @@ func (k Keeper) CalcNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint6
 	return epochEmission.Add(prevHistoryEmission)
 }
 
-func (k Keeper) CalcNodeCumulativeEmissionByEpochNew(ctx sdk.Context, epochID uint64, nodeID string, epochGlobalEmission sdk.Dec, epochGlobalPower sdk.Dec) sdk.Dec {
+func (k Keeper) SetNodeCumulativeEmissionByEpochNew(ctx sdk.Context, epochID uint64, nodeID string, epochGlobalEmission sdk.Dec, epochGlobalPower sdk.Dec) sdk.Dec {
 	if epochID == 0 {
 		return sdk.ZeroDec()
 	}
@@ -177,6 +208,31 @@ func (k Keeper) setNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64
 func (k Keeper) delNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) {
 	store := ctx.KVStore(k.storeKey)
 	key := types.NodeCumulativeEmissionByEpochStoreKey(epochID, nodeID)
+	store.Delete(key)
+}
+
+// SetNodeEmissionByEpoch sets the epoch emission for a node.
+func (k Keeper) SetNodeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string, amount string) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.NodeEpochEmissionByEpochStoreKey(epochID, nodeID)
+	store.Set(key, []byte(amount))
+}
+
+// GetNodeEmissionByEpoch Gets the epoch emission for a node.
+func (k Keeper) GetNodeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) sdk.Dec {
+	store := ctx.KVStore(k.storeKey)
+	key := types.NodeEpochEmissionByEpochStoreKey(epochID, nodeID)
+	bz := store.Get(key)
+	if len(bz) == 0 {
+		return sdk.ZeroDec()
+	}
+	return sdk.MustNewDecFromStr(string(bz))
+}
+
+// DelNodeEmissionByEpoch deletes the epoch emission for a node.
+func (k Keeper) delNodeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.NodeEpochEmissionByEpochStoreKey(epochID, nodeID)
 	store.Delete(key)
 }
 

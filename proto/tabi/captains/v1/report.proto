@@ -3,7 +3,7 @@ package tabi.captains.v1;
 
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
-
+import "cosmos/base/v1beta1/coin.proto";
 option go_package = "github.com/tabilabs/tabi/x/captains/types";
 
 // ReportType
@@ -14,8 +14,10 @@ enum ReportType {
   REPORT_TYPE_DIGEST = 1;
   // REPORT_TYPE_BATCH
   REPORT_TYPE_BATCH = 2;
+  // REPORT_TYPE_EMISSION
+  REPORT_TYPE_EMISSION = 3;
   // REPORT_TYPE_END
-  REPORT_TYPE_END = 3;
+  REPORT_TYPE_END = 4;
 }
 
 // ReportDigest
@@ -48,6 +50,18 @@ message ReportBatch {
   repeated NodePowerOnRatio nodes = 4 [(gogoproto.nullable) = false];
 }
 
+// ReportEmission marks the a batch of nodes.
+message ReportEmission {
+  // epoch_id is the epoch id of the report
+  uint64 epoch_id = 1;
+  // batch_id is the batch id of the report
+  uint64 batch_id = 2;
+  // node_count is the number of nodes in the batch
+  uint64 node_count = 3;
+  // nodes is the list of node in the batch
+  repeated NodeEpochEmission nodes = 4 [(gogoproto.nullable) = false];
+}
+
 // ReportEnd marks the end of commiting a report.
 message ReportEnd {
   // epoch_id
@@ -64,6 +78,15 @@ message NodePowerOnRatio {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
+}
+
+// NodeEpochEmission is the epoch emission of a node.
+message NodeEpochEmission {
+  // node_id is the id of the node
+  string node_id = 1;
+  // node_emission is the operation ratio of the node
+  cosmos.base.v1beta1.Coin node_emission = 2
+  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 // BatchBase is the base batch message.

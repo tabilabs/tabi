@@ -1,10 +1,10 @@
 package keeper
 
 import (
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	"github.com/tabilabs/tabi/x/captains/types"
 
 	sdkcdc "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	errorsmod "cosmossdk.io/errors"
@@ -16,7 +16,9 @@ func (k Keeper) CommitReport(ctx sdk.Context, report any) error {
 	case *types.ReportDigest:
 		return k.HandleReportDigest(ctx, report)
 	case *types.ReportBatch:
-		return k.HandleReportBatch(ctx, report)
+		return nil
+	case *types.ReportEmission:
+		return k.HandleReportEmission(ctx, report)
 	case *types.ReportEnd:
 		return k.HandleReportEnd(ctx, report)
 	}
@@ -95,6 +97,32 @@ func (k Keeper) HandleReportBatch(ctx sdk.Context, report *types.ReportBatch) er
 	return nil
 }
 
+func (k Keeper) HandleReportEmission(ctx sdk.Context, report *types.ReportEmission) error {
+	epochId := report.EpochId
+
+	for _, node := range report.Nodes {
+		_, found := k.GetNodeOwner(ctx, node.NodeId)
+		if !found {
+			return errorsmod.Wrapf(types.ErrNodeNotExists, "node-%s not exists", node.NodeId)
+		}
+		k.SetNodeEmissionByEpoch(ctx, epochId, node.NodeId, node.NodeEmission.Amount.String())
+
+		historyEmission1 := k.GetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId)
+		if historyEmission1.Equal(sdk.ZeroDec()) {
+			historyEmission2 := k.GetNodeCumulativeEmissionByEpoch(ctx, epochId-2, node.NodeId)
+			oldEmission := k.GetNodeEmissionByEpoch(ctx, epochId-1, node.NodeId)
+			k.SetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId, historyEmission2.Add(oldEmission))
+		}
+
+		k.delNodeCumulativeEmissionByEpoch(ctx, epochId-3, node.NodeId)
+		k.delNodeEmissionByEpoch(ctx, epochId-3, node.NodeId)
+
+	}
+	// mark we have handle this batch.
+	k.setReportBatch(ctx, epochId, report.BatchId, report.NodeCount)
+	return nil
+}
+
 // HandleReportEnd processes a report end
 func (k Keeper) HandleReportEnd(ctx sdk.Context, report *types.ReportEnd) error {
 	epochId := report.EpochId
@@ -162,6 +190,15 @@ func (k Keeper) ValidateReport(ctx sdk.Context, reportType types.ReportType, rep
 		}
 
 		return batch, nil
+	case types.ReportType_REPORT_TYPE_EMISSION:
+		emission, ok := message.(*types.ReportEmission)
+		if !ok {
+			return nil, errorsmod.Wrapf(types.ErrInvalidReport, "invalid report")
+		}
+		if err := k.ValidateReportEmission(ctx, emission); err != nil {
+			return nil, err
+		}
+		return emission, nil
 	case types.ReportType_REPORT_TYPE_END:
 		end, ok := message.(*types.ReportEnd)
 		if !ok {
@@ -172,6 +209,7 @@ func (k Keeper) ValidateReport(ctx sdk.Context, reportType types.ReportType, rep
 		}
 		return end, nil
 	}
+
 	return nil, errorsmod.Wrapf(types.ErrInvalidReport, "invalid report type")
 }
 
@@ -200,7 +238,7 @@ func (k Keeper) ValidateReportDigest(ctx sdk.Context, report *types.ReportDigest
 
 	// NOTE:  assure all nodes created on chain submitted, otherwise emission calc will be incorrect.
 	if report.TotalNodeCount != k.GetNodesCount(ctx) {
-		return errorsmod.Wrapf(types.ErrInvalidReport, "node count mismatch")
+		return errorsmod.Wrapf(types.ErrInvalidReport, "node count mismatch %d != %d", report.TotalNodeCount, k.GetNodesCount(ctx))
 	}
 
 	return nil
@@ -235,6 +273,11 @@ func (k Keeper) ValidateReportBatch(ctx sdk.Context, report *types.ReportBatch) 
 		}
 	}
 
+	return nil
+}
+
+// ValidateReportEmission checks if the report end is valid
+func (k Keeper) ValidateReportEmission(ctx sdk.Context, report *types.ReportEmission) error {
 	return nil
 }
 

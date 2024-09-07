@@ -127,6 +127,12 @@ func NewMsgCommitReport(authority string, reportType ReportType, report any) (*M
 			return nil, err
 		}
 		res.Report = anyV
+	case *ReportEmission:
+		anyV, err := types.NewAnyWithValue(v)
+		if err != nil {
+			return nil, err
+		}
+		res.Report = anyV
 	case *ReportEnd:
 		anyV, err := types.NewAnyWithValue(v)
 		if err != nil {
@@ -184,6 +190,16 @@ func (msg *MsgCommitReport) ValidateBasic() error {
 			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 		}
 		err = end.ValidateBasic()
+		if err != nil {
+			return err
+		}
+	case ReportType_REPORT_TYPE_EMISSION:
+		var emission ReportEmission
+		err := emission.Unmarshal(bz)
+		if err != nil {
+			return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+		}
+		err = emission.ValidateBasic()
 		if err != nil {
 			return err
 		}

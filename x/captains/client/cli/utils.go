@@ -15,9 +15,10 @@ const (
 	FlagOwner      = "owner"
 	FlagReportType = "report-type"
 
-	ReportTypeDigest = "digest"
-	ReportTypeBatch  = "batch"
-	ReportTypeEnd    = "end"
+	ReportTypeDigest   = "digest"
+	ReportTypeBatch    = "batch"
+	ReportTypeEmission = "emission"
+	ReportTypeEnd      = "end"
 
 	draftReportDigestFileName = "draft_report_digest.json"
 	draftReportBatchFileName  = "draft_report_batch.json"
@@ -64,6 +65,8 @@ func parseReportType(reportType string) types.ReportType {
 		return types.ReportType_REPORT_TYPE_DIGEST
 	case ReportTypeBatch:
 		return types.ReportType_REPORT_TYPE_BATCH
+	case ReportTypeEmission:
+		return types.ReportType_REPORT_TYPE_EMISSION
 	case ReportTypeEnd:
 		return types.ReportType_REPORT_TYPE_END
 	}
