@@ -85,8 +85,8 @@ message NodeEpochEmission {
   // node_id is the id of the node
   string node_id = 1;
   // node_emission is the operation ratio of the node
-  cosmos.base.v1beta1.Coin node_emission = 2
-  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  cosmos.base.v1beta1.DecCoin node_emission = 2
+  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoin"];
 }
 
 // BatchBase is the base batch message.

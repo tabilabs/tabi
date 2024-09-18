@@ -372,7 +372,7 @@ type NodeEpochEmission struct {
 	// node_id is the id of the node
 	NodeId string `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
 	// node_emission is the operation ratio of the node
-	NodeEmission types.Coin `protobuf:"bytes,2,opt,name=node_emission,json=nodeEmission,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"node_emission"`
+	NodeEmission types.DecCoin `protobuf:"bytes,2,opt,name=node_emission,json=nodeEmission,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.DecCoin" json:"node_emission"`
 }
 
 func (m *NodeEpochEmission) Reset()         { *m = NodeEpochEmission{} }
@@ -415,11 +415,11 @@ func (m *NodeEpochEmission) GetNodeId() string {
 	return ""
 }
 
-func (m *NodeEpochEmission) GetNodeEmission() types.Coin {
+func (m *NodeEpochEmission) GetNodeEmission() types.DecCoin {
 	if m != nil {
 		return m.NodeEmission
 	}
-	return types.Coin{}
+	return types.DecCoin{}
 }
 
 // BatchBase is the base batch message.
