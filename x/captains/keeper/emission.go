@@ -115,18 +115,17 @@ func (k Keeper) CalcNodeCumulativeEmissionByEpochNew(ctx sdk.Context, epochID ui
 }
 
 func (k Keeper) SetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64, nodeID string, nodeEpochEmission sdk.Dec) sdk.Dec {
-	res := k.SetNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID, nodeEpochEmission)
 
 	// no need to set the emission for the first epoch
 	if epochID == 0 {
-		return res
+		return sdk.ZeroDec()
 	}
 
-	k.setNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID, res)
+	k.setNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID, nodeEpochEmission)
 	k.delNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
 	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
 
-	return res
+	return nodeEpochEmission
 }
 
 // CalcNodeCumulativeEmissionByEpoch returns the historical emission for a node at the end of an epoch.
