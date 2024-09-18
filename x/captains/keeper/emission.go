@@ -142,7 +142,7 @@ func (k Keeper) CalcNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint6
 	}
 
 	prevHistoryEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
-	epochEmission := k.CalcNodeEmissionOnEpoch(ctx, epochID, nodeID)
+	epochEmission := k.GetNodeEmissionByEpoch(ctx, epochID, nodeID)
 	return epochEmission.Add(prevHistoryEmission)
 }
 
