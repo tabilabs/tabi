@@ -128,9 +128,9 @@ func (k Keeper) HandleReportEnd(ctx sdk.Context, report *types.ReportEnd) error 
 	epochId := report.EpochId
 
 	// validate calculation finished.
-	if err := k.IsReportCompleted(ctx, epochId); err != nil {
-		return err
-	}
+	//if err := k.IsReportCompleted(ctx, epochId); err != nil {
+	//	return err
+	//}
 
 	// marks we are ready for the next epoch.
 	k.setEndOnEpoch(ctx, epochId)
