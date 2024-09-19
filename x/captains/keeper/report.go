@@ -107,16 +107,9 @@ func (k Keeper) HandleReportEmission(ctx sdk.Context, report *types.ReportEmissi
 		}
 		k.SetNodeEmissionByEpoch(ctx, epochId, node.NodeId, node.NodeEmission.Amount.String())
 
-		historyEmission1 := k.GetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId)
-		if historyEmission1.Equal(sdk.ZeroDec()) {
-			historyEmission2 := k.GetNodeCumulativeEmissionByEpoch(ctx, epochId-2, node.NodeId)
-			oldEmission := k.GetNodeEmissionByEpoch(ctx, epochId-1, node.NodeId)
-			k.SetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId, historyEmission2.Add(oldEmission))
-		}
-
-		k.delNodeCumulativeEmissionByEpoch(ctx, epochId-3, node.NodeId)
-		k.delNodeEmissionByEpoch(ctx, epochId-3, node.NodeId)
-
+		historyEmission2 := k.GetNodeCumulativeEmissionByEpoch(ctx, epochId-2, node.NodeId)
+		oldEmission := k.GetNodeEmissionByEpoch(ctx, epochId-1, node.NodeId)
+		k.SetNodeCumulativeEmissionByEpoch(ctx, epochId-1, node.NodeId, historyEmission2.Add(oldEmission))
 	}
 	// mark we have handle this batch.
 	k.setReportBatch(ctx, epochId, report.BatchId, report.NodeCount)

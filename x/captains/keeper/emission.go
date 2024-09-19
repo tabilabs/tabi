@@ -122,8 +122,8 @@ func (k Keeper) SetNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint64
 	}
 
 	k.setNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID, nodeEpochEmission)
-	k.delNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
-	k.delNodeComputingPowerOnEpoch(ctx, epochID-1, nodeID)
+	k.delNodeCumulativeEmissionByEpoch(ctx, epochID-2, nodeID)
+	k.delNodeComputingPowerOnEpoch(ctx, epochID-2, nodeID)
 
 	return nodeEpochEmission
 }
