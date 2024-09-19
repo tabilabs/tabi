@@ -202,7 +202,6 @@ require (
 replace (
 	// use cosmos fork of keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
-	github.com/cosmos/cosmos-sdk v0.46.15 => github.com/tabilabs/cosmos-sdk v0.46.15-tabi
 	github.com/ethereum/go-ethereum => github.com/evmos/go-ethereum v1.10.26
 	// Security Advisory https://github.com/advisories/GHSA-h395-qcrw-5vmq
 	github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.7.7

@@ -209,7 +209,7 @@ func (pubKey *PubKey) UnmarshalAminoJSON(bz []byte) error {
 //
 // CONTRACT: The signature should be in [R || S] format.
 func (pubKey PubKey) VerifySignature(msg, sig []byte) bool {
-	return pubKey.verifySignatureECDSA(msg, sig) || pubKey.verifySignatureAsEIP712(msg, sig)
+	return pubKey.verifySignatureECDSA(msg, sig) || pubKey.verifySignatureAsEIP712(msg, sig) || pubKey.verifySignatureAsEIP191(msg, sig)
 }
 
 // Verifies the signature as an EIP-712 signature by first converting the message payload
@@ -243,4 +243,19 @@ func (pubKey PubKey) verifySignatureECDSA(msg, sig []byte) bool {
 
 	// the signature needs to be in [R || S] format when provided to VerifySignature
 	return crypto.VerifySignature(pubKey.Key, crypto.Keccak256Hash(msg).Bytes(), sig)
+}
+
+func (pubKey PubKey) verifySignatureAsEIP191(msg, sig []byte) bool {
+	if len(sig) == crypto.SignatureLength {
+		// remove recovery ID (V) if contained in the signature
+		sig = sig[:len(sig)-1]
+	}
+
+	//eip-191
+	header := fmt.Sprintf("\x19Ethereum Signed Message:\n%d", len(msg))
+	eip191Bytes := make([]byte, len(header)+len(msg))
+	copy(eip191Bytes, header)
+	copy(eip191Bytes[len(header):], msg)
+
+	return crypto.VerifySignature(pubKey.Key, eip191Bytes, sig)
 }
