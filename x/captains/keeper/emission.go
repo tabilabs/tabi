@@ -136,10 +136,10 @@ func (k Keeper) CalcNodeCumulativeEmissionByEpoch(ctx sdk.Context, epochID uint6
 	}
 
 	// NOTE: we may have already set this value when user claimed the rewards before report handles it.
-	historyEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
-	if !historyEmission.Equal(sdk.ZeroDec()) {
-		return historyEmission
-	}
+	//historyEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID, nodeID)
+	//if !historyEmission.Equal(sdk.ZeroDec()) {
+	//	return historyEmission
+	//}
 
 	prevHistoryEmission := k.GetNodeCumulativeEmissionByEpoch(ctx, epochID-1, nodeID)
 	epochEmission := k.GetNodeEmissionByEpoch(ctx, epochID, nodeID)
