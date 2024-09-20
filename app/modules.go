@@ -128,7 +128,7 @@ var (
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		evmtypes.ModuleName:            {authtypes.Minter, authtypes.Burner}, // used for secure addition and subtraction of balance using module account
-		claimstypes.ModuleName:         nil,
+		claimstypes.ModuleName:         {authtypes.Minter},
 		tokenconverttypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
 	}
 

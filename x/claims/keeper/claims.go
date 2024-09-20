@@ -29,6 +29,12 @@ func (k Keeper) WithdrawRewards(ctx sdk.Context, sender, receiver sdk.Address) (
 
 	// Truncate the rewards
 	truncatedCoins, _ := totalRewards.TruncateDecimal()
+
+	// mint vetabi to the module
+	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, truncatedCoins); err != nil {
+		return sdk.Coins{}, nil
+	}
+
 	// send the rewards to the receiver
 	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver.Bytes(), truncatedCoins); err != nil {
 		return sdk.Coins{}, errorsmod.Wrapf(
