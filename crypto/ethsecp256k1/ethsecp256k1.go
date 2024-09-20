@@ -257,5 +257,5 @@ func (pubKey PubKey) verifySignatureAsEIP191(msg, sig []byte) bool {
 	copy(eip191Bytes, header)
 	copy(eip191Bytes[len(header):], msg)
 
-	return crypto.VerifySignature(pubKey.Key, eip191Bytes, sig)
+	return crypto.VerifySignature(pubKey.Key, crypto.Keccak256Hash(eip191Bytes).Bytes(), sig)
 }
