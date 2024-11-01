@@ -133,7 +133,7 @@ func NewTxCmdCommitReport() *cobra.Command {
 func NewTxCmdAddAuthorizedMembers() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add-authorized-members [member1,member2,member3] --from [sender]",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		Short: "Add members to the authorized members list",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -159,7 +159,7 @@ func NewTxCmdAddAuthorizedMembers() *cobra.Command {
 func NewTxCmdRemoveAuthorizedMembers() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "remove-authorized-members [member1,member2,member3] --from [sender]",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		Short: "Remove members from the authorized members list",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
