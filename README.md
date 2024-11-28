@@ -19,16 +19,6 @@ Head over there and check it out.
 
 **Note**: Requires [Go 1.20+](https://golang.org/dl/)
 
-## Installation
-
-For prerequisites and detailed build instructions
-please read the [Installation](https://github.com/tabilabs/tabi-node) instructions.
-Once the dependencies are installed, run:
-
-```bash
-make install
-```
-
 Or check out the latest [release](https://github.com/tabilabs/tabi/releases).
 
 ## Quick Start
