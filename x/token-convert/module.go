@@ -44,7 +44,9 @@ func (AppModuleBasic) Name() string {
 }
 
 // RegisterLegacyAminoCodec registers the token-convert module's types on the given LegacyAmino codec.
-func (AppModuleBasic) RegisterLegacyAminoCodec(*codec.LegacyAmino) {}
+func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	types.RegisterLegacyAminoCodec(cdc)
+}
 
 // RegisterInterfaces registers the module's interface types
 func (AppModuleBasic) RegisterInterfaces(registry codectypes.InterfaceRegistry) {

@@ -47,8 +47,8 @@ func LegacyWrapTxToTypedData(
 		Name:              "Cosmos Web3",
 		Version:           "1.0.0",
 		ChainId:           math.NewHexOrDecimal256(int64(chainID)),
-		VerifyingContract: "cosmos",
-		Salt:              "0",
+		VerifyingContract: "0x3132333435313233343531323334353132333435",
+		Salt:              "0x3132333435363738313233343536373831323334353637383132333435363738",
 	}
 
 	msgTypes, err := extractMsgTypes(cdc, "MsgValue", msg)
