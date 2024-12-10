@@ -148,3 +148,35 @@ func (m *MsgCancelConvert) GetSigners() []sdk.AccAddress {
 	}
 	return []sdk.AccAddress{from}
 }
+
+func (m *MsgCancelConvert) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
+}
+
+func (m *MsgCancelConvert) Route() string { return RouterKey }
+
+func (m *MsgCancelConvert) Type() string { return TypeMsgCancelConvert }
+
+func (m *MsgConvertTabi) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
+}
+
+func (m *MsgConvertTabi) Route() string { return RouterKey }
+
+func (m *MsgConvertTabi) Type() string { return TypeMsgConvertTabi }
+
+func (m *MsgConvertVetabi) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
+}
+
+func (m *MsgConvertVetabi) Route() string { return RouterKey }
+
+func (m *MsgConvertVetabi) Type() string { return TypeMsgConvertVetabi }
+
+func (m *MsgWithdrawTabi) GetSignBytes() []byte {
+	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(m))
+}
+
+func (m *MsgWithdrawTabi) Route() string { return RouterKey }
+
+func (m *MsgWithdrawTabi) Type() string { return TypeMsgWithdrawTabi }

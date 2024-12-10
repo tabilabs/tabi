@@ -11,6 +11,8 @@ const (
 
 	// StoreKey is the store key for token-convert
 	StoreKey = ModuleName
+
+	RouterKey = ModuleName
 )
 
 // KVStore keys

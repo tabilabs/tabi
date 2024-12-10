@@ -18,7 +18,7 @@ import (
 
 const (
 	rootPrefix = "_"
-	typePrefix = "Type"
+	typePrefix = ""
 
 	txField   = "Tx"
 	ethBool   = "bool"
@@ -49,11 +49,11 @@ func createEIP712Types(messagePayload eip712MessagePayload) (apitypes.Types, err
 			},
 			{
 				Name: "verifyingContract",
-				Type: "string",
+				Type: "address",
 			},
 			{
 				Name: "salt",
-				Type: "string",
+				Type: "bytes32",
 			},
 		},
 		"Tx": {
@@ -302,9 +302,9 @@ func addTypesToRoot(typeMap apitypes.Types, typeDef string, types []apitypes.Typ
 		}
 	}
 
-	typeMap[indexedTypeDef] = types
+	typeMap[typeDef] = types
 
-	return indexedTypeDef, nil
+	return typeDef, nil
 }
 
 // typeDefWithIndex creates a duplicate-indexed type definition
@@ -340,16 +340,20 @@ func sanitizeTypedef(str string) string {
 	caser := cases.Title(language.English, cases.NoLower)
 	parts := strings.Split(str, ".")
 
-	for _, part := range parts {
-		if part == rootPrefix {
-			buf.WriteString(typePrefix)
-			continue
-		}
-
-		subparts := strings.Split(part, "_")
-		for _, subpart := range subparts {
-			buf.WriteString(caser.String(subpart))
-		}
+	//for _, part := range parts {
+	//	if part == rootPrefix {
+	//		buf.WriteString(typePrefix)
+	//		continue
+	//	}
+	//
+	//	subparts := strings.Split(part, "_")
+	//	for _, subpart := range subparts {
+	//		buf.WriteString(caser.String(subpart))
+	//	}
+	//}
+	if len(parts) > 0 {
+		lastPart := parts[len(parts)-1]
+		buf.WriteString(caser.String(lastPart))
 	}
 
 	return buf.String()
