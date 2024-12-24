@@ -199,10 +199,10 @@ func (tx LegacyTx) Validate() error {
 		)
 	}
 
-	if !(chainID.Cmp(big.NewInt(9789)) == 0 || chainID.Cmp(big.NewInt(9788)) == 0) {
+	if !(chainID.Cmp(big.NewInt(10123)) == 0 || chainID.Cmp(big.NewInt(10124)) == 0 || chainID.Cmp(big.NewInt(9789)) == 0 || chainID.Cmp(big.NewInt(9788)) == 0) {
 		return errorsmod.Wrapf(
 			errortypes.ErrInvalidChainID,
-			"chain ID must be 9789 or 9788 on Tabi, got %s", chainID,
+			"chain ID must be 10123 or 10124 or 9789 or 9788 on Tabi, got %s", chainID,
 		)
 	}
 

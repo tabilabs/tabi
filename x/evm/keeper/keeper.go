@@ -111,8 +111,8 @@ func (k *Keeper) WithChainID(ctx sdk.Context) {
 		panic("chain id already set")
 	}
 
-	if !(chainID.Cmp(big.NewInt(9789)) == 0 || chainID.Cmp(big.NewInt(9788)) == 0) {
-		panic("EVM only supports Tabi chain identifiers (9789 or 9788)")
+	if !(chainID.Cmp(big.NewInt(10123)) == 0 || chainID.Cmp(big.NewInt(10124)) == 0 || chainID.Cmp(big.NewInt(9789)) == 0 || chainID.Cmp(big.NewInt(9788)) == 0) {
+		panic("EVM only supports Tabi chain identifiers (10123 10124 9789 9788)")
 	}
 
 	k.eip155ChainID = chainID

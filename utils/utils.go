@@ -1,4 +1,3 @@
-
 package utils
 
 import (
@@ -16,9 +15,9 @@ import (
 
 const (
 	// MainnetChainID defines the Tabi EIP155 chain ID for mainnet
-	MainnetChainID = "tabi_9788"
+	MainnetChainID = "tabi_10123"
 	// TestnetChainID defines the Tabi EIP155 chain ID for testnet
-	TestnetChainID = "tabi_9789"
+	TestnetChainID = "tabi_10124"
 	// BaseDenom defines the Tabi mainnet denomination
 	BaseDenom = "atabi"
 )
