@@ -38,7 +38,7 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) error {
 func (k Keeper) UpdateSaleLevel(ctx sdk.Context, newSaleLevel uint64) (uint64, error) {
 	params := k.GetParams(ctx)
 	oldSaleLevel := params.CurrentSaleLevel
-	if oldSaleLevel > newSaleLevel {
+	if oldSaleLevel >= newSaleLevel {
 		return oldSaleLevel, types.ErrInvalidSaleLevel
 	}
 
