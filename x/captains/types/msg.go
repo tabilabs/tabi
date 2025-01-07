@@ -152,7 +152,7 @@ func (msg *MsgCommitReport) ValidateBasic() error {
 		return errorsmod.Wrap(err, "invalid authority address")
 	}
 
-	if msg.ReportType > ReportType_REPORT_TYPE_END || msg.ReportType == ReportType_REPORT_TYPE_UNSPECIFIED {
+	if msg.ReportType > ReportType_REPORT_TYPE_END || msg.ReportType <= ReportType_REPORT_TYPE_UNSPECIFIED {
 		return errorsmod.Wrap(sdkerrors.ErrInvalidRequest, "invalid report type")
 	}
 
