@@ -52,5 +52,5 @@ message MsgClaims {
 message MsgClaimsResponse {
   // amount Since: cosmos-sdk 0.46
   repeated cosmos.base.v1beta1.Coin amount = 1
-  [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+      [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }

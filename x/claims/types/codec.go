@@ -1,6 +1,8 @@
 package types
 
 import (
+	cryptocodec "github.com/tabilabs/tabi/crypto/codec"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -14,12 +16,12 @@ const (
 )
 
 var (
-	amino = codec.NewLegacyAmino()
-
+	amino     = codec.NewLegacyAmino()
 	ModuleCdc = codec.NewAminoCodec(amino)
 )
 
 func init() {
+	cryptocodec.RegisterCrypto(amino)
 	RegisterLegacyAminoCodec(amino)
 	amino.Seal()
 }
