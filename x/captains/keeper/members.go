@@ -16,6 +16,7 @@ func (k Keeper) SetAuthorizedMembers(ctx sdk.Context, members []string) error {
 		for _, authzMember := range params.AuthorizedMembers {
 			if authzMember == member {
 				allowAdd = false
+				break
 			}
 		}
 		if allowAdd {
@@ -80,6 +81,7 @@ func (k Keeper) HasAuthorizedMember(ctx sdk.Context, member sdk.AccAddress) bool
 	for _, authzMember := range params.AuthorizedMembers {
 		if sdk.MustAccAddressFromBech32(authzMember).Equals(member) {
 			allowAuthz = true
+			break
 		}
 	}
 	return allowAuthz
