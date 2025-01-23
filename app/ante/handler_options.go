@@ -9,6 +9,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	captainstypes "github.com/tabilabs/tabi/x/captains/types"
+	claimestypes "github.com/tabilabs/tabi/x/claims/types"
+
 	sdkvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 
 	ibcante "github.com/cosmos/ibc-go/v6/modules/core/ante"
@@ -118,6 +121,11 @@ func newCosmosAnteHandler(options HandlerOptions) sdk.AnteHandler {
 		cosmosante.NewAuthzLimiterDecorator( // disable the Msg types that cannot be included on an authz.MsgExec msgs field
 			sdk.MsgTypeURL(&evmtypes.MsgEthereumTx{}),
 			sdk.MsgTypeURL(&sdkvesting.MsgCreateVestingAccount{}),
+			sdk.MsgTypeURL(&captainstypes.MsgClaimComputingPower{}),
+			sdk.MsgTypeURL(&captainstypes.MsgCreateCaptainNode{}),
+			sdk.MsgTypeURL(&captainstypes.MsgCommitComputingPower{}),
+			sdk.MsgTypeURL(&captainstypes.MsgUpdateSaleLevel{}),
+			sdk.MsgTypeURL(&claimestypes.MsgClaims{}),
 		),
 		tabiante.NewCaptainsRestrictionDecorator(options.CaptainsKeeper), // reject msgs as per captains epoch phase
 		ante.NewSetUpContextDecorator(),
