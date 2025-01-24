@@ -91,7 +91,7 @@ func NodeByOwnerStoreKey(owner sdk.AccAddress, nodeID string) []byte {
 // Items are stored with the following key
 // <prefix_key><owner><delimiter>
 func NodeByOwnerPrefixStoreKey(owner sdk.AccAddress) []byte {
-	address.MustLengthPrefix(owner)
+	owner = address.MustLengthPrefix(owner)
 
 	key := make([]byte, len(NodeByOwnerKey)+len(owner)+len(Delimiter))
 	copy(key, NodeByOwnerKey)
@@ -170,7 +170,7 @@ func NodeClaimedEmissionStoreKey(nodeID string) []byte {
 // Items are stored with the following key: values
 // <prefix_key><owner> -> <computing_power>
 func ClaimableComputingPowerStoreKey(owner sdk.AccAddress) []byte {
-	address.MustLengthPrefix(owner)
+	owner = address.MustLengthPrefix(owner)
 
 	key := make([]byte, len(ClaimableComputingPowerKey)+len(owner))
 	copy(key, ClaimableComputingPowerKey)
@@ -216,7 +216,7 @@ func GlobalPledgeOnEpochStoreKey(epochID uint64) []byte {
 // OwnerPledgeOnEpochStoreKey returns the byte representation of the owner pledge on epoch key
 // <prefix_key><epoch_id><delimiter><owner> -> <pledge>
 func OwnerPledgeOnEpochStoreKey(owner sdk.AccAddress, epochID uint64) []byte {
-	address.MustLengthPrefix(owner)
+	owner = address.MustLengthPrefix(owner)
 
 	epochBz := sdk.Uint64ToBigEndian(epochID)
 	key := make([]byte, len(OwnerPledgeOnEpochKey)+len(epochBz)+len(Delimiter)+len(owner))

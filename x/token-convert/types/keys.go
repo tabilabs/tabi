@@ -54,7 +54,7 @@ func VoucherStoreKey(voucherID string) []byte {
 // Items are stored with key as follows:
 // 0x03<owner><Delimiter(1 Byte)><voucherID>
 func VoucherByOwnerStoreKey(owner sdktypes.AccAddress, voucherID string) []byte {
-	address.MustLengthPrefix(owner)
+	owner = address.MustLengthPrefix(owner)
 
 	bz := make([]byte, len(VoucherByOwnerKey)+len(owner)+len(Delimiter)+len(voucherID))
 
@@ -70,7 +70,7 @@ func VoucherByOwnerStoreKey(owner sdktypes.AccAddress, voucherID string) []byte 
 // Items are stored with key as follows:
 // 0x03<owner><Delimiter(1 Byte)>
 func VoucherByOwnerStorePrefixKey(owner sdktypes.AccAddress) []byte {
-	address.MustLengthPrefix(owner)
+	owner = address.MustLengthPrefix(owner)
 
 	bz := make([]byte, len(VoucherByOwnerKey)+len(owner)+len(Delimiter))
 
