@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	errorsmod "cosmossdk.io/errors"
 	"github.com/tabilabs/tabi/x/captains/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -51,6 +52,7 @@ func (k Keeper) DeleteAuthorizedMembers(ctx sdk.Context, members []string) error
 			if authzMember == member {
 				params.AuthorizedMembers = append(params.AuthorizedMembers[:i], params.AuthorizedMembers[i+1:]...)
 				allowRemove = true
+				break
 			}
 		}
 		if allowRemove {
@@ -62,6 +64,10 @@ func (k Keeper) DeleteAuthorizedMembers(ctx sdk.Context, members []string) error
 				),
 			)
 		}
+	}
+
+	if len(params.AuthorizedMembers) == 0 {
+		return errorsmod.Wrap(types.ErrDeleteLastMember, "can not delete the last member")
 	}
 
 	if err := k.SetParams(ctx, params); err != nil {

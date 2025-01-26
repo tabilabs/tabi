@@ -82,6 +82,8 @@ func (k Keeper) incrDivisionTotalCount(ctx sdk.Context, division types.Division)
 
 // decrDivisionTotalCount decrements the sold count of the division
 func (k Keeper) decrDivisionTotalCount(ctx sdk.Context, division types.Division) {
-	division.TotalCount--
-	k.setDivision(ctx, division)
+	if division.TotalCount > 0 {
+		division.TotalCount--
+		k.setDivision(ctx, division)
+	}
 }

@@ -57,8 +57,10 @@ func NewTxDataFromTx(tx *ethtypes.Transaction) (TxData, error) {
 		txData, err = NewDynamicFeeTx(tx)
 	case ethtypes.AccessListTxType:
 		txData, err = newAccessListTx(tx)
-	default:
+	case ethtypes.LegacyTxType:
 		txData, err = NewLegacyTx(tx)
+	default:
+		return nil, ethtypes.ErrInvalidTxType
 	}
 	if err != nil {
 		return nil, err

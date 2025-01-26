@@ -162,6 +162,9 @@ func (b *Backend) processBlock(
 				continue
 			}
 			tx := ethMsg.AsTransaction()
+			if tx == nil {
+				continue
+			}
 			reward := tx.EffectiveGasTipValue(blockBaseFee)
 			if reward == nil {
 				reward = big.NewInt(0)

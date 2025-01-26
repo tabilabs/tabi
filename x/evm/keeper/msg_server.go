@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	errortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"strconv"
 
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
@@ -30,6 +31,10 @@ func (k *Keeper) EthereumTx(goCtx context.Context, msg *types.MsgEthereumTx) (*t
 
 	sender := msg.From
 	tx := msg.AsTransaction()
+	if tx == nil {
+		return nil, errorsmod.Wrapf(errortypes.ErrUnpackAny, "cannot unpack Any into TxData")
+	}
+
 	txIndex := k.GetTxIndexTransient(ctx)
 
 	labels := []metrics.Label{

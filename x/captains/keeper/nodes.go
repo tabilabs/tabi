@@ -75,6 +75,10 @@ func (k Keeper) UpdateNode(
 	}
 
 	after := node.ComputingPower + amount
+
+	if after < node.ComputingPower || after < 0 {
+		return errorsmod.Wrap(types.ErrTypeOverflow, nodeID)
+	}
 	currDivision, _ := k.GetDivision(ctx, node.DivisionId)
 	if after > currDivision.ComputingPowerUpperBound {
 		// check if we need to improve node division

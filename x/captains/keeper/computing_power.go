@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	errorsmod "cosmossdk.io/errors"
 	"fmt"
 	"math"
 
@@ -116,17 +117,24 @@ func (k Keeper) GetNodeBaseComputingPower(ctx sdk.Context, nodeID string) uint64
 }
 
 // CommitComputingPower commits the pending computing power.
-func (k Keeper) CommitComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) (uint64, uint64) {
+func (k Keeper) CommitComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) (uint64, uint64, error) {
 	before := k.GetClaimableComputingPower(ctx, owner)
 	after := before + amount
+	if after < before || after < 0 {
+		return 0, 0, errorsmod.Wrap(types.ErrTypeOverflow, "")
+	}
 	k.setClaimableComputingPower(ctx, after, owner)
-	return before, after
+	return before, after, nil
 }
 
 // decrClaimableComputingPower decrements the claimable computing power of an owner.
 func (k Keeper) decrClaimableComputingPower(ctx sdk.Context, amount uint64, owner sdk.AccAddress) {
 	power := k.GetClaimableComputingPower(ctx, owner)
-	power -= amount
+	if power >= amount {
+		power -= amount
+	} else {
+		power = 0
+	}
 	k.setClaimableComputingPower(ctx, power, owner)
 }
 
