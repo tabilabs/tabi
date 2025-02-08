@@ -28,7 +28,11 @@ func (k *Keeper) GetAccount(ctx sdk.Context, addr common.Address) *statedb.Accou
 		return nil
 	}
 
-	acct.Balance = k.GetBalance(ctx, addr)
+	Balance, err := k.GetBalance(ctx, addr)
+	if err != nil {
+		return nil
+	}
+	acct.Balance = Balance
 	return acct
 }
 

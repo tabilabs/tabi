@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	codeErrInvalidState = uint32(iota) + 2 // NOTE: code 1 is reserved for internal errors
+	codeErrInternal     = uint32(iota) + 1
+	codeErrInvalidState // NOTE: code 1 is reserved for internal errors
 	codeErrInvalidChainConfig
 	codeErrZeroAddress
 	codeErrCreateDisabled
@@ -76,6 +77,9 @@ var (
 
 	// ErrInvalidGasLimit returns an error if gas limit value is invalid
 	ErrInvalidGasLimit = errorsmod.Register(ModuleName, codeErrInvalidGasLimit, "invalid gas limit")
+
+	//ErrInvalidParams returns an error if the parameters are invalid
+	ErrInvalidParams = errorsmod.Register(ModuleName, codeErrInternal, "invalid parameters")
 )
 
 // NewExecErrorWithReason unpacks the revert return bytes and returns a wrapped error
