@@ -693,6 +693,7 @@ func (suite *EvmTestSuite) TestERC20TransferReverted() {
 			suite.Require().Empty(res.Logs)
 
 			after, err := k.GetBalance(suite.ctx, suite.from)
+			suite.Require().NoError(err)
 
 			if tc.expErr == "out of gas" {
 				suite.Require().Equal(tc.gasLimit, res.GasUsed)
