@@ -12,6 +12,9 @@ import (
 )
 
 func NewLegacyTx(tx *ethtypes.Transaction) (*LegacyTx, error) {
+	if err := ValidateEthTx(tx); err != nil {
+		return nil, err
+	}
 	txData := &LegacyTx{
 		Nonce:    tx.Nonce(),
 		Data:     tx.Data(),

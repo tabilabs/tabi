@@ -1,7 +1,9 @@
 package types
 
 import (
+	"errors"
 	"fmt"
+	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"math/big"
 
 	"github.com/gogo/protobuf/proto"
@@ -20,6 +22,8 @@ import (
 var DefaultPriorityReduction = sdk.DefaultPowerReduction
 
 var EmptyCodeHash = crypto.Keccak256(nil)
+
+const maxBitLen = 256
 
 // DecodeTxResponse decodes an protobuf-encoded byte slice into TxResponse
 func DecodeTxResponse(in []byte) (*MsgEthereumTxResponse, error) {
@@ -100,4 +104,25 @@ func BinSearch(lo, hi uint64, executable func(uint64) (bool, *MsgEthereumTxRespo
 // `effectiveGasPrice = min(baseFee + tipCap, feeCap)`
 func EffectiveGasPrice(baseFee, feeCap, tipCap *big.Int) *big.Int {
 	return math.BigMin(new(big.Int).Add(tipCap, baseFee), feeCap)
+}
+
+func ValidateEthTx(tx *ethtypes.Transaction) error {
+	if !IsValidInt256(tx.Value()) {
+		return errors.New("value overflow")
+	}
+	if !IsValidInt256(tx.GasPrice()) {
+		return errors.New("gas price overflow")
+	}
+	if !IsValidInt256(tx.GasFeeCap()) {
+		return errors.New("gas fee cap overflow")
+	}
+	if !IsValidInt256(tx.GasTipCap()) {
+		return errors.New("gas tip cap overflow")
+	}
+	return nil
+}
+
+// IsValidInt256 check the bound of 256 bit number
+func IsValidInt256(i *big.Int) bool {
+	return i == nil || i.BitLen() <= maxBitLen
 }
