@@ -671,7 +671,8 @@ func (suite *EvmTestSuite) TestERC20TransferReverted() {
 			tx := types.NewTx(ethTxParams)
 			suite.SignTx(tx)
 
-			before := k.GetBalance(suite.ctx, suite.from)
+			before, err := k.GetBalance(suite.ctx, suite.from)
+			suite.Require().NoError(err)
 
 			evmParams := suite.app.EvmKeeper.GetParams(suite.ctx)
 			ethCfg := evmParams.GetChainConfig().EthereumConfig(nil)
@@ -691,7 +692,8 @@ func (suite *EvmTestSuite) TestERC20TransferReverted() {
 			suite.Require().Equal(tc.expErr, res.VmError)
 			suite.Require().Empty(res.Logs)
 
-			after := k.GetBalance(suite.ctx, suite.from)
+			after, err := k.GetBalance(suite.ctx, suite.from)
+			suite.Require().NoError(err)
 
 			if tc.expErr == "out of gas" {
 				suite.Require().Equal(tc.gasLimit, res.GasUsed)

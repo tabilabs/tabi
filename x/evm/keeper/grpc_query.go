@@ -138,7 +138,10 @@ func (k Keeper) Balance(c context.Context, req *types.QueryBalanceRequest) (*typ
 
 	ctx := sdk.UnwrapSDKContext(c)
 
-	balanceInt := k.GetBalance(ctx, common.HexToAddress(req.Address))
+	balanceInt, iserror := k.GetBalance(ctx, common.HexToAddress(req.Address))
+	if iserror != nil {
+		return nil, status.Error(codes.Internal, iserror.Error())
+	}
 
 	return &types.QueryBalanceResponse{
 		Balance: balanceInt.String(),
