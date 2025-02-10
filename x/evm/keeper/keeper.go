@@ -304,16 +304,16 @@ func (k *Keeper) GetNonce(ctx sdk.Context, addr common.Address) uint64 {
 }
 
 // GetBalance load account's balance of gas token
-func (k *Keeper) GetBalance(ctx sdk.Context, addr common.Address) *big.Int {
+func (k *Keeper) GetBalance(ctx sdk.Context, addr common.Address) (*big.Int, error) {
 	cosmosAddr := sdk.AccAddress(addr.Bytes())
 	evmParams := k.GetParams(ctx)
 	evmDenom := evmParams.GetEvmDenom()
 	// if node is pruned, params is empty. Return invalid value
 	if evmDenom == "" {
-		return big.NewInt(-1)
+		return big.NewInt(0), errorsmod.Wrap(types.ErrInvalidParams, "evm denom is empty")
 	}
 	coin := k.bankKeeper.GetBalance(ctx, cosmosAddr, evmDenom)
-	return coin.Amount.BigInt()
+	return coin.Amount.BigInt(), nil
 }
 
 // GetBaseFee returns current base fee, return values:

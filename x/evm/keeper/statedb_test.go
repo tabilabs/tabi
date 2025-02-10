@@ -927,7 +927,7 @@ func (suite *KeeperTestSuite) TestSetBalance() {
 			if tc.expErr {
 				suite.Require().Error(err)
 			} else {
-				balance := suite.app.EvmKeeper.GetBalance(suite.ctx, tc.addr)
+				balance, err := suite.app.EvmKeeper.GetBalance(suite.ctx, tc.addr)
 				suite.Require().NoError(err)
 				suite.Require().Equal(amount, balance)
 			}
@@ -969,7 +969,8 @@ func (suite *KeeperTestSuite) TestDeleteAccount() {
 				suite.Require().Error(err)
 			} else {
 				suite.Require().NoError(err)
-				balance := suite.app.EvmKeeper.GetBalance(suite.ctx, tc.addr)
+				balance, err := suite.app.EvmKeeper.GetBalance(suite.ctx, tc.addr)
+				suite.Require().NoError(err)
 				suite.Require().Equal(new(big.Int), balance)
 			}
 		})
