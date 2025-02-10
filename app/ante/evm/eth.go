@@ -157,8 +157,18 @@ func (egcd EthGasConsumeDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simula
 	// Use the lowest priority of all the messages as the final one.
 	minPriority := int64(math.MaxInt64)
 	baseFee := egcd.evmKeeper.GetBaseFee(ctx, ethCfg)
+	blockGasLimit := types.BlockGasLimit(ctx)
 
 	for _, msg := range tx.GetMsgs() {
+		if gasWanted > blockGasLimit {
+			return ctx, errorsmod.Wrapf(
+				errortypes.ErrOutOfGas,
+				"tx gas (%d) exceeds block gas limit (%d)",
+				gasWanted,
+				blockGasLimit,
+			)
+		}
+
 		msgEthTx, ok := msg.(*evmtypes.MsgEthereumTx)
 		if !ok {
 			return ctx, errorsmod.Wrapf(errortypes.ErrUnknownRequest, "invalid message type %T, expected %T", msg, (*evmtypes.MsgEthereumTx)(nil))
@@ -172,12 +182,29 @@ func (egcd EthGasConsumeDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simula
 
 		if ctx.IsCheckTx() && egcd.maxGasWanted != 0 {
 			// We can't trust the tx gas limit, because we'll refund the unused gas.
+			if txData.GetGas() > blockGasLimit && egcd.maxGasWanted > blockGasLimit {
+				return ctx, errorsmod.Wrapf(
+					errortypes.ErrOutOfGas,
+					"tx gas (%d) exceeds block gas limit (%d)",
+					gasWanted,
+					blockGasLimit,
+				)
+			}
+
 			if txData.GetGas() > egcd.maxGasWanted {
 				gasWanted += egcd.maxGasWanted
 			} else {
 				gasWanted += txData.GetGas()
 			}
 		} else {
+			if txData.GetGas() > blockGasLimit {
+				return ctx, errorsmod.Wrapf(
+					errortypes.ErrOutOfGas,
+					"tx gas (%d) exceeds block gas limit (%d)",
+					gasWanted,
+					blockGasLimit,
+				)
+			}
 			gasWanted += txData.GetGas()
 		}
 
@@ -212,8 +239,6 @@ func (egcd EthGasConsumeDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simula
 	}
 
 	ctx.EventManager().EmitEvents(events)
-
-	blockGasLimit := types.BlockGasLimit(ctx)
 
 	// return error if the tx gas is greater than the block limit (max gas)
 
