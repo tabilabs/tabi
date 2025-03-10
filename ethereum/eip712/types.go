@@ -302,9 +302,9 @@ func addTypesToRoot(typeMap apitypes.Types, typeDef string, types []apitypes.Typ
 		}
 	}
 
-	typeMap[typeDef] = types
+	typeMap[indexedTypeDef] = types
 
-	return typeDef, nil
+	return indexedTypeDef, nil
 }
 
 // typeDefWithIndex creates a duplicate-indexed type definition

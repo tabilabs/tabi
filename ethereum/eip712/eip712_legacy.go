@@ -128,6 +128,14 @@ func extractMsgTypes(cdc codectypes.AnyUnpacker, msgTypeName string, msg sdk.Msg
 			{Name: "type", Type: "string"},
 			{Name: "value", Type: msgTypeName},
 		},
+		"Content": {
+			{Name: "type", Type: "string"},
+			{Name: "value", Type: "TextProposal"},
+		},
+		"TextProposal": {
+			{Name: "title", Type: "string"},
+			{Name: "description", Type: "string"},
+		},
 		msgTypeName: {},
 	}
 
